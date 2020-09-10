@@ -1,0 +1,1 @@
+mwcceppc -O4 -proc gekko -lang C99 -S -d GAME_SPM seqdrv.c
