@@ -1,5 +1,6 @@
+#include <string.h>
+
 #include "seqdrv.h"
-#include "string.h"
 #include "system.h"
 
 /*
@@ -117,13 +118,17 @@ void seqMain() {
 		seqWork.stage = 0;
 		seqWork.p0 = next_p0;
 		seqWork.p1 = next_p1;
+#if GAME_SPM
 		seqWork.afterFunc = NULL;
+#endif
 		(*seq_data[now_seq].init)(&seqWork);
 	}
 	(*seq_data[now_seq].main)(&seqWork);
+#if GAME_SPM
 	if (seqWork.afterFunc != NULL) {
 		(*seqWork.afterFunc)(&seqWork);
 	}
+#endif
 }
 
 /*

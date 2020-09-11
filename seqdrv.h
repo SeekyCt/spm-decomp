@@ -1,21 +1,21 @@
 #ifndef SEQDRV_H
 #define SEQDRV_H
 
-#include "stdbool.h"
+#include <stdbool.h>
+
 #include "seqdef.h"
 
 /*
   Functions:
   ==========
-  Name                SPM   TTYD
-  seqInit_SPMARIO     yes   n/a
-  seqInit_MARIOSTORY  n/a   yes
-  seqMain             yes   yes
-  seqSetSeq           yes   yes
-  seqGetSeq           yes   yes
-  seqGetPrevSeq       n/a   yes
-  seqGetNextSeq       n/a   yes
-  seqCheckSeq         n/a   yes
+  Name
+  seqInit_SPMARIO     yes (aka seqInit_MARIOSTORY)
+  seqMain             yes (only matching spm 1:1, logic matching for ttyd)
+  seqSetSeq           yes
+  seqGetSeq           yes
+  seqGetPrevSeq       yes (ttyd exclusive)
+  seqGetNextSeq       yes (ttyd exclusive)
+  seqCheckSeq         yes (ttyd exclusive)
 
   Other:
   ======
