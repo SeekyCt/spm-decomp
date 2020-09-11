@@ -37,7 +37,7 @@ typedef struct _SeqWork {
   00004d58 000020 803ca978  1 .bss 	seqdrv.o 
   00004d58 000020 803ca978  4 seqWork 	seqdrv.o 
 */
-SeqWork seqWork; // 80512360
+extern SeqWork seqWork; // 80512360
 
 /*
   00000080 00008c 80413da0  1 .sdata 	seqdrv.o 
@@ -45,17 +45,17 @@ SeqWork seqWork; // 80512360
   00000084 000004 80413da4  4 next_seq 	seqdrv.o 
   00000088 000004 80413da8  4 prev_seq 	seqdrv.o 
 */
-int now_seq = -1; // 805ae0b8
-int next_seq = -1; // 805ae0bc
-int prev_seq = -1; // 805ae0c0
+extern int now_seq; // 805ae0b8
+extern int next_seq; // 805ae0bc
+extern int prev_seq; // 805ae0c0
 
 /*
   00000080 000008 804151e0  1 .sbss 	seqdrv.o 
   00000080 000004 804151e0  4 next_p0 	seqdrv.o 
   00000084 000004 804151e4  4 next_p1 	seqdrv.o 
 */
-char * next_p0; // 805ae918 - seqMapName
-char * next_p1; // 805ae91c - seqDoorName
+extern char * next_p0; // 805ae918 - seqMapName
+extern char * next_p1; // 805ae91c - seqDoorName
 
 /*
   00027c6c 00016c 8002d24c  1 .text 	seqdrv.o 

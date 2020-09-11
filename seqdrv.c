@@ -1,7 +1,15 @@
 #include <string.h>
+#include <stddef.h>
 
 #include "seqdrv.h"
 #include "system.h"
+
+SeqWork seqWork;
+int now_seq = -1;
+int next_seq = -1;
+int prev_seq = -1;
+char * next_p0;
+char * next_p1;
 
 /*
 8017bf2c 94  21  ff  f0    stwu       r1,-16(r1)

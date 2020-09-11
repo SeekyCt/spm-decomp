@@ -17,12 +17,8 @@ typedef struct {
 } SeqDef;
 /*
   00000298 0000ac 802ff6d8  1 .data 	seqdef.o 
-  UNUSED   000008 ........ negone_one$374 seqdef.o 
-  UNUSED   000008 ........ one_negone$373 seqdef.o 
-  UNUSED   000008 ........ negone_one$360 seqdef.o 
-  UNUSED   000008 ........ one_negone$359 seqdef.o 
   00000298 00006c 802ff6d8  4 seq_data 	seqdef.o 
 */
-SeqDef seq_data[SEQ_COUNT];
+extern SeqDef seq_data[SEQ_COUNT];
 
 #endif
