@@ -8,7 +8,6 @@
 /*
   Functions:
   ==========
-  Name
   seqInit_SPMARIO     yes (aka seqInit_MARIOSTORY)
   seqMain             yes (only matching spm 1:1, logic matching for ttyd)
   seqSetSeq           yes
@@ -19,7 +18,7 @@
 
   Other:
   ======
-  SeqWork is missing fields, but those are not referenced in seqdrv.c code
+  Data matching except SeqWork missing fields (but those are not referenced in seqdrv.c code)
 */
 
 typedef struct _SeqWork {

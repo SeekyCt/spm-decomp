@@ -1,1 +1,1 @@
-mwcceppc -O4 -proc gekko -lang C99 -S -d GAME_SPM *.c
+mwcceppc -O4 -proc gekko -lang C99 -S -d GAME_SPM -w all -use_lmw_stmw on -inline auto *.c
