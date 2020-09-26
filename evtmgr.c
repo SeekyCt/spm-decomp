@@ -3,6 +3,7 @@
 
 #include "evtmgr.h"
 #include "memory.h"
+#include "somewhere.h"
 #include "swdrv.h"
 #include "system.h"
 
@@ -17,40 +18,51 @@ int evtActiveEntryCount; // evtMax?
 int priTblNum;
 int evt_unk805ae8e; // runMainF?
 int evtId = 1;
+float evtSpeed = 1.0;
 
 EvtWork * evtGetWork() {
     return &evtWork;
 }
 
+// not
 void make_pri_table() {
+    EvtWork * wp = &evtWork;
+    EvtEntry * entry = wp->entries;
     // Add all active entries to index and id tables
     int priEntryCount = 0;
-    for (int i = 0; i < evtWork.entryCount; i++) {
-        if ((evtWork.entries[i].flags & 1) != 0) {
+    int i = 0;
+    while (i < wp->entryCount) {
+        if (entry->flags & 1) {
             priTbl[priEntryCount] = i;
-            priIdTbl[priEntryCount] = evtWork.entries[i].id;
+            priIdTbl[priEntryCount] = entry->id;
             priEntryCount++;
         }
+        i++;
+        entry++;
     }
 
     priTblNum = priEntryCount;
 
     // Bubble sort tables
-    for (int i = 0; i < priEntryCount - 1; i++) {
-        for (int j = i + 1; j < priEntryCount; j++) {
+    i = 0; // wrong register used, stops matching from here
+    while (i < priEntryCount - 1) {
+        int j = i + 1;
+        while (j < priEntryCount) {
             int slotI = priTbl[i];
-            if (evtWork.entries[slotI].priority < evtWork.entries[priTbl[j]].priority) {
+            if (wp->entries[slotI].priority < wp->entries[priTbl[j]].priority) {
                 priTbl[i] = priTbl[j];
                 priTbl[j] = slotI;
                 int idI = priIdTbl[i];
                 priIdTbl[i] = priIdTbl[j];
                 priIdTbl[j] = idI;
             }
+            j++;
         }
+        i++;
     }
 }
 
-// make_jump_table
+// void make_jump_table(EvtEntry * entry)
 
 void evtmgrInit() {
     evtWork.entryCount = EVT_ENTRY_MAX;
@@ -73,7 +85,8 @@ void evtmgrReInit() {
     evt_msg_init();
 }
 
-EvtEntry * evtEntry(void * script, uint8_t priority, int8_t flags) {
+// not matching
+EvtEntry * evtEntry(void * script, uint8_t priority, uint8_t flags) {
     EvtEntry * entry = evtWork.entries;
     int i;
     for (i = 0; i < evtWork.entryCount; i++) {
@@ -85,7 +98,7 @@ EvtEntry * evtEntry(void * script, uint8_t priority, int8_t flags) {
     }
     evtActiveEntryCount += 1;
     memset(entry, 0, sizeof(EvtEntry));
-    entry->flags |= 1;
+    entry->flags = flags | 1;
     entry->curInstructionPtr = script;
     entry->scriptStart = script;
     entry->prevInstructionPtr = script;
@@ -97,7 +110,7 @@ EvtEntry * evtEntry(void * script, uint8_t priority, int8_t flags) {
     entry->id = evtId++;
     entry->dowhileDepth = -1;
     entry->unknown_0xf = -1;
-    entry->type = -1;
+    entry->type = 0xff;
     entry->unknown_0x19c = 0;
     entry->speed = 1.0f;
     entry->unknown_0x160 = 0.0f;
@@ -105,16 +118,220 @@ EvtEntry * evtEntry(void * script, uint8_t priority, int8_t flags) {
     entry->unknown_0x168 = 0;
     entry->unknown_0x4 = 0;
     entry->unknown_0x0 = 0;
-    for (i = 0; i < 16; i++) {
+    for (int j = 0; j < 16; j++) {
         entry->lw[i] = 0;
     }
-    for (i = 0; i < 3; i++) {
-        entry->lw[i] = 0;
+    for (int j = 0; j < 3; j++) {
+        entry->lw[j] = 0;
     }
     make_jump_table(entry);
     if ((evt_unk805ae8e0 != 0) && (entry->flags & 0x20 != 0)) {
-
+        priTbl[priTblNum] = i;
+        priIdTbl[priTblNum++] = entry->id;
     }
-    (void) flags;
+    if (unknown_805ae9c8 == 1) {
+        for (int i = 0; i < evtWork.entryCount; i++) {
+            if (evtWork.entries[i].flags & 1 != 0) {
+                evtStop(&evtWork.entries[i], 3);
+            }
+        }
+    }
+    else if (unknown_805ae9c8 > 0 && unknown_805ae9c8 < 3) {
+        for (int i = 0; i < evtWork.entryCount; i++) {
+            if (evtWork.entries[i].flags & 1 != 0) {
+                evtStop(&evtWork.entries[i], 0xff);
+            }
+        }
+    }
+    if (evtId == 0) {
+        evtId = 1;
+    }
+    return entry;
+}
+
+
+//EvtEntry * evtEntryType(void * script, int param_2, int param_3, int param_4)
+//EvtEntry * evtChildEntry(EvtEntry * entry, void * script, uint8_t flags)
+//EvtEntry * evtBrotherEntry(EvtEntry * entry, void * script, uint8_t flags)
+//EvtEntry * evtRestart(EvtEntry * entry)
+//void evtmgrMain()
+//void evtDelete(EvtEntry * entry)
+
+void evtDeleteID(int id)
+{
+    EvtWork * wp = &evtWork;
+    EvtEntry * entry = wp->entries;
+    int i = 0;
+    while (i < wp->entryCount) {
+        if (entry->flags & 1 != 0 && entry->id == id) {
+            evtDelete(entry);
+        }
+        i++;
+        entry++;
+    }
+}
+
+bool evtCheckID(int id) {
+    EvtWork * wp = &evtWork;
+    EvtEntry * entry = wp->entries;
+    int i = 0;
+    while (i < wp->entryCount) {
+        if (entry->flags & 1 && entry->id == id) {
+            return true;
+        }
+        i++;
+        entry++;
+    }
+    return false;
+}
+
+void evtSetPri(EvtEntry * entry, uint8_t priority) {
+    entry->priority = priority;
+}
+
+void evtSetSpeed(EvtEntry * entry, float multiplier) {
+    entry->speed = multiplier * evtSpeed;
+}
+
+void evtSetType(EvtEntry * entry, uint8_t type) {
+    entry->type = type;
+}
+
+void evtStop(EvtEntry * entry, uint8_t mask) {
+    EvtWork * wp = &evtWork;
+    if (entry->childEntry) {
+        evtStop(entry->childEntry, mask);
+    }
+    EvtEntry * curEntry = wp->entries;
+    int i = 0;
+    while (i < wp->entryCount) {
+        if (curEntry->flags & 1 && curEntry->brotherEntry == entry) {
+            evtStop(curEntry, mask);
+        }
+        i++;
+        curEntry++;
+    }
+    if (entry->type & mask) {
+        entry->flags |= 2;
+    }
+}
+
+void evtStart(EvtEntry * entry, uint8_t mask) {
+    EvtWork * wp = &evtWork;
+    if (entry->childEntry) {
+        evtStart(entry->childEntry, mask);
+    }
+    EvtEntry * curEntry = wp->entries;
+    int i = 0;
+    while (i < wp->entryCount) {
+        if (curEntry->flags & 1 && curEntry->brotherEntry == entry) {
+            evtStart(curEntry, mask);
+        }
+        i++;
+        curEntry++;
+    }
+    if (entry->type & mask) {
+        entry->flags &= ~2;
+    }
+}
+
+void evtStopID(int id) {
+    EvtWork * wp = &evtWork;
+    EvtEntry * entry = wp->entries;
+    int i = 0;
+    while (i < wp->entryCount) {
+        if (entry->flags & 1 && entry->id == id) {
+            evtStop(entry, 0xff);
+        }
+        i++;
+        entry++;
+    }
+}
+
+void evtStartID(int id) {
+    EvtWork * wp = &evtWork;
+    EvtEntry * entry = wp->entries;
+    int i = 0;
+    while (i < wp->entryCount) {
+        if (entry->flags & 1 && entry->id == id) {
+            evtStart(entry, 0xff);
+        }
+        i++;
+        entry++;
+    }
+}
+
+void evtStopAll(uint8_t mask) {
+    EvtWork * wp = &evtWork;
+    EvtEntry * entry = wp->entries;
+    int i = 0;
+    while (i < wp->entryCount) {
+        if (entry->flags & 1) {
+            evtStop(entry, mask);
+        }
+        i++;
+        entry++;
+    }
+}
+
+void evtStartAll(uint8_t mask) {
+    EvtWork * wp = &evtWork;
+    EvtEntry * entry = wp->entries;
+    int i = 0;
+    while (i < wp->entryCount) {
+        if (entry->flags & 1) {
+            evtStart(entry, mask);
+        }
+        i++;
+        entry++;
+    }
+}
+
+void evtStopOther(EvtEntry * entry, uint8_t mask) {
+    EvtWork * wp = &evtWork;
+    EvtEntry * curEntry = wp->entries;
+    int i = 0;
+    while (i < wp->entryCount) {
+        if (curEntry->flags & 1 && curEntry != entry) {
+            evtStop(curEntry, mask);
+        }
+        i++;
+        curEntry++;
+    }
+}
+
+void evtStartOther(EvtEntry * entry, uint8_t mask) {
+    EvtWork * wp = &evtWork;
+    EvtEntry * curEntry = wp->entries;
+    int i = 0;
+    while (i < wp->entryCount) {
+        if (curEntry->flags & 1 && curEntry != entry) {
+            evtStart(curEntry, mask);
+        }
+        i++;
+        curEntry++;
+    }
+}
+
+EvtEntry * evtGetPtr(int index) {
+    EvtWork * wp = &evtWork;
+    EvtEntry * entry = &wp->entries[index];
+    if (entry->flags & 1) {
+        return entry;
+    }
+    return 0;
+}
+
+EvtEntry * evtGetPtrID(int id) {
+    EvtWork * wp = &evtWork;
+    EvtEntry * curEntry = wp->entries;
+    int i = 0;
+    while (i < wp->entryCount) {
+        if (curEntry->flags & 1 && curEntry->id == id) {
+            return curEntry;
+        }
+        curEntry++;
+        i++;
+    }
     return 0;
 }
