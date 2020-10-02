@@ -4,21 +4,9 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-/*
-  Functions:
-  ==========
-  evtGetWork      yes
-  ...             no
-  evtmgrInit      yes
-  evtmgrReInit    yes
-  ...             no
-
-  Other:
-  ======
-
-*/
-
+#define EVT_max 0x78
 #define EVT_ENTRY_MAX 0x80
+#define MAX_EVT_JMPTBL 16
 
 struct _EvtEntry;
 typedef int (*user_func)(struct _EvtEntry * entry, bool firstRun);
@@ -34,10 +22,10 @@ typedef struct _EvtEntry {
   char unknown_0xd;
   int8_t dowhileDepth; // number of do-while loops the current instruction is nested into
   int8_t unknown_0xf;
-  void * curInstructionPtr;
+  int * pCurInstruction;
   void * curDataPtr;
-  uint8_t labelIds[16]; // each correspond to an address in the jump table
-  void * jumptable[16]; // addresses for each label
+  int8_t labelIds[16]; // each correspond to an address in the jump table
+  void * jumptable[MAX_EVT_JMPTBL]; // addresses for each label
   struct _EvtEntry * parent;
   struct _EvtEntry * childEntry;
   struct _EvtEntry * brotherEntry;
@@ -55,7 +43,7 @@ typedef struct _EvtEntry {
   int unknown_0x164;
   uint32_t unknown_0x168;
   char unknown_0x16c[0x198 - 0x16c];
-  void * scriptStart;
+  int * scriptStart;
   uint32_t unknown_0x19c;  
   void * prevInstructionPtr;
   char unknown_0x1a4[0x1a8 - 0x1a4];
@@ -81,10 +69,10 @@ void make_pri_table(); // 800d87f0
 void make_jump_table(EvtEntry * entry); // 800d890c
 void evtmgrInit(); // 800d8a88
 void evtmgrReInit(); // 800d8b2c
-EvtEntry * evtEntry(void * script, uint8_t priority, uint8_t flags); // 800d8b88
-EvtEntry * evtEntryType(void * script, int param_2, int param_3, int param_4); // 800d8df4
-EvtEntry * evtChildEntry(EvtEntry * entry, void * script, uint8_t flags); // 800d9060
-EvtEntry * evtBrotherEntry(EvtEntry * entry, void * script, uint8_t flags); // 800d9370
+EvtEntry * evtEntry(int * script, uint8_t priority, uint8_t flags); // 800d8b88
+EvtEntry * evtEntryType(int * script, int param_2, int param_3, int param_4); // 800d8df4
+EvtEntry * evtChildEntry(EvtEntry * entry, int * script, uint8_t flags); // 800d9060
+EvtEntry * evtBrotherEntry(EvtEntry * entry, int * script, uint8_t flags); // 800d9370
 EvtEntry * evtRestart(EvtEntry * entry); // 800d9634
 void evtmgrMain(); // 800d9764
 void evtDelete(EvtEntry * entry); // 800d9944

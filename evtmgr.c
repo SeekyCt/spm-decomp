@@ -7,9 +7,6 @@
 #include "swdrv.h"
 #include "system.h"
 
-// TODO: move
-void evt_msg_init();
-
 EvtWork evtWork;
 int priTbl[EVT_ENTRY_MAX];
 int priIdTbl[EVT_ENTRY_MAX];
@@ -24,7 +21,7 @@ EvtWork * evtGetWork() {
     return &evtWork;
 }
 
-// not
+// not matching
 void make_pri_table() {
     EvtWork * wp = &evtWork;
     EvtEntry * entry = wp->entries;
@@ -62,7 +59,38 @@ void make_pri_table() {
     }
 }
 
-// void make_jump_table(EvtEntry * entry)
+void make_jump_table(EvtEntry * entry) {
+    for (int i = 0; i < 16; i++) {
+        entry->labelIds[i] = -1;
+        entry->jumptable[i] = 0;
+    }
+
+    int n = 0;
+    int * pScriptHead = entry->pCurInstruction;
+    while (true) {
+        int cmd = *pScriptHead & 0xffff;
+        int cmdn = *pScriptHead >> 16;
+        pScriptHead++;
+
+        assert(cmdn >= 0, "EVTMGR:command line error") // missing double branch here
+        assert(cmd < EVT_max, "EVTMGR:command line error") // missing double branch here
+
+        int id = *pScriptHead;
+        pScriptHead += cmdn;
+
+        switch (cmd) {
+            case 1:
+                goto end; // break can't be used, return didn't match
+            case 3:
+                entry->labelIds[n] = id;
+                entry->jumptable[n] = pScriptHead;
+                n++;
+        }
+
+        assert(n < MAX_EVT_JMPTBL, "EVTMGR:Jump Table Overflow !![make_jump_table]") // missing double branch here
+    }
+    end: ;
+}
 
 void evtmgrInit() {
     evtWork.entryCount = EVT_ENTRY_MAX;
@@ -86,7 +114,7 @@ void evtmgrReInit() {
 }
 
 // not matching
-EvtEntry * evtEntry(void * script, uint8_t priority, uint8_t flags) {
+EvtEntry * evtEntry(int * script, uint8_t priority, uint8_t flags) {
     EvtEntry * entry = evtWork.entries;
     int i;
     for (i = 0; i < evtWork.entryCount; i++) {
@@ -94,12 +122,12 @@ EvtEntry * evtEntry(void * script, uint8_t priority, uint8_t flags) {
         entry++;
     }
     if (i >= evtWork.entryCount) {
-        assert(0, "EVTMGR:Pointer Table Overflow !![evtEntry]")
+        //assert(0, "EVTMGR:Pointer Table Overflow !![evtEntry]")
     }
     evtActiveEntryCount += 1;
     memset(entry, 0, sizeof(EvtEntry));
     entry->flags = flags | 1;
-    entry->curInstructionPtr = script;
+    entry->pCurInstruction = script;
     entry->scriptStart = script;
     entry->prevInstructionPtr = script;
     entry->curOpcode = 2; // TODO: make 'next'
@@ -149,10 +177,9 @@ EvtEntry * evtEntry(void * script, uint8_t priority, uint8_t flags) {
     return entry;
 }
 
-
-//EvtEntry * evtEntryType(void * script, int param_2, int param_3, int param_4)
-//EvtEntry * evtChildEntry(EvtEntry * entry, void * script, uint8_t flags)
-//EvtEntry * evtBrotherEntry(EvtEntry * entry, void * script, uint8_t flags)
+//EvtEntry * evtEntryType(int * script, int param_2, int param_3, int param_4)
+//EvtEntry * evtChildEntry(EvtEntry * entry, int * script, uint8_t flags)
+//EvtEntry * evtBrotherEntry(EvtEntry * entry, int * script, uint8_t flags)
 //EvtEntry * evtRestart(EvtEntry * entry)
 //void evtmgrMain()
 //void evtDelete(EvtEntry * entry)
