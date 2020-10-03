@@ -23,8 +23,8 @@ typedef struct _EvtEntry {
   int8_t dowhileDepth; // number of do-while loops the current instruction is nested into
   int8_t unknown_0xf;
   int * pCurInstruction;
-  void * curDataPtr;
-  int8_t labelIds[16]; // each correspond to an address in the jump table
+  int * pCurData;
+  int8_t labelIds[MAX_EVT_JMPTBL]; // each correspond to an address in the jump table
   void * jumptable[MAX_EVT_JMPTBL]; // addresses for each label
   struct _EvtEntry * parent;
   struct _EvtEntry * childEntry;
@@ -53,7 +53,7 @@ typedef struct _EvtEntry {
   char unknown_0x18c[0x198 - 0x18c];
   int * scriptStart;
   uint32_t unknown_0x19c;  
-  void * prevInstructionPtr;
+  void * pPrevInstruction;
   char unknown_0x1a4[0x1a8 - 0x1a4];
 } EvtEntry;
 

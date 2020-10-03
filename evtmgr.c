@@ -137,7 +137,7 @@ EvtEntry * evtEntry(int * script, uint8_t priority, uint8_t flags) {
     entry->flags = flags | 1;
     entry->pCurInstruction = script;
     entry->scriptStart = script;
-    entry->prevInstructionPtr = script;
+    entry->pPrevInstruction = script;
     entry->curOpcode = 2; // TODO: make 'next'
     entry->parent = NULL;
     entry->childEntry = NULL;
