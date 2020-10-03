@@ -42,7 +42,15 @@ typedef struct _EvtEntry {
   float unknown_0x160;
   int unknown_0x164;
   uint32_t unknown_0x168;
-  char unknown_0x16c[0x198 - 0x16c];
+  char unknown_0x16c[0x170 - 0x16c];
+  int unknown_0x170;
+  int unknown_0x174;
+  int unknown_0x178;
+  float unknown_0x17c;
+  float unknown_0x180;
+  float unknown_0x184;
+  int unknown_0x188;
+  char unknown_0x18c[0x198 - 0x18c];
   int * scriptStart;
   uint32_t unknown_0x19c;  
   void * prevInstructionPtr;

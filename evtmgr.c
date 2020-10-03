@@ -51,10 +51,8 @@ void make_pri_table() {
     priTblNum = priEntryCount;
 
     // Bubble sort tables
-    i = 0;
-    while (i < priEntryCount - 1) {
-        j = i + 1;
-        while (j < priEntryCount) {
+    for (i = 0; i < priEntryCount - 1; i++) {
+        for (j = i + 1; j < priEntryCount; j++) {
             slotJ = priTbl[j];
             slotI = priTbl[i];
             if (wp->entries[slotI].priority < wp->entries[slotJ].priority) {
@@ -65,9 +63,7 @@ void make_pri_table() {
                 priTbl[j] = slotI;
                 priIdTbl[j] = idI;
             }
-            j++;
         }
-        i++;
     }
 }
 
@@ -194,7 +190,46 @@ EvtEntry * evtEntry(int * script, uint8_t priority, uint8_t flags) {
 //EvtEntry * evtBrotherEntry(EvtEntry * entry, int * script, uint8_t flags)
 //EvtEntry * evtRestart(EvtEntry * entry)
 //void evtmgrMain()
-//void evtDelete(EvtEntry * entry)
+
+void evtDelete(EvtEntry * entry) {
+    EvtWork * wp = &evtWork;
+    if (entry->flags & 1 != 0) {
+        if (entry->childEntry != NULL) {
+            evtDelete(entry->childEntry);
+        }
+        EvtEntry * curEntry = wp->entries;
+        int i = 0;
+        while(i < wp->entryCount) {
+            if (curEntry->flags & 1 != 0 && curEntry->brotherEntry == entry) {
+                evtDelete(curEntry);
+            }
+            i++;
+            curEntry++;
+        }
+
+        EvtEntry * parent = entry->parent;
+        if (parent != NULL) {
+            parent->flags &= ~0x10;
+            parent->childEntry = NULL;
+            for (int i = 0; i < 16; i++) {
+                parent->lw[i] = entry->lw[i];
+            }
+            for (int i = 0; i < 3; i++) {
+                parent->lf[i] = entry->lf[i];
+            }
+            parent->unknown_0x174 = entry->unknown_0x174; // might be some arrays w/ unrolling here
+            parent->unknown_0x170 = entry->unknown_0x170;
+            parent->unknown_0x178 = entry->unknown_0x178;
+            parent->unknown_0x17c = entry->unknown_0x17c;
+            parent->unknown_0x180 = entry->unknown_0x180;
+            parent->unknown_0x184 = entry->unknown_0x184;
+            parent->unknown_0x188 = entry->unknown_0x188;
+        }
+        entry->flags &= ~1;
+        memset(entry, 0, sizeof(EvtEntry));
+        evtActiveEntryCount -= 1;
+    }
+}
 
 void evtDeleteID(int id)
 {
@@ -313,6 +348,7 @@ void evtStopAll(uint8_t mask) {
     }
 }
 
+// recheck from here just to be very very very sure
 void evtStartAll(uint8_t mask) {
     EvtWork * wp = &evtWork;
     EvtEntry * entry = wp->entries;
