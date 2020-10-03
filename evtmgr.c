@@ -21,36 +21,48 @@ EvtWork * evtGetWork() {
     return &evtWork;
 }
 
-// not matching
 void make_pri_table() {
-    EvtWork * wp = &evtWork;
-    EvtEntry * entry = wp->entries;
+    EvtWork * wp;
+    EvtEntry * entry;
+    int n;
+    int priEntryCount;
+    int slotI;
+    int slotJ;
+    int i;
+    int j;
+    int idI;
+    int idJ;
+
+    wp = &evtWork;
+    entry = wp->entries;
+
     // Add all active entries to index and id tables
-    int priEntryCount = 0;
-    int i = 0;
-    while (i < wp->entryCount) {
+    priEntryCount = 0;
+    n = 0;
+    while (n < wp->entryCount) {
         if (entry->flags & 1) {
-            priTbl[priEntryCount] = i;
+            priTbl[priEntryCount] = n;
             priIdTbl[priEntryCount] = entry->id;
             priEntryCount++;
         }
-        i++;
+        n++;
         entry++;
     }
-
     priTblNum = priEntryCount;
 
     // Bubble sort tables
-    i = 0; // wrong register used, stops matching from here
+    i = 0;
     while (i < priEntryCount - 1) {
-        int j = i + 1;
+        j = i + 1;
         while (j < priEntryCount) {
-            int slotI = priTbl[i];
-            if (wp->entries[slotI].priority < wp->entries[priTbl[j]].priority) {
-                priTbl[i] = priTbl[j];
+            slotJ = priTbl[j];
+            slotI = priTbl[i];
+            if (wp->entries[slotI].priority < wp->entries[slotJ].priority) {
+                idI = priIdTbl[i];
+                idJ = priIdTbl[j];
+                priTbl[i] = slotJ;
+                priIdTbl[i] = idJ;
                 priTbl[j] = slotI;
-                int idI = priIdTbl[i];
-                priIdTbl[i] = priIdTbl[j];
                 priIdTbl[j] = idI;
             }
             j++;
@@ -80,7 +92,7 @@ void make_jump_table(EvtEntry * entry) {
 
         switch (cmd) {
             case 1:
-                goto end; // break can't be used, return didn't match
+                goto end;
             case 3:
                 entry->labelIds[n] = id;
                 entry->jumptable[n] = pScriptHead;
