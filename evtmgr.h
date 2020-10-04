@@ -65,16 +65,10 @@ typedef struct {
   char unknown_0x94[0x98 - 0x94];
   int64_t time;
 } EvtWork;
-extern EvtWork evtWork; // 8050c990
 
-extern int evtActiveEntryCount; // 805ae8d8
-//extern int priTblNum; // 805ae8dc
-extern int evt_unk805ae8e0; // 805ae8e0
-extern int evtId; // 805ae018
+extern int evtMax; // 805ae8d8
 
 EvtWork * evtGetWork(); // 800d87e4
-void make_pri_table(); // 800d87f0
-void make_jump_table(EvtEntry * entry); // 800d890c
 void evtmgrInit(); // 800d8a88
 void evtmgrReInit(); // 800d8b2c
 EvtEntry * evtEntry(int * script, uint8_t priority, uint8_t flags); // 800d8b88

@@ -7,21 +7,21 @@
 #include "swdrv.h"
 #include "system.h"
 
-EvtWork evtWork;
-int priTbl[EVT_ENTRY_MAX];
-int priIdTbl[EVT_ENTRY_MAX];
+static EvtWork work; // 8050c990
+static int priTbl[EVT_ENTRY_MAX]; // 8050ca30
+static int priIdTbl[EVT_ENTRY_MAX]; // 8050cc30
 
-int evtActiveEntryCount; // evtMax?
-int priTblNum;
-int evt_unk805ae8e; // runMainF?
-int evtId = 1;
-float evtSpeed = 1.0;
+int evtMax;
+static int priTblNum; // 805ae8dc
+static int runMainF; // 805ae8e0
+static int evtId = 1; // 805ae018
+static float evtSpd = 1.0; // 805ae01c
 
 EvtWork * evtGetWork() {
-    return &evtWork;
+    return &work;
 }
 
-void make_pri_table() {
+static void make_pri_table() { // 800d87f0
     EvtWork * wp;
     EvtEntry * entry;
     int n;
@@ -33,7 +33,7 @@ void make_pri_table() {
     int idI;
     int idJ;
 
-    wp = &evtWork;
+    wp = &work;
     entry = wp->entries;
 
     // Add all active entries to index and id tables
@@ -67,7 +67,7 @@ void make_pri_table() {
     }
 }
 
-void make_jump_table(EvtEntry * entry) {
+static void make_jump_table(EvtEntry * entry) { // 800d890c
     for (int i = 0; i < 16; i++) {
         entry->labelIds[i] = -1;
         entry->jumptable[i] = 0;
@@ -90,7 +90,7 @@ void make_jump_table(EvtEntry * entry) {
             case 1:
                 goto end;
             case 3:
-                entry->labelIds[n] = id;
+                entry->labelIds[n] = (int8_t) id;
                 entry->jumptable[n] = pScriptHead;
                 n++;
         }
@@ -101,40 +101,40 @@ void make_jump_table(EvtEntry * entry) {
 }
 
 void evtmgrInit() {
-    evtWork.entryCount = EVT_ENTRY_MAX;
-    evtWork.entries = (EvtEntry *) __MemAlloc(0, evtWork.entryCount * sizeof(EvtEntry));
-    evtWork.time = swdrv->time;
-    memset(evtWork.entries, 0, evtWork.entryCount * sizeof(EvtEntry));
-    memset(evtWork.gw, 0, sizeof(evtWork.gw));
-    memset(evtWork.gf, 0, sizeof(evtWork.gf));
-    evtActiveEntryCount = 0;
+    work.entryCount = EVT_ENTRY_MAX;
+    work.entries = (EvtEntry *) __MemAlloc(0, work.entryCount * sizeof(EvtEntry));
+    work.time = swdrv->time;
+    memset(work.entries, 0, work.entryCount * sizeof(EvtEntry));
+    memset(work.gw, 0, sizeof(work.gw));
+    memset(work.gf, 0, sizeof(work.gf));
+    evtMax = 0;
     priTblNum = 0;
-    evt_unk805ae8e0 = 0;
+    runMainF = 0;
     evt_msg_init();
 }
 
 void evtmgrReInit() {
-    evtWork.time = swdrv->time;
-    memset(evtWork.entries, 0, evtWork.entryCount * sizeof(EvtEntry));
-    evtActiveEntryCount = 0;
-    evt_unk805ae8e0 = 0;
+    work.time = swdrv->time;
+    memset(work.entries, 0, work.entryCount * sizeof(EvtEntry));
+    evtMax = 0;
+    runMainF = 0;
     evt_msg_init();
 }
 
 // not matching
 EvtEntry * evtEntry(int * script, uint8_t priority, uint8_t flags) {
-    EvtEntry * entry = evtWork.entries;
+    EvtEntry * entry = work.entries;
     int i;
-    for (i = 0; i < evtWork.entryCount; i++) {
+    for (i = 0; i < work.entryCount; i++) {
         if (entry->flags & 1 == 0) break;
         entry++;
     }
-    if (i >= evtWork.entryCount) {
+    if (i >= work.entryCount) {
         //assert(0, "EVTMGR:Pointer Table Overflow !![evtEntry]")
     }
-    evtActiveEntryCount += 1;
+    evtMax += 1;
     memset(entry, 0, sizeof(EvtEntry));
-    entry->flags = flags | 1;
+    entry->flags = (uint8_t) (flags | 1);
     entry->pCurInstruction = script;
     entry->scriptStart = script;
     entry->pPrevInstruction = script;
@@ -161,21 +161,21 @@ EvtEntry * evtEntry(int * script, uint8_t priority, uint8_t flags) {
         entry->lw[j] = 0;
     }
     make_jump_table(entry);
-    if ((evt_unk805ae8e0 != 0) && (entry->flags & 0x20 != 0)) {
+    if ((runMainF != 0) && (entry->flags & 0x20 != 0)) {
         priTbl[priTblNum] = i;
         priIdTbl[priTblNum++] = entry->id;
     }
     if (unknown_805ae9c8 == 1) {
-        for (int i = 0; i < evtWork.entryCount; i++) {
-            if (evtWork.entries[i].flags & 1 != 0) {
-                evtStop(&evtWork.entries[i], 3);
+        for (int i = 0; i < work.entryCount; i++) {
+            if (work.entries[i].flags & 1 != 0) {
+                evtStop(&work.entries[i], 3);
             }
         }
     }
     else if (unknown_805ae9c8 > 0 && unknown_805ae9c8 < 3) {
-        for (int i = 0; i < evtWork.entryCount; i++) {
-            if (evtWork.entries[i].flags & 1 != 0) {
-                evtStop(&evtWork.entries[i], 0xff);
+        for (int i = 0; i < work.entryCount; i++) {
+            if (work.entries[i].flags & 1 != 0) {
+                evtStop(&work.entries[i], 0xff);
             }
         }
     }
@@ -192,7 +192,7 @@ EvtEntry * evtEntry(int * script, uint8_t priority, uint8_t flags) {
 //void evtmgrMain()
 
 void evtDelete(EvtEntry * entry) {
-    EvtWork * wp = &evtWork;
+    EvtWork * wp = &work;
     if (entry->flags & 1 != 0) {
         if (entry->childEntry != NULL) {
             evtDelete(entry->childEntry);
@@ -227,13 +227,13 @@ void evtDelete(EvtEntry * entry) {
         }
         entry->flags &= ~1;
         memset(entry, 0, sizeof(EvtEntry));
-        evtActiveEntryCount -= 1;
+        evtMax -= 1;
     }
 }
 
 void evtDeleteID(int id)
 {
-    EvtWork * wp = &evtWork;
+    EvtWork * wp = &work;
     EvtEntry * entry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -246,7 +246,7 @@ void evtDeleteID(int id)
 }
 
 bool evtCheckID(int id) {
-    EvtWork * wp = &evtWork;
+    EvtWork * wp = &work;
     EvtEntry * entry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -264,7 +264,7 @@ void evtSetPri(EvtEntry * entry, uint8_t priority) {
 }
 
 void evtSetSpeed(EvtEntry * entry, float multiplier) {
-    entry->speed = multiplier * evtSpeed;
+    entry->speed = multiplier * evtSpd;
 }
 
 void evtSetType(EvtEntry * entry, uint8_t type) {
@@ -272,7 +272,7 @@ void evtSetType(EvtEntry * entry, uint8_t type) {
 }
 
 void evtStop(EvtEntry * entry, uint8_t mask) {
-    EvtWork * wp = &evtWork;
+    EvtWork * wp = &work;
     if (entry->childEntry) {
         evtStop(entry->childEntry, mask);
     }
@@ -291,7 +291,7 @@ void evtStop(EvtEntry * entry, uint8_t mask) {
 }
 
 void evtStart(EvtEntry * entry, uint8_t mask) {
-    EvtWork * wp = &evtWork;
+    EvtWork * wp = &work;
     if (entry->childEntry) {
         evtStart(entry->childEntry, mask);
     }
@@ -310,7 +310,7 @@ void evtStart(EvtEntry * entry, uint8_t mask) {
 }
 
 void evtStopID(int id) {
-    EvtWork * wp = &evtWork;
+    EvtWork * wp = &work;
     EvtEntry * entry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -323,7 +323,7 @@ void evtStopID(int id) {
 }
 
 void evtStartID(int id) {
-    EvtWork * wp = &evtWork;
+    EvtWork * wp = &work;
     EvtEntry * entry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -336,7 +336,7 @@ void evtStartID(int id) {
 }
 
 void evtStopAll(uint8_t mask) {
-    EvtWork * wp = &evtWork;
+    EvtWork * wp = &work;
     EvtEntry * entry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -350,7 +350,7 @@ void evtStopAll(uint8_t mask) {
 
 // recheck from here just to be very very very sure
 void evtStartAll(uint8_t mask) {
-    EvtWork * wp = &evtWork;
+    EvtWork * wp = &work;
     EvtEntry * entry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -363,7 +363,7 @@ void evtStartAll(uint8_t mask) {
 }
 
 void evtStopOther(EvtEntry * entry, uint8_t mask) {
-    EvtWork * wp = &evtWork;
+    EvtWork * wp = &work;
     EvtEntry * curEntry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -376,7 +376,7 @@ void evtStopOther(EvtEntry * entry, uint8_t mask) {
 }
 
 void evtStartOther(EvtEntry * entry, uint8_t mask) {
-    EvtWork * wp = &evtWork;
+    EvtWork * wp = &work;
     EvtEntry * curEntry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -389,7 +389,7 @@ void evtStartOther(EvtEntry * entry, uint8_t mask) {
 }
 
 EvtEntry * evtGetPtr(int index) {
-    EvtWork * wp = &evtWork;
+    EvtWork * wp = &work;
     EvtEntry * entry = &wp->entries[index];
     if (entry->flags & 1) {
         return entry;
@@ -398,7 +398,7 @@ EvtEntry * evtGetPtr(int index) {
 }
 
 EvtEntry * evtGetPtrID(int id) {
-    EvtWork * wp = &evtWork;
+    EvtWork * wp = &work;
     EvtEntry * curEntry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
