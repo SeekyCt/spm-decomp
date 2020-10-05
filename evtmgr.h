@@ -34,9 +34,10 @@ typedef struct _EvtEntry {
   int lw[16];
   int lf[3];
   void * dowhileStartPtrs[8]; // pointer to do opcodes
-  char unknown_0x104[0x150 - 0x104];
+  int dowhileIds[8];
+  char unknown_0x124[0x150 - 0x124];
   int * uw;
-  int * uf;
+  unsigned int * uf;
   int id;
   float speed;
   float unknown_0x160;

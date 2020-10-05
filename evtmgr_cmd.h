@@ -9,20 +9,24 @@
 */
 
 // Script instruction functions
-
 #define EVT_END 0xff
 #define EVT_CONTINUE 2
+
+// Data types
+#define EVTDAT_ADDR_MAX -290000000
+#define EVTDAT_FLOAT_MAX -220000000
+#define EVTDAT_FLOAT1024_MAX -220000000
+#define EVTDAT_UF_MAX -200000000
+#define EVTDAT_UW_MAX -180000000
 
 #define EVT_CMD_FN(name) int evt_##name(EvtEntry * entry)
 
 EVT_CMD_FN(end_evt);
 EVT_CMD_FN(lbl);
 EVT_CMD_FN(goto);
+EVT_CMD_FN(do);
 
 /*
-  UNUSED   000008 ........ evt_lbl evtmgr_cmd.o 
-  UNUSED   000090 ........ evt_goto evtmgr_cmd.o 
-  UNUSED   000038 ........ evt_do evtmgr_cmd.o 
   0002f1a4 0000d4 80034784  4 evt_while evtmgr_cmd.o 
   UNUSED   00006c ........ evt_do_break evtmgr_cmd.o 
   UNUSED   000064 ........ evt_do_continue evtmgr_cmd.o 
