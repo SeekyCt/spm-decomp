@@ -28,7 +28,11 @@ EVT_CMD_FN(do);
 
 /*
   0002f1a4 0000d4 80034784  4 evt_while evtmgr_cmd.o 
-  UNUSED   00006c ........ evt_do_break evtmgr_cmd.o 
+*/
+
+EVT_CMD_FN(do_break);
+
+/*
   UNUSED   000064 ........ evt_do_continue evtmgr_cmd.o 
   UNUSED   000078 ........ evt_wait_frm evtmgr_cmd.o 
   0002f0d4 0000d0 800346b4  4 evt_wait_msec evtmgr_cmd.o 
@@ -163,7 +167,11 @@ float evtGetFloat(EvtEntry * entry, int data);
   UNUSED   000064 ........ evtSearchEndIf evtmgr_cmd.o 
   UNUSED   00005c ........ evtSearchEndSwitch evtmgr_cmd.o 
   UNUSED   000080 ........ evtSearchCase evtmgr_cmd.o 
-  UNUSED   000058 ........ evtSearchWhile evtmgr_cmd.o 
+*/
+
+int * evtSearchWhile(EvtEntry * entry);
+
+/*
   UNUSED   00005c ........ evtSearchJustBeforeWhile evtmgr_cmd.o 
 */
 

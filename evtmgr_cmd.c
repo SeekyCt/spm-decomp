@@ -45,7 +45,7 @@ EVT_CMD_FN(goto) {
 // not matching
 EVT_CMD_FN(do) {
     int depth = entry->dowhileDepth + 1;
-    entry->dowhileDepth = depth;
+    entry->dowhileDepth = (int8_t) depth;
     int * p = entry->pCurData;
     int id = *p++;
 
@@ -54,6 +54,17 @@ EVT_CMD_FN(do) {
     }
     entry->dowhileStartPtrs[depth] = p;
     entry->dowhileIds[depth] = id;
+    return EVT_CONTINUE;
+}
+
+// EVT_CMD_FN(while)
+
+EVT_CMD_FN(do_break) {
+    if (entry->dowhileDepth < 0) {
+        assert(0, "EVTMGR_CMD:While Table Underflow !!")
+    }
+    entry->pCurInstruction = evtSearchWhile(entry);
+    entry->dowhileDepth -= 1;
     return EVT_CONTINUE;
 }
 
