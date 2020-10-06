@@ -88,8 +88,8 @@ static void make_jump_table(EvtEntry * entry) { // 800d890c
         int cmdn = *pScriptHead >> 16;
         pScriptHead++;
 
-        assert(cmdn >= 0, "EVTMGR:command line error") // missing double branch here
-        assert(cmd < EVT_max, "EVTMGR:command line error") // missing double branch here
+        assert(cmdn >= 0, "EVTMGR:command line error"); // missing double branch here
+        assert(cmd < EVT_max, "EVTMGR:command line error"); // missing double branch here
 
         int id = *pScriptHead;
         pScriptHead += cmdn;
@@ -103,7 +103,7 @@ static void make_jump_table(EvtEntry * entry) { // 800d890c
                 n++;
         }
 
-        assert(n < MAX_EVT_JMPTBL, "EVTMGR:Jump Table Overflow !![make_jump_table]") // missing double branch here
+        assert(n < MAX_EVT_JMPTBL, "EVTMGR:Jump Table Overflow !![make_jump_table]"); // missing double branch here
     }
     end: ; // didn't match when just using return
 }
@@ -138,7 +138,7 @@ EvtEntry * evtEntry(int * script, uint8_t priority, uint8_t flags) {
         entry++;
     }
     if (i >= work.entryCount) {
-        //assert(0, "EVTMGR:Pointer Table Overflow !![evtEntry]")
+        //assert(0, "EVTMGR:Pointer Table Overflow !![evtEntry]");
     }
     evtMax += 1;
     memset(entry, 0, sizeof(EvtEntry));

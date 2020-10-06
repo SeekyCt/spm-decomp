@@ -34,7 +34,7 @@ EVT_CMD_FN(goto) {
             }
         }
         if (n >= MAX_EVT_JMPTBL) {
-            assertf(0, "EVTMGR_CMD:Jump Table Search error !!\n [lbl=%d, n=%d]", lbl, n)
+            assertf(0, "EVTMGR_CMD:Jump Table Search error !!\n [lbl=%d, n=%d]", lbl, n);
         }
         dest = r31;
     }
@@ -50,7 +50,7 @@ EVT_CMD_FN(do) {
     int id = *p++;
 
     if (depth >= 8) {
-        assert(0, "EVTMGR_CMD:While Table Overflow !!")
+        assert(0, "EVTMGR_CMD:While Table Overflow !!");
     }
     entry->dowhileStartPtrs[depth] = p;
     entry->dowhileIds[depth] = id;
@@ -61,7 +61,7 @@ EVT_CMD_FN(do) {
 
 EVT_CMD_FN(do_break) {
     if (entry->dowhileDepth < 0) {
-        assert(0, "EVTMGR_CMD:While Table Underflow !!")
+        assert(0, "EVTMGR_CMD:While Table Underflow !!");
     }
     entry->pCurInstruction = evtSearchWhile(entry);
     entry->dowhileDepth -= 1;
@@ -70,7 +70,7 @@ EVT_CMD_FN(do_break) {
 
 EVT_CMD_FN(do_continue) {
     if (entry->dowhileDepth < 0) {
-        assert(0, "EVTMGR_CMD:While Table Underflow !!")
+        assert(0, "EVTMGR_CMD:While Table Underflow !!");
     }
     entry->pCurInstruction = evtSearchJustBeforeWhile(entry);
     return EVT_CONTINUE;
