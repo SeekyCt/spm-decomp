@@ -31,9 +31,9 @@ EVT_CMD_FN(do);
 */
 
 EVT_CMD_FN(do_break);
+EVT_CMD_FN(do_continue);
 
 /*
-  UNUSED   000064 ........ evt_do_continue evtmgr_cmd.o 
   UNUSED   000078 ........ evt_wait_frm evtmgr_cmd.o 
   0002f0d4 0000d0 800346b4  4 evt_wait_msec evtmgr_cmd.o 
   UNUSED   00003c ........ evt_halt evtmgr_cmd.o 
@@ -170,9 +170,6 @@ float evtGetFloat(EvtEntry * entry, int data);
 */
 
 int * evtSearchWhile(EvtEntry * entry);
-
-/*
-  UNUSED   00005c ........ evtSearchJustBeforeWhile evtmgr_cmd.o 
-*/
+int * evtSearchJustBeforeWhile(EvtEntry * entry);
 
 #endif

@@ -68,6 +68,14 @@ EVT_CMD_FN(do_break) {
     return EVT_CONTINUE;
 }
 
+EVT_CMD_FN(do_continue) {
+    if (entry->dowhileDepth < 0) {
+        assert(0, "EVTMGR_CMD:While Table Underflow !!")
+    }
+    entry->pCurInstruction = evtSearchJustBeforeWhile(entry);
+    return EVT_CONTINUE;
+}
+
 // a lot
 
 // unfinished
