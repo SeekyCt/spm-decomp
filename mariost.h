@@ -13,8 +13,9 @@ typedef struct {
     uint8_t lswf[64];
     uint8_t lsw[1024];
     char unknown_0x1184[0x1ab0 - 0x1184];
-} Swdrv;
-extern Swdrv * swdrv;
+} MarioStGlobals;
+extern MarioStGlobals * gp;
+extern MarioStGlobals marioSt;
 // TODO: this is actually called gp, pointing to mariost
 
 #endif

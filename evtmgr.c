@@ -13,7 +13,7 @@
 #include "evtmgr.h"
 #include "memory.h"
 #include "somewhere.h"
-#include "swdrv.h"
+#include "mariost.h"
 #include "system.h"
 
 static EvtWork work; // 8050c990
@@ -111,7 +111,7 @@ static void make_jump_table(EvtEntry * entry) { // 800d890c
 void evtmgrInit() {
     work.entryCount = EVT_ENTRY_MAX;
     work.entries = (EvtEntry *) __MemAlloc(0, work.entryCount * sizeof(EvtEntry));
-    work.time = swdrv->time;
+    work.time = gp->time;
     memset(work.entries, 0, work.entryCount * sizeof(EvtEntry));
     memset(work.gw, 0, sizeof(work.gw));
     memset(work.gf, 0, sizeof(work.gf));
@@ -122,7 +122,7 @@ void evtmgrInit() {
 }
 
 void evtmgrReInit() {
-    work.time = swdrv->time;
+    work.time = gp->time;
     memset(work.entries, 0, work.entryCount * sizeof(EvtEntry));
     evtMax = 0;
     runMainF = 0;
