@@ -1,12 +1,8 @@
 /*
-    A common pattern in this file is work being accessed through a local pointer to it.
-    This is a remnant of ttyd, where there were 2 work structs and each function would
-    decide which to use at the start where spm sets up this pointer. This doesn't
-    happen in functions evtmgrInit since in ttyd they handled both work structs.
-    This, along with the evtEntryRunCheck call in evtEntry, might mean some inlining
-    is happening that's not matched.
+    Todo: evtEntryRunCheck is inlined in evtEntry, but the code was just put in directly
 */
 
+#include <os.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -43,7 +39,7 @@ static void make_pri_table() { // 800d87f0
     int idI;
     int idJ;
 
-    wp = &work;
+    wp = evtGetWork();
     entry = wp->entries;
     priEntryCount = 0;
     n = 0;
@@ -197,10 +193,19 @@ EvtEntry * evtEntry(int * script, uint8_t priority, uint8_t flags) {
 //EvtEntry * evtChildEntry(EvtEntry * entry, int * script, uint8_t flags)
 //EvtEntry * evtBrotherEntry(EvtEntry * entry, int * script, uint8_t flags)
 //EvtEntry * evtRestart(EvtEntry * entry)
-//void evtmgrMain()
+
+// unfinished
+void evtmgrMain() {
+    EvtWork * wp = evtGetWork();
+    int64_t timeDif = gp->time - wp->time;
+    if (timeDif < 0) {
+        timeDif = 0;
+    }
+    // int x = OSTicksToMilliseconds(timeDif);
+}
 
 void evtDelete(EvtEntry * entry) {
-    EvtWork * wp = &work;
+    EvtWork * wp = evtGetWork();
     if (entry->flags & 1 != 0) {
         if (entry->childEntry != NULL) {
             evtDelete(entry->childEntry);
@@ -240,7 +245,7 @@ void evtDelete(EvtEntry * entry) {
 }
 
 void evtDeleteID(int id) {
-    EvtWork * wp = &work;
+    EvtWork * wp = evtGetWork();
     EvtEntry * entry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -253,7 +258,7 @@ void evtDeleteID(int id) {
 }
 
 bool evtCheckID(int id) {
-    EvtWork * wp = &work;
+    EvtWork * wp = evtGetWork();
     EvtEntry * entry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -279,7 +284,7 @@ void evtSetType(EvtEntry * entry, uint8_t type) {
 }
 
 void evtStop(EvtEntry * entry, uint8_t mask) {
-    EvtWork * wp = &work;
+    EvtWork * wp = evtGetWork();
     if (entry->childEntry) {
         evtStop(entry->childEntry, mask);
     }
@@ -298,7 +303,7 @@ void evtStop(EvtEntry * entry, uint8_t mask) {
 }
 
 void evtStart(EvtEntry * entry, uint8_t mask) {
-    EvtWork * wp = &work;
+    EvtWork * wp = evtGetWork();
     if (entry->childEntry) {
         evtStart(entry->childEntry, mask);
     }
@@ -317,7 +322,7 @@ void evtStart(EvtEntry * entry, uint8_t mask) {
 }
 
 void evtStopID(int id) {
-    EvtWork * wp = &work;
+    EvtWork * wp = evtGetWork();
     EvtEntry * entry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -330,7 +335,7 @@ void evtStopID(int id) {
 }
 
 void evtStartID(int id) {
-    EvtWork * wp = &work;
+    EvtWork * wp = evtGetWork();
     EvtEntry * entry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -343,7 +348,7 @@ void evtStartID(int id) {
 }
 
 void evtStopAll(uint8_t mask) {
-    EvtWork * wp = &work;
+    EvtWork * wp = evtGetWork();
     EvtEntry * entry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -357,7 +362,7 @@ void evtStopAll(uint8_t mask) {
 
 // recheck from here just to be very very very sure
 void evtStartAll(uint8_t mask) {
-    EvtWork * wp = &work;
+    EvtWork * wp = evtGetWork();
     EvtEntry * entry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -370,7 +375,7 @@ void evtStartAll(uint8_t mask) {
 }
 
 void evtStopOther(EvtEntry * entry, uint8_t mask) {
-    EvtWork * wp = &work;
+    EvtWork * wp = evtGetWork();
     EvtEntry * curEntry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -383,7 +388,7 @@ void evtStopOther(EvtEntry * entry, uint8_t mask) {
 }
 
 void evtStartOther(EvtEntry * entry, uint8_t mask) {
-    EvtWork * wp = &work;
+    EvtWork * wp = evtGetWork();
     EvtEntry * curEntry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {
@@ -396,7 +401,7 @@ void evtStartOther(EvtEntry * entry, uint8_t mask) {
 }
 
 EvtEntry * evtGetPtr(int index) {
-    EvtWork * wp = &work;
+    EvtWork * wp = evtGetWork();
     EvtEntry * entry = &wp->entries[index];
     if (entry->flags & 1 != 0) {
         return entry;
@@ -405,7 +410,7 @@ EvtEntry * evtGetPtr(int index) {
 }
 
 EvtEntry * evtGetPtrID(int id) {
-    EvtWork * wp = &work;
+    EvtWork * wp = evtGetWork();
     EvtEntry * curEntry = wp->entries;
     int i = 0;
     while (i < wp->entryCount) {

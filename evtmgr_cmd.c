@@ -7,6 +7,17 @@
 
 static char debugMsgBuf[256];
 
+static float check_float(int val) { // usually inlined
+    if (val <= EVTDAT_FLOAT_MAX) {
+        return (val + 240000000) / 1024.0f;
+    }
+    else {
+        return val;
+    }
+}
+
+// change_float
+
 EVT_CMD_FN(end_evt) {
     evtDelete(entry);
     return EVT_END;
@@ -17,7 +28,7 @@ EVT_CMD_FN(lbl) {
     return EVT_CONTINUE;
 }
 
-// Matching but not good
+// Matching but not good - probably inlining?
 EVT_CMD_FN(goto) {
     int lbl = evtGetValue(entry, entry->pCurData[0]);
     int * r31 = entry->pCurData;
@@ -42,13 +53,10 @@ EVT_CMD_FN(goto) {
     return EVT_CONTINUE;
 }
 
-// not matching
 EVT_CMD_FN(do) {
-    int depth = entry->dowhileDepth + 1;
-    entry->dowhileDepth = (int8_t) depth;
     int * p = entry->pCurData;
     int id = *p++;
-
+    int depth = ++entry->dowhileDepth; // missing rlwinm here
     if (depth >= 8) {
         assert(0, "EVTMGR_CMD:While Table Overflow !!");
     }
@@ -86,14 +94,7 @@ EVT_CMD_FN(debug_put_reg) {
         sprintf(debugMsgBuf, "ADDR     [%08X]", reg);
     }
     else if (reg <= EVTDAT_FLOAT_MAX) {
-        float f;
-        if (reg <= EVTDAT_FLOAT1024_MAX) {
-            f = (reg + 240000000) / 1024.0f;
-        }
-        else {
-            f = reg;
-        }
-        sprintf(debugMsgBuf, "FLOAT    [%4.2f]", f);
+        sprintf(debugMsgBuf, "FLOAT    [%4.2f]", check_float(reg));
     }
     else if (reg <= EVTDAT_UF_MAX) {
         int n = reg + 210000000;
@@ -106,14 +107,7 @@ EVT_CMD_FN(debug_put_reg) {
             sprintf(debugMsgBuf, "UW(%3d)  [%08X]", val, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
-            float f;
-            if (val <= EVTDAT_FLOAT1024_MAX) {
-                f = (val + 240000000) / 1024.0f;
-            }
-            else {
-                f = val;
-            }
-            sprintf(debugMsgBuf, "UW(%3d)  [%4.2f]", reg + 190000000, f);
+            sprintf(debugMsgBuf, "UW(%3d)  [%4.2f]", reg + 190000000, check_float(val));
         }
         else {
             sprintf(debugMsgBuf, "UW(%3d)  [%d]", reg + 190000000, val);
