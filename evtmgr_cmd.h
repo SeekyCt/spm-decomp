@@ -3,15 +3,6 @@
 
 #include "evtmgr.h"
 
-/*
-  missed   000070 ........ check_float evtmgr_cmd.o 
-  missed   000028 ........ change_float evtmgr_cmd.o 
-*/
-
-// Script instruction functions
-#define EVT_END 0xff
-#define EVT_CONTINUE 2
-
 // Data types
 #define EVTDAT_ADDR_MAX -290000000
 #define EVTDAT_FLOAT_MAX -220000000
@@ -38,17 +29,18 @@
 #define EVTDAT_GW_BASE 50000000
 #define EVTDAT_LW_BASE 30000000
 
+// Return values
+#define EVT_END 0xff
+#define EVT_CONTINUE 2
+
 #define EVT_CMD_FN(name) int evt_##name(EvtEntry * entry)
 
+// Script instruction functions
 EVT_CMD_FN(end_evt);
 EVT_CMD_FN(lbl);
 EVT_CMD_FN(goto);
 EVT_CMD_FN(do);
-
-/*
-  0002f1a4 0000d4 80034784  4 evt_while evtmgr_cmd.o 
-*/
-
+// EVT_CMD_FN(while);
 EVT_CMD_FN(do_break);
 EVT_CMD_FN(do_continue);
 EVT_CMD_FN(wait_frm);
