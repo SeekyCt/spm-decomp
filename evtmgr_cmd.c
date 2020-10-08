@@ -87,10 +87,11 @@ EVT_CMD_FN(do_continue) {
 
 // a lot
 
-// not finished
+// I think 1:1? Need to double check + improve quality
 EVT_CMD_FN(debug_put_reg) {
-    int reg = entry->pCurData[0];
+    int * p = entry->pCurData;
     EvtWork * wp = evtGetWork();
+    int reg = *p;
     if (reg <= EVTDAT_ADDR_MAX) {
         sprintf(debugMsgBuf, "ADDR     [%08X]", reg);
     }
@@ -99,8 +100,7 @@ EVT_CMD_FN(debug_put_reg) {
         sprintf(debugMsgBuf, "FLOAT    [%4.2f]", f);
     }
     else if (reg <= EVTDAT_UF_MAX) {
-        int n = reg + 210000000;
-        unsigned int val = entry->uf[n / 32] & (1 << (n % 32));
+        unsigned int val = entry->uf[(reg + 210000000) / 32] & (1 << ((reg + 210000000) % 32));
         sprintf(debugMsgBuf, "UF(%3d)  [%d]", reg + 210000000, val);
     }
     else if (reg <= EVTDAT_UW_MAX) {
@@ -109,7 +109,8 @@ EVT_CMD_FN(debug_put_reg) {
             sprintf(debugMsgBuf, "UW(%3d)  [%08X]", val, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
-            sprintf(debugMsgBuf, "UW(%3d)  [%4.2f]", reg + 190000000, check_float(val));
+            float f = check_float(val);
+            sprintf(debugMsgBuf, "UW(%3d)  [%4.2f]", reg + 190000000, f);
         }
         else {
             sprintf(debugMsgBuf, "UW(%3d)  [%d]", reg + 190000000, val);
@@ -121,7 +122,8 @@ EVT_CMD_FN(debug_put_reg) {
             sprintf(debugMsgBuf, "GSW(%3d) [%08X]", val, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
-            sprintf(debugMsgBuf, "GSW(%3d) [%4.2f]", reg + 170000000, check_float(val));
+            float f = check_float(val);
+            sprintf(debugMsgBuf, "GSW(%3d) [%4.2f]", reg + 170000000, f);
         }
         else {
             sprintf(debugMsgBuf, "GSW(%3d) [%d]", reg + 170000000, val);
@@ -133,10 +135,11 @@ EVT_CMD_FN(debug_put_reg) {
             sprintf(debugMsgBuf, "LSW(%3d) [%08X]", val, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
-            sprintf(debugMsgBuf, "LSW(%3d)  [%4.2f]", reg + 170000000, check_float(val));
+            float f = check_float(val);
+            sprintf(debugMsgBuf, "LSW(%3d)  [%4.2f]", reg + 150000000, f);
         }
         else {
-            sprintf(debugMsgBuf, "LSW(%3d) [%d]", reg + 170000000, val);
+            sprintf(debugMsgBuf, "LSW(%3d) [%d]", reg + 150000000, val);
         }
     }
     else if (reg <= EVTDAT_GSWF_MAX) {
@@ -146,22 +149,21 @@ EVT_CMD_FN(debug_put_reg) {
         sprintf(debugMsgBuf, "LSWF(%3d)[%d]", reg + 110000000, _swGet(reg + 110000000));
     }
     else if (reg <= EVTDAT_GF_MAX) {
-        int n = reg + 90000000;
-        unsigned int val = wp->gf[n / 32] & (1 << (n % 32));
+        unsigned int val = wp->gf[(reg + 90000000) / 32] & (1 << ((reg + 90000000) % 32));
         sprintf(debugMsgBuf, "GF(%3d)  [%d]", reg + 90000000, val);
     }
     else if (reg <= EVTDAT_LF_MAX) {
-        int n = reg + 70000000;
-        unsigned int val = wp->gf[n / 32] & (1 << (n % 32));
+        unsigned int val = entry->lf[(reg + 70000000) / 32] & (1 << ((reg + 70000000) % 32));
         sprintf(debugMsgBuf, "LF(%3d)  [%d]", reg + 70000000, val);
     }
     else if (reg <= EVTDAT_GW_MAX) {
         int val = wp->gw[reg + 50000000];
         if (val <= EVTDAT_ADDR_MAX) {
-            sprintf(debugMsgBuf, "GW(%3d)  [%08X]", val, val);
+            sprintf(debugMsgBuf, "GW(%3d)  [%08X]", reg + 50000000, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
-            sprintf(debugMsgBuf, "GW(%3d)  [%4.2f]", reg + 50000000, check_float(val));
+            float f = check_float(val);
+            sprintf(debugMsgBuf, "GW(%3d)  [%4.2f]", reg + 50000000, f);
         }
         else {
             sprintf(debugMsgBuf, "GW(%3d)  [%d]", reg + 50000000, val);
@@ -173,7 +175,8 @@ EVT_CMD_FN(debug_put_reg) {
             sprintf(debugMsgBuf, "LW(%3d)  [%08X]", val, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
-            sprintf(debugMsgBuf, "LW(%3d)  [%4.2f]", reg + 30000000, check_float(val));
+            float f = check_float(val);
+            sprintf(debugMsgBuf, "LW(%3d)  [%4.2f]", reg + 30000000, f);
         }
         else {
             sprintf(debugMsgBuf, "LW(%3d)  [%d]", reg + 30000000, val);

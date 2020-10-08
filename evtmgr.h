@@ -32,7 +32,7 @@ typedef struct _EvtEntry {
   char unknown_0x74[0x94 - 0x74];
   user_func * userFunc; // Function set & called by the user_func opcode
   int lw[16];
-  int lf[3];
+  uint32_t lf[3];
   void * dowhileStartPtrs[8]; // pointer to do opcodes
   int dowhileIds[8];
   char unknown_0x124[0x150 - 0x124];

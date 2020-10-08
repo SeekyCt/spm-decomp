@@ -6,13 +6,13 @@ if not name.endswith('.s'):
     name += '.s'
 existing = listdir()
 i = 0
-while f"{name[:-2]}.text{i}.s" in existing and i < len(existing):
+while f"{name[:-2]}.t{i}.s" in existing and i < len(existing):
     i += 1
 
 f = open(name, 'r')
 lines = f.readlines()
 f.close()
-o = open(f"{name[:-2]}.text{i}.s", 'w')
+o = open(f"{name[:-2]}.t{i}.s", 'w')
 
 i = 0
 while not lines[i] == "==> .text\n":
