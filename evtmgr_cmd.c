@@ -10,7 +10,7 @@ static char debugMsgBuf[256];
 
 static float check_float(int val) { // usually inlined
     if (val <= EVTDAT_FLOAT_MAX) {
-        return (val + 240000000) / 1024.0f;
+        return (val + EVTDAT_FLOAT_BASE) / 1024.0f;
     }
     else {
         return val;
@@ -100,86 +100,99 @@ EVT_CMD_FN(debug_put_reg) {
         sprintf(debugMsgBuf, "FLOAT    [%4.2f]", f);
     }
     else if (reg <= EVTDAT_UF_MAX) {
-        unsigned int val = entry->uf[(reg + 210000000) / 32] & (1 << ((reg + 210000000) % 32));
-        sprintf(debugMsgBuf, "UF(%3d)  [%d]", reg + 210000000, val);
+        reg += EVTDAT_UF_BASE;
+        unsigned int mask = 1U << ((reg) % 32);
+        unsigned int dat = entry->uf[(reg) / 32];
+        sprintf(debugMsgBuf, "UF(%3d)  [%d]", reg, mask & dat);
     }
     else if (reg <= EVTDAT_UW_MAX) {
-        int val = entry->uw[reg + 190000000];
+        reg += EVTDAT_UW_BASE;
+        int val = entry->uw[reg];
         if (val <= EVTDAT_ADDR_MAX) {
             sprintf(debugMsgBuf, "UW(%3d)  [%08X]", val, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
             float f = check_float(val);
-            sprintf(debugMsgBuf, "UW(%3d)  [%4.2f]", reg + 190000000, f);
+            sprintf(debugMsgBuf, "UW(%3d)  [%4.2f]", reg, f);
         }
         else {
-            sprintf(debugMsgBuf, "UW(%3d)  [%d]", reg + 190000000, val);
+            sprintf(debugMsgBuf, "UW(%3d)  [%d]", reg, val);
         }
     }
     else if (reg <= EVTDAT_GSW_MAX) {
-        int val = swByteGet(reg + 170000000);
+        reg += EVTDAT_GSW_BASE;
+        int val = swByteGet(reg);
         if (val <= EVTDAT_ADDR_MAX) {
             sprintf(debugMsgBuf, "GSW(%3d) [%08X]", val, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
             float f = check_float(val);
-            sprintf(debugMsgBuf, "GSW(%3d) [%4.2f]", reg + 170000000, f);
+            sprintf(debugMsgBuf, "GSW(%3d) [%4.2f]", reg, f);
         }
         else {
-            sprintf(debugMsgBuf, "GSW(%3d) [%d]", reg + 170000000, val);
+            sprintf(debugMsgBuf, "GSW(%3d) [%d]", reg, val);
         }
     }
     else if (reg <= EVTDAT_LSW_MAX) {
-        int val = _swByteGet(reg + 150000000);
+        reg += EVTDAT_LSW_BASE;
+        int val = _swByteGet(reg);
         if (val <= EVTDAT_ADDR_MAX) {
             sprintf(debugMsgBuf, "LSW(%3d) [%08X]", val, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
             float f = check_float(val);
-            sprintf(debugMsgBuf, "LSW(%3d)  [%4.2f]", reg + 150000000, f);
+            sprintf(debugMsgBuf, "LSW(%3d)  [%4.2f]", reg, f);
         }
         else {
-            sprintf(debugMsgBuf, "LSW(%3d) [%d]", reg + 150000000, val);
+            sprintf(debugMsgBuf, "LSW(%3d) [%d]", reg, val);
         }
     }
     else if (reg <= EVTDAT_GSWF_MAX) {
-        sprintf(debugMsgBuf, "GSWF(%3d)[%d]", reg + 130000000, swGet(reg + 130000000));
+        reg += EVTDAT_GSWF_BASE;
+        sprintf(debugMsgBuf, "GSWF(%3d)[%d]", reg, swGet(reg));
     }
     else if (reg <= EVTDAT_LSWF_MAX) {
-        sprintf(debugMsgBuf, "LSWF(%3d)[%d]", reg + 110000000, _swGet(reg + 110000000));
+        reg += EVTDAT_LSWF_BASE;
+        sprintf(debugMsgBuf, "LSWF(%3d)[%d]", reg, _swGet(reg));
     }
     else if (reg <= EVTDAT_GF_MAX) {
-        unsigned int val = wp->gf[(reg + 90000000) / 32] & (1 << ((reg + 90000000) % 32));
-        sprintf(debugMsgBuf, "GF(%3d)  [%d]", reg + 90000000, val);
+        reg += EVTDAT_GF_BASE;
+        unsigned int mask = 1U << ((reg) % 32);
+        unsigned int dat = wp->gf[(reg) / 32];
+        sprintf(debugMsgBuf, "GF(%3d)  [%d]", reg, mask & dat);
     }
     else if (reg <= EVTDAT_LF_MAX) {
-        unsigned int val = entry->lf[(reg + 70000000) / 32] & (1 << ((reg + 70000000) % 32));
-        sprintf(debugMsgBuf, "LF(%3d)  [%d]", reg + 70000000, val);
+        reg += EVTDAT_LF_BASE;
+        unsigned int mask = 1U << ((reg) % 32);
+        unsigned int dat = entry->lf[(reg) / 32];
+        sprintf(debugMsgBuf, "LF(%3d)  [%d]", reg, mask & dat);
     }
     else if (reg <= EVTDAT_GW_MAX) {
-        int val = wp->gw[reg + 50000000];
+        reg += EVTDAT_GW_BASE;
+        int val = wp->gw[reg];
         if (val <= EVTDAT_ADDR_MAX) {
-            sprintf(debugMsgBuf, "GW(%3d)  [%08X]", reg + 50000000, val);
+            sprintf(debugMsgBuf, "GW(%3d)  [%08X]", reg, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
             float f = check_float(val);
-            sprintf(debugMsgBuf, "GW(%3d)  [%4.2f]", reg + 50000000, f);
+            sprintf(debugMsgBuf, "GW(%3d)  [%4.2f]", reg, f);
         }
         else {
-            sprintf(debugMsgBuf, "GW(%3d)  [%d]", reg + 50000000, val);
+            sprintf(debugMsgBuf, "GW(%3d)  [%d]", reg, val);
         }
     }
     else if (reg <= EVTDAT_LW_MAX) {
-        int val = entry->lw[reg + 30000000];
+        reg += EVTDAT_LW_BASE;
+        int val = entry->lw[reg];
         if (val <= EVTDAT_ADDR_MAX) {
-            sprintf(debugMsgBuf, "LW(%3d)  [%08X]", val, val);
+            sprintf(debugMsgBuf, "LW(%3d)  [%08X]", reg, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
             float f = check_float(val);
-            sprintf(debugMsgBuf, "LW(%3d)  [%4.2f]", reg + 30000000, f);
+            sprintf(debugMsgBuf, "LW(%3d)  [%4.2f]", reg, f);
         }
         else {
-            sprintf(debugMsgBuf, "LW(%3d)  [%d]", reg + 30000000, val);
+            sprintf(debugMsgBuf, "LW(%3d)  [%d]", reg, val);
         }
     }
     else {
