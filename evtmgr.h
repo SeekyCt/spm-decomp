@@ -60,7 +60,7 @@ typedef struct _EvtEntry {
 
 typedef struct {
   int entryCount;
-  uint32_t gw[32];
+  int gw[32];
   uint32_t gf[3];
   EvtEntry * entries;
   char unknown_0x94[0x98 - 0x94];

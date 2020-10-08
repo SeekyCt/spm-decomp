@@ -1,5 +1,5 @@
-#ifndef SWDRV_H
-#define SWDRV_H
+#ifndef MARIOST_H
+#define MARIOST_H
 
 #include <stdint.h>
 

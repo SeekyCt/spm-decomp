@@ -22,7 +22,7 @@ static int runMainF; // 805ae8e0
 static int evtId = 1; // 805ae018
 static float evtSpd = 1.0; // 805ae01c
 
-EvtWork * evtGetWork() {
+EvtWork * evtGetWork() { // usually inlined in this file but not elsewhere
     return &work;
 }
 
@@ -360,7 +360,6 @@ void evtStopAll(uint8_t mask) {
     }
 }
 
-// recheck from here just to be very very very sure
 void evtStartAll(uint8_t mask) {
     EvtWork * wp = evtGetWork();
     EvtEntry * entry = wp->entries;
