@@ -85,6 +85,21 @@ EVT_CMD_FN(do_continue) {
     return EVT_CONTINUE;
 }
 
+EVT_CMD_FN(wait_frm) {
+    int * p = entry->pCurData;
+    if (!entry->blocked) { // wrong branch setup here
+        entry->unknown_0x74 = evtGetValue(entry, *p);
+        entry->blocked = 1;
+    }
+
+    if (entry->unknown_0x74 == 0) {
+        return EVT_CONTINUE;
+    }
+    else {
+        return !--entry->unknown_0x74;
+    }
+}
+
 // a lot
 
 EVT_CMD_FN(debug_put_reg) {

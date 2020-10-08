@@ -19,7 +19,7 @@ typedef struct _EvtEntry {
   uint8_t curOpcode; // see links above for opcodes
   uint8_t priority;
   uint8_t type;
-  char unknown_0xd;
+  int8_t blocked;
   int8_t dowhileDepth; // number of do-while loops the current instruction is nested into
   int8_t unknown_0xf;
   int * pCurInstruction;
@@ -29,7 +29,8 @@ typedef struct _EvtEntry {
   struct _EvtEntry * parent;
   struct _EvtEntry * childEntry;
   struct _EvtEntry * brotherEntry;
-  char unknown_0x74[0x94 - 0x74];
+  int unknown_0x74;
+  char unknown_0x78[0x94 - 0x78];
   user_func * userFunc; // Function set & called by the user_func opcode
   int lw[16];
   uint32_t lf[3];

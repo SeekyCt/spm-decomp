@@ -51,9 +51,9 @@ EVT_CMD_FN(do);
 
 EVT_CMD_FN(do_break);
 EVT_CMD_FN(do_continue);
+EVT_CMD_FN(wait_frm);
 
 /*
-  UNUSED   000078 ........ evt_wait_frm evtmgr_cmd.o 
   0002f0d4 0000d0 800346b4  4 evt_wait_msec evtmgr_cmd.o 
   UNUSED   00003c ........ evt_halt evtmgr_cmd.o 
   0002efe4 0000f0 800345c4  4 evt_if_str_equal evtmgr_cmd.o 
