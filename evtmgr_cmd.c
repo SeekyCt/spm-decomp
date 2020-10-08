@@ -87,7 +87,6 @@ EVT_CMD_FN(do_continue) {
 
 // a lot
 
-// I think 1:1? Need to double check + improve quality
 EVT_CMD_FN(debug_put_reg) {
     int * p = entry->pCurData;
     EvtWork * wp = evtGetWork();
