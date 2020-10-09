@@ -131,6 +131,15 @@ EVT_CMD_FN(wait_frm) {
 
 // a lot
 
+EVT_CMD_FN(debug_put_msg) {
+    evtGetValue(entry, *entry->pCurData);
+    return EVT_CONTINUE;
+}
+
+EVT_CMD_FN(debug_msg_clear) {
+    return EVT_CONTINUE;
+}
+
 EVT_CMD_FN(debug_put_reg) {
     int * p = entry->pCurData;
     EvtWork * wp = evtGetWork();

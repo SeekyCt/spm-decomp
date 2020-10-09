@@ -149,10 +149,9 @@ EVT_CMD_FN(wait_frm);
   0002caac 000094 8003208c  4 evt_brother_evt evtmgr_cmd.o 
   0002c9fc 0000b0 80031fdc  4 evt_brother_evt_id evtmgr_cmd.o 
   UNUSED   000024 ........ evt_end_brother evtmgr_cmd.o 
-  UNUSED   000008 ........ evt_debug_put_msg evtmgr_cmd.o 
-  UNUSED   000008 ........ evt_debug_msg_clear evtmgr_cmd.o 
 */
-
+EVT_CMD_FN(debug_put_msg);
+EVT_CMD_FN(debug_msg_clear);
 EVT_CMD_FN(debug_put_reg);
 
 /*
