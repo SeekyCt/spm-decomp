@@ -66,7 +66,36 @@ EVT_CMD_FN(do) {
     return EVT_CONTINUE;
 }
 
-// EVT_CMD_FN(while)
+EVT_CMD_FN(while) {
+    int id; // only way the register usage of depth's sign extend matched
+    int depth = entry->dowhileDepth;
+    if (depth < 0) {
+        assert(0, "EVTMGR_CMD:While Table Underflow !!");
+    }
+    id = entry->dowhileIds[depth];
+    if (id == 0) {
+        entry->pCurInstruction = entry->dowhileStartPtrs[depth];
+        return EVT_CONTINUE;
+    }
+    else {
+        if (id >= -10000000) {
+            entry->dowhileIds[depth] = --id;
+        }
+        else {
+            int ret = evtGetValue(entry, id);
+            evtSetValue(entry, id, ret - 1);
+            id = ret - 1;
+        }
+        if (id == 0) {
+            entry->pCurInstruction = entry->dowhileStartPtrs[depth];
+            return EVT_CONTINUE;
+        }
+        else {
+            entry->dowhileDepth--;
+            return EVT_CONTINUE;
+        }
+    }
+}
 
 EVT_CMD_FN(do_break) {
     if (entry->dowhileDepth < 0) {

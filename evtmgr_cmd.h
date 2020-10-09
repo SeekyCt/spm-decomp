@@ -40,7 +40,7 @@ EVT_CMD_FN(end_evt);
 EVT_CMD_FN(lbl);
 EVT_CMD_FN(goto);
 EVT_CMD_FN(do);
-// EVT_CMD_FN(while);
+EVT_CMD_FN(while);
 EVT_CMD_FN(do_break);
 EVT_CMD_FN(do_continue);
 EVT_CMD_FN(wait_frm);
