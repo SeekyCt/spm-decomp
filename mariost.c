@@ -1,4 +1,4 @@
 #include "mariost.h"
 
 MarioStGlobals marioSt;
-MarioStGlobals * gp;
+MarioStGlobals * gp = &marioSt;

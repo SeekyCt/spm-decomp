@@ -4,7 +4,9 @@
 #include <stdint.h>
 
 typedef struct {
-    char unknown_0x0[0xf8 - 0x0];
+    char unknown_0x0[0x4 - 0x0];
+    uint32_t unknown_0x4;
+    char unknown_0x8[0xf8 - 0x8];
     int64_t time;
     char unknown_0x100[0x140 - 0x100];
     int gsw0;

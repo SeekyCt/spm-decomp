@@ -12,8 +12,7 @@ struct _EvtEntry;
 typedef int (*user_func)(struct _EvtEntry * entry, bool firstRun);
 
 typedef struct _EvtEntry {
-  uint32_t unknown_0x0;
-  uint32_t unknown_0x4;
+  int64_t lifetime;
   uint8_t flags; // bit flags, 1 seems to be the script being active?
   uint8_t curDataLength; // number of pieces of data (4 bytes each) belonging to the current instruction
   uint8_t curOpcode; // see links above for opcodes

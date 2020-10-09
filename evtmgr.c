@@ -201,7 +201,16 @@ void evtmgrMain() {
     if (timeDif < 0) {
         timeDif = 0;
     }
-    // int x = OSTicksToMilliseconds(timeDif);
+    int64_t ms = OSTicksToMilliseconds(gp->time);
+    if (ms > 500) {
+        // this line is iffy
+        timeDif = (1000 / gp->unknown_0x4) * (OSClockSpeed / 1000);
+    }
+    wp->time = gp->time;
+    make_pri_table();
+    for (int i = 0; i < priTblNum; i++) {
+        
+    }
 }
 
 void evtDelete(EvtEntry * entry) {
