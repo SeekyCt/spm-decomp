@@ -137,6 +137,7 @@ EVT_CMD_FN(debug_put_msg) {
 }
 
 EVT_CMD_FN(debug_msg_clear) {
+    (void) entry;
     return EVT_CONTINUE;
 }
 
@@ -252,4 +253,21 @@ EVT_CMD_FN(debug_put_reg) {
     }
 
     return EVT_CONTINUE;
+}
+
+EVT_CMD_FN(debug_name) {
+    entry->name = (char *) *entry->pCurData;
+    return EVT_CONTINUE;
+}
+
+EVT_CMD_FN(debug_rem) {
+    (void) entry;
+    return EVT_CONTINUE;
+}
+
+EVT_CMD_FN(debug_bp) {
+    for (int i = 0; i < EVT_ENTRY_MAX; i++) {
+        if (evtGetPtr(i) == entry) break;
+    }
+    return 1;
 }

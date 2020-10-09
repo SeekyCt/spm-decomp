@@ -153,11 +153,11 @@ EVT_CMD_FN(wait_frm);
 EVT_CMD_FN(debug_put_msg);
 EVT_CMD_FN(debug_msg_clear);
 EVT_CMD_FN(debug_put_reg);
+EVT_CMD_FN(debug_name);
+EVT_CMD_FN(debug_rem);
+EVT_CMD_FN(debug_bp);
 
 /*
-  UNUSED   000014 ........ evt_debug_name evtmgr_cmd.o 
-  UNUSED   000008 ........ evt_debug_rem evtmgr_cmd.o 
-  UNUSED   000054 ........ evt_debug_bp evtmgr_cmd.o 
   0002af10 0013b0 800304f0  4 evtmgrCmd evtmgr_cmd.o 
 */
 

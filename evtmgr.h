@@ -54,7 +54,7 @@ typedef struct _EvtEntry {
   int unknown_0x188;
   char unknown_0x18c[0x198 - 0x18c];
   int * scriptStart;
-  uint32_t unknown_0x19c;  
+  char * name; // debug thing, unused?
   void * pPrevInstruction;
   char unknown_0x1a4[0x1a8 - 0x1a4];
 } EvtEntry;

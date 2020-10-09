@@ -151,7 +151,7 @@ EvtEntry * evtEntry(int * script, uint8_t priority, uint8_t flags) {
     entry->dowhileDepth = -1;
     entry->unknown_0xf = -1;
     entry->type = 0xff;
-    entry->unknown_0x19c = 0;
+    entry->name = NULL;
     entry->speed = 1.0f;
     entry->unknown_0x160 = 0.0f;
     entry->unknown_0x164 = -1;
