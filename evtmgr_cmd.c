@@ -56,37 +56,37 @@ EVT_CMD_FN(goto) {
 
 EVT_CMD_FN(do) {
     int * p = entry->pCurData;
-    int id = *p++;
+    int count = *p++;
     int depth = ++entry->dowhileDepth; // missing rlwinm here
     if (depth >= 8) {
         assert(0, "EVTMGR_CMD:While Table Overflow !!");
     }
     entry->dowhileStartPtrs[depth] = p;
-    entry->dowhileIds[depth] = id;
+    entry->dowhileCounters[depth] = count;
     return EVT_CONTINUE;
 }
 
 EVT_CMD_FN(while) {
-    int id; // only way the register usage of depth's sign extend matched
+    int count; // only way the register usage of depth's sign extend matched
     int depth = entry->dowhileDepth;
     if (depth < 0) {
         assert(0, "EVTMGR_CMD:While Table Underflow !!");
     }
-    id = entry->dowhileIds[depth];
-    if (id == 0) {
+    count = entry->dowhileCounters[depth];
+    if (count == 0) {
         entry->pCurInstruction = entry->dowhileStartPtrs[depth];
         return EVT_CONTINUE;
     }
     else {
-        if (id >= -10000000) {
-            entry->dowhileIds[depth] = --id;
+        if (count >= -10000000) {
+            entry->dowhileCounters[depth] = --count;
         }
         else {
-            int ret = evtGetValue(entry, id);
-            evtSetValue(entry, id, ret - 1);
-            id = ret - 1;
+            int ret = evtGetValue(entry, count);
+            evtSetValue(entry, count, ret - 1);
+            count = ret - 1;
         }
-        if (id == 0) {
+        if (count == 0) {
             entry->pCurInstruction = entry->dowhileStartPtrs[depth];
             return EVT_CONTINUE;
         }

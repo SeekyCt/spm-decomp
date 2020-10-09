@@ -35,7 +35,7 @@ typedef struct _EvtEntry {
   int lw[16];
   uint32_t lf[3];
   void * dowhileStartPtrs[8]; // pointer to do opcodes
-  int dowhileIds[8];
+  int dowhileCounters[8];
   char unknown_0x124[0x150 - 0x124];
   int * uw;
   unsigned int * uf;
