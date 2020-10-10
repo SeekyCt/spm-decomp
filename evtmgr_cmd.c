@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "evtmgr_cmd.h"
 #include "evtmgr.h"
@@ -127,6 +128,29 @@ EVT_CMD_FN(wait_frm) {
     else {
         return !--entry->unknown_0x74;
     }
+}
+
+// EVT_CMD_FN(wait_msec)
+
+EVT_CMD_FN(halt) {
+   return evtGetValue(entry, *entry->pCurData) ? 0 : EVT_CONTINUE;
+}
+
+EVT_CMD_FN(if_str_equal) {
+    int * p = entry->pCurData;
+    char * s1 = (char *) evtGetValue(entry, p[0]);
+    char * s2 = (char *) evtGetValue(entry, p[1]);
+    if (s1 == NULL) {
+        s1 = "";
+    }
+    if (s2 == NULL) {
+        s2 = "";
+    }
+    if (strcmp(s1, s2)) {
+        entry->pCurInstruction = evtSearchElse(entry);
+        return EVT_CONTINUE;
+    }
+    return EVT_CONTINUE;
 }
 
 // a lot

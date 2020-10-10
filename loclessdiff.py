@@ -30,7 +30,7 @@ for line1 in f1.readlines():
     line2 = noComment(noAddress(noNewline(f2.readline())))
     if line1 != line2:
         print(Fore.CYAN + f"[{n:04}]: {line1}")
-        print(Fore.YELLOW + f"[{n:04}]: {line2}")
+        print(Fore.YELLOW + f"{{{n:04}}}: {line2}")
     n += 1
 f1.close()
 f2.close()

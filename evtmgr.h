@@ -29,7 +29,8 @@ typedef struct _EvtEntry {
   struct _EvtEntry * childEntry;
   struct _EvtEntry * brotherEntry;
   int unknown_0x74;
-  char unknown_0x78[0x94 - 0x78];
+  int64_t unknown_0x78;
+  char unknown_0x80[0x94 - 0x80];
   user_func * userFunc; // Function set & called by the user_func opcode
   int lw[16];
   uint32_t lf[3];

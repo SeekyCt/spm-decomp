@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "evtmgr.h"
+#include "evtmgr_cmd.h"
 #include "memory.h"
 #include "somewhere.h"
 #include "mariost.h"
@@ -156,8 +157,7 @@ EvtEntry * evtEntry(int * script, uint8_t priority, uint8_t flags) {
     entry->unknown_0x160 = 0.0f;
     entry->unknown_0x164 = -1;
     entry->unknown_0x168 = 0;
-    entry->unknown_0x4 = 0;
-    entry->unknown_0x0 = 0;
+    entry->lifetime = 0;
     for (int j = 0; j < 16; j++) {
         entry->lw[i] = 0;
     }
@@ -197,6 +197,7 @@ EvtEntry * evtEntry(int * script, uint8_t priority, uint8_t flags) {
 // unfinished
 void evtmgrMain() {
     EvtWork * wp = evtGetWork();
+    runMainF = 1;
     int64_t timeDif = gp->time - wp->time;
     if (timeDif < 0) {
         timeDif = 0;
@@ -209,8 +210,26 @@ void evtmgrMain() {
     wp->time = gp->time;
     make_pri_table();
     for (int i = 0; i < priTblNum; i++) {
-        
+        EvtEntry * entry = &wp->entries[priTbl[i]];
+        if (entry->flags & 1 && entry->id == priIdTbl[i] && entry->flags & 0x92) {
+            if (entry->flags & 4) {
+                entry->lifetime += ms;
+            }
+            entry->unknown_0x160 += 1.0f;
+            int shouldBreak = 0;
+            while (entry->unknown_0x160 >= 1.0f) {
+                entry->unknown_0x160 -= 1.0f;
+                int ret = evtmgrCmd(entry);
+                if (ret == 1) {
+                    shouldBreak = 1;
+                    break;
+                }
+                if (ret == -1) break;
+            }
+            if (shouldBreak) break;
+        }
     }
+    runMainF = 0;
 }
 
 void evtDelete(EvtEntry * entry) {

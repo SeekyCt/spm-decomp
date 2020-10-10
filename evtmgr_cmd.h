@@ -44,9 +44,9 @@ EVT_CMD_FN(while);
 EVT_CMD_FN(do_break);
 EVT_CMD_FN(do_continue);
 EVT_CMD_FN(wait_frm);
-
+EVT_CMD_FN(wait_msec);
+EVT_CMD_FN(halt);
 /*
-  0002f0d4 0000d0 800346b4  4 evt_wait_msec evtmgr_cmd.o 
   UNUSED   00003c ........ evt_halt evtmgr_cmd.o 
   0002efe4 0000f0 800345c4  4 evt_if_str_equal evtmgr_cmd.o 
   0002eef4 0000f0 800344d4  4 evt_if_str_not_equal evtmgr_cmd.o 
@@ -157,10 +157,7 @@ EVT_CMD_FN(debug_name);
 EVT_CMD_FN(debug_rem);
 EVT_CMD_FN(debug_bp);
 
-/*
-  0002af10 0013b0 800304f0  4 evtmgrCmd evtmgr_cmd.o 
-*/
-
+int evtmgrCmd(EvtEntry * entry);
 int evtGetValue(EvtEntry * entry, int data);
 
 /*
@@ -173,7 +170,9 @@ float evtGetFloat(EvtEntry * entry, int data);
 /*
   00029d14 000384 8002f2f4  4 evtSetFloat evtmgr_cmd.o 
   UNUSED   00005c ........ evtSearchLabel evtmgr_cmd.o 
-  UNUSED   00006c ........ evtSearchElse evtmgr_cmd.o 
+*/
+int * evtSearchElse(EvtEntry * entry); 
+/*
   UNUSED   000064 ........ evtSearchEndIf evtmgr_cmd.o 
   UNUSED   00005c ........ evtSearchEndSwitch evtmgr_cmd.o 
   UNUSED   000080 ........ evtSearchCase evtmgr_cmd.o 
