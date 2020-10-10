@@ -46,15 +46,14 @@ EVT_CMD_FN(do_continue);
 EVT_CMD_FN(wait_frm);
 EVT_CMD_FN(wait_msec);
 EVT_CMD_FN(halt);
+EVT_CMD_FN(if_str_equal);
+EVT_CMD_FN(if_str_not_equal);
+EVT_CMD_FN(if_str_small);
+EVT_CMD_FN(if_str_large); 
+EVT_CMD_FN(if_str_small_equal);
+EVT_CMD_FN(if_str_large_equal); 
+EVT_CMD_FN(iff_equal);
 /*
-  UNUSED   00003c ........ evt_halt evtmgr_cmd.o 
-  0002efe4 0000f0 800345c4  4 evt_if_str_equal evtmgr_cmd.o 
-  0002eef4 0000f0 800344d4  4 evt_if_str_not_equal evtmgr_cmd.o 
-  0002ee04 0000f0 800343e4  4 evt_if_str_small evtmgr_cmd.o 
-  0002ed14 0000f0 800342f4  4 evt_if_str_large evtmgr_cmd.o 
-  0002ec24 0000f0 80034204  4 evt_if_str_small_equal evtmgr_cmd.o 
-  0002eb34 0000f0 80034114  4 evt_if_str_large_equal evtmgr_cmd.o 
-  0002ea60 0000d4 80034040  4 evt_iff_equal evtmgr_cmd.o 
   0002e98c 0000d4 80033f6c  4 evt_iff_not_equal evtmgr_cmd.o 
   0002e8b4 0000d8 80033e94  4 evt_iff_small evtmgr_cmd.o 
   0002e7dc 0000d8 80033dbc  4 evt_iff_large evtmgr_cmd.o 
