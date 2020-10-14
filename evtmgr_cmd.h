@@ -53,6 +53,7 @@ EVT_CMD_FN(if_str_large);
 EVT_CMD_FN(if_str_small_equal);
 EVT_CMD_FN(if_str_large_equal); 
 EVT_CMD_FN(iff_equal);
+EVT_CMD_FN(iff_not_equal);
 /*
   0002e98c 0000d4 80033f6c  4 evt_iff_not_equal evtmgr_cmd.o 
   0002e8b4 0000d8 80033e94  4 evt_iff_small evtmgr_cmd.o 
