@@ -34,3 +34,6 @@ void kill_script_by_ID(s32 id) {
 so it seems unlikely the devs would've switched to this weird while format over a for loop.
 
 Early code also aimed to match TTYD concurrently; I gave up on this after seqdrv, but what I did is still in there.
+
+## Credits
+Various members of the TTYD community for their documentation here https://github.com/PistonMiner/ttyd-tools and for porting the demo symbol map to the final game
