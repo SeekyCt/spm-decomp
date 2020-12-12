@@ -18,6 +18,5 @@ typedef struct {
 } MarioStGlobals;
 extern MarioStGlobals * gp;
 extern MarioStGlobals marioSt;
-// TODO: this is actually called gp, pointing to mariost
 
 #endif
