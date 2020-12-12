@@ -54,18 +54,18 @@ EVT_CMD_FN(if_str_small_equal);
 EVT_CMD_FN(if_str_large_equal); 
 EVT_CMD_FN(iff_equal);
 EVT_CMD_FN(iff_not_equal);
+EVT_CMD_FN(iff_small);
+EVT_CMD_FN(iff_large);
+EVT_CMD_FN(iff_small_equal);
+EVT_CMD_FN(iff_large_equal);
+EVT_CMD_FN(if_equal);
+EVT_CMD_FN(if_not_equal);
+EVT_CMD_FN(_if_small);
+EVT_CMD_FN(if_large);
+EVT_CMD_FN(if_small_equal);
+EVT_CMD_FN(if_large_equal);
+
 /*
-  0002e98c 0000d4 80033f6c  4 evt_iff_not_equal evtmgr_cmd.o 
-  0002e8b4 0000d8 80033e94  4 evt_iff_small evtmgr_cmd.o 
-  0002e7dc 0000d8 80033dbc  4 evt_iff_large evtmgr_cmd.o 
-  0002e708 0000d4 80033ce8  4 evt_iff_small_equal evtmgr_cmd.o 
-  0002e634 0000d4 80033c14  4 evt_iff_large_equal evtmgr_cmd.o 
-  0002e568 0000cc 80033b48  4 evt_if_equal evtmgr_cmd.o 
-  0002e49c 0000cc 80033a7c  4 evt_if_not_equal evtmgr_cmd.o 
-  0002e3d0 0000cc 800339b0  4 evt_if_small evtmgr_cmd.o 
-  0002e304 0000cc 800338e4  4 evt_if_large evtmgr_cmd.o 
-  0002e238 0000cc 80033818  4 evt_if_small_equal evtmgr_cmd.o 
-  0002e16c 0000cc 8003374c  4 evt_if_large_equal evtmgr_cmd.o 
   0002e0ac 0000c0 8003368c  4 evt_if_flag evtmgr_cmd.o 
   0002dfec 0000c0 800335cc  4 evt_if_not_flag evtmgr_cmd.o 
   UNUSED   00006c ........ evt_else evtmgr_cmd.o 

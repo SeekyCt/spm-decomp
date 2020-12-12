@@ -261,6 +261,72 @@ EVT_CMD_FN(iff_not_equal) {
     return EVT_CONTINUE;
 }
 
+EVT_CMD_FN(iff_small) {
+    int * p = entry->pCurData;
+    float f1 = evtGetFloat(entry, p[0]);
+    float f2 = evtGetFloat(entry, p[1]);
+    if (f1 >= f2) {
+        entry->pCurInstruction = evtSearchElse(entry);
+        return EVT_CONTINUE;
+    }
+    return EVT_CONTINUE;
+}
+
+EVT_CMD_FN(iff_large) {
+    int * p = entry->pCurData;
+    float f1 = evtGetFloat(entry, p[0]);
+    float f2 = evtGetFloat(entry, p[1]);
+    if (f1 <= f2) {
+        entry->pCurInstruction = evtSearchElse(entry);
+        return EVT_CONTINUE;
+    }
+    return EVT_CONTINUE;
+}
+
+EVT_CMD_FN(iff_small_equal) {
+    int * p = entry->pCurData;
+    float f1 = evtGetFloat(entry, p[0]);
+    float f2 = evtGetFloat(entry, p[1]);
+    if (f1 > f2) {
+        entry->pCurInstruction = evtSearchElse(entry);
+        return EVT_CONTINUE;
+    }
+    return EVT_CONTINUE;
+}
+
+EVT_CMD_FN(iff_large_equal) {
+    int * p = entry->pCurData;
+    float f1 = evtGetFloat(entry, p[0]);
+    float f2 = evtGetFloat(entry, p[1]);
+    if (f1 < f2) {
+        entry->pCurInstruction = evtSearchElse(entry);
+        return EVT_CONTINUE;
+    }
+    return EVT_CONTINUE;
+}
+
+EVT_CMD_FN(if_equal) {
+    int * p = entry->pCurData;
+    int val1 = evtGetValue(entry, p[0]);
+    int val2 = evtGetValue(entry, p[1]);
+    if (val1 != val2) {
+        entry->pCurInstruction = evtSearchElse(entry);
+        return EVT_CONTINUE;
+    }
+    return EVT_CONTINUE;
+}
+
+EVT_CMD_FN(if_not_equal) {
+    int * p = entry->pCurData;
+    int val1 = evtGetValue(entry, p[0]);
+    int val2 = evtGetValue(entry, p[1]);
+    if (val1 == val2) {
+        entry->pCurInstruction = evtSearchElse(entry);
+        return EVT_CONTINUE;
+    }
+    return EVT_CONTINUE;
+}
+
 // a lot
 
 EVT_CMD_FN(debug_put_msg) {
