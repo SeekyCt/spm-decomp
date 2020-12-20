@@ -13,6 +13,7 @@ void fsort(char ** table, size_t size);
 static char * tmp0[MAX_ELEMENT]; // pointers to all items
 static char tmp1[0x100]; // temporary copy of an item being swapped
 static void * comp; // comparison function, passed to fsort indirectly
+/*
 void qqsort(char * list, size_t nel, size_t size, void * compare) {
     assert(nel < MAX_ELEMENT, "要素数が多すぎてバッファが足りません"); // "Too many elements and not enough buffer"
     assert(size < MAX_ELEMENT_SIZE, "１要素のサイズが大きくてバッファが足りません"); // "One element is too big and there is not enough buffer"
@@ -43,6 +44,7 @@ void qqsort(char * list, size_t nel, size_t size, void * compare) {
         item += size;
     }
 }
+*/
 
 /*
 void qqsort(char * list, size_t nel, size_t size, char * compare) {

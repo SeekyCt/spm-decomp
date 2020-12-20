@@ -1,5 +1,7 @@
 /*
-    Todo: evtEntryRunCheck is inlined in evtEntry, but the code was just put in directly
+    Includes many weird while loops where for loops didn't match because of the
+    variable incrementing order, maybe a sign of wrong compiler version?
+    (Especially since PM64 decomp matched them with for loops)
 */
 
 #include <os.h>
@@ -23,7 +25,7 @@ static int runMainF; // 805ae8e0
 static int evtId = 1; // 805ae018
 static float evtSpd = 1.0; // 805ae01c
 
-EvtWork * evtGetWork() { // usually inlined in this file but not elsewhere
+EvtWork * evtGetWork() { // usually inlined in this file
     return &work;
 }
 
@@ -126,7 +128,7 @@ void evtmgrReInit() {
     evt_msg_init();
 }
 
-// not matching
+// not matching, includes inline evtEntryRunCheck
 EvtEntry * evtEntry(int * script, uint8_t priority, uint8_t flags) {
     EvtEntry * entry = work.entries;
     int i;

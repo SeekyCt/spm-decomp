@@ -38,7 +38,7 @@
 // Opcodes
 enum {
   EVT_OPC_NEXT,
-  EVT_OPC_ENDSCRIPT,
+  EVT_OPC_END_SCRIPT,
   EVT_OPC_END_EVT,
   EVT_OPC_LBL,
   EVT_OPC_GOTO,
@@ -188,92 +188,89 @@ EVT_CMD_FN(_if_small);
 EVT_CMD_FN(if_large);
 EVT_CMD_FN(if_small_equal);
 EVT_CMD_FN(if_large_equal);
-
-/*
-  0002e0ac 0000c0 8003368c  4 evt_if_flag evtmgr_cmd.o 
-  0002dfec 0000c0 800335cc  4 evt_if_not_flag evtmgr_cmd.o 
-  UNUSED   00006c ........ evt_else evtmgr_cmd.o 
-  UNUSED   000008 ........ evt_end_if evtmgr_cmd.o 
-  UNUSED   000064 ........ evt_switch evtmgr_cmd.o 
-  UNUSED   00003c ........ evt_switchi evtmgr_cmd.o 
-  0002de90 00015c 80033470  4 evt_case_equal evtmgr_cmd.o 
-  0002dd34 00015c 80033314  4 evt_case_not_equal evtmgr_cmd.o 
-  0002dbd8 00015c 800331b8  4 evt_case_small evtmgr_cmd.o 
-  0002da7c 00015c 8003305c  4 evt_case_small_equal evtmgr_cmd.o 
-  0002d920 00015c 80032f00  4 evt_case_large evtmgr_cmd.o 
-  0002d7c4 00015c 80032da4  4 evt_case_large_equal evtmgr_cmd.o 
-  0002d648 00017c 80032c28  4 evt_case_between evtmgr_cmd.o 
-  UNUSED   00008c ........ evt_case_etc evtmgr_cmd.o 
-  0002d51c 00012c 80032afc  4 evt_case_flag evtmgr_cmd.o 
-  0002d3b4 000168 80032994  4 evt_case_or evtmgr_cmd.o 
-  0002d1bc 0001f8 8003279c  4 evt_case_and evtmgr_cmd.o 
-  0002d03c 000180 8003261c  4 evt_case_end evtmgr_cmd.o 
-  UNUSED   000064 ........ evt_switch_break evtmgr_cmd.o 
-  UNUSED   000028 ........ evt_end_switch evtmgr_cmd.o 
-  UNUSED   000058 ........ evt_set evtmgr_cmd.o 
-  UNUSED   000030 ........ evt_seti evtmgr_cmd.o 
-  UNUSED   000050 ........ evt_setf evtmgr_cmd.o 
-  UNUSED   00006c ........ evt_add evtmgr_cmd.o 
-  UNUSED   00006c ........ evt_sub evtmgr_cmd.o 
-  UNUSED   00006c ........ evt_mul evtmgr_cmd.o 
-  UNUSED   00006c ........ evt_div evtmgr_cmd.o 
-  UNUSED   0000d8 ........ evt_mod evtmgr_cmd.o 
-  UNUSED   000074 ........ evt_addf evtmgr_cmd.o 
-  UNUSED   000074 ........ evt_subf evtmgr_cmd.o 
-  UNUSED   000074 ........ evt_mulf evtmgr_cmd.o 
-  UNUSED   000074 ........ evt_divf evtmgr_cmd.o 
-  UNUSED   00003c ........ evt_set_read evtmgr_cmd.o 
-  UNUSED   00003c ........ evt_set_readf evtmgr_cmd.o 
-  UNUSED   00003c ........ evt_read evtmgr_cmd.o 
-  UNUSED   00006c ........ evt_read2 evtmgr_cmd.o 
-  UNUSED   000088 ........ evt_read3 evtmgr_cmd.o 
-  UNUSED   0000a4 ........ evt_read4 evtmgr_cmd.o 
-  UNUSED   00005c ........ evt_read_n evtmgr_cmd.o 
-  UNUSED   00003c ........ evt_readf evtmgr_cmd.o 
-  UNUSED   00006c ........ evt_readf2 evtmgr_cmd.o 
-  UNUSED   000088 ........ evt_readf3 evtmgr_cmd.o 
-  UNUSED   0000a4 ........ evt_readf4 evtmgr_cmd.o 
-  UNUSED   00007c ........ evt_readf_n evtmgr_cmd.o 
-  UNUSED   00003c ........ evt_set_user_wrk evtmgr_cmd.o 
-  UNUSED   00003c ........ evt_set_user_flg evtmgr_cmd.o 
-  UNUSED   000060 ........ evt_alloc_user_wrk evtmgr_cmd.o 
-  UNUSED   00006c ........ evt_and evtmgr_cmd.o 
-  UNUSED   000064 ........ evt_andi evtmgr_cmd.o 
-  UNUSED   00006c ........ evt_or evtmgr_cmd.o 
-  UNUSED   000064 ........ evt_ori evtmgr_cmd.o 
-  UNUSED   00006c ........ evt_set_frame_from_msec evtmgr_cmd.o 
-  UNUSED   000070 ........ evt_set_msec_from_frame evtmgr_cmd.o 
-  UNUSED   00003c ........ evt_set_ram evtmgr_cmd.o 
-  UNUSED   00003c ........ evt_set_ramf evtmgr_cmd.o 
-  UNUSED   000034 ........ evt_get_ram evtmgr_cmd.o 
-  UNUSED   000034 ........ evt_get_ramf evtmgr_cmd.o 
-  UNUSED   000064 ........ evt_setr evtmgr_cmd.o 
-  UNUSED   00005c ........ evt_setrf evtmgr_cmd.o 
-  UNUSED   000060 ........ evt_getr evtmgr_cmd.o 
-  UNUSED   00005c ........ evt_getrf evtmgr_cmd.o 
-  UNUSED   000094 ........ evt_user_func evtmgr_cmd.o 
-  0002cf38 000104 80032518  4 evt_run_evt evtmgr_cmd.o 
-  0002ce18 000120 800323f8  4 evt_run_evt_id evtmgr_cmd.o 
-  UNUSED   000054 ........ evt_run_child_evt evtmgr_cmd.o 
-  UNUSED   000044 ........ evt_restart_evt evtmgr_cmd.o 
-  UNUSED   000030 ........ evt_delete_evt evtmgr_cmd.o 
-  UNUSED   000048 ........ evt_set_pri evtmgr_cmd.o 
-  UNUSED   000040 ........ evt_set_spd evtmgr_cmd.o 
-  UNUSED   000048 ........ evt_set_type evtmgr_cmd.o 
-  UNUSED   000030 ........ evt_stop_all evtmgr_cmd.o 
-  UNUSED   000030 ........ evt_start_all evtmgr_cmd.o 
-  UNUSED   000048 ........ evt_stop_other evtmgr_cmd.o 
-  UNUSED   000048 ........ evt_start_other evtmgr_cmd.o 
-  UNUSED   000030 ........ evt_stop_id evtmgr_cmd.o 
-  UNUSED   000030 ........ evt_start_id evtmgr_cmd.o 
-  UNUSED   000058 ........ evt_chk_evt evtmgr_cmd.o 
-  0002ccbc 00015c 8003229c  4 evt_inline_evt evtmgr_cmd.o 
-  0002cb40 00017c 80032120  4 evt_inline_evt_id evtmgr_cmd.o 
-  UNUSED   000024 ........ evt_end_inline evtmgr_cmd.o 
-  0002caac 000094 8003208c  4 evt_brother_evt evtmgr_cmd.o 
-  0002c9fc 0000b0 80031fdc  4 evt_brother_evt_id evtmgr_cmd.o 
-  UNUSED   000024 ........ evt_end_brother evtmgr_cmd.o 
-*/
+// EVT_CMD_FN(evt_if_flag)
+// EVT_CMD_FN(evt_if_not_flag)
+// EVT_CMD_FN(evt_else)
+// EVT_CMD_FN(evt_end_if)
+// EVT_CMD_FN(evt_switch)
+// EVT_CMD_FN(evt_switchi)
+// EVT_CMD_FN(evt_case_equal)
+// EVT_CMD_FN(evt_case_not_equal)
+// EVT_CMD_FN(evt_case_small)
+// EVT_CMD_FN(evt_case_small_equal)
+// EVT_CMD_FN(evt_case_large)
+// EVT_CMD_FN(evt_case_large_equal)
+// EVT_CMD_FN(evt_case_between)
+// EVT_CMD_FN(evt_case_etc)
+// EVT_CMD_FN(evt_case_flag)
+// EVT_CMD_FN(evt_case_or)
+// EVT_CMD_FN(evt_case_and)
+// EVT_CMD_FN(evt_case_end)
+// EVT_CMD_FN(evt_switch_break)
+// EVT_CMD_FN(evt_end_switch)
+// EVT_CMD_FN(evt_set)
+// EVT_CMD_FN(evt_seti)
+// EVT_CMD_FN(evt_setf)
+// EVT_CMD_FN(evt_add)
+// EVT_CMD_FN(evt_sub)
+// EVT_CMD_FN(evt_mul)
+// EVT_CMD_FN(evt_div)
+// EVT_CMD_FN(evt_mod)
+// EVT_CMD_FN(evt_addf)
+// EVT_CMD_FN(evt_subf)
+// EVT_CMD_FN(evt_mulf)
+// EVT_CMD_FN(evt_divf)
+// EVT_CMD_FN(evt_set_read)
+// EVT_CMD_FN(evt_set_readf)
+// EVT_CMD_FN(evt_read)
+// EVT_CMD_FN(evt_read2)
+// EVT_CMD_FN(evt_read3)
+// EVT_CMD_FN(evt_read4)
+// EVT_CMD_FN(evt_read_n)
+// EVT_CMD_FN(evt_readf)
+// EVT_CMD_FN(evt_readf2)
+// EVT_CMD_FN(evt_readf3)
+// EVT_CMD_FN(evt_readf4)
+// EVT_CMD_FN(evt_readf_n)
+// EVT_CMD_FN(evt_set_user_wrk)
+// EVT_CMD_FN(evt_set_user_flg)
+// EVT_CMD_FN(evt_alloc_user_wrk)
+// EVT_CMD_FN(evt_and)
+// EVT_CMD_FN(evt_andi)
+// EVT_CMD_FN(evt_or)
+// EVT_CMD_FN(evt_ori)
+// EVT_CMD_FN(evt_set_frame_from_msec)
+// EVT_CMD_FN(evt_set_msec_from_frame)
+// EVT_CMD_FN(evt_set_ram)
+// EVT_CMD_FN(evt_set_ramf)
+// EVT_CMD_FN(evt_get_ram)
+// EVT_CMD_FN(evt_get_ramf)
+// EVT_CMD_FN(evt_setr)
+// EVT_CMD_FN(evt_setrf)
+// EVT_CMD_FN(evt_getr)
+// EVT_CMD_FN(evt_getrf)
+// EVT_CMD_FN(evt_user_func)
+// EVT_CMD_FN(evt_run_evt)
+// EVT_CMD_FN(evt_run_evt_id)
+// EVT_CMD_FN(evt_run_child_evt)
+// EVT_CMD_FN(evt_restart_evt)
+// EVT_CMD_FN(evt_delete_evt)
+// EVT_CMD_FN(evt_set_pri)
+// EVT_CMD_FN(evt_set_spd)
+// EVT_CMD_FN(evt_set_type)
+// EVT_CMD_FN(evt_stop_all)
+// EVT_CMD_FN(evt_start_all)
+// EVT_CMD_FN(evt_stop_other)
+// EVT_CMD_FN(evt_start_other)
+// EVT_CMD_FN(evt_stop_id)
+// EVT_CMD_FN(evt_start_id)
+// EVT_CMD_FN(evt_chk_evt)
+// EVT_CMD_FN(evt_inline_evt)
+// EVT_CMD_FN(evt_inline_evt_id)
+// EVT_CMD_FN(evt_end_inline)
+// EVT_CMD_FN(evt_brother_evt)
+// EVT_CMD_FN(evt_brother_evt_id)
+// EVT_CMD_FN(evt_end_brother)
 EVT_CMD_FN(debug_put_msg);
 EVT_CMD_FN(debug_msg_clear);
 EVT_CMD_FN(debug_put_reg);
@@ -287,7 +284,7 @@ int evtGetValue(EvtEntry * entry, int data);
 int evtSetValue(EvtEntry * entry, int, int);
 float evtGetFloat(EvtEntry * entry, int data);
 // evtSetFloat
-int * evtSearchLabel(EvtEntry * entry);
+int * evtSearchLabel(EvtEntry * entry, int id);
 int * evtSearchElse(EvtEntry * entry); 
 // evtSearchEndIf
 // evtSearchEndSwitch

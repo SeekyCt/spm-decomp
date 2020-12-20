@@ -15,10 +15,6 @@ typedef struct {
     SeqFunc * main;
     SeqFunc * exit;
 } SeqDef;
-/*
-  00000298 0000ac 802ff6d8  1 .data 	seqdef.o 
-  00000298 00006c 802ff6d8  4 seq_data 	seqdef.o 
-*/
 extern SeqDef seq_data[SEQ_COUNT];
 
 #endif

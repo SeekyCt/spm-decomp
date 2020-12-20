@@ -15,7 +15,7 @@ typedef struct _EvtEntry {
   int64_t lifetime;
   uint8_t flags; // bit flags, 1 seems to be the script being active?
   uint8_t curDataLength; // number of pieces of data (4 bytes each) belonging to the current instruction
-  uint8_t curOpcode; // see links above for opcodes
+  uint8_t curOpcode; // see evtmgr_cmd.h above for opcodes
   uint8_t priority;
   uint8_t type;
   int8_t blocked;
