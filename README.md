@@ -2,6 +2,8 @@
 
 Decompilation of Super Paper Mario. Doesn't produce a dol, asm is just checked by compiling with -S. A small bit of TTYD support.
 
+See also https://github.com/SeekyCt/spm-docs for other documentation
+
 ## Compiler Version Note
 The project currently uses Codewarrior Version 4.1 build 60831, which seems to be a slightly wrong version. The main reason that makes this seem like it could be the case is that to match the variable incrementing order in some loops, while loops have had to be used instead of for loops, like in this code
 ```c
