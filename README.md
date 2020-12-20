@@ -1,6 +1,6 @@
 # spm-decomp
 
-Decompilation of Super Paper Mario. Doesn't produce a dol, asm is just checked by compiling with -S. TTYD support to some extent.
+Decompilation of Super Paper Mario. Doesn't produce a dol, asm is just checked by compiling with -S. A small bit of TTYD support.
 
 ## Compiler Version Note
 The project currently uses Codewarrior Version 4.1 build 60831, which seems to be a slightly wrong version. The main reason that makes this seem like it could be the case is that to match the variable incrementing order in some loops, while loops have had to be used instead of for loops, like in this code
@@ -33,6 +33,9 @@ void kill_script_by_ID(s32 id) {
 }
 ```
 so it seems unlikely the devs would've switched to this weird while format over a for loop.
+
+## TTYD Support
+TTYD was initially matched too for some of seqdrv, but this was abandoned based on the effort it would've taken to keep doing and also to find the right compiler version & flags for it too. The code that was matched still remains.
 
 ## Credits
 Various members of the TTYD community for their documentation here https://github.com/PistonMiner/ttyd-tools and for porting the demo symbol map to the final game
