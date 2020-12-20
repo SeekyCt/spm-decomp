@@ -1,5 +1,2 @@
 .vscode
-help.txt
-ldhelp.txt
 *.s
-*.o

@@ -7,9 +7,7 @@
 #include "swdrv.h"
 #include "system.h"
 
-static char debugMsgBuf[256];
-
-static float check_float(int val) { // usually inlined
+static float check_float(int val) { // always inlined
     if (val <= EVTDAT_FLOAT_MAX) {
         return (val + EVTDAT_FLOAT_BASE) / 1024.0f;
     }
@@ -18,7 +16,7 @@ static float check_float(int val) { // usually inlined
     }
 }
 
-// change_float
+// change_float (inlined/unused)
 
 EVT_CMD_FN(end_evt) {
     evtDelete(entry);
@@ -340,114 +338,115 @@ EVT_CMD_FN(debug_msg_clear) {
 }
 
 EVT_CMD_FN(debug_put_reg) {
+    static char str[256];
     int * p = entry->pCurData;
     EvtWork * wp = evtGetWork();
     int reg = *p;
     if (reg <= EVTDAT_ADDR_MAX) {
-        sprintf(debugMsgBuf, "ADDR     [%08X]", reg);
+        sprintf(str, "ADDR     [%08X]", reg);
     }
     else if (reg <= EVTDAT_FLOAT_MAX) {
         float f = check_float(reg);
-        sprintf(debugMsgBuf, "FLOAT    [%4.2f]", f);
+        sprintf(str, "FLOAT    [%4.2f]", f);
     }
     else if (reg <= EVTDAT_UF_MAX) {
         reg += EVTDAT_UF_BASE;
         unsigned int mask = 1U << ((reg) % 32);
         unsigned int dat = entry->uf[(reg) / 32];
-        sprintf(debugMsgBuf, "UF(%3d)  [%d]", reg, mask & dat);
+        sprintf(str, "UF(%3d)  [%d]", reg, mask & dat);
     }
     else if (reg <= EVTDAT_UW_MAX) {
         reg += EVTDAT_UW_BASE;
         int val = entry->uw[reg];
         if (val <= EVTDAT_ADDR_MAX) {
-            sprintf(debugMsgBuf, "UW(%3d)  [%08X]", val, val);
+            sprintf(str, "UW(%3d)  [%08X]", val, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
             float f = check_float(val);
-            sprintf(debugMsgBuf, "UW(%3d)  [%4.2f]", reg, f);
+            sprintf(str, "UW(%3d)  [%4.2f]", reg, f);
         }
         else {
-            sprintf(debugMsgBuf, "UW(%3d)  [%d]", reg, val);
+            sprintf(str, "UW(%3d)  [%d]", reg, val);
         }
     }
     else if (reg <= EVTDAT_GSW_MAX) {
         reg += EVTDAT_GSW_BASE;
         int val = swByteGet(reg);
         if (val <= EVTDAT_ADDR_MAX) {
-            sprintf(debugMsgBuf, "GSW(%3d) [%08X]", val, val);
+            sprintf(str, "GSW(%3d) [%08X]", val, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
             float f = check_float(val);
-            sprintf(debugMsgBuf, "GSW(%3d) [%4.2f]", reg, f);
+            sprintf(str, "GSW(%3d) [%4.2f]", reg, f);
         }
         else {
-            sprintf(debugMsgBuf, "GSW(%3d) [%d]", reg, val);
+            sprintf(str, "GSW(%3d) [%d]", reg, val);
         }
     }
     else if (reg <= EVTDAT_LSW_MAX) {
         reg += EVTDAT_LSW_BASE;
         int val = _swByteGet(reg);
         if (val <= EVTDAT_ADDR_MAX) {
-            sprintf(debugMsgBuf, "LSW(%3d) [%08X]", val, val);
+            sprintf(str, "LSW(%3d) [%08X]", val, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
             float f = check_float(val);
-            sprintf(debugMsgBuf, "LSW(%3d)  [%4.2f]", reg, f);
+            sprintf(str, "LSW(%3d)  [%4.2f]", reg, f);
         }
         else {
-            sprintf(debugMsgBuf, "LSW(%3d) [%d]", reg, val);
+            sprintf(str, "LSW(%3d) [%d]", reg, val);
         }
     }
     else if (reg <= EVTDAT_GSWF_MAX) {
         reg += EVTDAT_GSWF_BASE;
-        sprintf(debugMsgBuf, "GSWF(%3d)[%d]", reg, swGet(reg));
+        sprintf(str, "GSWF(%3d)[%d]", reg, swGet(reg));
     }
     else if (reg <= EVTDAT_LSWF_MAX) {
         reg += EVTDAT_LSWF_BASE;
-        sprintf(debugMsgBuf, "LSWF(%3d)[%d]", reg, _swGet(reg));
+        sprintf(str, "LSWF(%3d)[%d]", reg, _swGet(reg));
     }
     else if (reg <= EVTDAT_GF_MAX) {
         reg += EVTDAT_GF_BASE;
         unsigned int mask = 1U << ((reg) % 32);
         unsigned int dat = wp->gf[(reg) / 32];
-        sprintf(debugMsgBuf, "GF(%3d)  [%d]", reg, mask & dat);
+        sprintf(str, "GF(%3d)  [%d]", reg, mask & dat);
     }
     else if (reg <= EVTDAT_LF_MAX) {
         reg += EVTDAT_LF_BASE;
         unsigned int mask = 1U << ((reg) % 32);
         unsigned int dat = entry->lf[(reg) / 32];
-        sprintf(debugMsgBuf, "LF(%3d)  [%d]", reg, mask & dat);
+        sprintf(str, "LF(%3d)  [%d]", reg, mask & dat);
     }
     else if (reg <= EVTDAT_GW_MAX) {
         reg += EVTDAT_GW_BASE;
         int val = wp->gw[reg];
         if (val <= EVTDAT_ADDR_MAX) {
-            sprintf(debugMsgBuf, "GW(%3d)  [%08X]", reg, val);
+            sprintf(str, "GW(%3d)  [%08X]", reg, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
             float f = check_float(val);
-            sprintf(debugMsgBuf, "GW(%3d)  [%4.2f]", reg, f);
+            sprintf(str, "GW(%3d)  [%4.2f]", reg, f);
         }
         else {
-            sprintf(debugMsgBuf, "GW(%3d)  [%d]", reg, val);
+            sprintf(str, "GW(%3d)  [%d]", reg, val);
         }
     }
     else if (reg <= EVTDAT_LW_MAX) {
         reg += EVTDAT_LW_BASE;
         int val = entry->lw[reg];
         if (val <= EVTDAT_ADDR_MAX) {
-            sprintf(debugMsgBuf, "LW(%3d)  [%08X]", reg, val);
+            sprintf(str, "LW(%3d)  [%08X]", reg, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
             float f = check_float(val);
-            sprintf(debugMsgBuf, "LW(%3d)  [%4.2f]", reg, f);
+            sprintf(str, "LW(%3d)  [%4.2f]", reg, f);
         }
         else {
-            sprintf(debugMsgBuf, "LW(%3d)  [%d]", reg, val);
+            sprintf(str, "LW(%3d)  [%d]", reg, val);
         }
     }
     else {
-        sprintf(debugMsgBuf, "         [%d]", reg);
+        sprintf(str, "         [%d]", reg);
     }
 
     return EVT_CONTINUE;
@@ -469,3 +468,39 @@ EVT_CMD_FN(debug_bp) {
     }
     return 1;
 }
+
+// evtmgrCmd
+// evtGetValue
+// evtGetNumber (inlined/unused)
+// evtSetValue
+// evtGetFloat
+// evtSetFloat
+// evtSearchLabel (inlined)
+
+static int * evtSearchElse(EvtEntry * entry) {
+    int ifDepth = 0;
+    int * pInstr = entry->pCurInstruction;
+    while (true) {
+        int opc = *pInstr & 0xffff;
+        pInstr += *pInstr++ >> 16;
+        switch (opc) {
+            case 1: // end
+                assert(0, "EVTMGR_CMD:'ELSE' Search Error !!");
+            case 33: // end if
+                if (--ifDepth >= 0) break;
+                else return pInstr;
+            case 12 ... 31: // if
+                ifDepth += 1;
+                break;
+             case 32: // else
+                if (ifDepth == 0) return pInstr;
+                else break;
+       }
+    }
+}
+
+// evtSearchEndIf
+// evtSearchEndSwitch
+// evtSearchCase
+// evtSearchWhile 
+// evtSearchJustBeforeWhile
