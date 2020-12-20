@@ -1,8 +1,9 @@
 # spm-decomp
 
-Messy decompilation of Super Paper Mario, I'd planned to clean this up and make it public but it's been months and I still haven't so I might as well just release what I have; I'm not really motivated to work on this any more anyway. This can't build a full dol or anything, code was compared by compiling with '-S'.
+Decompilation of Super Paper Mario. Doesn't produce a dol, asm is just checked by compiling with -S. TTYD support to some extent.
 
-Development was done with Codewarrior Version 4.1 build 60831, which I think is a slightly wrong version. The main reason is that I've often had to use while loops with a bunch of pointers manually incremented instead of indexing by i in a for loop to get the increment order to match, like in this code
+## Compiler Version Note
+The project currently uses Codewarrior Version 4.1 build 60831, which seems to be a slightly wrong version. The main reason that makes this seem like it could be the case is that to match the variable incrementing order in some loops, while loops have had to be used instead of for loops, like in this code
 ```c
 void evtDeleteID(int id) {
     EvtWork * wp = evtGetWork();
@@ -32,8 +33,6 @@ void kill_script_by_ID(s32 id) {
 }
 ```
 so it seems unlikely the devs would've switched to this weird while format over a for loop.
-
-Early code also aimed to match TTYD concurrently; I gave up on this after seqdrv, but what I did is still in there.
 
 ## Credits
 Various members of the TTYD community for their documentation here https://github.com/PistonMiner/ttyd-tools and for porting the demo symbol map to the final game
