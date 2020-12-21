@@ -278,18 +278,58 @@ EVT_CMD_FN(debug_name);
 EVT_CMD_FN(debug_rem);
 EVT_CMD_FN(debug_bp);
 
+/*
+  Executes an entry's script until it pauses or finishes
+*/
 int evtmgrCmd(EvtEntry * entry);
+
+/*
+  Gives the value of an evt variable
+*/
 int evtGetValue(EvtEntry * entry, int data);
+
 // evtGetNumber
+
+/*
+  Sets the value of an evt variable
+*/
 int evtSetValue(EvtEntry * entry, int, int);
+
+/*
+  Gets the value of a float evt variable
+*/
 float evtGetFloat(EvtEntry * entry, int data);
+
 // evtSetFloat
+
+/*
+  Returns a pointer to the instruction after the specified label
+  in an entry's script
+*/
 int * evtSearchLabel(EvtEntry * entry, int id);
+
+/*
+  Returns a pointer to the instruction after the next else on the
+  current if else depth in an entry's script
+*/
 int * evtSearchElse(EvtEntry * entry); 
+
 // evtSearchEndIf
+
 // evtSearchEndSwitch
+
 // evtSearchCase
+
+/*
+  Returns a pointer to the instruction after the next while on the
+  current do while depth in an entry's script
+*/
 int * evtSearchWhile(EvtEntry * entry);
+
+/*
+  Returns a pointer to the next while instruction on the current do
+  while depth in an entry's script
+*/
 int * evtSearchJustBeforeWhile(EvtEntry * entry);
 
 #endif

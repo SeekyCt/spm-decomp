@@ -603,4 +603,21 @@ EvtScriptCode * evtSearchWhile(EvtEntry * entry) {
     }
 }
 
-// evtSearchJustBeforeWhile
+EvtScriptCode * evtSearchJustBeforeWhile(EvtEntry * entry) {
+    s32 dowhileDepth = 0;
+    EvtScriptCode * pInstr = entry->pCurInstruction;
+    while (true) {
+        s32 opc = *pInstr & 0xffff;
+        switch (opc) {
+            case EVT_OPC_END_SCRIPT:
+                assert(0, "EVTMGR_CMD:'WHILE' Search Error !!");
+            case EVT_OPC_WHILE:
+                if (--dowhileDepth >= 0) break;
+                else return pInstr;
+            case EVT_OPC_DO:
+                dowhileDepth += 1;
+                break;
+        }
+        pInstr += *pInstr++ >> 16;
+    }
+}
