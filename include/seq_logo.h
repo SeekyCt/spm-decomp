@@ -1,7 +1,8 @@
 #ifndef SEQ_LOGO_H
 #define SEQ_LOGO_H
 
-#include "seqdef.h"
+#include <common.h>
+#include <seqdrv.h>
 
 void seq_logoInit(SeqWork * work); // 80178fd0
 void seq_logoMain(SeqWork * work); // 80179140

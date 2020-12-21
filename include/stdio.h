@@ -1,6 +1,8 @@
 #ifndef STDIO_H
 #define STDIO_H
 
-int sprintf(char *str, const char *format, ...);
+#include <common.h>
+
+s32 sprintf(char *str, const char *format, ...);
 
 #endif

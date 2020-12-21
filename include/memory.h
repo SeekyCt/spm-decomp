@@ -1,7 +1,7 @@
 #ifndef MEMORY_H
 #define MEMORY_H
 
-#include <stddef.h>
+#include <common.h>
 
 void * __MemAlloc(int heap, size_t size);
 

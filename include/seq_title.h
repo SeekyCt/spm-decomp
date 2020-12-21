@@ -1,7 +1,8 @@
 #ifndef SEQ_TITLE_H
 #define SEQ_TITLE_H
 
-#include "seqdef.h"
+#include <common.h>
+#include <seqdrv.h>
 
 void seq_titleInit(SeqWork * work); // 8017b130
 void seq_titleMain(SeqWork * work); // 8017b250

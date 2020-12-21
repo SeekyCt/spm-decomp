@@ -1,7 +1,8 @@
 #ifndef SEQ_GAMEOVER_H
 #define SEQ_GAMEOVER_H
 
-#include "seqdef.h"
+#include <common.h>
+#include <seqdrv.h>
 
 void seq_gameOverInit(SeqWork * work); // 801789f4
 void seq_gameOverMain(SeqWork * work); // 80178b68

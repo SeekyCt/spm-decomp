@@ -1,13 +1,12 @@
 #include <string.h>
-#include <stddef.h>
 
 #include "seqdrv.h"
 #include "system.h"
 
 SeqWork seqWork;
-int now_seq = -1;
-int next_seq = -1;
-int prev_seq = -1;
+s32 now_seq = -1;
+s32 next_seq = -1;
+s32 prev_seq = -1;
 char * next_p0;
 char * next_p1;
 
@@ -48,13 +47,13 @@ void seqMain() {
 #endif
 }
 
-void seqSetSeq(int seq, char * p0, char * p1) {
+void seqSetSeq(s32 seq, char * p0, char * p1) {
 	next_seq = seq;
 	next_p0 = p0;
 	next_p1 = p1;
 }
 
-int seqGetSeq() {
+s32 seqGetSeq() {
 	#ifdef GAME_SPM
 	return now_seq == -1 ? 0 : now_seq;
 	#else
@@ -64,11 +63,11 @@ int seqGetSeq() {
 
 #ifndef GAME_SPM
 
-int seqGetPrevSeq() {
+s32 seqGetPrevSeq() {
 	return prev_seq;
 }
 
-int seqGetNextSeq() {
+s32 seqGetNextSeq() {
 	return next_seq;
 }
 

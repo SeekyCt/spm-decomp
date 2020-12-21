@@ -1,6 +1,8 @@
 #ifndef SEQDEF_H
 #define SEQDEF_H
 
+#include <common.h>
+
 struct _SeqWork;
 typedef void (SeqFunc)(struct _SeqWork *);
 

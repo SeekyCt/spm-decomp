@@ -1,19 +1,21 @@
 #ifndef SWDRV_H
 #define SWDRV_H
 
+#include <common.h>
+
 // swInit
 // swReInit
 // swSet
-int swGet(int n);
+s32 swGet(s32 n);
 // swClear
 // swToggle
 // swByteSet
-int swByteGet(int n);
+s32 swByteGet(s32 n);
 // _swSet
-int _swGet(int n);
+s32 _swGet(s32 n);
 // _swClear
 // _swToggl
 // _swByteSet
-int _swByteGet(int n);
+s32 _swByteGet(s32 n);
 
 #endif

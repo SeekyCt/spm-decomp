@@ -1,13 +1,13 @@
+#include <common.h>
+#include <seq_game.h>
+#include <seq_gameover.h>
+#include <seq_load.h>
+#include <seq_logo.h>
+#include <seq_mapchange.h>
+#include <seq_title.h>
+#include <seqdef.h>
+#include <seqdrv.h>
 #include <stddef.h>
-
-#include "seqdef.h"
-#include "seqdrv.h"
-#include "seq_logo.h"
-#include "seq_title.h"
-#include "seq_game.h"
-#include "seq_mapchange.h"
-#include "seq_gameover.h"
-#include "seq_load.h"
 
 #ifdef GAME_SPM
 SeqDef seq_data[SEQ_COUNT] = {

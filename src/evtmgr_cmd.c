@@ -1,13 +1,12 @@
-#include <stdint.h>
+#include <common.h>
+#include <evtmgr_cmd.h>
+#include <evtmgr.h>
 #include <stdio.h>
 #include <string.h>
+#include <swdrv.h>
+#include <system.h>
 
-#include "evtmgr_cmd.h"
-#include "evtmgr.h"
-#include "swdrv.h"
-#include "system.h"
-
-static float check_float(int val) { // always inlined
+static float check_float(s32 val) { // always inlined
     if (val <= EVTDAT_FLOAT_MAX) {
         return (val + EVTDAT_FLOAT_BASE) / 1024.0f;
     }
@@ -30,14 +29,14 @@ EVT_CMD_FN(lbl) {
 
 // Matching but not good
 EVT_CMD_FN(goto) {
-    int lbl = evtGetValue(entry, entry->pCurData[0]);
-    int * r31 = entry->pCurData;
-    int * dest;
+    s32 lbl = evtGetValue(entry, entry->pCurData[0]);
+    EvtScriptCode * r31 = entry->pCurData;
+    EvtScriptCode * dest;
     if (lbl < EVTDAT_ADDR_MAX) { // likely evtSearchLabel inlined
-        dest = (int *) lbl;
+        dest = (EvtScriptCode *) lbl;
     }
     else {
-        int n;
+        s32 n;
         for (n = 0; n < MAX_EVT_JMPTBL; n++) {
             if (lbl == entry->labelIds[n]) {
                 r31 = entry->jumptable[n];
@@ -54,9 +53,9 @@ EVT_CMD_FN(goto) {
 }
 
 EVT_CMD_FN(do) {
-    int * p = entry->pCurData;
-    int count = *p++;
-    int depth = ++entry->dowhileDepth; // missing rlwinm here
+    EvtScriptCode * p = entry->pCurData;
+    s32 count = *p++;
+    s32 depth = ++entry->dowhileDepth; // missing rlwinm here
     if (depth >= 8) {
         assert(0, "EVTMGR_CMD:While Table Overflow !!");
     }
@@ -66,8 +65,8 @@ EVT_CMD_FN(do) {
 }
 
 EVT_CMD_FN(while) {
-    int count; // only way the register usage of depth's sign extend matched
-    int depth = entry->dowhileDepth;
+    s32 count; // only way the register usage of depth's sign extend matched
+    s32 depth = entry->dowhileDepth;
     if (depth < 0) {
         assert(0, "EVTMGR_CMD:While Table Underflow !!");
     }
@@ -81,7 +80,7 @@ EVT_CMD_FN(while) {
             entry->dowhileCounters[depth] = --count;
         }
         else {
-            int ret = evtGetValue(entry, count);
+            s32 ret = evtGetValue(entry, count);
             evtSetValue(entry, count, ret - 1);
             count = ret - 1;
         }
@@ -114,7 +113,7 @@ EVT_CMD_FN(do_continue) {
 }
 
 EVT_CMD_FN(wait_frm) {
-    int * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     if (!entry->blocked) { // wrong branch setup here
         entry->unknown_0x74 = evtGetValue(entry, *p);
         entry->blocked = 1;
@@ -135,7 +134,7 @@ EVT_CMD_FN(halt) {
 }
 
 EVT_CMD_FN(if_str_equal) {
-    int * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     char * s1 = (char *) evtGetValue(entry, p[0]);
     char * s2 = (char *) evtGetValue(entry, p[1]);
     if (s1 == NULL) {
@@ -152,7 +151,7 @@ EVT_CMD_FN(if_str_equal) {
 }
 
 EVT_CMD_FN(if_str_not_equal) {
-    int * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     char * s1 = (char *) evtGetValue(entry, p[0]);
     char * s2 = (char *) evtGetValue(entry, p[1]);
     if (s1 == NULL) {
@@ -169,7 +168,7 @@ EVT_CMD_FN(if_str_not_equal) {
 }
 
 EVT_CMD_FN(if_str_small) {
-    int * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     char * s1 = (char *) evtGetValue(entry, p[0]);
     char * s2 = (char *) evtGetValue(entry, p[1]);
     if (s1 == NULL) {
@@ -186,7 +185,7 @@ EVT_CMD_FN(if_str_small) {
 }
 
 EVT_CMD_FN(if_str_large) {
-    int * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     char * s1 = (char *) evtGetValue(entry, p[0]);
     char * s2 = (char *) evtGetValue(entry, p[1]);
     if (s1 == NULL) {
@@ -204,7 +203,7 @@ EVT_CMD_FN(if_str_large) {
 
 
 EVT_CMD_FN(if_str_small_equal) {
-    int * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     char * s1 = (char *) evtGetValue(entry, p[0]);
     char * s2 = (char *) evtGetValue(entry, p[1]);
     if (s1 == NULL) {
@@ -221,7 +220,7 @@ EVT_CMD_FN(if_str_small_equal) {
 }
 
 EVT_CMD_FN(if_str_large_equal)  {
-    int * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     char * s1 = (char *) evtGetValue(entry, p[0]);
     char * s2 = (char *) evtGetValue(entry, p[1]);
     if (s1 == NULL) {
@@ -238,7 +237,7 @@ EVT_CMD_FN(if_str_large_equal)  {
 }
 
 EVT_CMD_FN(iff_equal) {
-    int * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     float f1 = evtGetFloat(entry, p[0]);
     float f2 = evtGetFloat(entry, p[1]);
     if (f1 != f2) {
@@ -249,9 +248,9 @@ EVT_CMD_FN(iff_equal) {
 }
 
 EVT_CMD_FN(iff_not_equal) {
-    int * p = entry->pCurData;
-    float f1 = evtGetFloat(entry, p[0]);
-    float f2 = evtGetFloat(entry, p[1]);
+    EvtScriptCode * p = entry->pCurData;
+    f32 f1 = evtGetFloat(entry, p[0]);
+    f32 f2 = evtGetFloat(entry, p[1]);
     if (f1 == f2) {
         entry->pCurInstruction = evtSearchElse(entry);
         return EVT_CONTINUE;
@@ -260,9 +259,9 @@ EVT_CMD_FN(iff_not_equal) {
 }
 
 EVT_CMD_FN(iff_small) {
-    int * p = entry->pCurData;
-    float f1 = evtGetFloat(entry, p[0]);
-    float f2 = evtGetFloat(entry, p[1]);
+    EvtScriptCode * p = entry->pCurData;
+    f32 f1 = evtGetFloat(entry, p[0]);
+    f32 f2 = evtGetFloat(entry, p[1]);
     if (f1 >= f2) {
         entry->pCurInstruction = evtSearchElse(entry);
         return EVT_CONTINUE;
@@ -271,9 +270,9 @@ EVT_CMD_FN(iff_small) {
 }
 
 EVT_CMD_FN(iff_large) {
-    int * p = entry->pCurData;
-    float f1 = evtGetFloat(entry, p[0]);
-    float f2 = evtGetFloat(entry, p[1]);
+    EvtScriptCode * p = entry->pCurData;
+    f32 f1 = evtGetFloat(entry, p[0]);
+    f32 f2 = evtGetFloat(entry, p[1]);
     if (f1 <= f2) {
         entry->pCurInstruction = evtSearchElse(entry);
         return EVT_CONTINUE;
@@ -282,9 +281,9 @@ EVT_CMD_FN(iff_large) {
 }
 
 EVT_CMD_FN(iff_small_equal) {
-    int * p = entry->pCurData;
-    float f1 = evtGetFloat(entry, p[0]);
-    float f2 = evtGetFloat(entry, p[1]);
+    EvtScriptCode * p = entry->pCurData;
+    f32 f1 = evtGetFloat(entry, p[0]);
+    f32 f2 = evtGetFloat(entry, p[1]);
     if (f1 > f2) {
         entry->pCurInstruction = evtSearchElse(entry);
         return EVT_CONTINUE;
@@ -293,9 +292,9 @@ EVT_CMD_FN(iff_small_equal) {
 }
 
 EVT_CMD_FN(iff_large_equal) {
-    int * p = entry->pCurData;
-    float f1 = evtGetFloat(entry, p[0]);
-    float f2 = evtGetFloat(entry, p[1]);
+    EvtScriptCode * p = entry->pCurData;
+    f32 f1 = evtGetFloat(entry, p[0]);
+    f32 f2 = evtGetFloat(entry, p[1]);
     if (f1 < f2) {
         entry->pCurInstruction = evtSearchElse(entry);
         return EVT_CONTINUE;
@@ -304,9 +303,9 @@ EVT_CMD_FN(iff_large_equal) {
 }
 
 EVT_CMD_FN(if_equal) {
-    int * p = entry->pCurData;
-    int val1 = evtGetValue(entry, p[0]);
-    int val2 = evtGetValue(entry, p[1]);
+    EvtScriptCode * p = entry->pCurData;
+    s32 val1 = evtGetValue(entry, p[0]);
+    s32 val2 = evtGetValue(entry, p[1]);
     if (val1 != val2) {
         entry->pCurInstruction = evtSearchElse(entry);
         return EVT_CONTINUE;
@@ -315,9 +314,9 @@ EVT_CMD_FN(if_equal) {
 }
 
 EVT_CMD_FN(if_not_equal) {
-    int * p = entry->pCurData;
-    int val1 = evtGetValue(entry, p[0]);
-    int val2 = evtGetValue(entry, p[1]);
+    EvtScriptCode * p = entry->pCurData;
+    s32 val1 = evtGetValue(entry, p[0]);
+    s32 val2 = evtGetValue(entry, p[1]);
     if (val1 == val2) {
         entry->pCurInstruction = evtSearchElse(entry);
         return EVT_CONTINUE;
@@ -421,30 +420,30 @@ EVT_CMD_FN(debug_msg_clear) {
 
 EVT_CMD_FN(debug_put_reg) {
     static char str[256];
-    int * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     EvtWork * wp = evtGetWork();
-    int reg = *p;
+    s32 reg = *p;
     if (reg <= EVTDAT_ADDR_MAX) {
         sprintf(str, "ADDR     [%08X]", reg);
     }
     else if (reg <= EVTDAT_FLOAT_MAX) {
-        float f = check_float(reg);
+        f32 f = check_float(reg);
         sprintf(str, "FLOAT    [%4.2f]", f);
     }
     else if (reg <= EVTDAT_UF_MAX) {
         reg += EVTDAT_UF_BASE;
-        unsigned int mask = 1U << ((reg) % 32);
-        unsigned int dat = entry->uf[(reg) / 32];
+        u32 mask = 1U << ((reg) % 32);
+        u32 dat = entry->uf[(reg) / 32];
         sprintf(str, "UF(%3d)  [%d]", reg, mask & dat);
     }
     else if (reg <= EVTDAT_UW_MAX) {
         reg += EVTDAT_UW_BASE;
-        int val = entry->uw[reg];
+        s32 val = entry->uw[reg];
         if (val <= EVTDAT_ADDR_MAX) {
             sprintf(str, "UW(%3d)  [%08X]", val, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
-            float f = check_float(val);
+            f32 f = check_float(val);
             sprintf(str, "UW(%3d)  [%4.2f]", reg, f);
         }
         else {
@@ -453,12 +452,12 @@ EVT_CMD_FN(debug_put_reg) {
     }
     else if (reg <= EVTDAT_GSW_MAX) {
         reg += EVTDAT_GSW_BASE;
-        int val = swByteGet(reg);
+        s32 val = swByteGet(reg);
         if (val <= EVTDAT_ADDR_MAX) {
             sprintf(str, "GSW(%3d) [%08X]", val, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
-            float f = check_float(val);
+            f32 f = check_float(val);
             sprintf(str, "GSW(%3d) [%4.2f]", reg, f);
         }
         else {
@@ -467,12 +466,12 @@ EVT_CMD_FN(debug_put_reg) {
     }
     else if (reg <= EVTDAT_LSW_MAX) {
         reg += EVTDAT_LSW_BASE;
-        int val = _swByteGet(reg);
+        s32 val = _swByteGet(reg);
         if (val <= EVTDAT_ADDR_MAX) {
             sprintf(str, "LSW(%3d) [%08X]", val, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
-            float f = check_float(val);
+            f32 f = check_float(val);
             sprintf(str, "LSW(%3d)  [%4.2f]", reg, f);
         }
         else {
@@ -489,24 +488,24 @@ EVT_CMD_FN(debug_put_reg) {
     }
     else if (reg <= EVTDAT_GF_MAX) {
         reg += EVTDAT_GF_BASE;
-        unsigned int mask = 1U << ((reg) % 32);
-        unsigned int dat = wp->gf[(reg) / 32];
+        u32 mask = 1U << ((reg) % 32);
+        u32 dat = wp->gf[(reg) / 32];
         sprintf(str, "GF(%3d)  [%d]", reg, mask & dat);
     }
     else if (reg <= EVTDAT_LF_MAX) {
         reg += EVTDAT_LF_BASE;
-        unsigned int mask = 1U << ((reg) % 32);
-        unsigned int dat = entry->lf[(reg) / 32];
+        u32 mask = 1U << ((reg) % 32);
+        u32 dat = entry->lf[(reg) / 32];
         sprintf(str, "LF(%3d)  [%d]", reg, mask & dat);
     }
     else if (reg <= EVTDAT_GW_MAX) {
         reg += EVTDAT_GW_BASE;
-        int val = wp->gw[reg];
+        s32 val = wp->gw[reg];
         if (val <= EVTDAT_ADDR_MAX) {
             sprintf(str, "GW(%3d)  [%08X]", reg, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
-            float f = check_float(val);
+            f32 f = check_float(val);
             sprintf(str, "GW(%3d)  [%4.2f]", reg, f);
         }
         else {
@@ -515,12 +514,12 @@ EVT_CMD_FN(debug_put_reg) {
     }
     else if (reg <= EVTDAT_LW_MAX) {
         reg += EVTDAT_LW_BASE;
-        int val = entry->lw[reg];
+        s32 val = entry->lw[reg];
         if (val <= EVTDAT_ADDR_MAX) {
             sprintf(str, "LW(%3d)  [%08X]", reg, val);
         }
         else if (val <= EVTDAT_FLOAT_MAX) {
-            float f = check_float(val);
+            f32 f = check_float(val);
             sprintf(str, "LW(%3d)  [%4.2f]", reg, f);
         }
         else {
@@ -545,7 +544,7 @@ EVT_CMD_FN(debug_rem) {
 }
 
 EVT_CMD_FN(debug_bp) {
-    for (int i = 0; i < EVT_ENTRY_MAX; i++) {
+    for (s32 i = 0; i < EVT_ENTRY_MAX; i++) {
         if (evtGetPtr(i) == entry) break;
     }
     return 1;
@@ -559,11 +558,11 @@ EVT_CMD_FN(debug_bp) {
 // evtSetFloat
 // evtSearchLabel (inlined)
 
-static int * evtSearchElse(EvtEntry * entry) {
-    int ifDepth = 0;
-    int * pInstr = entry->pCurInstruction;
+EvtScriptCode * evtSearchElse(EvtEntry * entry) {
+    s32 ifDepth = 0;
+    EvtScriptCode * pInstr = entry->pCurInstruction;
     while (true) {
-        int opc = *pInstr & 0xffff;
+        s32 opc = *pInstr & 0xffff;
         pInstr += *pInstr++ >> 16;
         switch (opc) {
             case EVT_OPC_END_SCRIPT:
@@ -584,5 +583,24 @@ static int * evtSearchElse(EvtEntry * entry) {
 // evtSearchEndIf
 // evtSearchEndSwitch
 // evtSearchCase
-// evtSearchWhile 
+
+EvtScriptCode * evtSearchWhile(EvtEntry * entry) {
+    s32 dowhileDepth = 0;
+    EvtScriptCode * pInstr = entry->pCurInstruction;
+    while (true) {
+        s32 opc = *pInstr & 0xffff;
+        pInstr += *pInstr++ >> 16;
+        switch (opc) {
+            case EVT_OPC_END_SCRIPT:
+                assert(0, "EVTMGR_CMD:'WHILE' Search Error !!");
+            case EVT_OPC_WHILE:
+                if (--dowhileDepth >= 0) break;
+                else return pInstr;
+            case EVT_OPC_DO:
+                dowhileDepth += 1;
+                break;
+        }
+    }
+}
+
 // evtSearchJustBeforeWhile

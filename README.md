@@ -34,5 +34,9 @@ void kill_script_by_ID(s32 id) {
 ```
 so it seems unlikely the devs would've switched to this weird while format over a for loop.
 
+## Matching Notes
+- No attempt is made to match assert line numbers
+- String pool offsets won't match for incomplete files
+
 ## Credits
 Various members of the TTYD community for their documentation here https://github.com/PistonMiner/ttyd-tools and for porting the demo symbol map to the final game

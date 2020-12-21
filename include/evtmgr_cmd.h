@@ -1,7 +1,8 @@
 #ifndef EVTMGR_CMD_H
 #define EVTMGR_CMD_H
 
-#include "evtmgr.h"
+#include <common.h>
+#include <evtmgr.h>
 
 // Data types
 #define EVTDAT_ADDR_MAX -290000000
@@ -32,8 +33,6 @@
 // Return values
 #define EVT_END 0xff
 #define EVT_CONTINUE 2
-
-#define EVT_CMD_FN(name) int evt_##name(EvtEntry * entry)
 
 // Opcodes
 enum {
@@ -160,6 +159,7 @@ enum {
 };
 
 // Script instruction functions
+#define EVT_CMD_FN(name) s32 evt_##name(EvtEntry * entry)
 EVT_CMD_FN(end_evt);
 EVT_CMD_FN(lbl);
 EVT_CMD_FN(goto);

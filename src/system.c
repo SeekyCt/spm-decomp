@@ -1,7 +1,8 @@
-#include "string.h"
-#include "system.h"
+#include <common.h>
+#include <string.h>
+#include <system.h>
 
-static char * pad() { // need something in the string pool before "system.c"
+static char * pad() { // needed something in the string pool before "system.c", this doesn't actually exist
     return ".";
 }
 
