@@ -32,7 +32,7 @@ EVT_CMD_FN(goto) {
     s32 lbl = evtGetValue(entry, entry->pCurData[0]);
     EvtScriptCode * r31 = entry->pCurData;
     EvtScriptCode * dest;
-    if (lbl < EVTDAT_ADDR_MAX) { // likely evtSearchLabel inlined
+    if (lbl < EVTDAT_ADDR_MAX) { // TODO: evtSearchLabel inlined
         dest = (EvtScriptCode *) lbl;
     }
     else {
@@ -556,6 +556,7 @@ EVT_CMD_FN(debug_bp) {
 // evtSetValue
 // evtGetFloat
 // evtSetFloat
+
 // evtSearchLabel (inlined)
 
 EvtScriptCode * evtSearchElse(EvtEntry * entry) {
@@ -580,7 +581,25 @@ EvtScriptCode * evtSearchElse(EvtEntry * entry) {
     }
 }
 
-// evtSearchEndIf
+EvtScriptCode * evtSearchEndIf(EvtEntry * entry) {
+    s32 ifDepth = 0;
+    EvtScriptCode * pInstr = entry->pCurInstruction;
+    while (true) {
+        s32 opc = *pInstr & 0xffff;
+        pInstr += *pInstr++ >> 16;
+        switch (opc) {
+            case EVT_OPC_END_SCRIPT:
+                assert(0, "EVTMGR_CMD:'END_IF' Search Error !!");
+            case EVT_OPC_END_IF:
+                if (--ifDepth >= 0) break;
+                else return pInstr;
+            case EVT_OPC_IF_STR_EQUAL ... EVT_OPC_IF_NOT_FLAG:
+                ifDepth += 1;
+                break;
+       }
+    }
+}
+
 // evtSearchEndSwitch
 // evtSearchCase
 
