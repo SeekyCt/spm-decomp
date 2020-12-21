@@ -600,8 +600,48 @@ EvtScriptCode * evtSearchEndIf(EvtEntry * entry) {
     }
 }
 
-// evtSearchEndSwitch
-// evtSearchCase
+EvtScriptCode * evtSearchEndSwitch(EvtEntry * entry) {
+    EvtScriptCode * pInstr = entry->pCurInstruction;
+    s32 switchDepth = 1;
+    while (true) {
+        s32 opc = *pInstr & 0xffff;
+        EvtScriptCode * ret = pInstr;
+        pInstr += *pInstr++ >> 16;
+        switch(opc) {
+            case EVT_OPC_END_SCRIPT:
+                assert(0, "EVTMGR_CMD:'END_SWITCH' Search Error !!");
+            case EVT_OPC_SWITCH:
+                switchDepth += 1;
+                break;
+            case EVT_OPC_END_SWITCH:
+                if (--switchDepth == 0) return ret;
+                else break;
+        }
+    }
+}
+
+EvtScriptCode * evtSearchCase(EvtEntry * entry) {
+    EvtScriptCode * pInstr = entry->pCurInstruction;
+    s32 switchDepth = 1;
+    while (true) {
+        s32 opc = *pInstr & 0xffff;
+        EvtScriptCode * ret = pInstr;
+        pInstr += *pInstr++ >> 16;
+        switch(opc) {
+            case EVT_OPC_END_SCRIPT:
+                assert(0, "EVTMGR_CMD:'CASE' Search Error !!");
+            case EVT_OPC_SWITCH:
+                switchDepth += 1;
+                break;
+            case EVT_OPC_END_SWITCH:
+                if (--switchDepth == 0) return ret;
+                else break;
+            case EVT_OPC_CASE_EQUAL ... EVT_OPC_CASE_BETWEEN:
+                if (switchDepth == 1) return ret;
+                else break;
+        }
+    }
+}
 
 EvtScriptCode * evtSearchWhile(EvtEntry * entry) {
     s32 dowhileDepth = 0;

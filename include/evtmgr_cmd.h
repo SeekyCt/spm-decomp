@@ -320,9 +320,17 @@ EvtScriptCode * evtSearchElse(EvtEntry * entry);
 */
 EvtScriptCode * evtSearchEndIf(EvtEntry * entry);
 
-// evtSearchEndSwitch
+/*
+  Returns a pointer to the the next end switch on the current switch
+  depth in an entry's script
+*/
+EvtScriptCode * evtSearchEndSwitch(EvtEntry * entry);
 
-// evtSearchCase
+/*
+  Returns a pointer to the next case or end switch on the current
+  switch depth in an entry's script
+*/
+EvtScriptCode * evtSearchCase(EvtEntry * entry);
 
 /*
   Returns a pointer to the instruction after the next while on the
