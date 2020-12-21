@@ -4,7 +4,10 @@ Decompilation of Super Paper Mario. Doesn't produce a dol, asm is just checked b
 
 See also https://github.com/SeekyCt/spm-docs for other documentation
 
-## Compiler Version Note
+## Compiler Notes
+### Flags
+The compiler flags probably aren't fully accurate yet (particularly the inline pragma), and it's likely that some parts of the game will use different flags.
+### Version
 The project currently uses Codewarrior Version 4.1 build 60831, which seems to be a slightly wrong version. The main reason that makes this seem like it could be the case is that to match the variable incrementing order in some loops, while loops have had to be used instead of for loops, like in this code
 ```c
 void evtDeleteID(int id) {
