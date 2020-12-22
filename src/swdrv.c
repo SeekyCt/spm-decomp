@@ -1,7 +1,3 @@
-/*
-    80037eac-800388b3
-*/
-
 #include <common.h> 
 #include <evtmgr_cmd.h>
 #include <somewhere.h>
@@ -81,4 +77,3 @@ s32 _swByteGet(s32 num) {
 }
 
 // a lot
-
