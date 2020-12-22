@@ -30,14 +30,6 @@ typedef struct _SeqWork {
   SeqFunc * afterFunc;
 #endif
 } SeqWork;
-extern SeqWork seqWork; // 80512360
-
-extern s32 now_seq; // 805ae0b8
-extern s32 next_seq; // 805ae0bc
-extern s32 prev_seq; // 805ae0c0
-
-extern char * next_p0; // 805ae918 - seqMapName
-extern char * next_p1; // 805ae91c - seqDoorName
 
 #ifdef GAME_SPM
 void seqInit_SPMARIO(); // 8017bf2c

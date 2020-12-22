@@ -3,12 +3,12 @@
 #include "seqdrv.h"
 #include "system.h"
 
-SeqWork seqWork;
-s32 now_seq = -1;
-s32 next_seq = -1;
-s32 prev_seq = -1;
-char * next_p0;
-char * next_p1;
+static SeqWork seqWork; // 80512360
+static s32 now_seq = -1; // 805ae0b8
+static s32 next_seq = -1; // 805ae0bc
+static s32 prev_seq = -1; // 805ae0c0
+static char * next_p0; // 805ae918 - seqMapName
+static char * next_p1; // 805ae91c - seqDoorName
 
 #ifdef GAME_SPM
 void seqInit_SPMARIO() {
