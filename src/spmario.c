@@ -1,7 +1,8 @@
 #include <common.h>
+#include <evtmgr.h>
 #include <spmario.h>
 
-SpmarioGlobals marioSt;
+SpmarioGlobals spmario;
 SpmarioGlobals * gp = &spmario;
 s32 _spmarioSystemLevel;
 
@@ -11,8 +12,31 @@ s32 _spmarioSystemLevel;
 // spmarioInit
 // spmarioMain
 // spmarioDisp
-// spmarioSystemLevel
-// spmarioGetSystemLevel
+
+void spmarioSystemLevel(s32 level) {
+    switch (level) {
+        case 0:
+            _spmarioSystemLevel = level;
+            gp->systemLevelFlags &= ~3;
+            evtStartAll(0xff);
+            break;
+        case 1:
+            _spmarioSystemLevel = level;
+            gp->systemLevelFlags |= 1;
+            evtStopAll(7);
+            break;
+        case 2:
+            _spmarioSystemLevel = level;
+            gp->systemLevelFlags |= 3;
+            evtStopAll(0xff);
+            break;
+    }
+}
+
+s32 spmarioGetSystemLevel() {
+    return _spmarioSystemLevel;
+}
+
 // viPostCallback
 // wiiDvdCheckThread
 // wiiRumbleCheck
