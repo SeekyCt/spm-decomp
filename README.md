@@ -1,6 +1,6 @@
 # spm-decomp
 
-Decompilation of Super Paper Mario. Doesn't produce a dol, asm is just checked by compiling with -S. A small bit of TTYD support.
+Decompilation of Super Paper Mario (PAL revision 0). Doesn't produce a dol, asm is just checked by compiling with -S. A small bit of TTYD support.
 
 See also https://github.com/SeekyCt/spm-docs for other documentation
 
