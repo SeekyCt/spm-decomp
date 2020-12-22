@@ -31,10 +31,10 @@ s32 spmarioGetSystemLevel(); // 801a87ec
 // wiiDvdCheckThread // 801a898c
 // wiiRumbleCheck // 801a8db4
 
-// New to SPM so no symbols:
-// 801a9068
-// 801a9074
-// 801a9080
-// 801a908c
+// New to SPM so no symbols
+void unknown_801a9068();
+void unknown_801a9074();
+void unknown_801a9080();
+void unknown_801a908c();
 
 #endif

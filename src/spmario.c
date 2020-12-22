@@ -4,10 +4,16 @@
 
 SpmarioGlobals spmario;
 SpmarioGlobals * gp = &spmario;
-s32 _spmarioSystemLevel;
-
 // static dvd thread stack 80527370
 // static OSThread DVDCheckThread 80527058
+
+s8 unknown_805ae9c0;
+s8 unknown_805ae9c1;
+s8 unknown_805ae9c2;
+s8 unknown_805ae9c3;
+// 805ae9c4
+s32 _spmarioSystemLevel;
+// 805ae9cc
 
 // spmarioInit
 // spmarioMain
@@ -40,7 +46,19 @@ s32 spmarioGetSystemLevel() {
 // viPostCallback
 // wiiDvdCheckThread
 // wiiRumbleCheck
-// 801a9068
-// 801a9074
-// 801a9080
-// 801a908c
+
+void unknown_801a9068() {
+    unknown_805ae9c0 = 1;
+}
+
+void unknown_801a9074() {
+    unknown_805ae9c1 = 1;
+}
+
+void unknown_801a9080() {
+    unknown_805ae9c2 = 1;
+}
+
+void unknown_801a908c() {
+    unknown_805ae9c3 = 1;
+}
