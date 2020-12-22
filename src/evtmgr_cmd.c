@@ -324,10 +324,38 @@ EVT_CMD_FN(if_not_equal) {
     return EVT_CONTINUE;
 }
 
-// EVT_CMD_FN(if_flag)
-// EVT_CMD_FN(if_not_flag)
-// EVT_CMD_FN(else)
-// EVT_CMD_FN(end_if)
+EVT_CMD_FN(if_flag) {
+    EvtScriptCode * p = entry->pCurData;
+    s32 val = evtGetValue(entry, p[0]);
+    s32 mask = p[1];
+    if ((val & mask) == 0) {
+        entry->pCurInstruction = evtSearchElse(entry);
+        return EVT_CONTINUE;
+    }
+    return EVT_CONTINUE;
+}
+
+EVT_CMD_FN(if_not_flag) {
+    EvtScriptCode * p = entry->pCurData;
+    s32 val = evtGetValue(entry, p[0]);
+    s32 mask = p[1];
+    if ((val & mask) != 0) {
+        entry->pCurInstruction = evtSearchElse(entry);
+        return EVT_CONTINUE;
+    }
+    return EVT_CONTINUE;
+}
+
+EVT_CMD_FN(else) {
+    entry->pCurInstruction = evtSearchEndIf(entry);
+    return EVT_CONTINUE;
+}
+
+EVT_CMD_FN(end_if) {
+    (void) entry;
+    return EVT_CONTINUE;
+}
+
 // EVT_CMD_FN(switch)
 // EVT_CMD_FN(switchi)
 // EVT_CMD_FN(case_equal)

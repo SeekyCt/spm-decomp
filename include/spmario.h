@@ -32,6 +32,7 @@ s32 spmarioGetSystemLevel(); // 801a87ec
 // wiiRumbleCheck // 801a8db4
 
 // New to SPM so no symbols
+// TODO: maybe static?
 void unknown_801a9068();
 void unknown_801a9074();
 void unknown_801a9080();

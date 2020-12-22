@@ -192,10 +192,10 @@ EVT_CMD_FN(_if_small);
 EVT_CMD_FN(if_large);
 EVT_CMD_FN(if_small_equal);
 EVT_CMD_FN(if_large_equal);
-// EVT_CMD_FN(if_flag)
-// EVT_CMD_FN(if_not_flag)
-// EVT_CMD_FN(else)
-// EVT_CMD_FN(end_if)
+EVT_CMD_FN(if_flag);
+EVT_CMD_FN(if_not_flag);
+EVT_CMD_FN(else);
+EVT_CMD_FN(end_if);
 // EVT_CMD_FN(switch)
 // EVT_CMD_FN(switchi)
 // EVT_CMD_FN(case_equal)
@@ -288,7 +288,7 @@ EVT_CMD_FN(debug_bp);
 s32 evtmgrCmd(EvtEntry * entry); // 800ddd5c
 
 /*
-  Gives the value of an evt variable
+  Gets the value of an evt variable
 */
 s32 evtGetValue(EvtEntry * entry, s32 data); // 800de594
 
