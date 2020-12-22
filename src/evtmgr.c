@@ -7,6 +7,7 @@
 #include <common.h>
 #include <evtmgr.h>
 #include <evtmgr_cmd.h>
+#include <evt_msg.h>
 #include <mariost.h>
 #include <memory.h>
 #include <os.h>
