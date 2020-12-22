@@ -17,6 +17,6 @@ typedef struct {
     SeqFunc * main;
     SeqFunc * exit;
 } SeqDef;
-extern SeqDef seq_data[SEQ_COUNT];
+extern SeqDef seq_data[SEQ_COUNT]; // 804287a8
 
 #endif

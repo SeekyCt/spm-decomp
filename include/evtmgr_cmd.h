@@ -158,7 +158,7 @@ enum {
   EVT_OPC_DEBUG_BP
 };
 
-// Script instruction functions
+// Script instruction functions, 800da0b0 - 800ddd5b
 #define EVT_CMD_FN(name) s32 evt_##name(EvtEntry * entry)
 EVT_CMD_FN(end_evt);
 EVT_CMD_FN(lbl);
@@ -281,67 +281,72 @@ EVT_CMD_FN(debug_bp);
 /*
   Executes an entry's script until it pauses or finishes
 */
-s32 evtmgrCmd(EvtEntry * entry);
+s32 evtmgrCmd(EvtEntry * entry); // 800ddd5c
 
 /*
   Gives the value of an evt variable
 */
-s32 evtGetValue(EvtEntry * entry, int data);
+s32 evtGetValue(EvtEntry * entry, s32 data); // 800de594
 
-// evtGetNumber
+// evtGetNumber (inlined / unused)
 
 /*
   Sets the value of an evt variable
 */
-s32 evtSetValue(EvtEntry * entry, int, int);
+s32 evtSetValue(EvtEntry * entry, s32, s32); // 800de9b8
 
 /*
   Gets the value of a float evt variable
 */
-f32 evtGetFloat(EvtEntry * entry, int data);
+f32 evtGetFloat(EvtEntry * entry, s32 data); // 800dedb8
 
-// evtSetFloat
+/*
+  Sets the value of a float evt variable
+*/
+f32 evtSetFloat(EvtEntry * entry, s32, f32); // 800df1fc
+
+// TODO: search functions probably static?
 
 /*
   Returns a pointer to the instruction after the specified label
   in an entry's script
 */
-EvtScriptCode * evtSearchLabel(EvtEntry * entry, int id);
+EvtScriptCode * evtSearchLabel(EvtEntry * entry, int id); // inlined
 
 /*
   Returns a pointer to the instruction after the next else on the
   current if else depth in an entry's script
 */
-EvtScriptCode * evtSearchElse(EvtEntry * entry); 
+EvtScriptCode * evtSearchElse(EvtEntry * entry); // 800df55c
 
 /*
   Returns a pointer to the instruction after the next end if on the
   current if else depth in an entry's script
 */
-EvtScriptCode * evtSearchEndIf(EvtEntry * entry);
+EvtScriptCode * evtSearchEndIf(EvtEntry * entry); // 800df620
 
 /*
   Returns a pointer to the the next end switch on the current switch
   depth in an entry's script
 */
-EvtScriptCode * evtSearchEndSwitch(EvtEntry * entry);
+EvtScriptCode * evtSearchEndSwitch(EvtEntry * entry); // 800df6d8
 
 /*
   Returns a pointer to the next case or end switch on the current
   switch depth in an entry's script
 */
-EvtScriptCode * evtSearchCase(EvtEntry * entry);
+EvtScriptCode * evtSearchCase(EvtEntry * entry); // 800df780
 
 /*
   Returns a pointer to the instruction after the next while on the
   current do while depth in an entry's script
 */
-EvtScriptCode * evtSearchWhile(EvtEntry * entry);
+EvtScriptCode * evtSearchWhile(EvtEntry * entry); // 800df84c
 
 /*
   Returns a pointer to the next while instruction on the current do
   while depth in an entry's script
 */
-EvtScriptCode * evtSearchJustBeforeWhile(EvtEntry * entry);
+EvtScriptCode * evtSearchJustBeforeWhile(EvtEntry * entry); // 800df8f8
 
 #endif

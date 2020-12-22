@@ -419,7 +419,7 @@ EVT_CMD_FN(debug_msg_clear) {
 }
 
 EVT_CMD_FN(debug_put_reg) {
-    static char str[256];
+    static char str[256]; // 8050ce30
     EvtScriptCode * p = entry->pCurData;
     EvtWork * wp = evtGetWork();
     s32 reg = *p;

@@ -3,6 +3,6 @@
 
 #include <common.h>
 
-s32 sprintf(char *str, const char *format, ...);
+s32 sprintf(char *str, const char *format, ...); // 8025d098
 
 #endif

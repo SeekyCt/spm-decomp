@@ -7,7 +7,6 @@
 #include <seq_title.h>
 #include <seqdef.h>
 #include <seqdrv.h>
-#include <stddef.h>
 
 #ifdef GAME_SPM
 SeqDef seq_data[SEQ_COUNT] = {

@@ -3,6 +3,6 @@
 
 #include <common.h>
 
-void evt_msg_init();
+void evt_msg_init(); // 800fb27c
 
 #endif

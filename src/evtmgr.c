@@ -8,7 +8,7 @@
 #include <evtmgr.h>
 #include <evtmgr_cmd.h>
 #include <evt_msg.h>
-#include <mariost.h>
+#include <spmario.h>
 #include <memory.h>
 #include <os.h>
 #include <somewhere.h>
@@ -22,6 +22,7 @@ static s32 priIdTbl[EVT_ENTRY_MAX]; // 8050cc30
 s32 evtMax;
 static s32 priTblNum; // 805ae8dc
 static s32 runMainF; // 805ae8e0
+
 static s32 evtId = 1; // 805ae018
 static float evtSpd = 1.0; // 805ae01c
 

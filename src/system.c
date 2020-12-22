@@ -9,11 +9,9 @@ static char * pad() { // needed something in the string pool before "system.c", 
 #define MAX_ELEMENT 0xC00
 #define MAX_ELEMENT_SIZE 0x40
 
-void fsort(char ** table, size_t size);
-
-static char * tmp0[MAX_ELEMENT]; // pointers to all items
-static char tmp1[0x100]; // temporary copy of an item being swapped
-static void * comp; // comparison function, passed to fsort indirectly
+static char * tmp0[MAX_ELEMENT]; // 80513e60, pointers to all items
+static char tmp1[0x100]; // 80516e60, temporary copy of an item being swapped
+static void * comp; // 805ae968, comparison function, passed to fsort indirectly
 /*
 void qqsort(char * list, size_t nel, size_t size, void * compare) {
     assert(nel < MAX_ELEMENT, "要素数が多すぎてバッファが足りません"); // "Too many elements and not enough buffer"
