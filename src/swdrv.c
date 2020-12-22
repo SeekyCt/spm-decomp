@@ -1,3 +1,7 @@
+/*
+    80037eac-800388b3
+*/
+
 #include <common.h> 
 #include <evtmgr_cmd.h>
 #include <somewhere.h>
@@ -45,13 +49,35 @@ void swByteSet(s32 num, s32 value) {
     else {
         // "The value is strange"
         assertf(num < 256, "値がおかしい sw_byte[%d] = %d", num + EVTDAT_LSW_BASE, value);
-        gp->gsw[num] = (u8) value;
+        gp->gsw[num] = (s8) value;
     }
 }
 
 s32 swByteGet(s32 num) {
     if (num == 0) return gp->gsw0;
     else return gp->gsw[num];
+}
+
+void _swSet(s32 num) {
+    gp->lswf[num / 32] |= 1U << (num % 32);
+}
+
+bool _swGet(s32 num) {
+    u32 mask = 1U << (num % 32);
+    u32 dat = gp->lswf[num / 32];
+    return (bool) (mask & dat);
+}
+
+void _swClear(s32 num) {
+    gp->lswf[num / 32] &= ~(1U << (num % 32));
+}
+
+void _swByteSet(s32 num, s8 value) {
+    gp->lsw[num] = (s8) value;
+}
+
+s32 _swByteGet(s32 num) {
+    return gp->gsw[num];
 }
 
 // a lot

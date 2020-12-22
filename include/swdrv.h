@@ -1,3 +1,11 @@
+/*
+    Functions handling "Saved Work", which are variables used in evt
+    scripts that are saved when closing the game
+    Set, Get & Clear functions handle bools
+    ByteGet and ByteSet functions handle s8 (or s32 for gsw0)
+    LSW(F) functions are prefixed by an underscore, the rest are GSW(F)
+*/
+
 #ifndef SWDRV_H
 #define SWDRV_H
 
@@ -33,22 +41,53 @@ void swClear(s32 num); // 80038034
 
 /*
     Sets a global saved work value
-    Value cast to s8 unless setting GSW 0
+    Value cast to u8 unless setting GSW 0
 */
-void swByteSet(s32 num, s32 value);
+void swByteSet(s32 num, s32 value); // 80038074
 
 /*
     Gets a global saved work value
-    Return is s8 unless getting GSW 0
+    Return is u8 unless getting GSW 0
 */
-s32 swByteGet(s32 num);
+s32 swByteGet(s32 num); // 800380f8
 
-// _swSet
-s32 _swGet(s32 num);
-// _swClear
+/*
+    Turns on a local saved work flag
+*/
+void _swSet(s32 num); // 8003811c
+
+/*
+    Returns the value of a local saved work flag
+*/
+bool _swGet(s32 num); // 8003815c
+
+/*
+    Turns off a local saved work flag
+*/
+void _swClear(s32 num); // 800381a4
+
 // TTYD symbol map shows there's an _swToggle but it went unused in both games
-// _swToggle
-// _swByteSet
+
+/*
+    Sets a local saved work value
+*/
+void _swByteSet(s32 num, s8 value);
+
+/*
+    Returns a local saved work value
+    Note: return is technically just s8 but calls used wrong casts when it was set to that
+*/
 s32 _swByteGet(s32 num);
+
+// New to SPM so no symbols:
+// 80038204
+// 800383a0
+// 80038478
+// 80038550
+// 8003863c
+// 8003864c
+// 8003865c
+// 8003875c
+// 800387d8
 
 #endif

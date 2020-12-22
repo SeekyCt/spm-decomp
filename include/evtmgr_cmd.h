@@ -1,3 +1,7 @@
+/*
+  Functions to execute interpreted evt script code and handle evt variables
+*/
+
 #ifndef EVTMGR_CMD_H
 #define EVTMGR_CMD_H
 
