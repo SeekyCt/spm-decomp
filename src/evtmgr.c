@@ -11,7 +11,6 @@
 #include <spmario.h>
 #include <memory.h>
 #include <os.h>
-#include <somewhere.h>
 #include <string.h>
 #include <system.h>
 
@@ -172,14 +171,14 @@ EvtEntry * evtEntry(EvtScriptCode * script, u8 priority, u8 flags) {
         priTbl[priTblNum] = i;
         priIdTbl[priTblNum++] = entry->id;
     }
-    if (unknown_805ae9c8 == 1) {
+    if (_spmarioSystemLevel == 1) {
         for (s32 i = 0; i < work.entryCount; i++) {
             if (work.entries[i].flags & 1 != 0) {
                 evtStop(&work.entries[i], 3);
             }
         }
     }
-    else if (unknown_805ae9c8 > 0 && unknown_805ae9c8 < 3) {
+    else if (_spmarioSystemLevel > 0 && _spmarioSystemLevel < 3) {
         for (s32 i = 0; i < work.entryCount; i++) {
             if (work.entries[i].flags & 1 != 0) {
                 evtStop(&work.entries[i], 0xff);
