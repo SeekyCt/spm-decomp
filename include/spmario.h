@@ -8,11 +8,12 @@ typedef struct {
     s64 time;
     u8 unknown_0x100[0x140 - 0x100];
     s32 gsw0;
-    u8 gswf[1024];
+    u32 gswf[256];
     u8 gsw[2048];
-    u8 lswf[64];
+    s32 lswf[16];
     u8 lsw[1024];
-    u8 unknown_0x1184[0x1ab0 - 0x1184];
+    u8 unknown_0x1184[0x900]; // coin related?
+    u8 unknown_0x1a84[0x1ab0 - 0x1a84];
 } SpmarioGlobals;
 extern SpmarioGlobals * gp; // 805ae178
 extern SpmarioGlobals spmario; // 80525550

@@ -432,8 +432,8 @@ EVT_CMD_FN(debug_put_reg) {
     }
     else if (reg <= EVTDAT_UF_MAX) {
         reg += EVTDAT_UF_BASE;
-        u32 mask = 1U << ((reg) % 32);
-        u32 dat = entry->uf[(reg) / 32];
+        u32 mask = 1U << (reg % 32);
+        u32 dat = entry->uf[reg / 32];
         sprintf(str, "UF(%3d)  [%d]", reg, mask & dat);
     }
     else if (reg <= EVTDAT_UW_MAX) {
@@ -488,14 +488,14 @@ EVT_CMD_FN(debug_put_reg) {
     }
     else if (reg <= EVTDAT_GF_MAX) {
         reg += EVTDAT_GF_BASE;
-        u32 mask = 1U << ((reg) % 32);
-        u32 dat = wp->gf[(reg) / 32];
+        u32 mask = 1U << (reg % 32);
+        u32 dat = wp->gf[reg / 32];
         sprintf(str, "GF(%3d)  [%d]", reg, mask & dat);
     }
     else if (reg <= EVTDAT_LF_MAX) {
         reg += EVTDAT_LF_BASE;
-        u32 mask = 1U << ((reg) % 32);
-        u32 dat = entry->lf[(reg) / 32];
+        u32 mask = 1U << (reg % 32);
+        u32 dat = entry->lf[reg / 32];
         sprintf(str, "LF(%3d)  [%d]", reg, mask & dat);
     }
     else if (reg <= EVTDAT_GW_MAX) {
