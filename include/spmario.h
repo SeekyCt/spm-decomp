@@ -1,6 +1,8 @@
 #ifndef SPMARIO_H
 #define SPMARIO_H
 
+#include <common.h>
+
 typedef struct {
     u8 unknown_0x0[0x4 - 0x0];
     u32 unknown_0x4;

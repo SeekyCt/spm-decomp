@@ -1,7 +1,7 @@
+#include <common.h>
+#include <seqdrv.h>
 #include <string.h>
-
-#include "seqdrv.h"
-#include "system.h"
+#include <system.h>
 
 static SeqWork seqWork; // 80512360
 static s32 now_seq = -1; // 805ae0b8

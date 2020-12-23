@@ -2,10 +2,31 @@
 #define MEMORY_H
 
 #include <common.h>
+#include <mem.h>
 
-// memInit 801a5dcc
+#define MEM1_HEAP_COUNT 3
+#define MEM2_HEAP_COUNT 6
+#define HEAP_COUNT 9
+
+typedef struct {
+    MEMHeapHandle heapHandle[HEAP_COUNT];
+    void * heapStart[HEAP_COUNT];
+    void * heapEnd[HEAP_COUNT];
+} MemWork;
+
+enum HeapSizeType {
+    HEAPSIZE_PERCENT_REMAINING,
+    HEAPSIZE_ABSOLUTE_KB
+};
+
+typedef struct {
+    s32 type;
+    s32 size;
+} HeapSize;
+
+void memInit(); // 801a5dcc
 // memClear 801a61e4
-void * __memAlloc(int heap, size_t size); // 801a626c
+void * __memAlloc(s32 heap, size_t size); // 801a626c
 // __memFree 801a62f0
 // smartInit 801a6300
 // smartAutoFree 801a64f4
