@@ -109,7 +109,7 @@ static void make_jump_table(EvtEntry * entry) { // 800d890c
 
 void evtmgrInit() {
     work.entryCount = EVT_ENTRY_MAX;
-    work.entries = (EvtEntry *) __MemAlloc(0, work.entryCount * sizeof(EvtEntry));
+    work.entries = (EvtEntry *) __memAlloc(0, work.entryCount * sizeof(EvtEntry));
     work.time = gp->time;
     memset(work.entries, 0, work.entryCount * sizeof(EvtEntry));
     memset(work.gw, 0, sizeof(work.gw));
