@@ -48,4 +48,4 @@ TTYD was initially matched too for some of seqdrv, but this was abandoned based 
 
 ## Credits
 - Various members of the TTYD community for their [documentation](https://github.com/PistonMiner/ttyd-tools) and for porting the demo symbol map to the final game
-- The [PM64 decomp](https://github.com/ethteck/papermario) team for decompiling many of the same functions to check against
+- The [PM64 decomp](https://github.com/ethteck/papermario) team for decompiling many of the same functions, which are useful to check against
