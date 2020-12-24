@@ -3,8 +3,6 @@
 
 #include <common.h>
 
-#define LZSS10_GET_
-
 // Unsure about a lot of this
 
 // File is new to SPM and with no asserts, so no names are official here
