@@ -396,6 +396,26 @@ EVT_CMD_FN(end_if) {
 // EVT_CMD_FN(readf3)
 // EVT_CMD_FN(readf4)
 // EVT_CMD_FN(readf_n)
+
+EVT_CMD_FN(clamp_int) {
+    s32 * pData = entry->pCurData;
+
+    s32 dest = pData[0];
+    s32 destVal = evtGetValue(entry, dest);
+    s32 minVal = evtGetValue(entry, pData[1]);
+    s32 maxVal = evtGetValue(entry, pData[2]);
+
+    if (destVal < minVal) {
+        evtSetValue(entry, dest, minVal);
+    }
+
+    if (destVal > maxVal) {
+        evtSetValue(entry, dest, maxVal);
+    }
+    
+    return EVT_CONTINUE;
+}
+
 // EVT_CMD_FN(set_user_wrk)
 // EVT_CMD_FN(set_user_flg)
 // EVT_CMD_FN(alloc_user_wrk)

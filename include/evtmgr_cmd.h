@@ -236,6 +236,7 @@ EVT_CMD_FN(end_if);
 // EVT_CMD_FN(readf3)
 // EVT_CMD_FN(readf4)
 // EVT_CMD_FN(readf_n)
+EVT_CMD_FN(clamp_int);
 // EVT_CMD_FN(set_user_wrk)
 // EVT_CMD_FN(set_user_flg)
 // EVT_CMD_FN(alloc_user_wrk)
@@ -297,7 +298,7 @@ s32 evtGetValue(EvtEntry * entry, s32 data); // 800de594
 /*
   Sets the value of an evt variable
 */
-s32 evtSetValue(EvtEntry * entry, s32, s32); // 800de9b8
+s32 evtSetValue(EvtEntry * entry, s32 variable, s32 value); // 800de9b8
 
 /*
   Gets the value of a float evt variable
