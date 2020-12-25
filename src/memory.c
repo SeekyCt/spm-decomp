@@ -117,3 +117,9 @@ void * __memAlloc(s32 heapId, size_t size) {
     assertf(p, "ƒƒ‚ƒŠŠm•ÛƒGƒ‰[ [id = %d][size = %d]", heapId, size);
     return p;
 }
+
+void __memFree(s32 heapId, void * ptr) {
+    MEMFreeToExpHeap(wp->heapHandle[heapId], ptr);
+}
+
+// a lot
