@@ -6,8 +6,49 @@
 
 static MemWork memWork;
 static MemWork * wp = &memWork;
-static HeapSize size_table[HEAP_COUNT];
 static bool memInitFlag = false;
+
+static HeapSize size_table[HEAP_COUNT] = {
+    // MEM1
+    { // 0
+        .type = HEAPSIZE_ABSOLUTE_KB,
+        .size = 0x2400
+    },
+    { // 1
+        .type = HEAPSIZE_ABSOLUTE_KB,
+        .size = 0x1800
+    },
+    { // 2
+        .type = HEAPSIZE_PERCENT_REMAINING,
+        .size = 100
+    },
+
+    // MEM2
+    { // 3
+        .type = HEAPSIZE_ABSOLUTE_KB,
+        .size = 0x100
+    },
+    { // 4
+        .type = HEAPSIZE_ABSOLUTE_KB,
+        .size = 0x100
+    },
+    { // 5
+        .type = HEAPSIZE_ABSOLUTE_KB,
+        .size = 0x80
+    },
+    { // 6
+        .type = HEAPSIZE_ABSOLUTE_KB,
+        .size = 0x4400
+    },
+    { // 7
+        .type = HEAPSIZE_PERCENT_REMAINING,
+        .size = 100
+    },
+    { // 8
+        .type = HEAPSIZE_ABSOLUTE_KB,
+        .size = 1
+    }
+};
 
 void memInit() {
     s32 i; // register usage closer to matching
