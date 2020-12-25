@@ -15,8 +15,8 @@ static char * pad() { // needed something in the string pool before "system.c", 
 }
 
 void qqsort(char * list, size_t nel, size_t size, void * compare) {
-    assert(nel < MAX_ELEMENT, "è¦ç´ æ•°ãŒå¤šã™ãŽã¦ãƒãƒƒãƒ•ã‚¡ãŒè¶³ã‚Šã¾ã›ã‚“"); // "Too many elements and not enough buffer"
-    assert(size < MAX_ELEMENT_SIZE, "ï¼‘è¦ç´ ã®ã‚µã‚¤ã‚ºãŒå¤§ããã¦ãƒãƒƒãƒ•ã‚¡ãŒè¶³ã‚Šã¾ã›ã‚“"); // "One element is too big and there is not enough buffer"
+    assert(nel < MAX_ELEMENT, "—v‘f”‚ª‘½‚·‚¬‚Äƒoƒbƒtƒ@‚ª‘«‚è‚Ü‚¹‚ñ"); // "Too many elements and not enough buffer"
+    assert(size < MAX_ELEMENT_SIZE, "‚P—v‘f‚ÌƒTƒCƒY‚ª‘å‚«‚­‚Äƒoƒbƒtƒ@‚ª‘«‚è‚Ü‚¹‚ñ"); // "One element is too big and there is not enough buffer"
     comp = compare;
     if (nel <= 1) return;
     char * p = list;
@@ -46,8 +46,8 @@ void qqsort(char * list, size_t nel, size_t size, void * compare) {
 }
 
 void qqsort(char * list, size_t nel, size_t size, char * compare) {
-    assert(nel < MAX_ELEMENT, "è¦ç´ æ•°ãŒå¤šã™ãŽã¦ãƒãƒƒãƒ•ã‚¡ãŒè¶³ã‚Šã¾ã›ã‚“"); // "Too many elements and not enough buffer"
-    assert(size < MAX_ELEMENT_SIZE, "ï¼‘è¦ç´ ã®ã‚µã‚¤ã‚ºãŒå¤§ããã¦ãƒãƒƒãƒ•ã‚¡ãŒè¶³ã‚Šã¾ã›ã‚“"); // "One element is too big and there is not enough buffer"
+    assert(nel < MAX_ELEMENT, "—v‘f”‚ª‘½‚·‚¬‚Äƒoƒbƒtƒ@‚ª‘«‚è‚Ü‚¹‚ñ"); // "Too many elements and not enough buffer"
+    assert(size < MAX_ELEMENT_SIZE, "‚P—v‘f‚ÌƒTƒCƒY‚ª‘å‚«‚­‚Äƒoƒbƒtƒ@‚ª‘«‚è‚Ü‚¹‚ñ"); // "One element is too big and there is not enough buffer"
     comp = compare;
     if (nel > 1) {
         char * p = list;
@@ -78,8 +78,8 @@ void qqsort(char * list, size_t nel, size_t size, char * compare) {
 }
 
 void qqsort(char * list, size_t nel, size_t size, char * compare) {
-    assert(nel < MAX_ELEMENT, "è¦ç´ æ•°ãŒå¤šã™ãŽã¦ãƒãƒƒãƒ•ã‚¡ãŒè¶³ã‚Šã¾ã›ã‚“"); // "Too many elements and not enough buffer"
-    assert(size < MAX_ELEMENT_SIZE, "ï¼‘è¦ç´ ã®ã‚µã‚¤ã‚ºãŒå¤§ããã¦ãƒãƒƒãƒ•ã‚¡ãŒè¶³ã‚Šã¾ã›ã‚“"); // "One element is too big and there is not enough buffer"
+    assert(nel < MAX_ELEMENT, "—v‘f”‚ª‘½‚·‚¬‚Äƒoƒbƒtƒ@‚ª‘«‚è‚Ü‚¹‚ñ"); // "Too many elements and not enough buffer"
+    assert(size < MAX_ELEMENT_SIZE, "‚P—v‘f‚ÌƒTƒCƒY‚ª‘å‚«‚­‚Äƒoƒbƒtƒ@‚ª‘«‚è‚Ü‚¹‚ñ"); // "One element is too big and there is not enough buffer"
     comp = compare;
     if (nel > 1) {
         for (int i = 0; i < nel; i++) {

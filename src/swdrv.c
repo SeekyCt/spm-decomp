@@ -44,7 +44,7 @@ void swByteSet(s32 num, s32 value) {
     }
     else {
         // "The value is strange"
-        assertf(num < 256, "å€¤ãŒãŠã‹ã—ã„ sw_byte[%d] = %d", num + EVTDAT_LSW_BASE, value);
+        assertf(num < 256, "’l‚ª‚¨‚©‚µ‚¢ sw_byte[%d] = %d", num + EVTDAT_LSW_BASE, value);
         gp->gsw[num] = (s8) value;
     }
 }
