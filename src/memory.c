@@ -25,7 +25,7 @@ void memInit() {
             wp->heapStart[i] = min;
             wp->heapEnd[i] = min + size;
             // "Error: Overheap of heap from arena [%d] \ n"
-            assertf((u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            assertf((u32)wp->heapEnd[i] <= max, "ERROR: �A���[�i����̃q�[�v�̎擾�I�[�o�[�ł��B[%d]\n", i);
             min += size;
         }
     }
@@ -35,12 +35,12 @@ void memInit() {
         if (size_table[i].type == HEAPSIZE_PERCENT_REMAINING) {
             u32 size = (u32) (((u64) space * size_table[i].size) / 100);
             // "ERROR: Excessive heap acquisition from arena\n"
-            assert(size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
+            assert(size >= 32, "ERROR: �A���[�i����̃q�[�v�̎擾�I�[�o�[�ł��B\n");
             size -= size & 0x1f;
             wp->heapStart[i] = min;
             wp->heapEnd[i] = min + size;
             // "Error: Overheap of heap from arena [%d] \ n"
-            assertf((u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            assertf((u32)wp->heapEnd[i] <= max, "ERROR: �A���[�i����̃q�[�v�̎擾�I�[�o�[�ł��B[%d]\n", i);
             min += size;
         }
     }
@@ -60,7 +60,7 @@ void memInit() {
             wp->heapStart[i] = min;
             wp->heapEnd[i] = min + size;
             // "Error: Overheap of heap from arena [%d] \ n"
-            assertf((u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            assertf((u32)wp->heapEnd[i] <= max, "ERROR: �A���[�i����̃q�[�v�̎擾�I�[�o�[�ł��B[%d]\n", i);
             min += size;
         }
     }
@@ -70,12 +70,12 @@ void memInit() {
         if (size_table[i].type == HEAPSIZE_PERCENT_REMAINING) {
             u32 size = (u32) (((u64) space * size_table[i].size) / 100);
             // "ERROR: Excessive heap acquisition from arena\n"
-            assert(size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
+            assert(size >= 32, "ERROR: �A���[�i����̃q�[�v�̎擾�I�[�o�[�ł��B\n");
             size -= size & 0x1f;
             wp->heapStart[i] = min;
             wp->heapEnd[i] = min + size;
             // "Error: Overheap of heap from arena [%d] \ n"
-            assertf((u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            assertf((u32)wp->heapEnd[i] <= max, "ERROR: �A���[�i����̃q�[�v�̎擾�I�[�o�[�ł��B[%d]\n", i);
             min += size;
         }
     }
@@ -94,7 +94,7 @@ void memInit() {
         }
         else {
             MEMDestroyExpHeap(wp->heapHandle[i]);
-            MEMCreateExpHeapEx(wp->heapStart[i], (u32)wp->heapEnd[i] - (u32)wp->heapStart[i], 5);
+            MEMCreateExpHeapEx(wp->heapStart[i], (u32)wp->heapEnd[i] - (u32)wp->heapStart[i], 4 | 1);
         }
     }
 
@@ -108,6 +108,12 @@ void memClear(s32 heapId) {
     }
     else {
         MEMDestroyExpHeap(wp->heapHandle[heapId]);
-        MEMCreateExpHeapEx(wp->heapStart[heapId], (u32)wp->heapEnd[heapId] - (u32)wp->heapStart[heapId], 5);
+        MEMCreateExpHeapEx(wp->heapStart[heapId], (u32)wp->heapEnd[heapId] - (u32)wp->heapStart[heapId], 4 | 1);
     }
+}
+
+void * __memAlloc(s32 heapId, size_t size) {
+    void * p = MEMAllocFromExpHeapEx(wp->heapHandle[heapId], size, 0x20);
+    assertf(p, "�������m�ۃG���[ [id = %d][size = %d]", heapId, size);
+    return p;
 }
