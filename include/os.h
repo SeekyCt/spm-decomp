@@ -69,6 +69,6 @@ typedef struct _RelHeader {
     u32 fixSize;
 } RelHeader;
 
-void OSLink(RelHeader * relFile, void * bss);
+bool OSLink(RelHeader * relFile, void * bss);
 
 #endif

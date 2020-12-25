@@ -25,7 +25,7 @@ typedef struct {
 } HeapSize;
 
 void memInit(); // 801a5dcc
-// memClear 801a61e4
+void memClear(s32 heapId); // 801a61e4
 void * __memAlloc(s32 heap, size_t size); // 801a626c
 // __memFree 801a62f0
 // smartInit 801a6300

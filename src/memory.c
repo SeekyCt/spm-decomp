@@ -87,6 +87,7 @@ void memInit() {
     OSSetMem2ArenaLo((void *) max);
     
     for (i = 0; i < HEAP_COUNT; i++) {
+        // Maybe memClear inlined?
         if (i == 7) {
             MEMDestroyExpHeap(wp->heapHandle[i]);
             MEMCreateExpHeapEx(wp->heapStart[i], (u32)wp->heapEnd[i] - (u32)wp->heapStart[i], 4);
@@ -98,4 +99,15 @@ void memInit() {
     }
 
     memInitFlag = true;
+}
+
+void memClear(s32 heapId) {
+    if (heapId == 7) {
+        MEMDestroyExpHeap(wp->heapHandle[heapId]);
+        MEMCreateExpHeapEx(wp->heapStart[heapId], (u32)wp->heapEnd[heapId] - (u32)wp->heapStart[heapId], 4);
+    }
+    else {
+        MEMDestroyExpHeap(wp->heapHandle[heapId]);
+        MEMCreateExpHeapEx(wp->heapStart[heapId], (u32)wp->heapEnd[heapId] - (u32)wp->heapStart[heapId], 5);
+    }
 }
