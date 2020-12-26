@@ -63,7 +63,7 @@ void smartAutoFree(s32 type); // 801a64f4
 void smartFree(SmartAllocation * lp); // 801a6598
 SmartAllocation * smartAlloc(size_t size, u8 type); // 801a6794
 void smartGarbage(); // 801a6b60
-// smartTexObj 801a6cf0
+void * smartTexObj(void * texObj, SmartAllocation * imageAllocation); // 801a6cf0
 
 // New to SPM so no symbols:
 // 801a6d4c

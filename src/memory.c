@@ -1,5 +1,6 @@
 #include <common.h>
 #include <filemgr.h>
+#include <gx.h>
 #include <mem.h>
 #include <memory.h>
 #include <os.h>
@@ -408,7 +409,21 @@ SmartAllocation * smartAlloc(size_t size, u8 type) {
     }
 }
 
-// a lot
+// smartGarbage
+
+void * smartTexObj(void * texObj, SmartAllocation * imageAllocation) {
+    if (imageAllocation) {
+        GXInitTextObjData(texObj, imageAllocation->data);
+    }
+    else {
+        assert(0, "スマートメモリの情報がないよ\n");
+    }
+    return texObj;
+}
+
+// 801a6d4c
+// 801a6e34
+// 801a6e8c
 
 #undef IS_FIRST_SMART_ALLOC
 #undef IS_LAST_SMART_ALLOC
