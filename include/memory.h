@@ -51,17 +51,18 @@ typedef struct {
 
 #define SMART_HEAP_ID 7
 
-extern bool g_bFirstSmartAlloc; // 805ae9ac
+extern s32 g_bFirstSmartAlloc; // 805ae9ac
 
 void memInit(); // 801a5dcc
 void memClear(s32 heapId); // 801a61e4
 void * __memAlloc(s32 heapId, size_t size); // 801a626c
 void __memFree(s32 heapId, void * ptr); // 801a62f0
+
 void smartInit(); // 801a6300
 void smartAutoFree(s32 type); // 801a64f4
 void smartFree(SmartAllocation * lp); // 801a6598
-// smartAlloc 801a6794
-// smartGarbage 801a6b60
+SmartAllocation * smartAlloc(size_t size, u8 type); // 801a6794
+void smartGarbage(); // 801a6b60
 // smartTexObj 801a6cf0
 
 // New to SPM so no symbols:

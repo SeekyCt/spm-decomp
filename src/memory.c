@@ -1,8 +1,11 @@
 #include <common.h>
+#include <filemgr.h>
 #include <mem.h>
 #include <memory.h>
 #include <os.h>
 #include <system.h>
+
+#pragma inline_max_auto_size(17) // was needed for smartAlloc
 
 #define IS_FIRST_SMART_ALLOC(allocation) (allocation->prev == NULL)
 #define IS_LAST_SMART_ALLOC(allocation) (allocation->next == NULL)
@@ -12,7 +15,7 @@ static MemWork * wp = &memWork;
 static SmartWork smartWork;
 static SmartWork * swp = &smartWork;
 static bool memInitFlag = false;
-bool g_bFirstSmartAlloc;
+s32 g_bFirstSmartAlloc;
 
 static HeapSize size_table[HEAP_COUNT] = {
     // MEM1
@@ -209,7 +212,7 @@ void smartAutoFree(s32 type) {
         curAllocation = swp->allocatedStart;
         while (curAllocation != NULL) {
             next = curAllocation->next;
-            if (curAllocation->type == 4) {
+            if ((s8) curAllocation->type == 4) {
                 smartFree(curAllocation);
             }
             curAllocation = next;
@@ -277,7 +280,136 @@ void smartFree(SmartAllocation * lp) {
     }
 }
 
+SmartAllocation * smartAlloc(size_t size, u8 type) {
+    // Special behaviour if this is the first time running
+    if (!g_bFirstSmartAlloc) {
+        g_bFirstSmartAlloc = true;
+        smartAutoFree(3); // inline
+    }
+
+    // Wait if any allocations were freed this frame
+    if (swp->freedThisFrame != 0) {
+        sysWaitDrawSync();
+        swp->freedThisFrame = 0;
+    }
+
+    // Pick a free SmartAllocation to use
+    SmartAllocation * new_lp = swp->freeStart;
+    assert(new_lp, "ヒープリスト足りない\n");
+    
+    // Update previous item in the free list
+    if (IS_FIRST_SMART_ALLOC(new_lp)) {
+        swp->freeStart = new_lp->next;
+        if (swp->freeStart) {
+            swp->freeStart->prev = NULL;
+        }
+    }
+    else {
+        new_lp->prev->next = new_lp->next;
+    }
+
+    // Update next item in the free list
+    if (IS_LAST_SMART_ALLOC(new_lp)) {
+        swp->freeEnd = new_lp->prev;
+        if (swp->freeEnd) {
+            swp->freeEnd->next = NULL;
+        }
+    }
+    else {
+        new_lp->next->prev = new_lp->prev;
+    }
+
+    // Round up 0x20
+    if (size & 0x1f) {
+        size += 0x20 - (size & 0x1f);
+    }
+
+    // Fill in some of the new allocation
+    new_lp->flag = 1;
+    new_lp->type = type;
+    new_lp->size = size;
+    new_lp->unknown_0x8 = 0;
+
+    if (swp->heapStartSpace >= size) {
+        // If it'll fit at the start of the heap, insert at the start of the list
+        new_lp->data = swp->heapStart;
+        new_lp->spaceAfter = swp->heapStartSpace - size;
+        new_lp->next = swp->allocatedStart;
+        new_lp->prev = NULL;
+        swp->heapStartSpace = 0;
+        if (swp->allocatedStart) {
+            swp->allocatedStart->prev = new_lp;
+        }
+        swp->allocatedStart = new_lp;
+        if(IS_LAST_SMART_ALLOC(new_lp)) {
+            // This line isn't matching
+            new_lp->spaceAfter = (u32)swp->heapStart + MEMGetSizeForMBlockExpHeap(swp->heapStart)
+                                    - (u32) new_lp->data - new_lp->size;
+            swp->allocatedEnd = new_lp;
+        }
+        return new_lp;
+    }
+    else {
+        // If it'll fit after any existing allocations, insert there
+        SmartAllocation * lp = swp->allocatedStart;
+        while (lp != NULL) {
+            if (lp->spaceAfter >= size) {
+                new_lp->data = (void *) ((u32)lp->data + lp->size);
+                new_lp->spaceAfter = lp->spaceAfter - size;
+                new_lp->next = lp->next;
+                new_lp->prev = lp;
+                lp->spaceAfter = 0;
+                if (!IS_LAST_SMART_ALLOC(lp)) {
+                    lp->next->prev = new_lp;
+                }
+                else {
+                    swp->allocatedEnd = new_lp;
+                }
+                lp->next = new_lp;
+                return new_lp;
+            }
+            lp = lp->next;
+        }
+
+        // Try freeing space as a last resort
+        for (int i = 0; i < 3; i++) {
+            switch (i) {
+                case 0:
+                    // required to match
+                    break;
+                case 1:
+                    _fileGarbage(1);
+                    break;
+                case 2:
+                    _fileGarbage(0);
+                    break;
+            }
+            smartGarbage();
+            lp = swp->allocatedEnd;
+            if (lp->spaceAfter >= size) {
+                new_lp->data = (void *) ((u32)lp->data + lp->size);
+                new_lp->spaceAfter = lp->spaceAfter - size;
+                new_lp->next = lp->next;
+                new_lp->prev = lp;
+                lp->spaceAfter = 0;
+                if (!IS_LAST_SMART_ALLOC(lp)) {
+                    lp->next->prev = new_lp;
+                }
+                else {
+                    swp->allocatedEnd = new_lp;
+                }
+                lp->next = new_lp;
+                return new_lp;
+            }
+        }
+
+        assert(0, "smartAlloc: ガーベージコレクトしたけどヒープ足りない\n");
+        return NULL;
+    }
+}
+
 // a lot
 
 #undef IS_FIRST_SMART_ALLOC
 #undef IS_LAST_SMART_ALLOC
+#pragma inline_max_auto_size(5) // reset
