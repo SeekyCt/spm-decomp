@@ -35,7 +35,7 @@ void loadRel() {
     if (fileAsyncf(0, 0, relPath) == 0) return;
 
     FileRecord * file = fileAllocf(0, relPath);
-    if ((u32) file == 0xffff0000) {
+    if ((u32) file == 0xffffffff) {
         relHolder->loaded = true;
         return;
     }

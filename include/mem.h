@@ -4,6 +4,7 @@
 #include <common.h>
 
 typedef void * MEMHeapHandle;
+MEMHeapHandle MEMFindContainHeap(void * ptr); // 8029540c
 MEMHeapHandle MEMCreateExpHeapEx(void * memory, size_t size, s32 flags); // 80295a5c
 void MEMDestroyExpHeap(MEMHeapHandle handle); // 80295b0c
 void * MEMAllocFromExpHeapEx(MEMHeapHandle handle, size_t size, u32 alignment); // 80295b3c

@@ -25,17 +25,17 @@ void swReInit(); // 80037f48
 /*
     Turns on a global saved work flag
 */
-void swSet(s32 num); // 80037fac
+void swSet(s32 id); // 80037fac
 
 /*
     Returns the value of a global saved work flag
 */
-bool swGet(s32 num); // 80037fec
+bool swGet(s32 id); // 80037fec
 
 /*
     Turns off a global saved work flag
 */
-void swClear(s32 num); // 80038034
+void swClear(s32 id); // 80038034
 
 // TTYD symbol map shows there's an swToggle but it went unused in both games
 
@@ -43,41 +43,41 @@ void swClear(s32 num); // 80038034
     Sets a global saved work value
     Value cast to u8 unless setting GSW 0
 */
-void swByteSet(s32 num, s32 value); // 80038074
+void swByteSet(s32 id, s32 num); // 80038074
 
 /*
     Gets a global saved work value
     Return is u8 unless getting GSW 0
 */
-s32 swByteGet(s32 num); // 800380f8
+s32 swByteGet(s32 id); // 800380f8
 
 /*
     Turns on a local saved work flag
 */
-void _swSet(s32 num); // 8003811c
+void _swSet(s32 id); // 8003811c
 
 /*
     Returns the value of a local saved work flag
 */
-bool _swGet(s32 num); // 8003815c
+bool _swGet(s32 id); // 8003815c
 
 /*
     Turns off a local saved work flag
 */
-void _swClear(s32 num); // 800381a4
+void _swClear(s32 id); // 800381a4
 
 // TTYD symbol map shows there's an _swToggle but it went unused in both games
 
 /*
     Sets a local saved work value
 */
-void _swByteSet(s32 num, s8 value);
+void _swByteSet(s32 id, s8 num);
 
 /*
     Returns a local saved work value
     Note: return is technically just s8 but calls used wrong casts when it was set to that
 */
-s32 _swByteGet(s32 num);
+s32 _swByteGet(s32 id);
 
 // New to SPM so no symbols:
 // 80038204

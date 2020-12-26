@@ -24,56 +24,56 @@ void swReInit() {
     unknown_805adf40[0] = 0;
 }
 
-void swSet(s32 num) {
-    gp->gswf[num / 32] |= 1U << (num % 32);
+void swSet(s32 id) {
+    gp->gswf[id / 32] |= 1U << (id % 32);
 }
 
-bool swGet(s32 num) {
-    u32 mask = 1U << (num % 32);
-    u32 dat = gp->gswf[num / 32];
+bool swGet(s32 id) {
+    u32 mask = 1U << (id % 32);
+    u32 dat = gp->gswf[id / 32];
     return (bool) (mask & dat);
 }
 
-void swClear(s32 num) {
-    gp->gswf[num / 32] &= ~(1U << (num % 32));
+void swClear(s32 id) {
+    gp->gswf[id / 32] &= ~(1U << (id % 32));
 }
 
-void swByteSet(s32 num, s32 value) {
-    if (num == 0) {
-        gp->gsw0 = value;
+void swByteSet(s32 id, s32 num) {
+    if (id == 0) {
+        gp->gsw0 = num;
     }
     else {
         // "The value is strange"
-        assertf(num < 256, "’l‚ª‚¨‚©‚µ‚¢ sw_byte[%d] = %d", num + EVTDAT_LSW_BASE, value);
-        gp->gsw[num] = (s8) value;
+        assertf(num < 256, "’l‚ª‚¨‚©‚µ‚¢ sw_byte[%d] = %d", num + EVTDAT_LSW_BASE, num);
+        gp->gsw[id] = (s8) num;
     }
 }
 
-s32 swByteGet(s32 num) {
-    if (num == 0) return gp->gsw0;
-    else return gp->gsw[num];
+s32 swByteGet(s32 id) {
+    if (id == 0) return gp->gsw0;
+    else return gp->gsw[id] & 0xff;
 }
 
-void _swSet(s32 num) {
-    gp->lswf[num / 32] |= 1U << (num % 32);
+void _swSet(s32 id) {
+    gp->lswf[id / 32] |= 1U << (id % 32);
 }
 
-bool _swGet(s32 num) {
-    u32 mask = 1U << (num % 32);
-    u32 dat = gp->lswf[num / 32];
+bool _swGet(s32 id) {
+    u32 mask = 1U << (id % 32);
+    u32 dat = gp->lswf[id / 32];
     return (bool) (mask & dat);
 }
 
-void _swClear(s32 num) {
-    gp->lswf[num / 32] &= ~(1U << (num % 32));
+void _swClear(s32 id) {
+    gp->lswf[id / 32] &= ~(1U << (id % 32));
 }
 
-void _swByteSet(s32 num, s8 value) {
-    gp->lsw[num] = (s8) value;
+void _swByteSet(s32 id, s8 num) {
+    gp->lsw[id] = (s8) num;
 }
 
-s32 _swByteGet(s32 num) {
-    return gp->gsw[num];
+s32 _swByteGet(s32 id) {
+    return gp->lsw[id] & 0xff;
 }
 
 // a lot

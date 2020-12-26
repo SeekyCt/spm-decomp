@@ -50,7 +50,7 @@ static HeapSize size_table[HEAP_COUNT] = {
         .type = HEAPSIZE_ABSOLUTE_KB,
         .size = 0x4400
     },
-    { // 7
+    { // 7 - smart heap
         .type = HEAPSIZE_PERCENT_REMAINING,
         .size = 100
     },
@@ -67,9 +67,10 @@ void memInit() {
 
     // Instruction order doesn't match when geting size_table pointer at the start
 
-    min = OSGetMem1ArenaLo();
-    max = (u32) OSGetMem1ArenaHi();
+    min = OSGetMEM1ArenaLo();
+    max = (u32) OSGetMEM1ArenaHi();
 
+    // Set up MEM1 absolute size heaps
     for (i = 0; i < MEM1_HEAP_COUNT; i++) {
         if (size_table[i].type == HEAPSIZE_ABSOLUTE_KB) {
             u32 size = (u32) size_table[i].size * 1024;
@@ -81,6 +82,7 @@ void memInit() {
         }
     }
 
+    // Set up MEM1 relative size heaps with remaining space
     u32 space = (u32) max - (u32) min;
     for (i = 0; i < MEM1_HEAP_COUNT; i++) {
         if (size_table[i].type == HEAPSIZE_PERCENT_REMAINING) {
@@ -96,15 +98,18 @@ void memInit() {
         }
     }
 
+    // Pass MEM1 heaps into MEM library
     for (i = 0; i < MEM1_HEAP_COUNT; i++) {
         wp->heapHandle[i] = MEMCreateExpHeapEx(wp->heapStart[i], (u32)wp->heapEnd[i] - (u32)wp->heapStart[i], 0);
     }
 
-    OSSetMem1ArenaLo((void *) max);
-    // Register usage for min & max wrong way around from here
-    min = OSGetMem2ArenaLo();
-    max = (u32) OSGetMem2ArenaHi();
+    OSSetMEM1ArenaLo((void *) max);
 
+    // Register usage for min & max wrong way around from here
+    min = OSGetMEM2ArenaLo();
+    max = (u32) OSGetMEM2ArenaHi();
+
+    // Set up MEM2 absolute size heaps
     for (i = MEM1_HEAP_COUNT; i < HEAP_COUNT; i++) {
         if (size_table[i].type == HEAPSIZE_ABSOLUTE_KB) {
             u32 size = (u32) size_table[i].size * 1024;
@@ -116,6 +121,7 @@ void memInit() {
         }
     }
 
+    // Set up MEM2 relative size heaps with remaining space
     space = (u32) max - (u32) min;
     for (i = MEM1_HEAP_COUNT; i < HEAP_COUNT; i++) {
         if (size_table[i].type == HEAPSIZE_PERCENT_REMAINING) {
@@ -131,15 +137,17 @@ void memInit() {
         }
     }
 
+    // Pass MEM2 heaps into MEM library
     for (i = MEM1_HEAP_COUNT; i < HEAP_COUNT; i++) {
         wp->heapHandle[i] = MEMCreateExpHeapEx(wp->heapStart[i], (u32)wp->heapEnd[i] - (u32)wp->heapStart[i], 0);
     }
 
-    OSSetMem2ArenaLo((void *) max);
+    OSSetMEM2ArenaLo((void *) max);
     
+    // Clear all heaps
     for (i = 0; i < HEAP_COUNT; i++) {
-        // Maybe memClear inlined?
-        if (i == 7) {
+        // maybe memClear inlined?
+        if (i == SMART_HEAP_ID) {
             MEMDestroyExpHeap(wp->heapHandle[i]);
             MEMCreateExpHeapEx(wp->heapStart[i], (u32)wp->heapEnd[i] - (u32)wp->heapStart[i], 4);
         }
@@ -153,7 +161,7 @@ void memInit() {
 }
 
 void memClear(s32 heapId) {
-    if (heapId == 7) {
+    if (heapId == SMART_HEAP_ID) {
         MEMDestroyExpHeap(wp->heapHandle[heapId]);
         MEMCreateExpHeapEx(wp->heapStart[heapId], (u32)wp->heapEnd[heapId] - (u32)wp->heapStart[heapId], 4);
     }
@@ -165,6 +173,7 @@ void memClear(s32 heapId) {
 
 void * __memAlloc(s32 heapId, size_t size) {
     void * p = MEMAllocFromExpHeapEx(wp->heapHandle[heapId], size, 0x20);
+    // "Memory allocation error"
     assertf(p, "メモリ確保エラー [id = %d][size = %d]", heapId, size);
     return p;
 }
@@ -174,14 +183,19 @@ void __memFree(s32 heapId, void * ptr) {
 }
 
 void smartInit() {
+    // Allocate the entire heap for custom use
     u32 size = MEMGetAllocatableSizeForExpHeapEx(wp->heapHandle[SMART_HEAP_ID], 4);
     void * p = MEMAllocFromExpHeapEx(wp->heapHandle[SMART_HEAP_ID], size, 0x20);
+    // "Memory allocation error"
     assertf(p, "メモリ確保エラー [id = %d][size = %d]", SMART_HEAP_ID, size);
-    swp->heapStart = p;
 
-    swp->allocatedStart = 0;
-    swp->allocatedEnd = 0;
+    // Space at the start of the heap is the whole heap, allocated list is empty
+    swp->heapStart = p;
+    swp->allocatedStart = NULL;
+    swp->allocatedEnd = NULL;
     swp->heapStartSpace = MEMGetSizeForMBlockExpHeap(swp->heapStart);
+
+    // Initialise free list
     SmartAllocation * curAllocation = swp->allocations;
     for (int i = 0; i < SMART_ALLOCATION_MAX; i++) {
         curAllocation->next = curAllocation + 1;
@@ -222,7 +236,9 @@ void smartAutoFree(s32 type) {
 }
 
 void smartFree(SmartAllocation * lp) {
+    // "Invalid pointer. p=0x%x"
     assertf(lp, "無効なポインタです。p=0x%x\n", lp);
+    // "Already free. p=0x%x"
     assertf(lp->flag != 0, "すでに開放されています。p=0x%x\n", lp);
     if (lp->type == 4) {
         lp->type = 3;
@@ -296,6 +312,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type) {
 
     // Pick a free SmartAllocation to use
     SmartAllocation * new_lp = swp->freeStart;
+    // "Heap list shortage"
     assert(new_lp, "ヒープリスト足りない\n");
     
     // Update previous item in the free list
@@ -404,6 +421,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type) {
             }
         }
 
+        // "Garbage collect, but not enough heap"
         assert(0, "smartAlloc: ガーベージコレクトしたけどヒープ足りない\n");
         return NULL;
     }
@@ -413,9 +431,10 @@ SmartAllocation * smartAlloc(size_t size, u8 type) {
 
 void * smartTexObj(void * texObj, SmartAllocation * imageAllocation) {
     if (imageAllocation) {
-        GXInitTextObjData(texObj, imageAllocation->data);
+        GXInitTexObjData(texObj, imageAllocation->data);
     }
     else {
+        // "There is no smart memory information"
         assert(0, "スマートメモリの情報がないよ\n");
     }
     return texObj;
@@ -423,7 +442,10 @@ void * smartTexObj(void * texObj, SmartAllocation * imageAllocation) {
 
 // 801a6d4c
 // 801a6e34
-// 801a6e8c
+
+void freeToHeap0(void * ptr) {
+    MEMFreeToExpHeap(wp->heapHandle[0], ptr);
+}
 
 #undef IS_FIRST_SMART_ALLOC
 #undef IS_LAST_SMART_ALLOC

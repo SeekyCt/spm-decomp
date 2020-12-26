@@ -55,7 +55,7 @@ EVT_CMD_FN(goto) {
 EVT_CMD_FN(do) {
     EvtScriptCode * p = entry->pCurData;
     s32 count = *p++;
-    s32 depth = ++entry->dowhileDepth; // missing rlwinm here
+    s32 depth = ++entry->dowhileDepth; // missing rlwinm here + scheduling problems
     if (depth >= 8) {
         assert(0, "EVTMGR_CMD:While Table Overflow !!");
     }
@@ -84,7 +84,7 @@ EVT_CMD_FN(while) {
             evtSetValue(entry, count, ret - 1);
             count = ret - 1;
         }
-        if (count == 0) {
+        if (count != 0) {
             entry->pCurInstruction = entry->dowhileStartPtrs[depth];
             return EVT_CONTINUE;
         }
@@ -323,6 +323,12 @@ EVT_CMD_FN(if_not_equal) {
     }
     return EVT_CONTINUE;
 }
+
+// EVT_CMD_FN(if_small)
+// EVT_CMD_FN(if_large)
+// EVT_CMD_FN(if_small_equal)
+// EVT_CMD_FN(if_large_equal)
+
 
 EVT_CMD_FN(if_flag) {
     EvtScriptCode * p = entry->pCurData;
@@ -593,7 +599,7 @@ EVT_CMD_FN(debug_rem) {
 
 EVT_CMD_FN(debug_bp) {
     for (s32 i = 0; i < EVT_ENTRY_MAX; i++) {
-        if (evtGetPtr(i) == entry) break;
+        if (entry == evtGetPtr(i)) break;
     }
     return 1;
 }

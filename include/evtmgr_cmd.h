@@ -188,7 +188,7 @@ EVT_CMD_FN(iff_small_equal);
 EVT_CMD_FN(iff_large_equal);
 EVT_CMD_FN(if_equal);
 EVT_CMD_FN(if_not_equal);
-EVT_CMD_FN(_if_small);
+EVT_CMD_FN(if_small);
 EVT_CMD_FN(if_large);
 EVT_CMD_FN(if_small_equal);
 EVT_CMD_FN(if_large_equal);
