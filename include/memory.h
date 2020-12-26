@@ -15,9 +15,13 @@ typedef struct {
 } MemWork;
 
 typedef struct _SmartAllocation {
-    u8 unknown_0x0[0xe - 0x0];
+    void * data;
+    size_t size;
+    u32 unknown_0x8;
+    u16 flag;
     u8 type;
-    u8 unknown_0xf[0x14 - 0xf];
+    u8 unknown_0xf; // padding?
+    size_t spaceAfter;
     struct _SmartAllocation * next;
     struct _SmartAllocation * prev;
 } SmartAllocation;
@@ -25,14 +29,14 @@ typedef struct _SmartAllocation {
 #define SMART_ALLOCATION_MAX 2048
 
 typedef struct {
-    void * heapStart;
+    void * heapStart; // pointer to the block of allocated memory to work with
     SmartAllocation allocations[SMART_ALLOCATION_MAX];
-    u32 heapSize;
-    SmartAllocation * firstAllocated;
-    SmartAllocation * lastAllocated;
-    SmartAllocation * firstFree;
-    SmartAllocation * lastFree;
-    u32 unknown_0xe018;
+    size_t heapStartSpace; // free space at the beginning of the heap
+    SmartAllocation * allocatedStart; // first item in the used linked list
+    SmartAllocation * allocatedEnd; // last item in the used linked list
+    SmartAllocation * freeStart; // first item in free allocation linked list
+    SmartAllocation * freeEnd; // last item in free allocation linked list
+    u32 freedThisFrame; // number of allocations freed this frame
 } SmartWork;
 
 enum HeapSizeType {
@@ -55,7 +59,7 @@ void * __memAlloc(s32 heapId, size_t size); // 801a626c
 void __memFree(s32 heapId, void * ptr); // 801a62f0
 void smartInit(); // 801a6300
 void smartAutoFree(s32 type); // 801a64f4
-void smartFree(SmartAllocation * allocation); // 801a6598
+void smartFree(SmartAllocation * lp); // 801a6598
 // smartAlloc 801a6794
 // smartGarbage 801a6b60
 // smartTexObj 801a6cf0

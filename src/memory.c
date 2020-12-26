@@ -4,6 +4,9 @@
 #include <os.h>
 #include <system.h>
 
+#define IS_FIRST_SMART_ALLOC(allocation) (allocation->prev == NULL)
+#define IS_LAST_SMART_ALLOC(allocation) (allocation->next == NULL)
+
 static MemWork memWork;
 static MemWork * wp = &memWork;
 static SmartWork smartWork;
@@ -172,21 +175,21 @@ void smartInit() {
     assertf(p, "メモリ確保エラー [id = %d][size = %d]", SMART_HEAP_ID, size);
     swp->heapStart = p;
 
-    swp->firstAllocated = 0;
-    swp->lastAllocated = 0;
-    swp->heapSize = MEMGetSizeForMBlockExpHeap(swp->heapStart);
+    swp->allocatedStart = 0;
+    swp->allocatedEnd = 0;
+    swp->heapStartSpace = MEMGetSizeForMBlockExpHeap(swp->heapStart);
     SmartAllocation * curAllocation = swp->allocations;
     for (int i = 0; i < SMART_ALLOCATION_MAX; i++) {
         curAllocation->next = curAllocation + 1;
         curAllocation->prev = curAllocation - 1;
         curAllocation++;
     }
-    swp->firstFree = &swp->allocations[0];
-    swp->firstFree->prev = NULL;
-    swp->lastFree = &swp->allocations[SMART_ALLOCATION_MAX - 1];
-    swp->lastFree->next = NULL;
+    swp->freeStart = &swp->allocations[0];
+    swp->freeStart->prev = NULL;
+    swp->freeEnd = &swp->allocations[SMART_ALLOCATION_MAX - 1];
+    swp->freeEnd->next = NULL;
     
-    swp->unknown_0xe018 = 0;
+    swp->freedThisFrame = 0;
     g_bFirstSmartAlloc = false;
 }
 
@@ -194,7 +197,7 @@ void smartAutoFree(s32 type) {
     SmartAllocation * curAllocation;
     SmartAllocation * next; // only way register usage matched for next in 2nd loop
 
-    curAllocation = swp->firstAllocated;
+    curAllocation = swp->allocatedStart;
     while (curAllocation != NULL) {
         next = curAllocation->next;
         if (curAllocation->type == (type & 0xffff)) {
@@ -203,7 +206,7 @@ void smartAutoFree(s32 type) {
         curAllocation = next;
     }
     if (type == 3) {
-        curAllocation = swp->firstAllocated;
+        curAllocation = swp->allocatedStart;
         while (curAllocation != NULL) {
             next = curAllocation->next;
             if (curAllocation->type == 4) {
@@ -214,4 +217,67 @@ void smartAutoFree(s32 type) {
     }
 }
 
+void smartFree(SmartAllocation * lp) {
+    assertf(lp, "無効なポインタです。p=0x%x\n", lp);
+    assertf(lp->flag != 0, "すでに開放されています。p=0x%x\n", lp);
+    if (lp->type == 4) {
+        lp->type = 3;
+    }
+    else {
+        // Update previous item in allocated list
+        if (IS_FIRST_SMART_ALLOC(lp)) {
+            swp->allocatedStart = lp->next;
+            if (swp->allocatedStart) {
+                swp->allocatedStart->prev = NULL;
+            }
+        }
+        else {
+            lp->prev->next = lp->next;
+        }
+
+        // Update next item in allocated list
+        if (IS_LAST_SMART_ALLOC(lp)) {
+            swp->allocatedEnd = lp->prev;
+            if (swp->allocatedEnd) {
+                swp->allocatedEnd->next = NULL;
+            }
+        }
+        else {
+            lp->next->prev = lp->prev;
+        }
+        
+        // Update spaceAfter of previous item in allocated list
+        size_t spaceFreed = lp->size + lp->spaceAfter;
+        if (!IS_FIRST_SMART_ALLOC(lp)) {
+            lp->prev->spaceAfter += spaceFreed;
+        }
+        else {
+            swp->heapStartSpace += spaceFreed;
+        }
+
+        // Append to free list
+        if (swp->freeStart == NULL) {
+            swp->freeStart = lp;
+            lp->prev = NULL;
+        }
+        else {
+            // "The list structure is broken"
+            // was getting a compiler error with plain sjis
+            assert(swp->freeEnd, "リスト" "\x8d\x5c\x91\xA2" "が壊れています");
+            swp->freeEnd->next = lp;
+            lp->prev = swp->freeEnd;
+        }
+        lp->flag = 0;
+        lp->next = NULL;
+        lp->size = 0;
+        lp->spaceAfter = 0;
+        lp->unknown_0x8 = 0;
+        swp->freeEnd = lp;
+        swp->freedThisFrame++;
+    }
+}
+
 // a lot
+
+#undef IS_FIRST_SMART_ALLOC
+#undef IS_LAST_SMART_ALLOC
