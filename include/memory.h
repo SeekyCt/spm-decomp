@@ -14,6 +14,25 @@ typedef struct {
     void * heapEnd[HEAP_COUNT];
 } MemWork;
 
+typedef struct _SmartAllocation {
+    u8 unknown_0x0[0x14 - 0x0];
+    struct _SmartAllocation * next;
+    struct _SmartAllocation * prev;
+} SmartAllocation;
+
+#define SMART_ALLOCATION_MAX 2048
+
+typedef struct {
+    void * heapStart;
+    SmartAllocation allocations[SMART_ALLOCATION_MAX];
+    u32 heapSize;
+    u32 unknown_0xe008;
+    u32 unknown_0xe00c;
+    SmartAllocation * firstFree;
+    SmartAllocation * lastFree;
+    u32 unknown_0xe018;
+} SmartWork;
+
 enum HeapSizeType {
     HEAPSIZE_PERCENT_REMAINING,
     HEAPSIZE_ABSOLUTE_KB
@@ -24,11 +43,15 @@ typedef struct {
     s32 size;
 } HeapSize;
 
+#define SMART_HEAP_ID 7
+
+extern bool g_bFirstSmartAlloc; // 805ae9ac
+
 void memInit(); // 801a5dcc
 void memClear(s32 heapId); // 801a61e4
 void * __memAlloc(s32 heapId, size_t size); // 801a626c
 void __memFree(s32 heapId, void * ptr); // 801a62f0
-// smartInit 801a6300
+void smartInit(); // 801a6300
 // smartAutoFree 801a64f4
 // smartFree 801a6598
 // smartAlloc 801a6794

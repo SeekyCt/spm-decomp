@@ -6,7 +6,10 @@
 
 static MemWork memWork;
 static MemWork * wp = &memWork;
+static SmartWork smartWork;
+static SmartWork * swp = &smartWork;
 static bool memInitFlag = false;
+bool g_bFirstSmartAlloc;
 
 static HeapSize size_table[HEAP_COUNT] = {
     // MEM1
@@ -161,6 +164,28 @@ void * __memAlloc(s32 heapId, size_t size) {
 
 void __memFree(s32 heapId, void * ptr) {
     MEMFreeToExpHeap(wp->heapHandle[heapId], ptr);
+}
+
+void smartInit() {
+    u32 size = MEMGetAllocatableSizeForExpHeapEx(wp->heapHandle[SMART_HEAP_ID], 4);
+    void * p = MEMAllocFromExpHeapEx(wp->heapHandle[SMART_HEAP_ID], size, 0x20);
+    assertf(p, "ƒƒ‚ƒŠŠm•ÛƒGƒ‰[ [id = %d][size = %d]", SMART_HEAP_ID, size);
+    swp->heapStart = p;
+    swp->unknown_0xe008 = 0;
+    swp->unknown_0xe00c = 0;
+    swp->heapSize = MEMGetSizeForMBlockExpHeap(swp->heapStart);
+    SmartAllocation * curAllocation = swp->allocations;
+    for (int i = 0; i < SMART_ALLOCATION_MAX; i++) {
+        curAllocation->next = curAllocation + 1;
+        curAllocation->prev = curAllocation - 1;
+        curAllocation++;
+    }
+    swp->firstFree = &swp->allocations[0];
+    swp->firstFree->prev = NULL;
+    swp->lastFree = &swp->allocations[SMART_ALLOCATION_MAX - 1];
+    swp->lastFree->next = NULL;
+    swp->unknown_0xe018 = 0;
+    g_bFirstSmartAlloc = false;
 }
 
 // a lot
