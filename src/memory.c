@@ -171,8 +171,9 @@ void smartInit() {
     void * p = MEMAllocFromExpHeapEx(wp->heapHandle[SMART_HEAP_ID], size, 0x20);
     assertf(p, "ƒƒ‚ƒŠŠm•ÛƒGƒ‰[ [id = %d][size = %d]", SMART_HEAP_ID, size);
     swp->heapStart = p;
-    swp->unknown_0xe008 = 0;
-    swp->unknown_0xe00c = 0;
+
+    swp->firstAllocated = 0;
+    swp->lastAllocated = 0;
     swp->heapSize = MEMGetSizeForMBlockExpHeap(swp->heapStart);
     SmartAllocation * curAllocation = swp->allocations;
     for (int i = 0; i < SMART_ALLOCATION_MAX; i++) {
@@ -184,8 +185,33 @@ void smartInit() {
     swp->firstFree->prev = NULL;
     swp->lastFree = &swp->allocations[SMART_ALLOCATION_MAX - 1];
     swp->lastFree->next = NULL;
+    
     swp->unknown_0xe018 = 0;
     g_bFirstSmartAlloc = false;
+}
+
+void smartAutoFree(s32 type) {
+    SmartAllocation * curAllocation;
+    SmartAllocation * next; // only way register usage matched for next in 2nd loop
+
+    curAllocation = swp->firstAllocated;
+    while (curAllocation != NULL) {
+        next = curAllocation->next;
+        if (curAllocation->type == (type & 0xffff)) {
+            smartFree(curAllocation);
+        }
+        curAllocation = next;
+    }
+    if (type == 3) {
+        curAllocation = swp->firstAllocated;
+        while (curAllocation != NULL) {
+            next = curAllocation->next;
+            if (curAllocation->type == 4) {
+                smartFree(curAllocation);
+            }
+            curAllocation = next;
+        }
+    }
 }
 
 // a lot
