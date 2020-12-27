@@ -41,12 +41,12 @@ void loadRel() {
     }
 
     if (!isCompressed) {
-        relHolder->relFile = __memAlloc(0, file->dataHolder->size);
-        memcpy(relHolder->relFile, file->dataHolder->data, file->dataHolder->size);
+        relHolder->relFile = __memAlloc(0, file->sp->size);
+        memcpy(relHolder->relFile, file->sp->data, file->sp->size);
     }
     else {
-        relHolder->relFile = __memAlloc(0, lzss10ParseHeader(file->dataHolder->data).decompSize);
-        lzss10Decompress(file->dataHolder->data, relHolder->relFile);
+        relHolder->relFile = __memAlloc(0, lzss10ParseHeader(file->sp->data).decompSize);
+        lzss10Decompress(file->sp->data, relHolder->relFile);
     }
 
     fileFree(file);

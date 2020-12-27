@@ -33,7 +33,6 @@ void filemgrInit() {
 void UnpackTexPalette(TPLHeader * palette) {
     VALIDATE_TPL_VERSION(palette);
 
-    // Check if the image table field is still an offset and not a pointer (already unpacked otherwise)
     if (IS_TPL_PACKED(palette)) {
         // Convert image table offset to pointer
         palette->imageTable = (ImageTableEntry *) (palette->imageTableOffset + (u32) palette);
@@ -41,7 +40,7 @@ void UnpackTexPalette(TPLHeader * palette) {
         // Unpack all images in table
         for (u16 i = 0; i < palette->imageCount; i++) {
             if (palette->imageTable[i].imageOffset != 0) {
-                // Convert image offset to pointer
+                // Convert image header offset to pointer
                 palette->imageTable[i].image = (ImageHeader *) ((u32) palette + palette->imageTable[i].imageOffset);
 
                 if (!palette->imageTable[i].image->unpacked) {
@@ -52,7 +51,7 @@ void UnpackTexPalette(TPLHeader * palette) {
             }
 
             if (palette->imageTable[i].paletteOffset != 0) {
-                // Convert palette offset to pointer
+                // Convert palette header offset to pointer
                 palette->imageTable[i].palette = (void *) ((u32) palette + palette->imageTable[i].paletteOffset);
 
                 if (!palette->imageTable[i].palette->unpacked) {
@@ -65,28 +64,45 @@ void UnpackTexPalette(TPLHeader * palette) {
     }
 }
 
-
 void PackTexPalette(TPLHeader * palette) {
     VALIDATE_TPL_VERSION(palette);
 
     if(!IS_TPL_PACKED(palette)) {
+        // Pack all images in table
         for (u16 i = 0; i < palette->imageCount; i++) {
             if (palette->imageTable[i].image != NULL) {
                 if (palette->imageTable[i].image->unpacked) {
                     palette->imageTable[i].image->unpacked = false;
+                    // Convert image data pointer to offset
                     palette->imageTable[i].image->dataOffset = (u32) palette->imageTable[i].image->data - (u32) palette;
                 }
+                // Convert image header pointer to offset
                 palette->imageTable[i].imageOffset = (u32) palette->imageTable[i].image - (u32) palette;
             }
 
             if (palette->imageTable[i].palette != NULL) {
                 if (palette->imageTable[i].palette->unpacked) {
                     palette->imageTable[i].palette->unpacked = false;
+                    // Convert palette data pointer to offset
                     palette->imageTable[i].palette->dataOffset = (u32) palette->imageTable[i].palette->data - (u32) palette;
                 }
+                // Convert palette header pointer to offset
                 palette->imageTable[i].paletteOffset = (u32) palette->imageTable[i].palette - (u32) palette;
             }
         }
+        // Convert image table pointer to offset
         palette->imageTableOffset = (u32) palette->imageTable - (u32) palette;
     }
 }
+
+// fileGarbageDataAdrClear
+// fileGarbageDataAdrSet
+// fileGarbageMoveMem
+// _fileGarbage
+// fileAllocf
+// fileAlloc 8019f7dc
+// _fileAlloc 8019f7e4
+// fileFree
+// dvdReadDoneCallback
+// fileAsyncf
+// fileAsync

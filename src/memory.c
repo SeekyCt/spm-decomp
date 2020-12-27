@@ -293,7 +293,7 @@ void smartFree(SmartAllocation * lp) {
         lp->next = NULL;
         lp->size = 0;
         lp->spaceAfter = 0;
-        lp->unknown_0x8 = NULL;
+        lp->fileRecord = NULL;
         swp->freeEnd = lp;
         swp->freedThisFrame++;
     }
@@ -348,7 +348,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type) {
     new_lp->flag = 1;
     new_lp->type = type;
     new_lp->size = size;
-    new_lp->unknown_0x8 = NULL;
+    new_lp->fileRecord = NULL;
 
     if (swp->heapStartSpace >= size) {
         // If it'll fit at the start of the heap, insert at the start of the list
@@ -448,9 +448,9 @@ void smartGarbage() {
         // If this allocation can be moved forwards
         if (curAllocation->data != space) {
             // Try move
-            if (curAllocation->unknown_0x8 != NULL) {
+            if (curAllocation->fileRecord != NULL) {
                 // Some unknown condition that means it can't move
-                if ((curAllocation->unknown_0x8->unknown_0x0 == 3) && (curAllocation->unknown_0x8->unknown_0xb0 != 0)) {
+                if ((curAllocation->fileRecord->unknown_0x0 == 3) && (curAllocation->fileRecord->unknown_0xb0 != 0)) {
                     // Update previous allocation since assumption there'd be no space after it is false
                     if (prevAllocation != NULL) {
                         prevAllocation->spaceAfter = (u32) curAllocation->data - (u32) space;
@@ -465,7 +465,7 @@ void smartGarbage() {
                 }
                 else {
                     // Move the memory in a different way
-                    fileGarbageMoveMem(space, curAllocation->unknown_0x8); // probably means unknown_0x8 is file related?
+                    fileGarbageMoveMem(space, curAllocation->fileRecord);
                 }
             }
             else {

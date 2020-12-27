@@ -2,7 +2,7 @@
     Game's custom library for handling memory allocation
     Heap 7 is the 'smart' heap, which regularly tries to move allocations forwards in
     the heap so that free space is in a larger block at the end. Allocations are accessed
-    by structs instead of direct pointers, since the data pointer can change.
+    by structs instead of direct pointers, since the data location can change.
 */
 
 #ifndef MEMORY_H
@@ -23,31 +23,25 @@ typedef struct {
     void * heapEnd[HEAP_COUNT];
 } MemWork;
 
-typedef struct {
-    u8 unknown_0x0;
-    u8 unknown_0x1[0xb0 - 0x1];
-    u32 unknown_0xb0;
-    // unknown size
-} SmartAllocation8;
-
+struct _FileRecord; // from filemgr.h (would be a cyclic include)
 typedef struct _SmartAllocation {
-    void * data;
-    size_t size;
-    SmartAllocation8 * unknown_0x8;
-    u16 flag;
-    u8 type;
+    void * data; // space on the smart heap for user to put their data
+    size_t size; // size of the space for data on the smart heap
+    struct _FileRecord * fileRecord; // allows special treatment if this allocation is for a file
+    u16 flag; // 1 for in use, 0 otherwise
+    u8 type; // used to group for deallocation
     u8 unknown_0xf; // padding?
-    size_t spaceAfter;
-    struct _SmartAllocation * next;
-    struct _SmartAllocation * prev;
+    size_t spaceAfter; // amount of free space in the smart heap after the data of this allocation
+    struct _SmartAllocation * next; // next item in the allocated or free linked list
+    struct _SmartAllocation * prev; // previous item in the allocated or free linked list
 } SmartAllocation;
 
 typedef struct {
     void * heapStart; // pointer to the block of allocated memory to work with
     SmartAllocation allocations[SMART_ALLOCATION_MAX];
     size_t heapStartSpace; // free space at the beginning of the heap
-    SmartAllocation * allocatedStart; // first item in the used linked list
-    SmartAllocation * allocatedEnd; // last item in the used linked list
+    SmartAllocation * allocatedStart; // first item in the allocated linked list
+    SmartAllocation * allocatedEnd; // last item in the allocated linked list
     SmartAllocation * freeStart; // first item in free allocation linked list
     SmartAllocation * freeEnd; // last item in free allocation linked list
     u32 freedThisFrame; // number of allocations freed this frame
