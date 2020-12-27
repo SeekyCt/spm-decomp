@@ -1,3 +1,7 @@
+/*
+    Revolution SDK MEM Library
+*/
+
 #ifndef MEM_H
 #define MEM_H
 

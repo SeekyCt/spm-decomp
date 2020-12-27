@@ -1,3 +1,7 @@
+/*
+  Functions to execute and control the current 'sequence' of the game
+*/
+
 #ifndef SEQDRV_H
 #define SEQDRV_H
 

@@ -1,3 +1,6 @@
+/*
+    Defines which functions should be called in each sequence for seqdrv
+*/
 #ifndef SEQDEF_H
 #define SEQDEF_H
 

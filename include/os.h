@@ -1,3 +1,7 @@
+/*
+    Revolution SDK OS Library
+*/
+
 #ifndef OS_H
 #define OS_H
 

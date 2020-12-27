@@ -1,3 +1,7 @@
+/*
+    Game's custom library for handling memory allocation
+*/
+
 #ifndef MEMORY_H
 #define MEMORY_H
 

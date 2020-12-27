@@ -1,3 +1,6 @@
+/*
+    Game's custom system library
+*/
 #ifndef SYSTEM_H
 #define SYSTEM_H
 

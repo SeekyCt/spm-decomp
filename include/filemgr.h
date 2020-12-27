@@ -1,3 +1,7 @@
+/*
+    Functions to access files on the game's disc
+*/
+
 #ifndef FILEMGR_H
 #define FILEMGR_H
 

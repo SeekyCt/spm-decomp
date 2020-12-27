@@ -1,3 +1,7 @@
+/*
+    Main functions and variables of the game
+*/
+
 #ifndef SPMARIO_H
 #define SPMARIO_H
 

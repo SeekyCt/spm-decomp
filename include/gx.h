@@ -1,3 +1,7 @@
+/*
+    Revolution SDK GX Library
+*/
+
 #ifndef GX_H
 #define GX_H
 

@@ -47,7 +47,7 @@ static void make_pri_table() { // 800d87f0
     priEntryCount = 0;
     n = 0;
     while (n < wp->entryCount) {
-        if (entry->flags & 1 != 0) {
+        if (entry->flags & EVT_FLAG_IN_USE != 0) {
             priTbl[priEntryCount] = n;
             priIdTbl[priEntryCount] = entry->id;
             priEntryCount++;
@@ -133,7 +133,7 @@ EvtEntry * evtEntry(EvtScriptCode * script, u8 priority, u8 flags) {
     EvtEntry * entry = work.entries;
     s32 i;
     for (i = 0; i < work.entryCount; i++) {
-        if (entry->flags & 1 == 0) break;
+        if (entry->flags & EVT_FLAG_IN_USE == 0) break;
         entry++;
     }
     if (i >= work.entryCount) {
@@ -141,7 +141,7 @@ EvtEntry * evtEntry(EvtScriptCode * script, u8 priority, u8 flags) {
     }
     evtMax += 1;
     memset(entry, 0, sizeof(EvtEntry));
-    entry->flags = (u8) (flags | 1);
+    entry->flags = (u8) (flags | EVT_FLAG_IN_USE);
     entry->pCurInstruction = script;
     entry->scriptStart = script;
     entry->pPrevInstruction = script;
@@ -173,14 +173,14 @@ EvtEntry * evtEntry(EvtScriptCode * script, u8 priority, u8 flags) {
     }
     if (_spmarioSystemLevel == 1) {
         for (s32 i = 0; i < work.entryCount; i++) {
-            if (work.entries[i].flags & 1 != 0) {
+            if (work.entries[i].flags & EVT_FLAG_IN_USE != 0) {
                 evtStop(&work.entries[i], 3);
             }
         }
     }
     else if (_spmarioSystemLevel > 0 && _spmarioSystemLevel < 3) {
         for (s32 i = 0; i < work.entryCount; i++) {
-            if (work.entries[i].flags & 1 != 0) {
+            if (work.entries[i].flags & EVT_FLAG_IN_USE != 0) {
                 evtStop(&work.entries[i], 0xff);
             }
         }
@@ -213,7 +213,7 @@ void evtmgrMain() {
     make_pri_table();
     for (s32 i = 0; i < priTblNum; i++) {
         EvtEntry * entry = &wp->entries[priTbl[i]];
-        if (entry->flags & 1 && entry->id == priIdTbl[i] && entry->flags & 0x92) {
+        if (entry->flags & EVT_FLAG_IN_USE && entry->id == priIdTbl[i] && entry->flags & 0x92) {
             if (entry->flags & 4) {
                 entry->lifetime += ms;
             }
@@ -236,7 +236,7 @@ void evtmgrMain() {
 
 void evtDelete(EvtEntry * entry) {
     EvtWork * wp = evtGetWork();
-    if (entry->flags & 1 != 0) {
+    if (entry->flags & EVT_FLAG_IN_USE != 0) {
         if (entry->childEntry != NULL) {
             evtDelete(entry->childEntry);
         }
@@ -268,7 +268,7 @@ void evtDelete(EvtEntry * entry) {
             parent->unknown_0x184 = entry->unknown_0x184;
             parent->unknown_0x188 = entry->unknown_0x188;
         }
-        entry->flags &= ~1;
+        entry->flags &= ~EVT_FLAG_IN_USE;
         memset(entry, 0, sizeof(EvtEntry));
         evtMax -= 1;
     }
@@ -279,7 +279,7 @@ void evtDeleteID(s32 id) {
     EvtEntry * entry = wp->entries;
     s32 i = 0;
     while (i < wp->entryCount) {
-        if (entry->flags & 1 != 0 && entry->id == id) {
+        if (entry->flags & EVT_FLAG_IN_USE != 0 && entry->id == id) {
             evtDelete(entry);
         }
         i++;
@@ -292,7 +292,7 @@ bool evtCheckID(s32 id) {
     EvtEntry * entry = wp->entries;
     s32 i = 0;
     while (i < wp->entryCount) {
-        if (entry->flags & 1 != 0 && entry->id == id) {
+        if (entry->flags & EVT_FLAG_IN_USE != 0 && entry->id == id) {
             return true;
         }
         i++;
@@ -321,14 +321,14 @@ void evtStop(EvtEntry * entry, u8 mask) {
     EvtEntry * curEntry = wp->entries;
     s32 i = 0;
     while (i < wp->entryCount) {
-        if (curEntry->flags & 1 != 0 && curEntry->brotherEntry == entry) {
+        if (curEntry->flags & EVT_FLAG_IN_USE != 0 && curEntry->brotherEntry == entry) {
             evtStop(curEntry, mask);
         }
         i++;
         curEntry++;
     }
     if (entry->type & mask) {
-        entry->flags |= 2;
+        entry->flags |= EVT_FLAG_PAUSED;
     }
 }
 
@@ -340,14 +340,14 @@ void evtStart(EvtEntry * entry, u8 mask) {
     EvtEntry * curEntry = wp->entries;
     s32 i = 0;
     while (i < wp->entryCount) {
-        if (curEntry->flags & 1 != 0 && curEntry->brotherEntry == entry) {
+        if (curEntry->flags & EVT_FLAG_IN_USE != 0 && curEntry->brotherEntry == entry) {
             evtStart(curEntry, mask);
         }
         i++;
         curEntry++;
     }
     if (entry->type & mask) {
-        entry->flags &= ~2;
+        entry->flags &= ~EVT_FLAG_PAUSED;
     }
 }
 
@@ -356,7 +356,7 @@ void evtStopID(s32 id) {
     EvtEntry * entry = wp->entries;
     s32 i = 0;
     while (i < wp->entryCount) {
-        if (entry->flags & 1 != 0 && entry->id == id) {
+        if (entry->flags & EVT_FLAG_IN_USE != 0 && entry->id == id) {
             evtStop(entry, 0xff);
         }
         i++;
@@ -369,7 +369,7 @@ void evtStartID(s32 id) {
     EvtEntry * entry = wp->entries;
     s32 i = 0;
     while (i < wp->entryCount) {
-        if (entry->flags & 1 != 0&& entry->id == id) {
+        if (entry->flags & EVT_FLAG_IN_USE != 0&& entry->id == id) {
             evtStart(entry, 0xff);
         }
         i++;
@@ -382,7 +382,7 @@ void evtStopAll(u8 mask) {
     EvtEntry * entry = wp->entries;
     s32 i = 0;
     while (i < wp->entryCount) {
-        if (entry->flags & 1 != 0) {
+        if (entry->flags & EVT_FLAG_IN_USE != 0) {
             evtStop(entry, mask);
         }
         i++;
@@ -395,7 +395,7 @@ void evtStartAll(u8 mask) {
     EvtEntry * entry = wp->entries;
     s32 i = 0;
     while (i < wp->entryCount) {
-        if (entry->flags & 1 != 0) {
+        if (entry->flags & EVT_FLAG_IN_USE != 0) {
             evtStart(entry, mask);
         }
         i++;
@@ -408,7 +408,7 @@ void evtStopOther(EvtEntry * entry, u8 mask) {
     EvtEntry * curEntry = wp->entries;
     s32 i = 0;
     while (i < wp->entryCount) {
-        if (curEntry->flags & 1 != 0 && curEntry != entry) {
+        if (curEntry->flags & EVT_FLAG_IN_USE != 0 && curEntry != entry) {
             evtStop(curEntry, mask);
         }
         i++;
@@ -421,7 +421,7 @@ void evtStartOther(EvtEntry * entry, u8 mask) {
     EvtEntry * curEntry = wp->entries;
     s32 i = 0;
     while (i < wp->entryCount) {
-        if (curEntry->flags & 1 != 0 && curEntry != entry) {
+        if (curEntry->flags & EVT_FLAG_IN_USE != 0 && curEntry != entry) {
             evtStart(curEntry, mask);
         }
         i++;
@@ -432,7 +432,7 @@ void evtStartOther(EvtEntry * entry, u8 mask) {
 EvtEntry * evtGetPtr(s32 index) {
     EvtWork * wp = evtGetWork();
     EvtEntry * entry = &wp->entries[index];
-    if (entry->flags & 1 != 0) {
+    if (entry->flags & EVT_FLAG_IN_USE != 0) {
         return entry;
     }
     return 0;
@@ -443,7 +443,7 @@ EvtEntry * evtGetPtrID(s32 id) {
     EvtEntry * curEntry = wp->entries;
     s32 i = 0;
     while (i < wp->entryCount) {
-        if (curEntry->flags & 1 != 0 && curEntry->id == id) {
+        if (curEntry->flags & EVT_FLAG_IN_USE != 0 && curEntry->id == id) {
             return curEntry;
         }
         curEntry++;
