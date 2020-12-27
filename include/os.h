@@ -10,6 +10,8 @@
 #define OSClockSpeed ((*(u32 *) 0x800000F8) / 4)
 #define OSTicksToMilliseconds(ticks)  ((ticks) / (OSClockSpeed / 1000))
 
+void OSPanic(char * filename, s32 line, char * msg, ...); // 8019e33c
+
 void * OSGetMEM1ArenaHi(); // 8026fac8
 void * OSGetMEM2ArenaHi(); // 8026fad0
 void * OSGetArenaHi(); // 8026fad8

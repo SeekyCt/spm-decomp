@@ -6,8 +6,7 @@
 #define FILEMGR_H
 
 #include <common.h>
-
-// Unsure about a lot of this
+#include <tpl.h>
 
 #define FILE_RECORD_MAX 1024
 
@@ -37,10 +36,22 @@ typedef struct {
 */
 void filemgrInit(); // 8017e288
 
-FileRecord * fileAllocf(s32, const char * format, ...); // 8019f724
-void fileFree(FileRecord * record); // 8019fa8c
-FileRecord * fileAsyncf(s32, s32, const char * format, ...); // 8019fc5c
-void _fileGarbage(s32); // 8019f560
+/*
+    Takes a TPL file and converts all offsets in it to pointers
+*/
+void UnpackTexPalette(TPLHeader * palette); // 8019e5a4
+
+void PackTexPalette(TPLHeader * palette); // 8019e6c0
+// fileGarbageDataAdrClear 8019e7e0
+// fileGarbageDataAdrSet 8019ee2c
 void fileGarbageMoveMem(void *, void *); // 8019f498
+void _fileGarbage(s32); // 8019f560
+FileRecord * fileAllocf(s32, const char * format, ...); // 8019f724
+// fileAlloc 8019f7dc
+// _fileAlloc 8019f7e4
+void fileFree(FileRecord * record); // 8019fa8c
+// dvdReadDoneCallback 8019fb38
+FileRecord * fileAsyncf(s32, s32, const char * format, ...); // 8019fc5c
+// fileAsync 8019fd24
 
 #endif
