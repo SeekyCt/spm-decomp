@@ -151,11 +151,11 @@ void memInit() {
         // maybe memClear inlined?
         if (i == SMART_HEAP_ID) {
             MEMDestroyExpHeap(wp->heapHandle[i]);
-            MEMCreateExpHeapEx(wp->heapStart[i], (u32)wp->heapEnd[i] - (u32)wp->heapStart[i], 4);
+            MEMCreateExpHeapEx(wp->heapStart[i], (u32)wp->heapEnd[i] - (u32)wp->heapStart[i], MEM_FLAG_THREAD_CONTROL);
         }
         else {
             MEMDestroyExpHeap(wp->heapHandle[i]);
-            MEMCreateExpHeapEx(wp->heapStart[i], (u32)wp->heapEnd[i] - (u32)wp->heapStart[i], 4 | 1);
+            MEMCreateExpHeapEx(wp->heapStart[i], (u32)wp->heapEnd[i] - (u32)wp->heapStart[i], MEM_FLAG_THREAD_CONTROL | MEM_FLAG_FILL_0);
         }
     }
 
@@ -165,11 +165,11 @@ void memInit() {
 void memClear(s32 heapId) {
     if (heapId == SMART_HEAP_ID) {
         MEMDestroyExpHeap(wp->heapHandle[heapId]);
-        MEMCreateExpHeapEx(wp->heapStart[heapId], (u32)wp->heapEnd[heapId] - (u32)wp->heapStart[heapId], 4);
+        MEMCreateExpHeapEx(wp->heapStart[heapId], (u32)wp->heapEnd[heapId] - (u32)wp->heapStart[heapId], MEM_FLAG_THREAD_CONTROL);
     }
     else {
         MEMDestroyExpHeap(wp->heapHandle[heapId]);
-        MEMCreateExpHeapEx(wp->heapStart[heapId], (u32)wp->heapEnd[heapId] - (u32)wp->heapStart[heapId], 4 | 1);
+        MEMCreateExpHeapEx(wp->heapStart[heapId], (u32)wp->heapEnd[heapId] - (u32)wp->heapStart[heapId], MEM_FLAG_THREAD_CONTROL | MEM_FLAG_FILL_0);
     }
 }
 
@@ -199,7 +199,7 @@ void smartInit() {
 
     // Initialise free list
     SmartAllocation * curAllocation = swp->allocations;
-    for (int i = 0; i < SMART_ALLOCATION_MAX; i++) {
+    for (s32 i = 0; i < SMART_ALLOCATION_MAX; i++) {
         curAllocation->next = curAllocation + 1;
         curAllocation->prev = curAllocation - 1;
         curAllocation++;
@@ -392,7 +392,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type) {
         }
 
         // Try freeing space as a last resort
-        for (int i = 0; i < 3; i++) {
+        for (s32 i = 0; i < 3; i++) {
             switch (i) {
                 case 0:
                     // required to match

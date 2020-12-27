@@ -7,6 +7,9 @@
 
 #include <common.h>
 
+#define MEM_FLAG_FILL_0 (1 << 0) // initialise allocated memory as 0
+#define MEM_FLAG_THREAD_CONTROL (1 << 2) // use mutexes for access when handling heap
+
 typedef void * MEMHeapHandle;
 MEMHeapHandle MEMFindContainHeap(void * ptr); // 8029540c
 MEMHeapHandle MEMCreateExpHeapEx(void * memory, size_t size, s32 flags); // 80295a5c
