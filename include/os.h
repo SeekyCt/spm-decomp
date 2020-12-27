@@ -23,6 +23,8 @@ void OSSetMEM1ArenaLo(void * arenaLo); // 8026fb10
 void OSSetMEM2ArenaLo(void * arenaLo); // 8026fb18
 void OSSetArenaLo(void * arenaLo); // 8026fb20
 
+void * DCFlushRange(void * ptr, size_t length); // 80270050
+
 typedef void (RelExportFunc)();
 
 // Unions are offsets in file then pointers after OSLink
@@ -73,6 +75,6 @@ typedef struct _RelHeader {
     u32 fixSize;
 } RelHeader;
 
-bool OSLink(RelHeader * relFile, void * bss);
+bool OSLink(RelHeader * relFile, void * bss); // 80274c0c
 
 #endif

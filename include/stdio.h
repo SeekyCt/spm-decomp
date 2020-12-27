@@ -1,5 +1,5 @@
 /*
-    Codewarrior's stdio functions
+    Codewarrior's standard library stdio functions
 */
 #ifndef STDIO_H
 #define STDIO_H

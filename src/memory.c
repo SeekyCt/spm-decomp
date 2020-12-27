@@ -4,12 +4,14 @@
 #include <mem.h>
 #include <memory.h>
 #include <os.h>
+#include <string.h>
 #include <system.h>
 
 #pragma inline_max_auto_size(17) // was needed for smartAlloc
 
 #define IS_FIRST_SMART_ALLOC(allocation) (allocation->prev == NULL)
 #define IS_LAST_SMART_ALLOC(allocation) (allocation->next == NULL)
+#define GET_SMART_HEAP_SIZE() (MEMGetSizeForMBlockExpHeap(swp->heapStart))
 
 static MemWork memWork;
 static MemWork * wp = &memWork;
@@ -193,7 +195,7 @@ void smartInit() {
     swp->heapStart = p;
     swp->allocatedStart = NULL;
     swp->allocatedEnd = NULL;
-    swp->heapStartSpace = MEMGetSizeForMBlockExpHeap(swp->heapStart);
+    swp->heapStartSpace = GET_SMART_HEAP_SIZE();
 
     // Initialise free list
     SmartAllocation * curAllocation = swp->allocations;
@@ -291,7 +293,7 @@ void smartFree(SmartAllocation * lp) {
         lp->next = NULL;
         lp->size = 0;
         lp->spaceAfter = 0;
-        lp->unknown_0x8 = 0;
+        lp->unknown_0x8 = NULL;
         swp->freeEnd = lp;
         swp->freedThisFrame++;
     }
@@ -346,7 +348,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type) {
     new_lp->flag = 1;
     new_lp->type = type;
     new_lp->size = size;
-    new_lp->unknown_0x8 = 0;
+    new_lp->unknown_0x8 = NULL;
 
     if (swp->heapStartSpace >= size) {
         // If it'll fit at the start of the heap, insert at the start of the list
@@ -361,7 +363,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type) {
         swp->allocatedStart = new_lp;
         if(IS_LAST_SMART_ALLOC(new_lp)) {
             // This line isn't matching
-            new_lp->spaceAfter = (u32)swp->heapStart + MEMGetSizeForMBlockExpHeap(swp->heapStart)
+            new_lp->spaceAfter = (u32)swp->heapStart + GET_SMART_HEAP_SIZE()
                                     - (u32) new_lp->data - new_lp->size;
             swp->allocatedEnd = new_lp;
         }
@@ -427,7 +429,69 @@ SmartAllocation * smartAlloc(size_t size, u8 type) {
     }
 }
 
-// smartGarbage
+void smartGarbage() {
+    sysWaitDrawSync();
+
+    // Update space at the start of the heap (redundant? alloc & free do this whenever it changes)
+    if (swp->allocatedStart != 0) {
+        swp->heapStartSpace = 0;
+    }
+    else {
+        swp->heapStartSpace = GET_SMART_HEAP_SIZE();
+    }
+
+    // Move all allocations closer together if possible
+    SmartAllocation * prevAllocation = NULL;
+    void * space = swp->heapStart;
+    SmartAllocation * curAllocation = swp->allocatedStart;
+    while (curAllocation != NULL) {
+        // If this allocation can be moved forwards
+        if (curAllocation->data != space) {
+            // Try move
+            if (curAllocation->unknown_0x8 != NULL) {
+                // Some unknown condition that means it can't move
+                if ((curAllocation->unknown_0x8->unknown_0x0 == 3) && (curAllocation->unknown_0x8->unknown_0xb0 != 0)) {
+                    // Update previous allocation since assumption there'd be no space after it is false
+                    if (prevAllocation != NULL) {
+                        prevAllocation->spaceAfter = (u32) curAllocation->data - (u32) space;
+                    }
+                    else {
+                        swp->heapStartSpace = (u32) curAllocation->data - (u32) space;
+                    }
+                    // Do the exact things the goto skips anyway
+                    space = (void *) ((u32)curAllocation->data + curAllocation->size);
+                    curAllocation->spaceAfter = 0;
+                    goto LB_801a6c64;
+                }
+                else {
+                    // Move the memory in a different way
+                    fileGarbageMoveMem(space, curAllocation->unknown_0x8); // probably means unknown_0x8 is file related?
+                }
+            }
+            else {
+                // Move the memory and update allocation with new pointer
+                memmove(space, curAllocation->data, curAllocation->size);
+                curAllocation->data = space;
+            }
+        }
+        // Assume there'll be no space after this, will be updated by the allocation after if this ends up being not true
+        curAllocation->spaceAfter = 0;
+        space = (void *) ((u32)curAllocation->data + curAllocation->size);
+LB_801a6c64:
+        prevAllocation = curAllocation;
+        curAllocation = curAllocation->next;
+    }
+
+    // Update spaceAfter of final allocation, since assumption it'd be 0 wasn't true
+    if (swp->allocatedEnd != NULL) {
+        // This line isn't matching
+        swp->allocatedEnd->spaceAfter = (u32) swp->heapStart + GET_SMART_HEAP_SIZE()
+                                        - (u32) swp->allocatedEnd->data - swp->allocatedEnd->size;
+    }
+
+    // Flush heap from cache
+    DCFlushRange(swp->heapStart, GET_SMART_HEAP_SIZE());
+}
 
 void * smartTexObj(void * texObj, SmartAllocation * imageAllocation) {
     if (imageAllocation) {
@@ -449,4 +513,5 @@ void freeToHeap0(void * ptr) {
 
 #undef IS_FIRST_SMART_ALLOC
 #undef IS_LAST_SMART_ALLOC
+#undef GET_SMART_HEAP_SIZE
 #pragma inline_max_auto_size(5) // reset

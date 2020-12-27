@@ -24,5 +24,6 @@ FileRecord * fileAllocf(s32, const char * format, ...); // 8019f724
 void fileFree(FileRecord * record); // 8019fa8c
 FileRecord * fileAsyncf(s32, s32, const char * format, ...); // 8019fc5c
 void _fileGarbage(s32); // 8019f560
+void fileGarbageMoveMem(void *, void *); // 8019f498
 
 #endif

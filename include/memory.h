@@ -1,5 +1,8 @@
 /*
     Game's custom library for handling memory allocation
+    Heap 7 is the 'smart' heap, which regularly tries to move allocations forwards in
+    the heap so that free space is in a larger block at the end. Allocations are accessed
+    by structs instead of direct pointers, since the data pointer can change.
 */
 
 #ifndef MEMORY_H
@@ -20,10 +23,17 @@ typedef struct {
     void * heapEnd[HEAP_COUNT];
 } MemWork;
 
+typedef struct {
+    u8 unknown_0x0;
+    u8 unknown_0x1[0xb0 - 0x1];
+    u32 unknown_0xb0;
+    // unknown size
+} SmartAllocation8;
+
 typedef struct _SmartAllocation {
     void * data;
     size_t size;
-    u32 unknown_0x8;
+    SmartAllocation8 * unknown_0x8;
     u16 flag;
     u8 type;
     u8 unknown_0xf; // padding?
@@ -56,7 +66,7 @@ typedef struct {
 extern s32 g_bFirstSmartAlloc; // 805ae9ac
 
 /*
-    Initialise the non-smart section of the library
+    Initialise heaps
 */
 void memInit(); // 801a5dcc
 
@@ -96,6 +106,10 @@ void smartFree(SmartAllocation * lp); // 801a6598
 */
 SmartAllocation * smartAlloc(size_t size, u8 type); // 801a6794
 
+/*
+    Moves allocations forwards in the heap where possible to collect empty space
+    into a larger block at the end
+*/
 void smartGarbage(); // 801a6b60
 
 /*

@@ -1,5 +1,5 @@
 /*
-    Codewarrior's string functions
+    Codewarrior's standard library string functions
 */
 #ifndef STRING_H
 #define STRING_H
@@ -8,6 +8,7 @@
 
 void * memcpy(void * dest, void * src, size_t num); // 80004000
 void * memset(void * ptr, s32 value, size_t num); // 80004104
+void * memmove(void * dest, void * src, size_t num); // 8025a874
 s32 strcmp(char * s1, char * s2); // 8025ea78
 
 #endif
