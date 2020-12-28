@@ -450,7 +450,7 @@ void smartGarbage() {
             // Try move
             if (curAllocation->fileRecord != NULL) {
                 // Some unknown condition that means it can't move
-                if ((curAllocation->fileRecord->unknown_0x0 == 3) && (curAllocation->fileRecord->unknown_0xb0 != 0)) {
+                if ((curAllocation->fileRecord->state == 3) && (curAllocation->fileRecord->unknown_0xb0 != 0)) {
                     // Update previous allocation since assumption there'd be no space after it is false
                     if (prevAllocation != NULL) {
                         prevAllocation->spaceAfter = (u32) curAllocation->data - (u32) space;

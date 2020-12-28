@@ -95,9 +95,99 @@ void PackTexPalette(TPLHeader * palette) {
     }
 }
 
-// fileGarbageDataAdrClear
+/* WIP - stopped for now since so much of it is unknown
+typedef union {
+    u32 offset;
+    void * ptr;
+} PtrOrOffset;
+typedef struct {
+    u8 unknown_0x0[0x14c - 0x0];
+    PtrOrOffset subs[25];
+    // unknown size
+} FileType1;
+typedef struct {
+    u8 unknown_0x0[0x24 - 0x0];
+    PtrOrOffset subs[8];
+    // unknown size
+} FileType2;
+typedef struct {
+    u8 unknown_0x0[0x48 - 0x0];
+    PtrOrOffset p;
+    // unknown size
+} FileType3;
+typedef struct {
+    u8 unknown_0x0[0x14c - 0x0];
+    PtrOrOffset subs[25];
+    // unknown size
+} FileType5;
+void fileGarbageDataAdrClear(FileRecord * record) {
+    switch (record->fileType) {
+        // might need case for 0 to match
+        case FILETYPE_1:
+            FileType1 * f1 = record->sp->data;
+            if (f1->subs[0].offset > (u32) f1) {
+                for (s32 i = 0; i < 25; i++) {
+                    f1->subs[i].offset = (u32) f1->subs[i].ptr - (u32) f1;
+                }
+            }
+            break;
+        case FILETYPE_2:
+            FileType2 * f2 = record->sp->data;
+            if (f2->subs[0].offset > (u32) f2) {
+                for (s32 i = 0; i < 8; i++) {
+                    f2->subs[i].offset = (u32) f2->subs[i].ptr - (u32) f2;
+                }
+            }
+            break;
+        case FILETYPE_3:
+            FileType3 * f3 = record->sp->data;
+            if (f3->p.offset > (u32) f3) {
+                f3->p.offset = (u32) f3->p.ptr - (u32) f3;
+            }
+            break;
+        case FILETYPE_TPL:
+            PackTexPalette((TPLHeader *) record->sp->data);
+            break;
+        case FILETYPE_5:
+            
+            break;
+    }
+}
+*/
+
 // fileGarbageDataAdrSet
-// fileGarbageMoveMem
+
+void fileGarbageMoveMem(void * dest, FileRecord * src) {
+    // Turn any pointers into the data to offsets 
+    if (src->state == 3) {
+        if (src->unknown_0xb0 == 0) {
+            fileGarbageDataAdrClear(src);
+        }
+    }
+    else {
+        fileGarbageDataAdrClear(src);
+    }
+
+    // Move data
+    memmove(dest, src->sp->data, src->sp->size);
+    src->sp->data = dest;
+
+    // Turn offsets back to pointers
+    if (src->state == 3) {
+        if (src->unknown_0xb0 != 0) {
+            src->unknown_0xb0->unknown_0x7c = dest;
+        }
+        else {
+            // wrong register used for fileType sign extend
+            fileGarbageDataAdrSet(src->sp->data, src->fileType);
+        }
+    }
+    else {
+        // wrong register used for fileType sign extend
+        fileGarbageDataAdrSet(src->sp->data, src->fileType);
+    }
+}
+
 // _fileGarbage
 // fileAllocf
 // fileAlloc 8019f7dc

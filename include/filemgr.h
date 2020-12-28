@@ -10,15 +10,36 @@
 
 #define FILE_RECORD_MAX 1024
 
+enum {
+    FILETYPE_0, // home button bins, rel (comp & decomp), setup dats, win/card.dat, lyt/title.bin, camera_road.bin
+    FILETYPE_1,
+    FILETYPE_2,
+    FILETYPE_3,
+    FILETYPE_TPL, // not used for bg tpls?
+    FILETYPE_5, // a/%s (no dash)
+    FILETYPE_6,
+    FILETYPE_7,
+    FILETYPE_8,
+    FILETYPE_9,
+    FILETYPE_10,
+    FILETYPE_11 // eff/%s/%s.dat, eff/%seffdata.dat
+};
+
+typedef struct {
+    u8 unknown_0x0[0x7c - 0x0];
+    void * unknown_0x7c;
+    // unknown size
+} FileRecordB0;
+
 struct _SmartAllocation; // from memory.h (would be a cyclic include)
 typedef struct _FileRecord {
-    u8 unknown_0x0;
-    u8 fileType;
+    u8 state;
+    s8 fileType;
     u8 unknown_0x2[0xa4 - 0x2];
     struct _SmartAllocation * sp; // smart pointer to file data
     struct _FileRecord * next; // next record in free or allocated list
     u8 unknown_0xac[0xb0 - 0xac];
-    void * unknown_0xb0;
+    FileRecordB0 * unknown_0xb0;
 } FileRecord;
 
 typedef struct {
@@ -44,9 +65,21 @@ void UnpackTexPalette(TPLHeader * palette); // 8019e5a4
 */
 void PackTexPalette(TPLHeader * palette); // 8019e6c0
 
-// fileGarbageDataAdrClear 8019e7e0
-// fileGarbageDataAdrSet 8019ee2c
-void fileGarbageMoveMem(void * dest, FileRecord * record); // 8019f498
+/*
+    Converts self-pointers in file data to offsets to allow safe moving
+*/
+void fileGarbageDataAdrClear(FileRecord * record); // 8019e7e0
+
+/*
+    Converts offsets in file data back to self-pointers
+*/
+void fileGarbageDataAdrSet(void * data, s8 fileType); // 8019ee2c
+
+/*
+    Safely moves memory containing file data, preserving any self-pointers
+*/
+void fileGarbageMoveMem(void * dest, FileRecord * sourceRecord); // 8019f498
+
 void _fileGarbage(s32); // 8019f560
 FileRecord * fileAllocf(s32, const char * format, ...); // 8019f724
 // fileAlloc 8019f7dc
