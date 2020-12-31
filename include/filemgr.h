@@ -35,7 +35,8 @@ struct _SmartAllocation; // from memory.h (would be a cyclic include)
 typedef struct _FileRecord {
     u8 state;
     s8 fileType;
-    u8 unknown_0x2[0xa4 - 0x2];
+    s16 touchCnt;
+    u8 unknown_0x4[0xa4 - 0x4];
     struct _SmartAllocation * sp; // smart pointer to file data
     struct _FileRecord * next; // next record in free or allocated list
     u8 unknown_0xac[0xb0 - 0xac];
@@ -73,7 +74,7 @@ void fileGarbageDataAdrClear(FileRecord * record); // 8019e7e0
 /*
     Converts offsets in file data back to self-pointers
 */
-void fileGarbageDataAdrSet(void * data, s8 fileType); // 8019ee2c
+void fileGarbageDataAdrSet(void * data, s32 fileType); // 8019ee2c
 
 /*
     Safely moves memory containing file data, preserving any self-pointers

@@ -66,4 +66,9 @@ typedef struct {
         OSPanic(__FILE__, __LINE__, "invalid version number for texture palette"); \
     }
 
+/*
+    Takes a TPL file and converts all offsets in it to pointers
+*/
+void UnpackTexPalette(TPLHeader * palette); // 802e30ec
+
 #endif

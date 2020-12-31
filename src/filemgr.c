@@ -178,20 +178,18 @@ void fileGarbageMoveMem(void * dest, FileRecord * src) {
             src->unknown_0xb0->unknown_0x7c = dest;
         }
         else {
-            // wrong register used for fileType sign extend
             fileGarbageDataAdrSet(src->sp->data, src->fileType);
         }
     }
     else {
-        // wrong register used for fileType sign extend
         fileGarbageDataAdrSet(src->sp->data, src->fileType);
     }
 }
 
 // _fileGarbage
 // fileAllocf
-// fileAlloc 8019f7dc
-// _fileAlloc 8019f7e4
+// fileAlloc
+// _fileAlloc
 // fileFree
 // dvdReadDoneCallback
 // fileAsyncf

@@ -23,4 +23,6 @@ typedef double f64;
 
 typedef u32 size_t;
 
+typedef u16 wchar_t;
+
 #endif

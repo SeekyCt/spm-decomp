@@ -79,4 +79,6 @@ typedef struct _RelHeader {
 
 bool OSLink(RelHeader * relFile, void * bss); // 80274c0c
 
+void OSYieldThread(); // 802776c0
+
 #endif

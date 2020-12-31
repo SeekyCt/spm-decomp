@@ -19,11 +19,16 @@ typedef struct {
 /*
     Reads the header of lzss10 compressed data and formats it into the struct
 */
-Lzss10ParsedHeader lzss10ParseHeader(void * file); // 802e270c
+Lzss10ParsedHeader lzss10ParseHeader(const void * file); // 802e270c
+
+/*
+    Reads the decompressed size from the header of lzss10 compressed data
+*/
+size_t lzss10GetDecompSize(const void * file); // 802e2598
 
 /*
     Decompresses lzss10 compressed data into a buffer
 */
-void lzss10Decompress(void * src, void * dest); // 802e25d8
+void lzss10Decompress(const void * file, void * dest); // 802e25d8
 
 #endif

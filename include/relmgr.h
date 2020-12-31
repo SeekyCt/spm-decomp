@@ -13,7 +13,6 @@ typedef struct {
     RelHeader * relFile;
     void * bss;
     bool loaded;
-    u8 unknown_0x9[0x10 - 0x9]; // probably just padding between file .data sections?
 } RelHolder;
 
 /*

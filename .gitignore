@@ -1,3 +1,4 @@
 .vscode
 *.s
+*.o
 *.py

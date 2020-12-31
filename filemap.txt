@@ -16,3 +16,6 @@ romfont.c       801a74f0 - 801a7ddb
 spmario.c       801a7ddc - 801a9097
 DEMOInit.c      801a9098 - >=801a963c
 ...
+relmgr.c        8023e434 - 8023e60b
+nandmgr.c       8023e60c - 8024069c
+...
