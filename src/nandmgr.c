@@ -4,14 +4,17 @@
 #include <nand.h>
 #include <nandmgr.h>
 #include <string.h>
+#include <system.h>
 #include <tpl.h>
+
+#define flag(value, mask) (value & mask) // needed for assert
 
 static NandWork nandWork;
 static NandWork * wp = &nandWork;
 
 #include "files/saveImagesTpl.inc" // static const u8 saveImagesTpl[0x5058]
 
-// Register usage + scheduling in the loop not matching
+// Register usage not matching, might need nandmgrInitSave inlined?
 void nandmgrInit() {
     memset(wp, 0, sizeof(*wp));
     wp->unknown_0x4_size = 0x4000;
@@ -63,10 +66,133 @@ void nandmgrInit() {
         curSave->checksum = 0;
         curSave->checksumNOT = 0xffffffff;
         u32 checksum = 0;
-        for (int j = 0; j < sizeof(*curSave); j++) {
+        for (int j = 0; j < sizeof(*curSave); j += 2) {
             checksum += ((u8 *)curSave)[j];
+            checksum += ((u8 *)curSave)[j+1];
         }
         curSave->checksum = checksum;
         curSave->checksumNOT = ~checksum;
     }
 }
+
+void nandmgrMain() {
+    switch (wp->task) {
+        case NANDMGR_TASK_NONE:
+            return;
+        case NANDMGR_TASK_1:
+            nandmgrTask1();
+            break;
+        case NANDMGR_TASK_2:
+            nandmgrTask2();
+            break;
+        case NANDMGR_TASK_3:
+            nandmgrTask3();
+            break;
+        case NANDMGR_TASK_4:
+            nandmgrTask4();
+            break;
+        case NANDMGR_TASK_5:
+            nandmgrTask5();
+            break;
+        case NANDMGR_TASK_6:
+            nandmgrTask6();
+            break;
+    }
+}
+
+bool nandmgrCheckFlag1Or2() {
+    if (wp->flag & 1)
+        return 1;
+    else
+        return (bool) (wp->flag & 2);
+}
+
+s32 nandmgrGet1b4() {
+    return wp->unknown_0x1b4;
+}
+
+SaveFile * nandmgrGetSaveFiles() {
+    return wp->saves;
+}
+
+void nandmgrStartTask1() {
+    // "Already running"
+    assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    wp->flag = NAND_FLAG_Exec;
+    wp->task = NANDMGR_TASK_1;
+    wp->unknown_0x1b4 = 0;
+    wp->unknown_0x1b0 = 0;
+    wp->unknown_0x1b8 = 0;
+}
+
+void nandmgrStartTask2() {
+    // "Already running"
+    assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    wp->flag = NAND_FLAG_Exec;
+    wp->task = NANDMGR_TASK_2;
+    wp->unknown_0x1b4 = 0;
+    wp->unknown_0x1b0 = 0;
+    wp->unknown_0x1b8 = 0;
+}
+
+void nandmgrStartTask3() {
+    // "Already running"
+    assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    wp->flag = NAND_FLAG_Exec;
+    wp->task = NANDMGR_TASK_3;
+    wp->unknown_0x1b4 = 0;
+    wp->unknown_0x1b0 = 0;
+    wp->unknown_0x1b8 = 0;
+}
+
+
+void nandmgrStartTask4(u32 unknown_1b8) {
+    // "Already running"
+    assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    wp->flag = NAND_FLAG_Exec;
+    wp->task = NANDMGR_TASK_4;
+    wp->unknown_0x1b4 = 0;
+    wp->unknown_0x1b0 = 0;
+    wp->unknown_0x1b8 = unknown_1b8;
+}
+
+void nandmgrStartTask5() {
+    // "Already running"
+    assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    wp->flag = NAND_FLAG_Exec;
+    wp->task = NANDMGR_TASK_5;
+    wp->unknown_0x1b4 = 0;
+    wp->unknown_0x1b0 = 0;
+    wp->unknown_0x1b8 = 0;
+}
+
+void nandmgrStartTask6() {
+    // "Already running"
+    assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    wp->flag = NAND_FLAG_Exec;
+    wp->task = NANDMGR_TASK_6;
+    wp->unknown_0x1b4 = 0;
+    wp->unknown_0x1b0 = 0;
+    wp->unknown_0x1b8 = 0;
+}
+
+void nandmgrCopySave(s32 sourceId, s32 destId) {
+    memcpy(&wp->saves[destId], &wp->saves[sourceId], sizeof(SaveFile));
+}
+
+void nandmgrInitSave(s32 saveId) {
+    SaveFile * save = &wp->saves[saveId];
+    memset(save, 0, sizeof(*save));
+    save->flags |= 1;
+    save->checksum = 0;
+    save->checksumNOT = 0xffffffff;
+    u32 checksum = 0;
+    for (int i = 0; i < sizeof(*save); i += 2) {
+        checksum += ((u8 *)save)[i];
+        checksum += ((u8 *)save)[i+1]; // scheduling doesn't match with just one
+    }
+    save->checksum = checksum;
+    save->checksumNOT = ~checksum;
+}
+
+#undef flag
