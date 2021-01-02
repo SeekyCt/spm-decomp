@@ -3,6 +3,7 @@
 #include <memory.h>
 #include <nand.h>
 #include <nandmgr.h>
+#include <somewhere.h>
 #include <string.h>
 #include <system.h>
 #include <tpl.h>
@@ -14,11 +15,11 @@ static NandWork * wp = &nandWork;
 
 #include "files/saveImagesTpl.inc" // static const u8 saveImagesTpl[0x5058]
 
-// Register usage not matching, might need nandmgrInitSave inlined?
-void nandmgrInit() {
+// Register usage not matching, might need nandErase inlined?
+void nandInit() {
     memset(wp, 0, sizeof(*wp));
-    wp->unknown_0x4_size = 0x4000;
-    wp->unknown_0x4 = __memAlloc(0, wp->unknown_0x4_size);
+    wp->openingBufferSize = 0x4000;
+    wp->openingBuffer = __memAlloc(0, wp->openingBufferSize);
     wp->saves = __memAlloc(0, sizeof(SaveFile) * 4);
     wp->unknown_0x14 = __memAlloc(0, 0x25c0);
     wp->banner = __memAlloc(0, sizeof(NANDBanner));
@@ -58,7 +59,7 @@ void nandmgrInit() {
     wp->banner->iconSpeed = (u16) (wp->banner->iconSpeed & ~0x30 | 0x20);
     wp->banner->iconSpeed = (u16) (wp->banner->iconSpeed & ~0xc0);
     __memFree(0, tpl);
-    wp->unknown_0x1a0 = 0x96a0;
+    wp->bannerSize = sizeof(NANDBanner) - (5 * 0x1200); // don't include unused iconTextures
     for (int i = 0; i < 4; i++) {
         SaveFile * curSave = &wp->saves[i];
         memset(curSave, 0, sizeof(*curSave));
@@ -75,21 +76,21 @@ void nandmgrInit() {
     }
 }
 
-void nandmgrMain() {
+void nandMain() {
     switch (wp->task) {
         case NANDMGR_TASK_NONE:
             return;
-        case NANDMGR_TASK_1:
-            nandmgrTask1();
+        case NANDMGR_TASK_CHECK:
+            nandCheckMain();
             break;
-        case NANDMGR_TASK_2:
-            nandmgrTask2();
+        case NANDMGR_TASK_WRITE_BANNER:
+            nandWriteBannerMain();
             break;
-        case NANDMGR_TASK_3:
-            nandmgrTask3();
+        case NANDMGR_TASK_WRITE_ALL:
+            nandWriteAllMain();
             break;
-        case NANDMGR_TASK_4:
-            nandmgrTask4();
+        case NANDMGR_TASK_WRITE:
+            nandWriteMain();
             break;
         case NANDMGR_TASK_5:
             nandmgrTask5();
@@ -100,60 +101,60 @@ void nandmgrMain() {
     }
 }
 
-bool nandmgrCheckFlag1Or2() {
-    if (wp->flag & 1)
+bool nandIsExec() {
+    if (wp->flag & NAND_FLAG_Exec)
         return 1;
     else
-        return (bool) (wp->flag & 2);
+        return (bool) (wp->flag & NAND_FLAG_Waiting);
 }
 
-s32 nandmgrGet1b4() {
-    return wp->unknown_0x1b4;
+s32 nandGetCode() {
+    return wp->code;
 }
 
-SaveFile * nandmgrGetSaveFiles() {
+SaveFile * nandGetSaveFiles() {
     return wp->saves;
 }
 
-void nandmgrStartTask1() {
+void nandCheck() {
     // "Already running"
     assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
     wp->flag = NAND_FLAG_Exec;
-    wp->task = NANDMGR_TASK_1;
-    wp->unknown_0x1b4 = 0;
-    wp->unknown_0x1b0 = 0;
-    wp->unknown_0x1b8 = 0;
+    wp->task = NANDMGR_TASK_CHECK;
+    wp->code = 0;
+    wp->stage = 0;
+    wp->saveId = 0;
 }
 
-void nandmgrStartTask2() {
+void nandWriteBanner() {
     // "Already running"
     assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
     wp->flag = NAND_FLAG_Exec;
-    wp->task = NANDMGR_TASK_2;
-    wp->unknown_0x1b4 = 0;
-    wp->unknown_0x1b0 = 0;
-    wp->unknown_0x1b8 = 0;
+    wp->task = NANDMGR_TASK_WRITE_BANNER;
+    wp->code = 0;
+    wp->stage = 0;
+    wp->saveId = 0;
 }
 
-void nandmgrStartTask3() {
+void nandWriteAll() {
     // "Already running"
     assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
     wp->flag = NAND_FLAG_Exec;
-    wp->task = NANDMGR_TASK_3;
-    wp->unknown_0x1b4 = 0;
-    wp->unknown_0x1b0 = 0;
-    wp->unknown_0x1b8 = 0;
+    wp->task = NANDMGR_TASK_WRITE_ALL;
+    wp->code = 0;
+    wp->stage = 0;
+    wp->saveId = 0;
 }
 
 
-void nandmgrStartTask4(u32 unknown_1b8) {
+void nandWrite(u32 saveId) {
     // "Already running"
     assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
     wp->flag = NAND_FLAG_Exec;
-    wp->task = NANDMGR_TASK_4;
-    wp->unknown_0x1b4 = 0;
-    wp->unknown_0x1b0 = 0;
-    wp->unknown_0x1b8 = unknown_1b8;
+    wp->task = NANDMGR_TASK_WRITE;
+    wp->code = 0;
+    wp->stage = 0;
+    wp->saveId = saveId;
 }
 
 void nandmgrStartTask5() {
@@ -161,9 +162,9 @@ void nandmgrStartTask5() {
     assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_5;
-    wp->unknown_0x1b4 = 0;
-    wp->unknown_0x1b0 = 0;
-    wp->unknown_0x1b8 = 0;
+    wp->code = 0;
+    wp->stage = 0;
+    wp->saveId = 0;
 }
 
 void nandmgrStartTask6() {
@@ -171,16 +172,16 @@ void nandmgrStartTask6() {
     assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_6;
-    wp->unknown_0x1b4 = 0;
-    wp->unknown_0x1b0 = 0;
-    wp->unknown_0x1b8 = 0;
+    wp->code = 0;
+    wp->stage = 0;
+    wp->saveId = 0;
 }
 
-void nandmgrCopySave(s32 sourceId, s32 destId) {
+void nandCopy(s32 sourceId, s32 destId) {
     memcpy(&wp->saves[destId], &wp->saves[sourceId], sizeof(SaveFile));
 }
 
-void nandmgrInitSave(s32 saveId) {
+void nandErase(s32 saveId) {
     SaveFile * save = &wp->saves[saveId];
     memset(save, 0, sizeof(*save));
     save->flags |= 1;
@@ -194,5 +195,19 @@ void nandmgrInitSave(s32 saveId) {
     save->checksum = checksum;
     save->checksumNOT = ~checksum;
 }
+
+// void nandUpdateSave(s32 saveId);
+// void nandLoadSave(s32 saveId);
+// void nandmgrSetFlag0x1000();
+// void nandmgrClearFlag0x1000();
+// bool nandmgrCheckFlag0x1000();
+// void nandCheckMain();
+// void nandWriteBannerMain();
+// void nandWriteAllMain();
+// void nandWriteMain();
+// void nandmgrTask5();
+// void nandmgrTask6();
+// void genericCallback(s32 result, NANDCommandBlock * commandBlock);
+// void checkCallback(s32 result, NANDCommandBlock * commandBlock);
 
 #undef flag
