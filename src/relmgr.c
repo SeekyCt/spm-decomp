@@ -20,7 +20,7 @@ void relInit() {
     relHolder->loaded = false;
 }
 
-void loadRel() {
+void relMain() {
     char relPath[0x48];
 
     if (relHolder->loaded) return;

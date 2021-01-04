@@ -21,9 +21,9 @@ typedef struct {
 void relInit(); // 8023e434
 
 /*
-    Attempts to continue the process of loading the rel, called every frame
+    Attempts to continue the process of loading the rel, if it hasn't already finished
 */
-void loadRel(); // 8023e444
+void relMain(); // 8023e444
 
 /*
     Returns whether the rel has finished loading and had its prolog run

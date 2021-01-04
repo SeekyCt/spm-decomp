@@ -81,4 +81,6 @@ bool OSLink(RelHeader * relFile, void * bss); // 80274c0c
 
 void OSYieldThread(); // 802776c0
 
+s64 OSGetTime(); // 80278370
+
 #endif

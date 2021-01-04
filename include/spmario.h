@@ -8,14 +8,31 @@
 #include <common.h>
 
 typedef struct {
-    u8 unknown_0x0[0x4 - 0x0];
+    u32 flags;
     u32 unknown_0x4;
-    u32 language;
-    u8 unknown_0xc[0x10 - 0xc];
+    s32 language;
+    u32 unknown_0xc;
     u32 systemLevelFlags;
-    u8 unknown_0x14[0xf8 - 0x14];
+    u8 unknown_0x14[0x18 - 0x14];
+    u16 framebufferWidth;
+    u16 framebufferHeight;
+    float unknown_0x1c;
+    char saveName[32]; // size needs checking
+    u32 unknown_0x40;
+    char mapName[32];
+    char doorName[32];
+    u8 unknown_0x84[0xc8 - 0x84];
+    s64 lastSaveUpdateTime; // last time save file in memory was written to ()
+    float unknown_0xd0;
+    float unknown_0xd4;
+    float unknown_0xd8;
+    int saveFileId;
+    u32 unknown_0xe0;
+    u8 unknown_0xe4[0xf8 - 0xe4];
     s64 time;
-    u8 unknown_0x100[0x140 - 0x100];
+    u8 unknown_0x100[0x110 - 0x100];
+    s64 lastSaveLoadTime;
+    u8 unknown_0x118[0x140 - 0x118];
     s32 gsw0;
     u32 gswf[256]; // 8192 flags
     s8 gsw[2048];
