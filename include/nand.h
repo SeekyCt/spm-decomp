@@ -13,9 +13,10 @@
 
 #define NAND_PERMISSION_READ 0x10
 #define NAND_PERMISSION_WRITE 0x20
+#define NAND_PERMISSION_READ_WRITE (NAND_PERMISSION_READ | NAND_PERMISSION_WRITE)
 
 #define NAND_MODE_READ 1
-#define NAND_MODE_WRITE 1
+#define NAND_MODE_WRITE 2
 
 typedef struct {
     u8 unknown_0x0[0x8c - 0x0];
@@ -37,6 +38,12 @@ typedef struct {
 
 typedef void (NANDCallback)(s32 result, NANDCommandBlock * commandBlock);
 
+s32 NANDCreateAsync(const char * filename, u8 permissions, u8 attributes, NANDCallback * callback, NANDCommandBlock * commandBlock); // 8029983c
+s32 NANDWriteAsync(NANDFileInfo * fileInfo, void * buffer, u32 size, NANDCallback * callback, NANDCommandBlock * commandBlock); // 80299cbc
+s32 NANDSafeOpenAsync(const char * path, NANDFileInfo * fileInfo, u8 mode, void * buffer, u32 bufferSize, NANDCallback * callback, NANDCommandBlock * commandBlock); // 8029a73c
+s32 NANDSafeCloseAsync(NANDFileInfo * fileInfo, NANDCallback * callback, NANDCommandBlock * commandBlock); // 8029ac98
+s32 NANDChangeDirAsync(const char * path, NANDCallback * callback, NANDCommandBlock * commandBlock); // 8029bbe4
+s32 NANDGetHomeDir(char * path); // 8029bdf8
 void NANDInitBanner(NANDBanner * banner, u32 flags, wchar_t * title, wchar_t * comment); // 8029c438
 s32 NANDCheckAsync(u32 blockCount, u32 inodeCount, u32 * answer, NANDCallback * callback, NANDCommandBlock * commandBlock); // 8029c5b0
 // more

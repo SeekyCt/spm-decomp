@@ -279,8 +279,8 @@ void nandCheckMain() {
                 wp->flag |= NAND_FLAG_Waiting;
                 s32 tries = 0;
                 wp->answer = 0;
-                while (NANDCheckAsync(NAND_BLOCK_COUNT, NAND_INODE_COUNT,
-                                      &wp->answer, &checkCallback, &wp->commandBlock) == NAND_CODE_BUSY) {
+                while (NANDCheckAsync(NAND_BLOCK_COUNT, NAND_INODE_COUNT, &wp->answer,
+                                      &checkCallback, &wp->commandBlock) == NAND_CODE_BUSY) {
                     if (++tries > NAND_ATTEMPTS_MAX) {
                         wp->code = -128;
                         wp->flag &= ~NAND_FLAG_Waiting;
@@ -297,7 +297,115 @@ void nandCheckMain() {
     }
 }
 
-// void nandWriteBannerMain();
+// Register usage not matching
+void nandWriteBannerMain() {
+    if (wp->flag & NAND_FLAG_Waiting) return;
+
+    if ((wp->code != NAND_CODE_OK) && (wp->code != NAND_CODE_EXISTS)) {
+        wp->task = 0;
+        wp->flag &= ~NAND_FLAG_Exec;
+        wp->flag |= 4;
+    }
+    else {
+        char * dir;
+        s32 tries;
+        NANDFileInfo * fileInfo;
+        const char * filename;
+        switch(wp->stage) {
+            // Get game save directory
+            case 0:
+                dir = wp->homedir;
+                wp->flag |= NAND_FLAG_Waiting;
+                tries = 0;
+                s32 code; // different since this function doesn't have a callback
+                while (code = NANDGetHomeDir(dir), code == NAND_CODE_BUSY) {
+                    if (++tries > NAND_ATTEMPTS_MAX) {
+                        code = -128;
+                        break;
+                    }
+                }
+                wp->code = code;
+                wp->flag &= ~NAND_FLAG_Waiting;
+                break;
+            // Change to game save directory
+            case 1:
+                dir = wp->homedir;
+                wp->flag |= NAND_FLAG_Waiting;
+                tries = 0;
+                while (NANDChangeDirAsync(dir, &genericCallback, &wp->commandBlock) == NAND_CODE_BUSY) {
+                    if (++tries > NAND_ATTEMPTS_MAX) {
+                        wp->code = -128;
+                        wp->flag &= ~NAND_FLAG_Waiting;
+                        break;
+                    }
+                }
+                break;
+            // Create banner.bin, may already exist
+            case 2:
+                filename = "banner.bin";
+                wp->flag |= NAND_FLAG_Waiting;
+                tries = 0;
+                while (NANDCreateAsync(filename, NAND_PERMISSION_READ_WRITE, 0, &genericCallback,
+                                       &wp->commandBlock) == NAND_CODE_BUSY) {
+                    if (++tries > NAND_ATTEMPTS_MAX) {
+                        wp->code = -128;
+                        wp->flag &= ~NAND_FLAG_Waiting;
+                        break;
+                    }
+                }
+                break;
+            // Open banner.bin
+            case 3:
+                fileInfo = &wp->fileInfo;
+                filename = "banner.bin";
+                wp->flag |= NAND_FLAG_Waiting;
+                tries = 0;
+                while (NANDSafeOpenAsync(filename, fileInfo, NAND_MODE_WRITE, wp->openingBuffer, wp->openingBufferSize,
+                                         &genericCallback, &wp->commandBlock) == NAND_CODE_BUSY) {
+                    if (++tries > NAND_ATTEMPTS_MAX) {
+                        wp->code = -128;
+                        wp->flag &= ~NAND_FLAG_Waiting;
+                        break;
+                    }
+                }
+                break;
+            // Write banner data into banner.bin
+            case 4:
+                fileInfo = &wp->fileInfo;
+                NANDBanner * banner = wp->banner;
+                u32 bannerSize = wp->bannerSize;
+                wp->flag |= NAND_FLAG_Waiting;
+                tries = 0;
+                while (NANDWriteAsync(fileInfo, banner, bannerSize, &genericCallback, &wp->commandBlock) == NAND_CODE_BUSY) {
+                    if (++tries > NAND_ATTEMPTS_MAX) {
+                        wp->code = -128;
+                        wp->flag &= ~NAND_FLAG_Waiting;
+                        break;
+                    }
+                }
+                break;
+            // Close banner.bin
+            case 5:
+                fileInfo = &wp->fileInfo;
+                wp->flag |= NAND_FLAG_Waiting;
+                tries = 0;
+                while (NANDSafeCloseAsync(fileInfo, &genericCallback, &wp->commandBlock) == NAND_CODE_BUSY) {
+                    if (++tries > NAND_ATTEMPTS_MAX) {
+                        wp->code = -128;
+                        wp->flag &= ~NAND_FLAG_Waiting;
+                        break;
+                    }
+                }
+                break;
+            // End
+            case 6:
+                wp->task = 0;
+                wp->flag &= ~NAND_FLAG_Exec;
+        }
+        wp->stage++;
+    }
+}
+
 // void nandWriteAllSavesMain();
 // void nandWriteSaveMain();
 // void nandWriteBannerLoadAllSavesMain();
