@@ -253,16 +253,72 @@ void nandLoadSave(s32 saveId) {
     gp->unknown_0xe0 = 0;
 }
 
-// void nandDisableSaving();
-// void nandEnableSaving();
-// bool nandCheckSaving();
-// void nandCheckMain();
+void nandDisableSaving() {
+    wp->flag |= NAND_FLAG_NoSave;
+}
+
+void nandEnableSaving() {
+    wp->flag &= ~NAND_FLAG_NoSave;
+}
+
+bool nandCheckSaving() {
+    return (wp->flag & NAND_FLAG_NoSave) != 0;
+}
+
+void nandCheckMain() {
+    if (wp->flag & NAND_FLAG_Waiting) return;
+
+    if (wp->code != NAND_CODE_OK) {
+        wp->task = 0;
+        wp->flag &= ~NAND_FLAG_Exec;
+        wp->flag |= 4;
+    }
+    else {
+        switch (wp->stage) {
+            case 0:
+                wp->flag |= NAND_FLAG_Waiting;
+                s32 tries = 0;
+                wp->answer = 0;
+                while (NANDCheckAsync(NAND_BLOCK_COUNT, NAND_INODE_COUNT,
+                                      &wp->answer, &checkCallback, &wp->commandBlock) == NAND_CODE_BUSY) {
+                    if (++tries > NAND_ATTEMPTS_MAX) {
+                        wp->code = -128;
+                        wp->flag &= ~NAND_FLAG_Waiting;
+                        break;
+                    }
+                }
+                break;
+            case 1:
+                wp->task = 0;
+                wp->flag &= ~NAND_FLAG_Exec;
+                break;
+        }
+        wp->stage++;
+    }
+}
+
 // void nandWriteBannerMain();
 // void nandWriteAllSavesMain();
 // void nandWriteSaveMain();
 // void nandWriteBannerLoadAllSavesMain();
 // void nandDeleteSaveMain();
-// void genericCallback(s32 result, NANDCommandBlock * commandBlock);
-// void checkCallback(s32 result, NANDCommandBlock * commandBlock);
+
+void genericCallback(s32 result, NANDCommandBlock * commandBlock) {
+    (void) commandBlock;
+    if (result > 0) {
+        result = 0;
+    }
+    wp->flag &= ~NAND_FLAG_Waiting;
+    wp->code = result;
+}
+
+void checkCallback(s32 result, NANDCommandBlock * commandBlock) {
+    (void) commandBlock;
+    wp->flag &= ~NAND_FLAG_Waiting;
+    wp->code = result;
+    if (wp->code != 0) return;
+    if (wp->answer & 0xa) wp->code = -11;
+    if (wp->answer & 5) wp->code = -9;
+}
 
 #undef flag

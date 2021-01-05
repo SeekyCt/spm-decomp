@@ -35,10 +35,10 @@ typedef struct {
     u8 unknown_0x0[0xb8 - 0x0];
 } NANDCommandBlock;
 
-typedef void (*NANDCallback)(s32 result, NANDCommandBlock * commandBlock);
+typedef void (NANDCallback)(s32 result, NANDCommandBlock * commandBlock);
 
 void NANDInitBanner(NANDBanner * banner, u32 flags, wchar_t * title, wchar_t * comment); // 8029c438
-void NANDCheckAsync(u32 blockCount, u32 inodeCount, u32 * answer, NANDCallback * callback, NANDCommandBlock * commandBlock); // 8029c5b0
+s32 NANDCheckAsync(u32 blockCount, u32 inodeCount, u32 * answer, NANDCallback * callback, NANDCommandBlock * commandBlock); // 8029c5b0
 // more
 
 #endif
