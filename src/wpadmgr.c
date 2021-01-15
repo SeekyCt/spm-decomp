@@ -75,19 +75,19 @@ bool wpadGetRumbleStatus(s32 controller) {
     return wp->enableRumble[controller];
 }
 
-u32 wpadGetButtonsHeld(s32 controller) { // 80237688
+u32 wpadGetButtonsHeld(s32 controller) {
     return wp->statuses[controller]->buttonsHeld;
 }
 
-u32 wpadGetButtonsReleased(s32 controller) { // 8023769c
+u32 wpadGetButtonsReleased(s32 controller) {
     return wp->statuses[controller]->buttonsReleased;
 }
 
-u32 wpadGetButtonsPressed(s32 controller) { // 802376b0
+u32 wpadGetButtonsPressed(s32 controller) {
     return wp->statuses[controller]->buttonsPressed;
 }
 
-u32 wpadGetButtonsHeldConditional(s32 controller) { // 802376c4
+u32 wpadGetButtonsHeldConditional(s32 controller) {
     u32 held = wp->statuses[controller][0].buttonsHeld;
     return held & 0x80000000 ? held : 0;
 }
