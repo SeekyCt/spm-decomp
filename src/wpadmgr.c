@@ -4,6 +4,7 @@
 #include <string.h>
 #include <wpad.h>
 #include <wpadmgr.h>
+#include <spmario.h>
 
 static WpadWork wpadWork; // 80528f48
 static WpadWork * wp = &wpadWork; // 805ae198
@@ -87,11 +88,20 @@ u32 wpadGetButtonsPressed(s32 controller) {
     return wp->statuses[controller]->buttonsPressed;
 }
 
-u32 wpadGetButtonsHeldConditional(s32 controller) {
+u32 wpadGetButtonsHeldRepeat(s32 controller) {
     u32 held = wp->statuses[controller][0].buttonsHeld;
-    return held & 0x80000000 ? held : 0;
+    return held & WPAD_BTN_REPEAT ? held : 0;
 }
 
-// 802376e4
-// 80237710
+u32 unknown_802376e4(s32 controller) {
+    if (wp->unknown_0x9d4c[controller] > 50)
+        return wp->unknown_0x9d3c[controller];
+    else
+        return 0;
+}
+
+void unknown_80237710(s32 controller) {
+    wp->unknown_0x9d4c[controller] = 0;
+    wp->unknown_0x9d60[controller] = gp->time;
+}
 // 80237750

@@ -18,7 +18,12 @@ typedef struct {
     Vec2 pointingPos[4]; // wii remote pointer positions
     KPADStatus statuses[4][WPAD_STATUS_COUNT];
     s32 kpadReadRet[4];
-    u8 unknown_0x217c[0x9dc8 - 0x217c];
+    u8 unknown_0x217c[0x9d3c - 0x217c];
+    u32 unknown_0x9d3c[4];
+    s32 unknown_0x9d4c[4];
+    u8 unknown_0x9d5c[0x9d60 - 0x9d5c];
+    s64 unknown_0x9d60[4];
+    u8 unknown_0x9d80[0x9dc8 - 0x9d80];
 } WpadWork;
 
 WpadWork * wpadGetWork(); // 8023697c
@@ -34,9 +39,9 @@ bool wpadGetRumbleStatus(s32 controller); // 80237678
 u32 wpadGetButtonsHeld(s32 controller); // 80237688
 u32 wpadGetButtonsReleased(s32 controller); // 8023769c
 u32 wpadGetButtonsPressed(s32 controller); // 802376b0
-u32 wpadGetButtonsHeldConditional(s32 controller); // 802376c4
-// 802376e4
-// 80237710
+u32 wpadGetButtonsHeldRepeat(s32 controller); // 802376c4
+u32 unknown_802376e4(s32 controller); // 802376e4
+void unknown_80237710(s32 controller); // 80237710
 // 80237750
 
 #endif
