@@ -82,12 +82,12 @@ void fileGarbageDataAdrSet(void * data, s32 fileType); // 8019ee2c
 void fileGarbageMoveMem(void * dest, FileRecord * sourceRecord); // 8019f498
 
 void _fileGarbage(s32); // 8019f560
-FileRecord * fileAllocf(s32, const char * format, ...); // 8019f724
-// fileAlloc 8019f7dc
-// _fileAlloc 8019f7e4
+FileRecord * fileAllocf(s32 fileType, const char * format, ...); // 8019f724
+FileRecord * fileAlloc(const char * path, s32 fileType); // 8019f7dc
+FileRecord * _fileAlloc(const char * path, s32 fileType, s32 p3); // 8019f7e4
 void fileFree(FileRecord * record); // 8019fa8c
 // dvdReadDoneCallback 8019fb38
-FileRecord * fileAsyncf(s32, s32, const char * format, ...); // 8019fc5c
-// fileAsync 8019fd24
+FileRecord * fileAsyncf(s32 fileType, s32 p2, const char * format, ...); // 8019fc5c
+FileRecord * fileAsync(const char * path, s32 fileType, s32 p3); // 8019fd24
 
 #endif
