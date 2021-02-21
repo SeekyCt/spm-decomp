@@ -15,7 +15,8 @@
 static NandWork nandWork;
 static NandWork * wp = &nandWork;
 
-#include "files/saveImagesTpl.inc" // static const u8 saveImagesTpl[0x5058]
+// #include "files/saveImagesTpl.inc"
+static const u8 saveImagesTpl[0x5058] = {1}; // not included in decomp for copyright reasons
 
 // Register usage not matching, might need nandClearSave inlined?
 void nandInit() {
