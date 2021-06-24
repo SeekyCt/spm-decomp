@@ -17,7 +17,7 @@ static s32 priTblNum; // 805ae8dc
 static s32 runMainF; // 805ae8e0
 
 static s32 evtId = 1; // 805ae018
-static float evtSpd = 1.0; // 805ae01c
+static float evtSpd = 1.0f; // 805ae01c
 
 EvtWork * evtGetWork() { // usually inlined in this file
     return &work;
@@ -39,15 +39,12 @@ static void make_pri_table() { // 800d87f0
     wp = evtGetWork();
     entry = wp->entries;
     priEntryCount = 0;
-    n = 0;
-    while (n < wp->entryCount) {
+    for (n = 0; n < wp->entryCount; n++, entry++) {
         if (entry->flags & EVT_FLAG_IN_USE != 0) {
             priTbl[priEntryCount] = n;
             priIdTbl[priEntryCount] = entry->id;
             priEntryCount++;
         }
-        n++;
-        entry++;
     }
     priTblNum = priEntryCount;
 
@@ -268,13 +265,10 @@ void evtDelete(EvtEntry * entry) {
             evtDelete(entry->childEntry);
         }
         EvtEntry * curEntry = wp->entries;
-        s32 i = 0;
-        while(i < wp->entryCount) {
+        for (s32 i = 0; i < wp->entryCount; i++, curEntry++) {
             if (curEntry->flags & 1 != 0 && curEntry->brotherEntry == entry) {
                 evtDelete(curEntry);
             }
-            i++;
-            curEntry++;
         }
 
         EvtEntry * parent = entry->parent;
@@ -304,26 +298,20 @@ void evtDelete(EvtEntry * entry) {
 void evtDeleteID(s32 id) {
     EvtWork * wp = evtGetWork();
     EvtEntry * entry = wp->entries;
-    s32 i = 0;
-    while (i < wp->entryCount) {
+    for (s32 i = 0; i < wp->entryCount; i++, entry++) {
         if (entry->flags & EVT_FLAG_IN_USE != 0 && entry->id == id) {
             evtDelete(entry);
         }
-        i++;
-        entry++;
     }
 }
 
 bool evtCheckID(s32 id) {
     EvtWork * wp = evtGetWork();
     EvtEntry * entry = wp->entries;
-    s32 i = 0;
-    while (i < wp->entryCount) {
+    for (s32 i = 0; i < wp->entryCount; i++, entry++) {
         if (entry->flags & EVT_FLAG_IN_USE != 0 && entry->id == id) {
             return true;
         }
-        i++;
-        entry++;
     }
     return false;
 }
@@ -346,13 +334,10 @@ void evtStop(EvtEntry * entry, u8 mask) {
         evtStop(entry->childEntry, mask);
     }
     EvtEntry * curEntry = wp->entries;
-    s32 i = 0;
-    while (i < wp->entryCount) {
+    for (s32 i = 0; i < wp->entryCount; i++, curEntry++) {
         if (curEntry->flags & EVT_FLAG_IN_USE != 0 && curEntry->brotherEntry == entry) {
             evtStop(curEntry, mask);
         }
-        i++;
-        curEntry++;
     }
     if (entry->type & mask) {
         entry->flags |= EVT_FLAG_PAUSED;
@@ -365,13 +350,10 @@ void evtStart(EvtEntry * entry, u8 mask) {
         evtStart(entry->childEntry, mask);
     }
     EvtEntry * curEntry = wp->entries;
-    s32 i = 0;
-    while (i < wp->entryCount) {
+    for (s32 i = 0; i < wp->entryCount; i++, curEntry++) {
         if (curEntry->flags & EVT_FLAG_IN_USE != 0 && curEntry->brotherEntry == entry) {
             evtStart(curEntry, mask);
         }
-        i++;
-        curEntry++;
     }
     if (entry->type & mask) {
         entry->flags &= ~EVT_FLAG_PAUSED;
@@ -381,78 +363,60 @@ void evtStart(EvtEntry * entry, u8 mask) {
 void evtStopID(s32 id) {
     EvtWork * wp = evtGetWork();
     EvtEntry * entry = wp->entries;
-    s32 i = 0;
-    while (i < wp->entryCount) {
+    for (s32 i = 0; i < wp->entryCount; i++, entry++) {
         if (entry->flags & EVT_FLAG_IN_USE != 0 && entry->id == id) {
             evtStop(entry, 0xff);
         }
-        i++;
-        entry++;
     }
 }
 
 void evtStartID(s32 id) {
     EvtWork * wp = evtGetWork();
     EvtEntry * entry = wp->entries;
-    s32 i = 0;
-    while (i < wp->entryCount) {
-        if (entry->flags & EVT_FLAG_IN_USE != 0&& entry->id == id) {
+    for (s32 i = 0; i < wp->entryCount; i++, entry++) {
+        if (entry->flags & EVT_FLAG_IN_USE != 0 && entry->id == id) {
             evtStart(entry, 0xff);
         }
-        i++;
-        entry++;
     }
 }
 
 void evtStopAll(u8 mask) {
     EvtWork * wp = evtGetWork();
     EvtEntry * entry = wp->entries;
-    s32 i = 0;
-    while (i < wp->entryCount) {
+    for (s32 i = 0; i < wp->entryCount; i++, entry++) {
         if (entry->flags & EVT_FLAG_IN_USE != 0) {
             evtStop(entry, mask);
         }
-        i++;
-        entry++;
     }
 }
 
 void evtStartAll(u8 mask) {
     EvtWork * wp = evtGetWork();
     EvtEntry * entry = wp->entries;
-    s32 i = 0;
-    while (i < wp->entryCount) {
+    for (s32 i = 0; i < wp->entryCount; i++, entry++) {
         if (entry->flags & EVT_FLAG_IN_USE != 0) {
             evtStart(entry, mask);
         }
-        i++;
-        entry++;
     }
 }
 
 void evtStopOther(EvtEntry * entry, u8 mask) {
     EvtWork * wp = evtGetWork();
     EvtEntry * curEntry = wp->entries;
-    s32 i = 0;
-    while (i < wp->entryCount) {
+    for (s32 i = 0; i < wp->entryCount; i++, curEntry++) {
         if (curEntry->flags & EVT_FLAG_IN_USE != 0 && curEntry != entry) {
             evtStop(curEntry, mask);
         }
-        i++;
-        curEntry++;
     }
 }
 
 void evtStartOther(EvtEntry * entry, u8 mask) {
     EvtWork * wp = evtGetWork();
     EvtEntry * curEntry = wp->entries;
-    s32 i = 0;
-    while (i < wp->entryCount) {
+    for (s32 i = 0; i < wp->entryCount; i++, curEntry++) {
         if (curEntry->flags & EVT_FLAG_IN_USE != 0 && curEntry != entry) {
             evtStart(curEntry, mask);
         }
-        i++;
-        curEntry++;
     }
 }
 
@@ -468,13 +432,10 @@ EvtEntry * evtGetPtr(s32 index) {
 EvtEntry * evtGetPtrID(s32 id) {
     EvtWork * wp = evtGetWork();
     EvtEntry * curEntry = wp->entries;
-    s32 i = 0;
-    while (i < wp->entryCount) {
+    for (s32 i = 0; i < wp->entryCount; i++, curEntry++) {
         if (curEntry->flags & EVT_FLAG_IN_USE != 0 && curEntry->id == id) {
             return curEntry;
         }
-        curEntry++;
-        i++;
     }
     return 0;
 }
