@@ -40,6 +40,11 @@ typedef struct {
 } NPCWork;
 
 NPCWork * npcGetWorkPtr();
+
 NPCEntry * npcNameToPtr();
+
+void func_801c3694(const char *, const char *);
+void func_801c37e4(const char *);
+void func_801c3848(const char *);
 
 #endif

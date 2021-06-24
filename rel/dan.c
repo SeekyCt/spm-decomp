@@ -1,12 +1,15 @@
 #include <common.h>
 #include <animdrv.h>
+#include <bgdrv.h>
 #include <dispdrv.h>
 #include <evtmgr.h>
 #include <evtmgr_cmd.h>
+#include <evt_door.h>
 #include <hitdrv.h>
 #include <hud.h>
 #include <itemdrv.h>
 #include <lzss10.h>
+#include <lz_texts.h>
 #include <mapdrv.h>
 #include <mario.h>
 #include <mario_pouch.h>
@@ -15,128 +18,23 @@
 #include <npcdrv.h>
 #include <parse.h>
 #include <seqdrv.h>
+#include <seq_title.h>
+#include <somewhere.h>
 #include <spmario.h>
 #include <stdio.h>
 #include <string.h>
 #include <system.h>
-
-extern u8 pitText[];
-const char * getNextDanMapname(int);
-void func_8004f5c8(const char *);
-void func_8004f5f0(const char *);
-void func_8008f2a4(const char *);
-void func_8008f324(const char *);
-void func_800b426c(float, float, float, int, int);
-void func_801c3694(const char *, const char *);
-void func_801c37e4(const char *);
-void func_801c3848(const char *);
-void func_800cd554(float, float, float, float, float, float, int, int);
-
-#define DUNGEON_MAX 200
-#define PARTS_COUNT 16
+#include <rel/dan.h>
 
 #define CHECK_ALL_MASK(num, mask) (((num) & (mask)) == (mask))
 #define CHECK_ANY_MASK(num, mask) (((num) & (mask)) != 0)
 
-typedef struct {
-    u32 flags;
-    const char * name_l;
-    const char * name_r;
-    const char * name_A2;
-    const char * name_A3;
-    const char * destMapName;
-    const char * unknown_0x18;
-    int unknown_0x1c;
-} MapDoorDesc; // total size 0x20
-
-typedef struct {
-    int scriptNumber;
-    u16 flags;
-    u16 _pad_6;
-    const char * name;
-    const char * mapName;
-    const char * case1Name;
-    const char * case2Name;
-    const char * destMapName;
-    const char * unknown_0x1c;
-} DokanDesc;
-
-typedef struct {
-    s32 enter;
-    s32 exit;
-} DanDoor; // total size 0x8
-
-typedef struct {
-    s32 name;
-    s32 num;
-    s32 pos;
-} DanEnemy; // total size 0xc;
-
-typedef struct {
-    u32 map; // flags for things to enable
-    s32 item; // only used in chest rooms
-    s32 doorCount;
-    s32 enemyCount;
-    DanDoor doors[20];
-    DanEnemy enemies[16];
-} DanDungeon; // total size 0x170
-
-typedef struct {
-    DanDungeon * dungeons; // DUNGEON_MAX
-    DanDoor doorInfo;
-    int unknown_0xc;
-    int unknown_0x10[1];
-    u8 unknown_0x14[0x110 - 0x14];
-    char enterDoorName_l[64];
-    char enterDoorName_r[64];
-    char enterDoorName_A2[64];
-    char enterDoorName_A3[64];
-    char prevMapName[64];
-    char enterDoor_desc0x18[64];
-    char exitDoorName_l[64];
-    char exitDoorName_r[64];
-    char exitDoorName_A2[64];
-    char exitDoorName_A3[64];
-    char nextMapName[64];
-    char exitDoor_desc0x18[64];
-    u8 unknown_0x410[0x510 - 0x410];
-    char enterDoorName[64];
-    char exitDoorName[64];
-} DanWork; // total size 0x590
-
 static DanWork * wp = NULL;
-static const char * danMapParts[PARTS_COUNT];
+static const char * danMapParts[DAN_PARTS_COUNT];
 static MapDoorDesc danMapDoorDescs[2];
 static DokanDesc danChestRoomDokanDesc;
 static MapDoorDesc danChestRoomMapDoorDescs[2];
 
-int evt_dan_read_data(EvtEntry * entry, bool isFirstCall);
-int evt_dan_handle_map_parts(EvtEntry * entry, bool isFirstCall);
-int evt_dan_handle_dokans(EvtEntry * entry, bool isFirstCall);
-int evt_dan_handle_doors(EvtEntry * entry, bool isFirstCall);
-int evt_dan_get_door_names(EvtEntry * entry, bool isFirstCall);
-int evt_dan_get_exit_door_name_l(EvtEntry * entry, bool isFirstCall);
-int evt_dan_get_enemy_info(EvtEntry * entry, bool isFirstCall);
-int func_80c82d38(EvtEntry * entry, bool isFirstCall);
-int evt_dan_get_enemy_spawn_pos(EvtEntry * entry, bool isInitialCall);
-int evt_dan_decide_key_enemy(EvtEntry * entry, bool isFirstCall);
-void danCountdownDone();
-int evt_dan_start_countdown(EvtEntry * entry, bool isFirstCall);
-bool danCheckKeyInMapBbox();
-bool danCheckKeyEnemyInMapBbox();
-int evt_dan_handle_key_failsafe(EvtEntry * entry, bool isFirstCall);
-int evt_dan_handle_chest_room_dokans_and_doors(EvtEntry * entry, bool isFirstCall);
-int evt_dan_get_chest_room_item(EvtEntry * entry, bool isFirstCall);
-int evt_dan_boss_room_set_door_name(EvtEntry * entry, bool isFirstCall);
-void func_80c839cc(const char * param_1, bool param_2);
-void wracktailDispCb(void * param, int animGroupIdx, int param_3);
-int evt_dan_set_wracktail_disp_cb(EvtEntry * entry, bool isFirstCall);
-int func_80c83c48(EvtEntry * entry, bool isFirstCall);
-void screenBlinkDisp(s8 cameraId, void * param);
-int evt_dan_screen_blink(EvtEntry * entry, bool isFirstCall);
-const char * func_80c83f6c(const char * param_1);
-
-// evt_dan_read_data()
 int evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
 {
     (void) entry;
@@ -207,7 +105,6 @@ int evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
     return 2;
 }
 
-// evt_dan_handle_map_parts(int no)
 int evt_dan_handle_map_parts(EvtEntry * entry, bool isFirstCall)
 {
     (void) isFirstCall;
@@ -222,7 +119,7 @@ int evt_dan_handle_map_parts(EvtEntry * entry, bool isFirstCall)
     mapGrpFlag4On(false, "block", 0x20);
 
     // Disable parts from map mask
-    for (u32 i = 0; i < PARTS_COUNT; i++)
+    for (u32 i = 0; i < DAN_PARTS_COUNT; i++)
     {
         if (dungeon->map & (1 << i))
         {
@@ -274,7 +171,6 @@ int evt_dan_handle_map_parts(EvtEntry * entry, bool isFirstCall)
     return 2;
 }
 
-// evt_dan_handle_dokans(int no)
 int evt_dan_handle_dokans(EvtEntry * entry, bool isFirstCall)
 {
     (void) isFirstCall;
@@ -327,7 +223,6 @@ int evt_dan_handle_dokans(EvtEntry * entry, bool isFirstCall)
 
 int rand();
 
-// evt_dan_handle_doors(int no, int room, &char * enterDoor, &char * exitDoor, &float lockX, &float lockY, &float lockZ)
 int evt_dan_handle_doors(EvtEntry * entry, bool isFirstCall)
 {
     (void) isFirstCall;
@@ -407,7 +302,6 @@ int evt_dan_handle_doors(EvtEntry * entry, bool isFirstCall)
     return 2;
 }
 
-// evt_dan_get_door_names(&char * enterName, &char * exitName)
 int evt_dan_get_door_names(EvtEntry * entry, bool isFirstCall)
 {
     (void) isFirstCall;
@@ -419,7 +313,6 @@ int evt_dan_get_door_names(EvtEntry * entry, bool isFirstCall)
     return 2;
 }
 
-// evt_dan_get_exit_door_name_l(&char * name)
 int evt_dan_get_exit_door_name_l(EvtEntry * entry, bool isFirstCall)
 {
     (void) isFirstCall;
@@ -430,7 +323,6 @@ int evt_dan_get_exit_door_name_l(EvtEntry * entry, bool isFirstCall)
     return 2;
 }
 
-// evt_dan_get_enemy_info(int no, int enemyIdx, &int templateId, &int num)
 int evt_dan_get_enemy_info(EvtEntry * entry, bool isFirstCall)
 {
     (void) isFirstCall;
@@ -486,7 +378,6 @@ inline void unkInline(int n)
     wp->unknown_0x10[wp->unknown_0xc++] = n;
 }
 
-// func_80c82d38()
 int func_80c82d38(EvtEntry * entry, bool isFirstCall)
 {
     (void) isFirstCall;
@@ -568,7 +459,6 @@ int func_80c82d38(EvtEntry * entry, bool isFirstCall)
     return 2;
 }
 
-// evt_dan_get_enemy_spawn_pos(int num, int no, int enemyIdx, &float x, &float y, &float z)
 int evt_dan_get_enemy_spawn_pos(EvtEntry * entry, bool isInitialCall)
 {
     (void) isInitialCall;
@@ -626,7 +516,6 @@ int evt_dan_get_enemy_spawn_pos(EvtEntry * entry, bool isInitialCall)
     return 2;
 }
 
-// evt_dan_decide_key_enemy(int itemId)
 int evt_dan_decide_key_enemy(EvtEntry * entry, bool isFirstCall)
 {
     (void) isFirstCall;
@@ -653,7 +542,6 @@ void danCountdownDone()
     seqSetSeq(SEQ_GAMEOVER, NULL, NULL);
 }
 
-// evt_dan_start_countdown()
 int evt_dan_start_countdown(EvtEntry * entry, bool isFirstCall)
 {
     (void) entry;
@@ -730,7 +618,6 @@ bool danCheckKeyEnemyInMapBbox()
         return false;
 }
 
-// evt_dan_handle_key_failsafe()
 int evt_dan_handle_key_failsafe(EvtEntry * entry, bool isFirstCall)
 {
     (void) isFirstCall;
@@ -757,7 +644,6 @@ int evt_dan_handle_key_failsafe(EvtEntry * entry, bool isFirstCall)
     }
 }
 
-// evt_dan_handle_chest_room_dokans_and_doors(int no)
 int evt_dan_handle_chest_room_dokans_and_doors(EvtEntry * entry, bool isFirstCall)
 {
     (void) isFirstCall;
@@ -782,7 +668,6 @@ int evt_dan_handle_chest_room_dokans_and_doors(EvtEntry * entry, bool isFirstCal
     return 2;
 }
 
-// evt_dan_get_chest_room_item(&int itemId)
 int evt_dan_get_chest_room_item(EvtEntry * entry, bool isFirstCall)
 {
     (void) isFirstCall;
@@ -796,7 +681,6 @@ int evt_dan_get_chest_room_item(EvtEntry * entry, bool isFirstCall)
     return 2;
 }
 
-// evt_dan_boss_room_set_door_name
 int evt_dan_boss_room_set_door_name(EvtEntry * entry, bool isFirstCall)
 {
     (void) entry;
@@ -891,7 +775,7 @@ const char * func_80c83f6c(const char * param_1)
         return param_1;
 }
 
-static const char * danMapParts[PARTS_COUNT] = {
+static const char * danMapParts[DAN_PARTS_COUNT] = {
     "parts_05",
     "parts_06",
     "parts_12_b",

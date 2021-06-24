@@ -32,4 +32,8 @@ UnkStruct80510458 * unknown_0x80121f48();
 void * unknown_0x8014c088();
 UnkStruct805283e0 * unknown_0x801c9adc();
 
+// referenced in dan.c
+void func_800b426c(float, float, float, int, int);
+void func_800cd554(float, float, float, float, float, float, int, int);
+
 #endif
