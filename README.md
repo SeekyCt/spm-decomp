@@ -6,7 +6,7 @@ See also https://github.com/SeekyCt/spm-docs for other documentation
 
 ## Compiler Notes
 ### Flags
-The compiler flags probably aren't fully accurate yet (particularly the inline pragma), and it's likely that some parts of the game will use different flags.
+The compiler flags probably aren't fully accurate yet, and it's likely that some parts of the game will use different flags.
 ### Version
 The project currently uses Codewarrior Version 4.1 build 60831, it's not known if this is the correct version.
 
