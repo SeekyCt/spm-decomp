@@ -24,6 +24,16 @@
   Data matching except SeqWork missing fields (but those are not referenced in seqdrv.c code)
 */
 
+enum
+{
+    SEQ_LOGO = 0,
+    SEQ_TITLE,
+    SEQ_GAME,
+    SEQ_MAPCHANGE,
+    SEQ_GAMEOVER,
+    SEQ_LOAD
+};
+
 typedef struct _SeqWork {
   s32 seq;
   s32 stage;

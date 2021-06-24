@@ -13,6 +13,7 @@ The project currently uses Codewarrior Version 4.1 build 60831, it's not known i
 ## Matching Notes
 - Data sections generally won't match in incomplete files
     - To match string pools in incomplete files (since they affect asm), functions with strings that haven't been decompiled have temporary replacements that call a fake __dummy_string function to place these strings in the pool
+    - To match float pools in incomplete rel files, __dummy_float is used
 
 ## TTYD Support
 TTYD was initially matched too for some of seqdrv, but this was abandoned based on the effort it would've taken to keep doing and also to find the right compiler version & flags for it too. The code that was matched still remains.

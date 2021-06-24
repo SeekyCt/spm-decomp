@@ -9,6 +9,7 @@
 #include <string.h>
 #include <system.h>
 
+#pragma push
 #pragma pool_strings off
 
 static RelHolder relFHolder;
@@ -62,4 +63,4 @@ bool isRelLoaded() {
     return relHolder->loaded;
 }
 
-#pragma pool_strings reset
+#pragma pop
