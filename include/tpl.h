@@ -61,9 +61,9 @@ typedef struct {
 } TPLHeader;
 
 #define IS_TPL_PACKED(tpl) (tpl->imageTableOffset < (u32) tpl) // offset will be a pointer to the table if unpacked
-#define VALIDATE_TPL_VERSION(palette) \
+#define VALIDATE_TPL_VERSION(line, palette) \
     if (palette->version != 0x20af30) { \
-        OSPanic(__FILE__, __LINE__, "invalid version number for texture palette"); \
+        OSPanic(__FILE__, line, "invalid version number for texture palette"); \
     }
 
 /*

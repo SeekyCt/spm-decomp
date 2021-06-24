@@ -81,8 +81,6 @@ void nandInit() {
 
 void nandMain() {
     switch (wp->task) {
-        case NANDMGR_TASK_NONE:
-            return;
         case NANDMGR_TASK_CHECK:
             nandCheckMain();
             break;
@@ -101,6 +99,8 @@ void nandMain() {
         case NANDMGR_TASK_DELETE_SAVE:
             nandDeleteSaveMain();
             break;
+        case NANDMGR_TASK_NONE:
+            return;
     }
 }
 
@@ -121,7 +121,7 @@ SaveFile * nandGetSaveFiles() {
 
 void nandCheck() {
     // "Already running"
-    assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    assert(0x12c, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_CHECK;
     wp->code = 0;
@@ -131,7 +131,7 @@ void nandCheck() {
 
 void nandWriteBanner() {
     // "Already running"
-    assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    assert(0x139, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_WRITE_BANNER;
     wp->code = 0;
@@ -141,7 +141,7 @@ void nandWriteBanner() {
 
 void nandWriteAllSaves() {
     // "Already running"
-    assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    assert(0x146, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_WRITE_ALL_SAVES;
     wp->code = 0;
@@ -151,7 +151,7 @@ void nandWriteAllSaves() {
 
 void nandWriteSave(s32 saveId) {
     // "Already running"
-    assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    assert(0x153, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_WRITE_SAVE;
     wp->code = 0;
@@ -161,7 +161,7 @@ void nandWriteSave(s32 saveId) {
 
 void nandWriteBannerLoadAllSaves() {
     // "Already running"
-    assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    assert(0x160, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_WRITE_BANNER_LOAD_ALL_SAVES;
     wp->code = 0;
@@ -171,7 +171,7 @@ void nandWriteBannerLoadAllSaves() {
 
 void nandDeleteSave(s32 saveId) {
     // "Already running"
-    assert(!flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    assert(0x16d, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_DELETE_SAVE;
     wp->code = 0;
@@ -407,7 +407,11 @@ void nandWriteBannerMain() {
     }
 }
 
-// void nandWriteAllSavesMain();
+// Unfinished, just for string pool
+void nandWriteAllSavesMain() {
+    __dummy_string("wiimario%02d");
+}
+
 // void nandWriteSaveMain();
 // void nandWriteBannerLoadAllSavesMain();
 // void nandDeleteSaveMain();

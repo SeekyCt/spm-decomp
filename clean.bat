@@ -1,1 +1,2 @@
 del *.s
+del *.o

@@ -1,9 +1,3 @@
-/*
-    Includes many weird while loops where for loops didn't match because of the
-    variable incrementing order, maybe a sign of wrong compiler version?
-    (Especially since PM64 decomp matched them with for loops)
-*/
-
 #include <common.h>
 #include <evtmgr.h>
 #include <evtmgr_cmd.h>
@@ -74,6 +68,7 @@ static void make_pri_table() { // 800d87f0
     }
 }
 
+// Not matching
 static void make_jump_table(EvtEntry * entry) { // 800d890c
     for (s32 i = 0; i < 16; i++) {
         entry->labelIds[i] = -1;
@@ -87,8 +82,8 @@ static void make_jump_table(EvtEntry * entry) { // 800d890c
         s32 cmdn = *pScriptHead >> 16;
         pScriptHead++;
 
-        assert(cmdn >= 0, "EVTMGR:command line error"); // missing double branch here
-        assert(cmd < EVT_max, "EVTMGR:command line error"); // missing double branch here
+        assert(0x74, cmdn >= 0, "EVTMGR:command line error"); // missing double branch here
+        assert(0x77, cmd < EVT_max, "EVTMGR:command line error"); // missing double branch here
 
         s32 id = *pScriptHead;
         pScriptHead += cmdn;
@@ -102,7 +97,7 @@ static void make_jump_table(EvtEntry * entry) { // 800d890c
                 n++;
         }
 
-        assert(n < MAX_EVT_JMPTBL, "EVTMGR:Jump Table Overflow !![make_jump_table]"); // missing double branch here
+        assert(0x88, n < MAX_EVT_JMPTBL, "EVTMGR:Jump Table Overflow !![make_jump_table]"); // missing double branch here
     }
     end: ; // didn't match when just using return
 }
@@ -128,7 +123,7 @@ void evtmgrReInit() {
     evt_msg_init();
 }
 
-// not matching, includes inline evtEntryRunCheck
+// Not matching, includes inline evtEntryRunCheck
 EvtEntry * evtEntry(EvtScriptCode * script, u8 priority, u8 flags) {
     EvtEntry * entry = work.entries;
     s32 i;
@@ -137,7 +132,7 @@ EvtEntry * evtEntry(EvtScriptCode * script, u8 priority, u8 flags) {
         entry++;
     }
     if (i >= work.entryCount) {
-        //assert(0, "EVTMGR:Pointer Table Overflow !![evtEntry]");
+        assert(0x108, 0, "EVTMGR:Pointer Table Overflow !![evtEntry]");
     }
     evtMax += 1;
     memset(entry, 0, sizeof(EvtEntry));
@@ -191,12 +186,43 @@ EvtEntry * evtEntry(EvtScriptCode * script, u8 priority, u8 flags) {
     return entry;
 }
 
-//EvtEntry * evtEntryType(EvtScriptCode * script, s32 param_2, s32 param_3, s32 param_4)
-//EvtEntry * evtChildEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags)
-//EvtEntry * evtBrotherEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags)
-//EvtEntry * evtRestart(EvtEntry * entry)
+// Unfinished, just for string pool
+EvtEntry * evtEntryType(EvtScriptCode * script, s32 param_2, s32 param_3, s32 param_4) {
+    (void) script;
+    (void) param_2;
+    (void) param_3;
+    (void) param_4;
 
-// unfinished
+    __dummy_string("EVTMGR:Pointer Table Overflow !![evtEntryType]");
+
+    return NULL;
+}
+
+// Unfinished, just for string pool
+EvtEntry * evtChildEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags) {
+    (void) entry;
+    (void) script;
+    (void) flags;
+
+    __dummy_string("EVTMGR:Pointer Table Overflow !![evtChildEntry]");
+
+    return NULL;
+}
+
+// Unfinished, just for string pool
+EvtEntry * evtBrotherEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags) {
+    (void) entry;
+    (void) script;
+    (void) flags;
+
+    __dummy_string("EVTMGR:Pointer Table Overflow !![evtBrotherEntry]");
+
+    return NULL;
+}
+
+// EvtEntry * evtRestart(EvtEntry * entry)
+
+/* Unfinished
 void evtmgrMain() {
     EvtWork * wp = evtGetWork();
     runMainF = 1;
@@ -233,6 +259,7 @@ void evtmgrMain() {
     }
     runMainF = 0;
 }
+*/
 
 void evtDelete(EvtEntry * entry) {
     EvtWork * wp = evtGetWork();

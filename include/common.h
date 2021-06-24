@@ -36,4 +36,7 @@ typedef struct {
     float z;
 } Vec3;
 
+// Used in un-implemented functions to make string pool match
+void __dummy_string(const char *);
+
 #endif

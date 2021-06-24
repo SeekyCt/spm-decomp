@@ -44,7 +44,7 @@ void swByteSet(s32 id, s32 num) {
     }
     else {
         // "The value is strange"
-        assertf(num < 256, "’l‚ª‚¨‚©‚µ‚¢ sw_byte[%d] = %d", num + EVTDAT_LSW_BASE, num);
+        assertf(0x9c, num < 256, "’l‚ª‚¨‚©‚µ‚¢ sw_byte[%d] = %d", id + EVTDAT_GSW_BASE, num);
         gp->gsw[id] = (s8) num;
     }
 }
@@ -76,4 +76,12 @@ s32 _swByteGet(s32 id) {
     return gp->lsw[id] & 0xff;
 }
 
-// a lot
+// 80038204
+// 800383a0
+// 80038478
+// 80038550
+// 8003863c
+// 8003864c
+// 8003865c
+// 8003875c
+// 800387d8

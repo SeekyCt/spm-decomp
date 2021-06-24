@@ -71,13 +71,13 @@ void _swClear(s32 id); // 800381a4
 /*
     Sets a local saved work value
 */
-void _swByteSet(s32 id, s8 num);
+void _swByteSet(s32 id, s8 num); // 800381e4
 
 /*
     Returns a local saved work value
     Note: return is technically just s8 but calls used wrong casts when it was set to that
 */
-s32 _swByteGet(s32 id);
+s32 _swByteGet(s32 id); // 800381f4
 
 // New to SPM so no symbols:
 // 80038204

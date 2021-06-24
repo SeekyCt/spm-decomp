@@ -18,7 +18,7 @@ typedef struct {
     Vec2 pointingPos[4]; // wii remote pointer positions
     KPADStatus statuses[4][WPAD_STATUS_COUNT];
     s32 kpadReadRet[4];
-    u8 unknown_0x217c[0x9d3c - 0x217c];
+    KPADStatus pastStatuses[4][60];
     u32 unknown_0x9d3c[4];
     s32 unknown_0x9d4c[4];
     u8 unknown_0x9d5c[0x9d60 - 0x9d5c];

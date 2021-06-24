@@ -35,8 +35,10 @@ typedef struct _EvtEntry {
   struct _EvtEntry * parent;
   struct _EvtEntry * childEntry;
   struct _EvtEntry * brotherEntry;
-  s32 unknown_0x74;
-  s64 unknown_0x78;
+  union {
+    s32 tempS[3];
+    u32 tempU[3];
+  };
   u8 unknown_0x80[0x94 - 0x80];
   user_func * userFunc; // Function set & called by the user_func opcode
   s32 lw[16];

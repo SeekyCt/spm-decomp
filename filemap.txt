@@ -1,23 +1,106 @@
-main.c          8001da60 - >=8001da87
+== Dol ==
+        === Game Specific ===
+main.c             8001da60 - >=8001da87
 ...
-swdrv.c         80037eac - 800388b3
+ac_scissor.c       <=8001e69c - >=80021ffc
 ...
-evtmgr.c        800d87e4 - 800da0af
-evtmgr_cmd.c    800da0b0 - 800df9a7
-evt_ac.c        800df9a8 - ?
+ac_signal_timing.c <=80022b34 - >=8002309b
 ...
-seqdrv.c        8017bf2c - 8017c09f
+item_event_data.c  <=80025164 - >=8002691b
 ...
-filemgr.c       8019e478 - 8019ffb7
+map_data.c         800294e0 - 8002967f
+setup_data.c       80029680 - 800297bf
+mobjdrv.c          800297c0 - 8002ed9f
+msgdrv.c           8002eda0 - 80034b43
+offscreen.c        80034b44 - 800355d3
+shadowdrv.c        800355d4 - 80037eab
+swdrv.c            80037eac - 800388b3
+windowdrv.c        800388b4 - 8003b26b
+winmgr.c           8003b26c - 8003eb4b
+acdrv.c            8003eb4c - 8004158b
+animdrv.c          8004158c - 8004e09b
+bgdrv.c            8004e09c - 8004f653
+cam_road.c         8004f654 - 80054803
+camdrv.c           80054804 - 80058d57
+casedrv.c          80058d58 - 8005aea3
+dispdrv.c          8005aea4 - 8005b533
+eff_sub.c          8005bf88 - 800614e0
+effdrv.c           800614e0 - 80063407
+envdrv.c           80063408 - 80064b57
+extdrv.c           80064b58 - 80065c77
+fadedrv.c          80065c78 - 80067ab7
+framedrv.c         80067ab8 - 8006aec7
+hitdrv.c           8006aec8 - 800717d7
+icondrv.c          80072188 - 8007508b
+imgdrv.c           8007508c - 8007765f
+itemdrv.c          80077660 - 8007e1a7
+lightdrv.c         8007e1a8 - 8007ec33
+mapdrv.c           8007ec34 - 80091653
 ...
-memory.c        801a5dcc - 801a6e9b
-parse.c         801a6e9c - 801a74ef
-romfont.c       801a74f0 - 801a7ddb
-spmario.c       801a7ddc - 801a9097
-DEMOInit.c      801a9098 - 801a963f
+evt_snd.c          800d2148 - 800d378b
+evt_sub.c          800d378c - <=800d792f
 ...
-wpadmgr.c       8023697c - 80237a0c
+evtmgr.c           800d87e4 - 800da0af
+evtmgr_cmd.c       800da0b0 - 800df9a7
+evt_ac.c           800df9a8 - 800dfadf
+evt_bg.c           800dfae0 - 800dfc7f
+evt_cam.c          800dfc80 - 800e0ca3
+evt_case.c         800e0ca4 - 800e0faf
+evt_door.c         800e0fb0 - 800e57bb
+evt_eff.c          800e57bc - 800e658b
+evt_env.c          800e658c - 800e6f9b
+evt_ext.c          800e6f9c - 800e704c
+evt_fade.c         800e7050 - 800e72c3
+evt_fairy.c        800e72c4 - 800e884f
+evt_frame.c        800e8850 - 800e9bb3
+evt_guide.c        800e9bb4 - 
 ...
-relmgr.c        8023e434 - 8023e60b
-nandmgr.c       8023e60c - 8024069c
+evt_npc.c          <=800fde94 - >=8010bc43
+...
+evt_pouch.c        8010c698 - 8010d027
+evt_seq.c          8010d028 - 8010d193
+...
+fairy.c            ?        - 8011fa2b
+guide.c            8011fa2c - >=80121e14
+...
+mario.c            <=80121e58 - ?
+...
+mario_pouch.c      8014c088 - 801501c3
+...
+?                  <=8017719c - 801789f3
+seq_gameover.c     801789f4 - 80178fef
+seq_logo.c         80178fd0 - 8017a33b
+seq_mapchange.c    8017a33c - 8017b12f
+seq_title.c        8017b130 - 8017bf2b
+seqdrv.c           8017bf2c - 8017c09f
+seq_load.c         8017c0a0 - 8017c61b
+seq_game.c         8017c61c - 8017d007
+seq_load_sub.c     8017d008 - 80180ccf
+levelupwindow.c    80180cd0 - 80181923
+...
+dvdmgr.c           8019e044 - 8019e327
+...
+filemgr.c          8019e478 - 8019ffb7
+fontmgr.c          8019ffb8 - >=801a37b3
+...
+memory.c           801a5dcc - 801a6e9b
+parse.c            801a6e9c - 801a74ef
+romfont.c          801a74f0 - 801a7ddb
+spmario.c          801a7ddc - 801a9097
+DEMOInit.c         801a9098 - 801a963f
+..
+npcdrv.c           <=801a96fc - ?
+...
+wpadmgr.c          8023697c - 80237a0f
+spmario_snd.c      80237a10 - 8023e433
+relmgr.c           8023e434 - 8023e60b
+nandmgr.c          8023e60c - 8024069f
+...
+        === Wii SDK ===
+
+
+== Rel ==
+...
+aa3_01.c        ?        - 80c81eaf
+dan.c           80c81eb0 - >=80c83fd3
 ...

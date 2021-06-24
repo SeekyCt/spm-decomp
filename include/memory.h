@@ -111,10 +111,10 @@ void smartGarbage(); // 801a6b60
 */
 void * smartTexObj(void * texObj, SmartAllocation * imageAllocation); // 801a6cf0
 
-// New to SPM so no official names:
+// New to SPM:
 
 // 801a6d4c
-// 801a6e34
+// __dl__FPv 801a6e34
 
 /*
     Frees a block of memory baack to heap 0

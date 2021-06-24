@@ -54,7 +54,7 @@ typedef struct {
 /*
     Initialise records
 */
-void filemgrInit(); // 8017e288
+void fileInit(); // 8017e288
 
 /*
     Takes a TPL file and converts all offsets in it to pointers

@@ -38,6 +38,9 @@ void KPADSetDistParam(s32 controller, float radius, float sensitivity); // 802df
 void KPADSetAccParam(s32 controller, float radius, float sensitivity); // 802df2ac
 void KPADSetBtnRepeat(s32 controller, float delay, float pulse); // 802df1c8
 void KPADCalibrateDPD(s32 controller); // 802df49c
+s32 KPADRead(s32 controller, KPADStatus * dest, u32 maxStatuses);// 802e15a0
 void KPADInit(); // 802e1cb8
+void KPADDisableDpd(s32 controller); // 802e2014
+void KPADEnableDpd(s32 controller); // 802e2030
 
 #endif

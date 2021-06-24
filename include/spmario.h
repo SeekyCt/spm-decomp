@@ -32,7 +32,8 @@ typedef struct {
     s64 time;
     u8 unknown_0x100[0x110 - 0x100];
     s64 lastSaveLoadTime;
-    u8 unknown_0x118[0x140 - 0x118];
+    u8 unknown_0x118[0x138 - 0x118];
+    s64 lastButtonPressTime;
     s32 gsw0;
     u32 gswf[256]; // 8192 flags
     s8 gsw[2048];

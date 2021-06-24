@@ -1,6 +1,7 @@
 #include <common.h>
 #include <evtmgr_cmd.h>
 #include <evtmgr.h>
+#include <os.h>
 #include <stdio.h>
 #include <string.h>
 #include <swdrv.h>
@@ -44,7 +45,7 @@ EVT_CMD_FN(goto) {
             }
         }
         if (n >= MAX_EVT_JMPTBL) {
-            assertf(0, "EVTMGR_CMD:Jump Table Search error !!\n [lbl=%d, n=%d]", lbl, n);
+            assertf(0xf2e, 0, "EVTMGR_CMD:Jump Table Search error !!\n [lbl=%d, n=%d]", lbl, n);
         }
         dest = r31;
     }
@@ -52,12 +53,13 @@ EVT_CMD_FN(goto) {
     return EVT_CONTINUE;
 }
 
+// Not matching
 EVT_CMD_FN(do) {
     EvtScriptCode * p = entry->pCurData;
     s32 count = *p++;
     s32 depth = ++entry->dowhileDepth; // missing rlwinm here + scheduling problems
     if (depth >= 8) {
-        assert(0, "EVTMGR_CMD:While Table Overflow !!");
+        assert(0x67, 0, "EVTMGR_CMD:While Table Overflow !!");
     }
     entry->dowhileStartPtrs[depth] = p;
     entry->dowhileCounters[depth] = count;
@@ -68,7 +70,7 @@ EVT_CMD_FN(while) {
     s32 count; // only way the register usage of depth's sign extend matched
     s32 depth = entry->dowhileDepth;
     if (depth < 0) {
-        assert(0, "EVTMGR_CMD:While Table Underflow !!");
+        assert(0x7b, 0, "EVTMGR_CMD:While Table Underflow !!");
     }
     count = entry->dowhileCounters[depth];
     if (count == 0) {
@@ -97,7 +99,7 @@ EVT_CMD_FN(while) {
 
 EVT_CMD_FN(do_break) {
     if (entry->dowhileDepth < 0) {
-        assert(0, "EVTMGR_CMD:While Table Underflow !!");
+        assert(0xa1, 0, "EVTMGR_CMD:While Table Underflow !!");
     }
     entry->pCurInstruction = evtSearchWhile(entry);
     entry->dowhileDepth -= 1;
@@ -106,7 +108,7 @@ EVT_CMD_FN(do_break) {
 
 EVT_CMD_FN(do_continue) {
     if (entry->dowhileDepth < 0) {
-        assert(0, "EVTMGR_CMD:While Table Underflow !!");
+        assert(0xb0, 0, "EVTMGR_CMD:While Table Underflow !!");
     }
     entry->pCurInstruction = evtSearchJustBeforeWhile(entry);
     return EVT_CONTINUE;
@@ -114,20 +116,39 @@ EVT_CMD_FN(do_continue) {
 
 EVT_CMD_FN(wait_frm) {
     EvtScriptCode * p = entry->pCurData;
-    if (!entry->blocked) { // wrong branch setup here
-        entry->unknown_0x74 = evtGetValue(entry, *p);
-        entry->blocked = 1;
+
+    // Just an if didn't match
+    switch (entry->blocked) {
+        case false:
+            entry->tempS[0] = evtGetValue(entry, *p);
+            entry->blocked = 1;
     }
 
-    if (entry->unknown_0x74 == 0) {
+    if (entry->tempS[0] == 0)
         return EVT_CONTINUE;
-    }
-    else {
-        return !--entry->unknown_0x74;
-    }
+    else
+        return !--entry->tempS[0];
 }
 
-// EVT_CMD_FN(wait_msec)
+/* Unfinished
+EVT_CMD_FN(wait_msec) {
+    EvtScriptCode * p = entry->pCurData;
+    s64 time = entry->lifetime;
+    switch(entry->blocked) {
+        case false:
+            entry->tempU[0] = evtGetValue(entry, *p);
+            entry->tempU[1] = (s32) (time >> 32 & 0xffffffff);
+            entry->tempU[2] = (s32) (time & 0xffffffff);
+            entry->blocked = true;
+    }
+
+    if (entry->tempU[0] == 0)
+        return EVT_CONTINUE;
+    else
+        // Wrong
+        return (OSTicksToMilliseconds((time & 0xffffffff) - entry->tempU[2]) >= entry->tempU[0]);
+}
+*/
 
 EVT_CMD_FN(halt) {
    return evtGetValue(entry, *entry->pCurData) ? 0 : EVT_CONTINUE;
@@ -362,9 +383,24 @@ EVT_CMD_FN(end_if) {
     return EVT_CONTINUE;
 }
 
-// EVT_CMD_FN(switch)
+// Unfinished, just for string pool
+EVT_CMD_FN(switch) {
+    (void) entry;
+    __dummy_string("EVTMGR_CMD:Switch Table Overflow !!");
+
+    return EVT_CONTINUE;
+}
+
 // EVT_CMD_FN(switchi)
-// EVT_CMD_FN(case_equal)
+
+// Unfinished, just for string pool
+EVT_CMD_FN(case_equal) {
+    (void) entry;
+    __dummy_string("EVTMGR_CMD:Switch Table Underflow !!");
+
+    return EVT_CONTINUE;
+}
+
 // EVT_CMD_FN(case_not_equal)
 // EVT_CMD_FN(case_small)
 // EVT_CMD_FN(case_small_equal)
@@ -604,7 +640,15 @@ EVT_CMD_FN(debug_bp) {
     return 1;
 }
 
-// evtmgrCmd
+// Unfinished, just for string pool
+int evtmgrCmd(EvtEntry * entry) {
+    (void) entry;
+
+    __dummy_string("EVTMGR_CMD:Command Undefined !!");
+
+    return 0;
+}
+
 // evtGetValue
 // evtGetNumber (inlined/unused)
 // evtSetValue
@@ -621,7 +665,7 @@ EvtScriptCode * evtSearchElse(EvtEntry * entry) {
         pInstr += *pInstr++ >> 16;
         switch (opc) {
             case EVT_OPC_END_SCRIPT:
-                assert(0, "EVTMGR_CMD:'ELSE' Search Error !!");
+                assert(0xf4b, 0, "EVTMGR_CMD:'ELSE' Search Error !!");
             case EVT_OPC_END_IF:
                 if (--ifDepth >= 0) break;
                 else return pInstr;
@@ -643,7 +687,7 @@ EvtScriptCode * evtSearchEndIf(EvtEntry * entry) {
         pInstr += *pInstr++ >> 16;
         switch (opc) {
             case EVT_OPC_END_SCRIPT:
-                assert(0, "EVTMGR_CMD:'END_IF' Search Error !!");
+                assert(0xf89, 0, "EVTMGR_CMD:'END_IF' Search Error !!");
             case EVT_OPC_END_IF:
                 if (--ifDepth >= 0) break;
                 else return pInstr;
@@ -663,7 +707,7 @@ EvtScriptCode * evtSearchEndSwitch(EvtEntry * entry) {
         pInstr += *pInstr++ >> 16;
         switch(opc) {
             case EVT_OPC_END_SCRIPT:
-                assert(0, "EVTMGR_CMD:'END_SWITCH' Search Error !!");
+                assert(0xfc9, 0, "EVTMGR_CMD:'END_SWITCH' Search Error !!");
             case EVT_OPC_SWITCH:
                 switchDepth += 1;
                 break;
@@ -683,7 +727,7 @@ EvtScriptCode * evtSearchCase(EvtEntry * entry) {
         pInstr += *pInstr++ >> 16;
         switch(opc) {
             case EVT_OPC_END_SCRIPT:
-                assert(0, "EVTMGR_CMD:'CASE' Search Error !!");
+                assert(0xff1, 0, "EVTMGR_CMD:'CASE' Search Error !!");
             case EVT_OPC_SWITCH:
                 switchDepth += 1;
                 break;
@@ -705,7 +749,7 @@ EvtScriptCode * evtSearchWhile(EvtEntry * entry) {
         pInstr += *pInstr++ >> 16;
         switch (opc) {
             case EVT_OPC_END_SCRIPT:
-                assert(0, "EVTMGR_CMD:'WHILE' Search Error !!");
+                assert(0x1027, 0, "EVTMGR_CMD:'WHILE' Search Error !!");
             case EVT_OPC_WHILE:
                 if (--dowhileDepth >= 0) break;
                 else return pInstr;
@@ -723,7 +767,7 @@ EvtScriptCode * evtSearchJustBeforeWhile(EvtEntry * entry) {
         s32 opc = *pInstr & 0xffff;
         switch (opc) {
             case EVT_OPC_END_SCRIPT:
-                assert(0, "EVTMGR_CMD:'WHILE' Search Error !!");
+                assert(0x1049, 0, "EVTMGR_CMD:just before 'WHILE' Search Error !!");
             case EVT_OPC_WHILE:
                 if (--dowhileDepth >= 0) break;
                 else return pInstr;

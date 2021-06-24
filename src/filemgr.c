@@ -10,7 +10,7 @@ static FileWork * afp = &fileWork;
 
 // fileGetWorkPointer inlined, may be needed to match like evtGetWork was
 
-void filemgrInit() {
+void fileInit() {
     // Allocate file record array
     afp->records = __memAlloc(0, sizeof(FileRecord[FILE_RECORD_MAX]));
 
@@ -31,7 +31,7 @@ void filemgrInit() {
 }
 
 void UnpackTexPalette(TPLHeader * palette) {
-    VALIDATE_TPL_VERSION(palette);
+    VALIDATE_TPL_VERSION(0x35, palette);
 
     if (IS_TPL_PACKED(palette)) {
         // Convert image table offset to pointer
@@ -65,7 +65,7 @@ void UnpackTexPalette(TPLHeader * palette) {
 }
 
 void PackTexPalette(TPLHeader * palette) {
-    VALIDATE_TPL_VERSION(palette);
+    VALIDATE_TPL_VERSION(0x5e, palette);
 
     if(!IS_TPL_PACKED(palette)) {
         // Pack all images in table
