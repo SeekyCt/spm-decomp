@@ -328,6 +328,9 @@ void evtSetType(EvtEntry * entry, u8 type) {
     entry->type = type;
 }
 
+#pragma push
+#pragma inline_max_auto_size(5)
+
 void evtStop(EvtEntry * entry, u8 mask) {
     EvtWork * wp = evtGetWork();
     if (entry->childEntry) {
@@ -359,6 +362,8 @@ void evtStart(EvtEntry * entry, u8 mask) {
         entry->flags &= ~EVT_FLAG_PAUSED;
     }
 }
+
+#pragma pop
 
 void evtStopID(s32 id) {
     EvtWork * wp = evtGetWork();

@@ -1,4 +1,4 @@
-set dolflags=-O4 -proc gekko -lang C99 -S -d GAME_SPM -w all -use_lmw_stmw on -fp hard -str pool -rostr -I- -i include -enc SJIS -inline all -pragma "inline_max_auto_size(5)" -sdata2 4
+set dolflags=-O4 -proc gekko -lang C99 -S -d GAME_SPM -w all -use_lmw_stmw on -fp hard -str pool -rostr -I- -i include -enc SJIS -inline all -sdata2 4
 
 mwcceppc %dolflags% src/evtmgr.c
 mwcceppc %dolflags% src/evtmgr_cmd.c
