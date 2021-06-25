@@ -77,6 +77,11 @@ typedef struct _RelHeader {
     u32 fixSize;
 } RelHeader;
 
+typedef struct
+{
+    u8 unknown_0x0[0x318 - 0x0];
+} OSThread;
+
 bool OSLink(RelHeader * relFile, void * bss); // 80274c0c
 
 void OSYieldThread(); // 802776c0

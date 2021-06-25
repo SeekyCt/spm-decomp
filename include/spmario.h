@@ -7,7 +7,8 @@
 
 #include <common.h>
 
-typedef struct {
+typedef struct
+{
     u32 flags;
     s32 fps;
     s32 language;
@@ -17,12 +18,12 @@ typedef struct {
     u16 framebufferWidth;
     u16 framebufferHeight;
     float gameSpeed;
-    char saveName[32]; // size needs checking
+    char saveName[32];
     int lastSaveLoaded;
     char mapName[32];
     char doorName[32];
     u8 unknown_0x84[0xc8 - 0x84];
-    s64 lastSaveUpdateTime; // last time save file in memory was written to ()
+    s64 lastSaveUpdateTime; // last time save file in memory was written to
     Vec3 savePosition;
     int saveFileId;
     u32 unknown_0xe0;
@@ -53,12 +54,9 @@ s32 spmarioGetSystemLevel(); // 801a87ec
 // viPostCallback // 801a87f4
 // wiiDvdCheckThread // 801a898c
 // wiiRumbleCheck // 801a8db4
-
-// New to SPM so no symbols
-// TODO: maybe static?
-void unknown_801a9068();
-void unknown_801a9074();
-void unknown_801a9080();
-void unknown_801a908c();
+void resetButtonRestart(); // 801a9068
+void shutdownConsole(); // 801a9074
+void homeButtonRestart(); // 801a9080
+void returnToWiiMenu(); // 801a908c
 
 #endif
