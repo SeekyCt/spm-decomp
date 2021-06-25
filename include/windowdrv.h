@@ -7,7 +7,8 @@ struct _WindowEntry;
 
 typedef void (WindowFunc)(struct _WindowEntry * );
 
-typedef struct _WindowEntry {
+typedef struct _WindowEntry
+{
     u8 unknown_0x0[0x2 - 0x0];
     u16 flags;
     u16 pri; // uncertain
