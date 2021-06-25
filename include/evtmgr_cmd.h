@@ -45,11 +45,31 @@
 #define GW(id) (id - EVTDAT_GW_BASE)
 #define LW(id) (id - EVTDAT_LW_BASE)
 
-// Return values
-#define EVT_END 0xff
+/*
+    Return values
+*/
+
+// Stop execution of all scripts this frame
+#define EVT_END_FRAME -1
+
+// Keep re-executing current instruction, continue next frame if too much time passed
+#define EVT_BLOCK_WEAK 0
+
+// Move to next instruction, continue next frame if too much time passed
+#define EVT_CONTINUE_WEAK 1
+
+// Move to next instruction
 #define EVT_CONTINUE 2
 
-// Opcodes
+// Keep re-executing current instruction (unused?)
+#define EVT_BLOCK 3
+
+// Stop running current script
+#define EVT_END 0xff
+
+/*
+    Opcodes
+*/
 enum {
   EVT_OPC_NEXT,
   EVT_OPC_END_SCRIPT,
@@ -174,125 +194,124 @@ enum {
 };
 
 // Script instruction functions, 800da0b0 - 800ddd5b
-#define EVT_CMD_FN(name) s32 evt_##name(EvtEntry * entry)
-EVT_CMD_FN(end_evt);
-EVT_CMD_FN(lbl);
-EVT_CMD_FN(goto);
-EVT_CMD_FN(do);
-EVT_CMD_FN(while);
-EVT_CMD_FN(do_break);
-EVT_CMD_FN(do_continue);
-EVT_CMD_FN(wait_frm);
-EVT_CMD_FN(wait_msec);
-EVT_CMD_FN(halt);
-EVT_CMD_FN(if_str_equal);
-EVT_CMD_FN(if_str_not_equal);
-EVT_CMD_FN(if_str_small);
-EVT_CMD_FN(if_str_large); 
-EVT_CMD_FN(if_str_small_equal);
-EVT_CMD_FN(if_str_large_equal); 
-EVT_CMD_FN(iff_equal);
-EVT_CMD_FN(iff_not_equal);
-EVT_CMD_FN(iff_small);
-EVT_CMD_FN(iff_large);
-EVT_CMD_FN(iff_small_equal);
-EVT_CMD_FN(iff_large_equal);
-EVT_CMD_FN(if_equal);
-EVT_CMD_FN(if_not_equal);
-EVT_CMD_FN(if_small);
-EVT_CMD_FN(if_large);
-EVT_CMD_FN(if_small_equal);
-EVT_CMD_FN(if_large_equal);
-EVT_CMD_FN(if_flag);
-EVT_CMD_FN(if_not_flag);
-EVT_CMD_FN(else);
-EVT_CMD_FN(end_if);
-EVT_CMD_FN(switch);
-// EVT_CMD_FN(switchi);
-EVT_CMD_FN(case_equal);
-// EVT_CMD_FN(case_not_equal);
-// EVT_CMD_FN(case_small);
-// EVT_CMD_FN(case_small_equal);
-// EVT_CMD_FN(case_large);
-// EVT_CMD_FN(case_large_equal);
-// EVT_CMD_FN(case_between);
-// EVT_CMD_FN(case_etc);
-// EVT_CMD_FN(case_flag);
-// EVT_CMD_FN(case_or);
-// EVT_CMD_FN(case_and);
-// EVT_CMD_FN(case_end);
-// EVT_CMD_FN(switch_break);
-// EVT_CMD_FN(end_switch);
-// EVT_CMD_FN(set);
-// EVT_CMD_FN(seti);
-// EVT_CMD_FN(setf);
-// EVT_CMD_FN(add);
-// EVT_CMD_FN(sub);
-// EVT_CMD_FN(mul);
-// EVT_CMD_FN(div);
-// EVT_CMD_FN(mod);
-// EVT_CMD_FN(addf);
-// EVT_CMD_FN(subf);
-// EVT_CMD_FN(mulf);
-// EVT_CMD_FN(divf);
-// EVT_CMD_FN(set_read);
-// EVT_CMD_FN(set_readf);
-// EVT_CMD_FN(read);
-// EVT_CMD_FN(read2);
-// EVT_CMD_FN(read3);
-// EVT_CMD_FN(read4);
-// EVT_CMD_FN(read_n);
-// EVT_CMD_FN(readf);
-// EVT_CMD_FN(readf2);
-// EVT_CMD_FN(readf3);
-// EVT_CMD_FN(readf4);
-// EVT_CMD_FN(readf_n);
-EVT_CMD_FN(clamp_int);
-// EVT_CMD_FN(set_user_wrk);
-// EVT_CMD_FN(set_user_flg);
-// EVT_CMD_FN(alloc_user_wrk);
-// EVT_CMD_FN(and);
-// EVT_CMD_FN(andi);
-// EVT_CMD_FN(or);
-// EVT_CMD_FN(ori);
-// EVT_CMD_FN(set_frame_from_msec);
-// EVT_CMD_FN(set_msec_from_frame);
-// EVT_CMD_FN(set_ram);
-// EVT_CMD_FN(set_ramf);
-// EVT_CMD_FN(get_ram);
-// EVT_CMD_FN(get_ramf);
-// EVT_CMD_FN(setr);
-// EVT_CMD_FN(setrf);
-// EVT_CMD_FN(getr);
-// EVT_CMD_FN(getrf);
-// EVT_CMD_FN(user_func);
-// EVT_CMD_FN(run_evt);
-// EVT_CMD_FN(run_evt_id);
-// EVT_CMD_FN(run_child_evt);
-// EVT_CMD_FN(restart_evt);
-// EVT_CMD_FN(delete_evt);
-// EVT_CMD_FN(set_pri);
-// EVT_CMD_FN(set_spd);
-// EVT_CMD_FN(set_type);
-// EVT_CMD_FN(stop_all);
-// EVT_CMD_FN(start_all);
-// EVT_CMD_FN(stop_other);
-// EVT_CMD_FN(start_other);
-// EVT_CMD_FN(stop_id);
-// EVT_CMD_FN(start_id);
-// EVT_CMD_FN(chk_evt);
-// EVT_CMD_FN(inline_evt);
-// EVT_CMD_FN(inline_evt_id);
-// EVT_CMD_FN(end_inline);
-// EVT_CMD_FN(brother_evt);
-// EVT_CMD_FN(brother_evt_id);
-// EVT_CMD_FN(end_brother);
-EVT_CMD_FN(debug_put_msg);
-EVT_CMD_FN(debug_msg_clear);
-EVT_CMD_FN(debug_put_reg);
-EVT_CMD_FN(debug_name);
-EVT_CMD_FN(debug_rem);
-EVT_CMD_FN(debug_bp);
+int evt_end_evt(EvtEntry * entry);
+int evt_lbl(EvtEntry * entry);
+int evt_goto(EvtEntry * entry);
+int evt_do(EvtEntry * entry);
+int evt_while(EvtEntry * entry);
+int evt_do_break(EvtEntry * entry);
+int evt_do_continue(EvtEntry * entry);
+int evt_wait_frm(EvtEntry * entry);
+int evt_wait_msec(EvtEntry * entry);
+int evt_halt(EvtEntry * entry);
+int evt_if_str_equal(EvtEntry * entry);
+int evt_if_str_not_equal(EvtEntry * entry);
+int evt_if_str_small(EvtEntry * entry);
+int evt_if_str_large(EvtEntry * entry); 
+int evt_if_str_small_equal(EvtEntry * entry);
+int evt_if_str_large_equal(EvtEntry * entry); 
+int evt_iff_equal(EvtEntry * entry);
+int evt_iff_not_equal(EvtEntry * entry);
+int evt_iff_small(EvtEntry * entry);
+int evt_iff_large(EvtEntry * entry);
+int evt_iff_small_equal(EvtEntry * entry);
+int evt_iff_large_equal(EvtEntry * entry);
+int evt_if_equal(EvtEntry * entry);
+int evt_if_not_equal(EvtEntry * entry);
+int evt_if_small(EvtEntry * entry);
+int evt_if_large(EvtEntry * entry);
+int evt_if_small_equal(EvtEntry * entry);
+int evt_if_large_equal(EvtEntry * entry);
+int evt_if_flag(EvtEntry * entry);
+int evt_if_not_flag(EvtEntry * entry);
+int evt_else(EvtEntry * entry);
+int evt_end_if(EvtEntry * entry);
+int evt_switch(EvtEntry * entry);
+// int evt_switchi(EvtEntry * entry);
+int evt_case_equal(EvtEntry * entry);
+// int evt_case_not_equal(EvtEntry * entry);
+// int evt_case_small(EvtEntry * entry);
+// int evt_case_small_equal(EvtEntry * entry);
+// int evt_case_large(EvtEntry * entry);
+// int evt_case_large_equal(EvtEntry * entry);
+// int evt_case_between(EvtEntry * entry);
+// int evt_case_etc(EvtEntry * entry);
+// int evt_case_flag(EvtEntry * entry);
+// int evt_case_or(EvtEntry * entry);
+// int evt_case_and(EvtEntry * entry);
+// int evt_case_end(EvtEntry * entry);
+// int evt_switch_break(EvtEntry * entry);
+// int evt_end_switch(EvtEntry * entry);
+// int evt_set(EvtEntry * entry);
+// int evt_seti(EvtEntry * entry);
+// int evt_setf(EvtEntry * entry);
+// int evt_add(EvtEntry * entry);
+// int evt_sub(EvtEntry * entry);
+// int evt_mul(EvtEntry * entry);
+// int evt_div(EvtEntry * entry);
+// int evt_mod(EvtEntry * entry);
+// int evt_addf(EvtEntry * entry);
+// int evt_subf(EvtEntry * entry);
+// int evt_mulf(EvtEntry * entry);
+// int evt_divf(EvtEntry * entry);
+// int evt_set_read(EvtEntry * entry);
+// int evt_set_readf(EvtEntry * entry);
+// int evt_read(EvtEntry * entry);
+// int evt_read2(EvtEntry * entry);
+// int evt_read3(EvtEntry * entry);
+// int evt_read4(EvtEntry * entry);
+// int evt_read_n(EvtEntry * entry);
+// int evt_readf(EvtEntry * entry);
+// int evt_readf2(EvtEntry * entry);
+// int evt_readf3(EvtEntry * entry);
+// int evt_readf4(EvtEntry * entry);
+// int evt_readf_n(EvtEntry * entry);
+int evt_clamp_int(EvtEntry * entry);
+// int evt_set_user_wrk(EvtEntry * entry);
+// int evt_set_user_flg(EvtEntry * entry);
+// int evt_alloc_user_wrk(EvtEntry * entry);
+// int evt_and(EvtEntry * entry);
+// int evt_andi(EvtEntry * entry);
+// int evt_or(EvtEntry * entry);
+// int evt_ori(EvtEntry * entry);
+// int evt_set_frame_from_msec(EvtEntry * entry);
+// int evt_set_msec_from_frame(EvtEntry * entry);
+// int evt_set_ram(EvtEntry * entry);
+// int evt_set_ramf(EvtEntry * entry);
+// int evt_get_ram(EvtEntry * entry);
+// int evt_get_ramf(EvtEntry * entry);
+// int evt_setr(EvtEntry * entry);
+// int evt_setrf(EvtEntry * entry);
+// int evt_getr(EvtEntry * entry);
+// int evt_getrf(EvtEntry * entry);
+// int evt_user_func(EvtEntry * entry);
+// int evt_run_evt(EvtEntry * entry);
+// int evt_run_evt_id(EvtEntry * entry);
+// int evt_run_child_evt(EvtEntry * entry);
+// int evt_restart_evt(EvtEntry * entry);
+// int evt_delete_evt(EvtEntry * entry);
+// int evt_set_pri(EvtEntry * entry);
+// int evt_set_spd(EvtEntry * entry);
+// int evt_set_type(EvtEntry * entry);
+// int evt_stop_all(EvtEntry * entry);
+// int evt_start_all(EvtEntry * entry);
+// int evt_stop_other(EvtEntry * entry);
+// int evt_start_other(EvtEntry * entry);
+// int evt_stop_id(EvtEntry * entry);
+// int evt_start_id(EvtEntry * entry);
+// int evt_chk_evt(EvtEntry * entry);
+// int evt_inline_evt(EvtEntry * entry);
+// int evt_inline_evt_id(EvtEntry * entry);
+// int evt_end_inline(EvtEntry * entry);
+// int evt_brother_evt(EvtEntry * entry);
+// int evt_brother_evt_id(EvtEntry * entry);
+// int evt_end_brother(EvtEntry * entry);
+int evt_debug_put_msg(EvtEntry * entry);
+int evt_debug_msg_clear(EvtEntry * entry);
+int evt_debug_put_reg(EvtEntry * entry);
+int evt_debug_name(EvtEntry * entry);
+int evt_debug_rem(EvtEntry * entry);
+int evt_debug_bp(EvtEntry * entry);
 
 /*
   Executes an entry's script until it pauses or finishes
