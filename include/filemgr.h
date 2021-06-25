@@ -6,11 +6,13 @@
 #define FILEMGR_H
 
 #include <common.h>
+#include <dvdmgr.h>
 #include <tpl.h>
 
 #define FILE_RECORD_MAX 1024
 
-enum {
+enum
+{
     FILETYPE_0, // home button bins, rel (comp & decomp), setup dats, win/card.dat, lyt/title.bin, camera_road.bin
     FILETYPE_1,
     FILETYPE_2,
@@ -25,14 +27,8 @@ enum {
     FILETYPE_11 // eff/%s/%s.dat, eff/%seffdata.dat
 };
 
-typedef struct {
-    u8 unknown_0x0[0x7c - 0x0];
-    void * unknown_0x7c;
-    // unknown size
-} FileRecordB0;
-
-struct _SmartAllocation; // from memory.h (would be a cyclic include)
-typedef struct _FileRecord {
+typedef struct _FileRecord
+{
     u8 state;
     s8 fileType;
     s16 touchCnt;
@@ -40,10 +36,11 @@ typedef struct _FileRecord {
     struct _SmartAllocation * sp; // smart pointer to file data
     struct _FileRecord * next; // next record in free or allocated list
     u8 unknown_0xac[0xb0 - 0xac];
-    FileRecordB0 * unknown_0xb0;
+    DVDEntry * dvdEntry;
 } FileRecord;
 
-typedef struct {
+typedef struct
+{
     FileRecord * records; // array of 1024 (FILE_RECORD_MAX)
     FileRecord * allocatedStart; // first item in the allocated linked list
     FileRecord * allocatedEnd; // last item in the allocated linked list
