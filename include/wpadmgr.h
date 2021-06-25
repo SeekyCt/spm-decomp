@@ -10,7 +10,8 @@
 
 #define WPAD_STATUS_COUNT 0x10
 
-typedef struct {
+typedef struct
+{
     u32 flags;
     u8 unknown_0x4[0x44 - 0x4];
     bool enableRumble[4];
@@ -40,8 +41,8 @@ u32 wpadGetButtonsHeld(s32 controller); // 80237688
 u32 wpadGetButtonsReleased(s32 controller); // 8023769c
 u32 wpadGetButtonsPressed(s32 controller); // 802376b0
 u32 wpadGetButtonsHeldRepeat(s32 controller); // 802376c4
-u32 unknown_802376e4(s32 controller); // 802376e4
-void unknown_80237710(s32 controller); // 80237710
-// 80237750
+u32 func_802376e4(s32 controller); // 802376e4
+void func_80237710(s32 controller); // 80237710
+// func_80237750
 
 #endif
