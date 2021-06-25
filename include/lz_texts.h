@@ -3,6 +3,6 @@
 
 #include <common.h>
 
-extern u8 pitText[];
+extern u8 pitText[]; // 8036afc0
 
 #endif

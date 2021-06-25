@@ -18,7 +18,7 @@ static SmartWork * swp = &smartWork; // 805ae16c
 static bool memInitFlag = false; // 805ae9a8
 s32 g_bFirstSmartAlloc;
 
-static HeapSize size_table[HEAP_COUNT] =
+static HeapSize size_table[HEAP_COUNT] = // 8042a408
 {
     // MEM1
     { // 0
@@ -339,7 +339,7 @@ void smartFree(SmartAllocation * lp)
         lp->next = NULL;
         lp->size = 0;
         lp->spaceAfter = 0;
-        lp->fileRecord = NULL;
+        lp->fileEntry = NULL;
         swp->freeEnd = lp;
         swp->freedThisFrame++;
     }
@@ -400,7 +400,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
     new_lp->flag = 1;
     new_lp->type = type;
     new_lp->size = size;
-    new_lp->fileRecord = NULL;
+    new_lp->fileEntry = NULL;
 
     if (swp->heapStartSpace >= size)
     {
@@ -520,10 +520,10 @@ void smartGarbage()
         if (curAllocation->data != space)
         {
             // Try move
-            if (curAllocation->fileRecord != NULL)
+            if (curAllocation->fileEntry != NULL)
             {
                 // Don't move if dvd is being read into it?
-                if ((curAllocation->fileRecord->state == 3) && (curAllocation->fileRecord->dvdEntry != 0))
+                if ((curAllocation->fileEntry->state == 3) && (curAllocation->fileEntry->dvdEntry != 0))
                 {
                     // Update previous allocation since assumption there'd be no space after it is false
                     if (prevAllocation != NULL)
@@ -539,7 +539,7 @@ void smartGarbage()
                 else
                 {
                     // Move the memory in a different way
-                    fileGarbageMoveMem(space, curAllocation->fileRecord);
+                    fileGarbageMoveMem(space, curAllocation->fileEntry);
                 }
             }
             else

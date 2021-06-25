@@ -68,67 +68,67 @@ typedef struct
     u8 unknown_0x69c[0x6a0 - 0x69c]; // unused?
 } MarioPouchWork;
 
-MarioPouchWork * pouchGetPtr();
-void pouchInit();
-void pouchReInit();
-void pouchMain();
-// 8014d184
-void pouchSetLevel(int level);
-int pouchGetLevel();
-int pouchGetNextLevelXp();
-void pouchSetAttack(int attack);
-int pouchGetAttack();
-void pouchAddAttack(int increase);
-void pouchSetHp(int attack);
-int pouchGetHp();
-void pouchAddHp(int increase);
-void pouchSetMaxHp(int maxHp);
-int pouchGetMaxHp();
-int pouchGetXp();
-void pouchAddXp(int increase);
-void pouchSetCoin(int coins);
-int pouchGetCoin();
-void pouchAddTotalCoin(int increase);
-void pouchAddCoin(int increase);
-bool pouchAddItem(short itemId);
-bool pouchCheckHaveItem(int itemId);
-void pouchRemoveItem(int itemId);
-// pouchRemoveItemIdx
-// pouchAddShopItem
-// pouchRemoveShopItem
-// pouchRemoveShopItemIdx
-// pouchGetCharInfo
-// pouchMakeCharSelectable
-// pouchMakeCharNotSelectable
-// pouchGetPixlInfo
-// pouchMakePixlSelectable
-// pouchMakePixlNotSelectable
-// pouchCheckPixlSelected
-// pouchGetCurPixl
-// pouchSetPixlSelected
-// pouchRegisterMapFound
-void pouchRegisterRecipeKnown(int itemId);
-// pouchCheckRecipeKnown
-// pouchGetCardCount
-// pouchCheckCardKnown
-// pouchRegisterJumpCombo
-// pouchRegisterStylishCombo
-// pouchSetEnemiesDefeated
-// pouchGetTotalCoinsCollected
-// pouchGetMaxJumpCombo
-// pouchGetMaxStylishCombo
-// pouchGetEnemiesDefeated
-// pouchGetArcadeTokens
-// pouchSetArcadeTokens
-// pouchCountUseItems
-// pouchCountKeyItems
-// pouchCountShopItems
-// pouchCountChars
-// pouchCountPixls
-// pouchCountPixlsNotSelected
-// pouchCheckFreeUseItem
-// pouchCountMapsOwned
-// pouchCountRecipesKnown
-// pouchCountCardsKnown
+MarioPouchWork * pouchGetPtr(); // 8014c088
+void pouchInit(); // 8014c094
+void pouchReInit(); // 8014c728
+void pouchMain(); // 8014cd90
+// func_8014d184
+void pouchSetLevel(int level); // 8014d1bc
+int pouchGetLevel(); // 8014d1f0
+int pouchGetNextLevelXp(); // 8014d200
+void pouchSetAttack(int attack); // 8014d394
+int pouchGetAttack(); // 8014d3c8
+void pouchAddAttack(int increase); // 8014d3d8
+void pouchSetHp(int attack); // 8014d414
+int pouchGetHp(); // 8014d458
+void pouchAddHp(int increase); // 8014d468
+void pouchSetMaxHp(int maxHp); // 8014d4b4
+int pouchGetMaxHp(); // 8014d4e8
+int pouchGetXp(); // 8014d4f8
+void pouchAddXp(int increase); // 8014d508
+void pouchSetCoin(int coins); // 8014d548
+int pouchGetCoin(); // 8014d57c
+void pouchAddTotalCoin(int increase); // inlined
+void pouchAddCoin(int increase); // 8014d58c
+bool pouchAddItem(short itemId); // 8014d5f8
+bool pouchCheckHaveItem(int itemId); // 8014dbf4
+void pouchRemoveItem(int itemId); // 8014df4c
+// pouchRemoveItemIdx 8014e6d0
+// pouchAddShopItem 8014ea38
+// pouchRemoveShopItem 8014eb68
+// pouchRemoveShopItemIdx 8014edb8
+// pouchGetCharInfo 8014ef98
+// pouchMakeCharSelectable 8014efb0
+// pouchMakeCharNotSelectable 8014f018
+// pouchGetPixlInfo 8014f080
+// pouchMakePixlSelectable 8014f098
+// pouchMakePixlNotSelectable 8014f154
+// pouchCheckPixlSelected 8014f210
+// pouchGetCurPixl 8014f31c
+// pouchSetPixlSelected 8014f408
+// pouchRegisterMapFound 8014f594
+void pouchRegisterRecipeKnown(int itemId); // 8014f64c
+// pouchCheckRecipeKnown 8014f704
+// pouchGetCardCount 8014f7c8
+// pouchCheckCardKnown 8014f84c
+// pouchRegisterJumpCombo 8014f910
+// pouchRegisterStylishCombo 8014f944
+// pouchSetEnemiesDefeated 8014f978
+// pouchGetTotalCoinsCollected 8014f99c
+// pouchGetMaxJumpCombo 8014f9ac
+// pouchGetMaxStylishCombo 8014f9bc
+// pouchGetEnemiesDefeated 8014f9cc
+// pouchGetArcadeTokens 8014f9dc
+// pouchSetArcadeTokens 8014f9ec
+// pouchCountUseItems 8014fa20
+// pouchCountKeyItems 8014fad0
+// pouchCountShopItems 8014fb78
+// pouchCountChars 8014fc20
+// pouchCountPixls 8014fc70
+// pouchCountPixlsNotSelected 8014fd18
+// pouchCheckFreeUseItem 8014fdb0
+// pouchCountMapsOwned 8014fe88
+// pouchCountRecipesKnown 8014ff9c
+// pouchCountCardsKnown 801500b0
 
 #endif

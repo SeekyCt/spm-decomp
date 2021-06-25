@@ -14,8 +14,8 @@
 
 #define flag(value, mask) (value & mask) // needed for assert
 
-static NandWork nandWork;
-static NandWork * wp = &nandWork;
+static NandWork nandWork; // 80534fa8
+static NandWork * wp = &nandWork; // 805ae1b0
 
 // #include "files/saveImagesTpl.inc"
 static const u8 saveImagesTpl[0x5058] = {1}; // not included in decomp for copyright reasons

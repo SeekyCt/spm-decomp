@@ -3,7 +3,7 @@
 #include <string.h>
 #include <windowdrv.h>
 
-static WindowEntry * wp;
+static WindowEntry * wp; // 805ae790
 
 void windowInit()
 {
@@ -72,16 +72,16 @@ void windowMain()
     }
 }
 
-// unknown_80038b08
-// unknown_80038cc0
-// unknown_80038fb8
-// unknown_80039188
-// unknown_800393c8
-// unknown_800396e0
-// unknown_80039b80
-// unknown_80039d40
-// unknown_8003a440
-// unknown_8003a5e4
+// func_80038b08
+// func_80038cc0
+// func_80038fb8
+// func_80039188
+// func_800393c8
+// func_800396e0
+// func_80039b80
+// func_80039d40
+// func_8003a440
+// func_8003a5e4
 // windowDispGX2_Waku_col
 
 s32 windowCheckID(s32 id)
@@ -94,7 +94,7 @@ WindowEntry * windowGetPointer(s32 id)
     return &wp[id];
 }
 
-bool unknown_8003b180()
+bool func_8003b180()
 {
     WindowEntry * entry = wp;
     for (s32 i = 0; i < WINDOW_MAX; i++, entry++)

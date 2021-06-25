@@ -13,7 +13,7 @@ MarioPouchWork * pouchGetPtr()
 // pouchInit
 // pouchReInit
 // pouchMain
-// 8014d184
+// func_8014d184
 
 void pouchSetLevel(int level)
 {

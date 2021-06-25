@@ -4,18 +4,21 @@
 #define DUNGEON_MAX 200
 #define DAN_PARTS_COUNT 16
 
-typedef struct {
+typedef struct
+{
     s32 enter;
     s32 exit;
 } DanDoor; // total size 0x8
 
-typedef struct {
+typedef struct
+{
     s32 name;
     s32 num;
     s32 pos;
 } DanEnemy; // total size 0xc;
 
-typedef struct {
+typedef struct
+{
     u32 map; // flags for things to enable
     s32 item; // only used in chest rooms
     s32 doorCount;
@@ -24,8 +27,9 @@ typedef struct {
     DanEnemy enemies[16];
 } DanDungeon; // total size 0x170
 
-typedef struct {
-    DanDungeon * dungeons; // DUNGEON_MAX
+typedef struct
+{
+    DanDungeon * dungeons; // array of size DUNGEON_MAX
     DanDoor doorInfo;
     int unknown_0xc;
     int unknown_0x10[1];

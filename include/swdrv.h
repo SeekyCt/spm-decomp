@@ -19,12 +19,12 @@ typedef struct
 
 /*
     Zeros all of the evt variables in SpmarioGlobals (GSW, GSWF, LSW, LSWF),
-    SpMarioGlobals.unknown_0x1184 and unknown_805adf40[0-1]
+    SpMarioGlobals.unknown_0x1184, coinId and gameCoinId
 */
 void swInit(); // 80037eac
 
 /*
-    Zeros SpmarioGlobals LSW, LSWF & unknown_0x1184 and unknown_805adf40[0]
+    Zeros SpmarioGlobals LSW, LSWF & unknown_0x1184 and coinId
 */
 void swReInit(); // 80037f48
 
@@ -86,14 +86,14 @@ void _swByteSet(s32 id, s8 num); // 800381e4
 s32 _swByteGet(s32 id); // 800381f4
 
 // New to SPM so no symbols:
-// 80038204
-// 800383a0
-// 80038478
-// 80038550
-// 8003863c
-// 8003864c
-// 8003865c
-// 8003875c
-// 800387d8
+// func_80038204
+// func_800383a0
+// func_80038478
+// func_80038550
+// func_8003863c
+// func_8003864c
+// func_8003865c
+// func_8003875c
+// func_800387d8
 
 #endif

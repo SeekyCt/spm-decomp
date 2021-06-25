@@ -11,7 +11,8 @@
 
 // File is new to SPM and with no asserts, so no names are official here
 
-typedef struct {
+typedef struct
+{
     u32 flags;
     u32 decompSize;
 } Lzss10ParsedHeader;

@@ -24,25 +24,25 @@ typedef struct _WindowEntry
 
 #define WINDOW_MAX 7
 
-void windowInit();
-void windowReInit();
-s32 windowEntry(u16 pri);
-bool windowDelete(WindowEntry * entry);
-bool windowDeleteID(s32 id);
-void windowMain();
-// unknown_80038b08
-// unknown_80038cc0
-// unknown_80038fb8
-// unknown_80039188
-// unknown_800393c8
-// unknown_800396e0
-// unknown_80039b80
-// unknown_80039d40
-// unknown_8003a440
-// unknown_8003a5e4
-// windowDispGX2_Waku_col
-s32 windowCheckID(s32 id);
-WindowEntry * windowGetPointer(s32 id);
-bool unknown_8003b180();
+void windowInit(); // 800388b4
+void windowReInit(); // 8003891c
+s32 windowEntry(u16 pri); // 80038960
+bool windowDelete(WindowEntry * entry); // 800389e8
+bool windowDeleteID(s32 id); // 80038a34
+void windowMain(); // 80038aa0
+// func_80038b08
+// func_80038cc0
+// func_80038fb8
+// func_80039188
+// func_800393c8
+// func_800396e0
+// func_80039b80
+// func_80039d40
+// func_8003a440
+// func_8003a5e4
+// windowDispGX2_Waku_col 8003ab80
+s32 windowCheckID(s32 id); // 8003b158
+WindowEntry * windowGetPointer(s32 id); // 8003b170
+bool func_8003b180();
 
 #endif

@@ -18,11 +18,13 @@
 #define NAND_MODE_READ 1
 #define NAND_MODE_WRITE 2
 
-typedef struct {
+typedef struct
+{
     u8 unknown_0x0[0x8c - 0x0];
 } NANDFileInfo;
 
-typedef struct {
+typedef struct
+{
     u32 magic;
     u32 flags;
     u16 iconSpeed;
@@ -32,7 +34,8 @@ typedef struct {
     u8 iconTextures[8][0x1200];
 } NANDBanner;
 
-typedef struct {
+typedef struct
+{
     u8 unknown_0x0[0xb8 - 0x0];
 } NANDCommandBlock;
 

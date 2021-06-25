@@ -22,6 +22,6 @@ typedef struct {
     u8 unknown_0x68[0x156c - 0x68];
 } MarioWork;
 
-MarioWork * marioGetPtr();
+MarioWork * marioGetPtr(); // 80121f48
 
 #endif

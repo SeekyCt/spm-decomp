@@ -7,7 +7,8 @@
 
 #include <common.h>
 
-typedef struct {
+typedef struct
+{
     u32 buttonsHeld; // all buttons down
     u32 buttonsPressed; // buttons down this frame but not last
     u32 buttonsReleased; // buttons released this frame

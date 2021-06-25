@@ -12,10 +12,10 @@
 #pragma push
 #pragma pool_strings off
 
-static RelWork work;
-static RelWork * wp = &work;
-static const char * relDecompName = "relF.rel";
-static const char * relCompName = "relF.bin";
+static RelWork work; // 80534f98
+static RelWork * wp = &work; // 805ae1a0
+static const char * relDecompName = "relF.rel"; // 805ae1a4
+static const char * relCompName = "relF.bin"; // 805ae1a8
 
 void relInit()
 {
@@ -39,7 +39,7 @@ void relMain()
 
     if (fileAsyncf(0, 0, relPath) == 0) return;
 
-    FileRecord * file = fileAllocf(0, relPath);
+    FileEntry * file = fileAllocf(0, relPath);
     if ((u32) file == 0xffffffff)
     {
         wp->loaded = true;

@@ -1,7 +1,8 @@
 #ifndef EVT_DOOR_H
 #define EVT_DOOR_H
 
-typedef struct {
+typedef struct
+{
     u32 flags;
     const char * name_l;
     const char * name_r;
@@ -12,7 +13,8 @@ typedef struct {
     int unknown_0x1c;
 } MapDoorDesc;
 
-typedef struct {
+typedef struct
+{
     int scriptNumber;
     u16 flags;
     u16 _pad_6;

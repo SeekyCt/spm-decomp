@@ -5,6 +5,6 @@
 
 typedef void (CountdownDoneCb)();
 
-void hudStartCountdown(u32 length, CountdownDoneCb * cb);
+void hudStartCountdown(u32 length, CountdownDoneCb * cb); // 80199cc4
 
 #endif

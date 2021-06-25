@@ -25,12 +25,14 @@ typedef u32 size_t;
 
 typedef u16 wchar_t;
 
-typedef struct {
+typedef struct
+{
     float x;
     float y;
 } Vec2;
 
-typedef struct {
+typedef struct
+{
     float x;
     float y;
     float z;

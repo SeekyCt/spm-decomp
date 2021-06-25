@@ -12,25 +12,25 @@ static FileWork * afp = &fileWork; // 805ae130
 
 void fileInit()
 {
-    // Allocate file record array
-    afp->records = __memAlloc(0, sizeof(FileRecord[FILE_RECORD_MAX]));
+    // Allocate file entry array
+    afp->entries = __memAlloc(0, sizeof(FileEntry[FILE_ENTRY_MAX]));
 
     // Initialise allocated linked list
     afp->allocatedStart = NULL;
     afp->allocatedEnd = NULL;
 
-    // Initialise records
-    memset(afp->records, 0, sizeof(FileRecord[FILE_RECORD_MAX]));
+    // Initialise entries
+    memset(afp->entries, 0, sizeof(FileEntry[FILE_ENTRY_MAX]));
 
     // Initialise free linked list
-    FileRecord * curRecord = afp->records;
-    for (s32 i = 0; i < FILE_RECORD_MAX; i++)
+    FileEntry * curRecord = afp->entries;
+    for (s32 i = 0; i < FILE_ENTRY_MAX; i++)
     {
         curRecord->next = curRecord + 1;
         curRecord++;
     }
-    afp->freeStart = &afp->records[0];
-    afp->freeEnd = &afp->records[FILE_RECORD_MAX - 1];
+    afp->freeStart = &afp->entries[0];
+    afp->freeEnd = &afp->entries[FILE_ENTRY_MAX - 1];
     afp->freeEnd->next = NULL;
 }
 
@@ -148,13 +148,13 @@ typedef struct
     PtrOrOffset subs[25];
     // unknown size
 } FileType5;
-void fileGarbageDataAdrClear(FileRecord * record)
+void fileGarbageDataAdrClear(FileEntry * entry)
 {
-    switch (record->fileType) 
+    switch (entry->fileType) 
     {
         // might need case for 0 to match
         case FILETYPE_1:
-            FileType1 * f1 = record->sp->data;
+            FileType1 * f1 = entry->sp->data;
             if (f1->subs[0].offset > (u32) f1)
             {
                 for (s32 i = 0; i < 25; i++)
@@ -162,7 +162,7 @@ void fileGarbageDataAdrClear(FileRecord * record)
             }
             break;
         case FILETYPE_2:
-            FileType2 * f2 = record->sp->data;
+            FileType2 * f2 = entry->sp->data;
             if (f2->subs[0].offset > (u32) f2)
             {
                 for (s32 i = 0; i < 8; i++)
@@ -170,12 +170,12 @@ void fileGarbageDataAdrClear(FileRecord * record)
             }
             break;
         case FILETYPE_3:
-            FileType3 * f3 = record->sp->data;
+            FileType3 * f3 = entry->sp->data;
             if (f3->p.offset > (u32) f3)
                 f3->p.offset = (u32) f3->p.ptr - (u32) f3;
             break;
         case FILETYPE_TPL:
-            PackTexPalette((TPLHeader *) record->sp->data);
+            PackTexPalette((TPLHeader *) entry->sp->data);
             break;
         case FILETYPE_5:
             
@@ -186,7 +186,7 @@ void fileGarbageDataAdrClear(FileRecord * record)
 
 // fileGarbageDataAdrSet
 
-void fileGarbageMoveMem(void * dest, FileRecord * src)
+void fileGarbageMoveMem(void * dest, FileEntry * src)
 {
     // Turn any pointers into the data to offsets 
     if (src->state == 3)

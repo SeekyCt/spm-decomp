@@ -8,6 +8,6 @@ typedef struct
     u8 unknown_0x3[0xb4 - 0x3];
 } GuideWork;
 
-GuideWork * guideGetWork();
+GuideWork * guideGetWork(); // 8011fa2c
 
 #endif

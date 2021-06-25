@@ -28,7 +28,7 @@ typedef struct _SmartAllocation
 {
     void * data; // space on the smart heap for user to put their data
     size_t size; // size of the space for data on the smart heap
-    struct _FileRecord * fileRecord; // allows special treatment if this allocation is for a file
+    struct _FileEntry * fileEntry; // allows special treatment if this allocation is for a file
     u16 flag; // 1 for in use, 0 otherwise
     u8 type; // used to group for deallocation
     u8 unknown_0xf; // padding?
@@ -123,6 +123,6 @@ void * smartTexObj(void * texObj, SmartAllocation * imageAllocation); // 801a6cf
 /*
     Frees a block of memory baack to heap 0
 */
-void freeToHeap0(void * ptr);
+void freeToHeap0(void * ptr); // 801a6e8c
 
 #endif

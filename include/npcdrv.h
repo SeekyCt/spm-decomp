@@ -5,7 +5,8 @@
 
 #define NPCTEMPLATE_MAX 435
 
-typedef struct {
+typedef struct
+{
     u8 unknown_0x0[0x8 - 0x0];
     u32 unknown_0x8;
     u8 unknown_0xc[0x14 - 0xc];
@@ -15,11 +16,13 @@ typedef struct {
 
 extern NPCEnemyTemplate npcEnemyTemplates[NPCTEMPLATE_MAX];
 
-typedef struct {
+typedef struct
+{
     u8 unknown_0x0[0x8 - 0x0];
     u32 flags_8;
     u8 unknown_0xc[0x44 - 0xc];
-    struct {
+    struct
+    {
         int m_nPoseId;
         u8 unknown_0x4[0xe0 - 0x4];
     } m_Anim;
@@ -32,7 +35,8 @@ typedef struct {
     u8 unknown_0x578[0x748 - 0x578];
 } NPCEntry;
 
-typedef struct {
+typedef struct
+{
     u32 flag;
     int num;
     NPCEntry * entries;
@@ -41,9 +45,9 @@ typedef struct {
     u8 unknown_0xb28[0xb48 - 0xb28];
 } NPCWork;
 
-NPCWork * npcGetWorkPtr();
+NPCWork * npcGetWorkPtr(); // 801c9adc
 
-NPCEntry * npcNameToPtr();
+NPCEntry * npcNameToPtr(); // 801b6f2c
 
 void func_801c3694(const char *, const char *);
 void func_801c37e4(const char *);
