@@ -5,6 +5,7 @@ Decompilation of Super Paper Mario (PAL revision 0). Doesn't produce a dol, asm 
 See also https://github.com/SeekyCt/spm-docs for other documentation
 
 ## Address Notes
+- Addresses of global functions and variables are commented in headers, static ones are commented at their c file definitions
 - PAL revision 1's addresses are identical to revision 0's, so information from the decomp is accurate there too
 - Rel addresses are given for the rel loaded in its default position for PAL revisions 0 & 1 (80c45820)
 
