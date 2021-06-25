@@ -18,19 +18,22 @@
 #define ITEM_ID_CARD_START 282
 #define ITEM_ID_CARD_MAX 538
 
-typedef struct {
+typedef struct
+{
     bool selectable;
     bool selected;
     s16 id;
 } PouchCharOrPixlInfo;
 
-typedef struct {
+typedef struct
+{
     int characterId;
     int score;
     u8 unknown_0x8[0x18 - 0x8];
 } PouchMinigameScore;
 
-typedef struct {
+typedef struct
+{
     u8 unknown_0x0[0x4 - 0x0]; // unused?
     int level;
     int attack;

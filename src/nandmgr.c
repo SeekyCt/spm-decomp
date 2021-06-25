@@ -221,7 +221,7 @@ void nandUpdateSave(s32 saveId) {
     gp->unknown_0xc = 0;
     gp->unknown_0x1c = 1.0f;
     memcpy(&save->spmarioGlobals, gp, sizeof(SpmarioGlobals));
-    memcpy(&save->unknown_0x1b10, unknown_0x8014c088(), sizeof(save->unknown_0x1b10));
+    memcpy(&save->pouch, pouchGetPtr(), sizeof(save->pouch));
     memcpy(&save->unknown_0x21b0, unknown_0x801c9adc()->unknown_0x728, sizeof(save->unknown_0x21b0));
     save->flags &= ~3;
     save->checksum = 0;
@@ -242,7 +242,7 @@ void nandLoadSave(s32 saveId) {
     u32 unk4 = gp->unknown_0x4;
     u32 unk40 = gp->unknown_0x40;
     memcpy(gp, &save->spmarioGlobals, sizeof(SpmarioGlobals));
-    memcpy(unknown_0x8014c088(), &save->unknown_0x1b10, sizeof(save->unknown_0x1b10));
+    memcpy(pouchGetPtr(), &save->pouch, sizeof(save->pouch));
     memcpy(unknown_0x801c9adc()->unknown_0x728, &save->unknown_0x21b0, sizeof(save->unknown_0x21b0));
     gp->unknown_0xc = 0;
     SpmarioGlobals * _gp = gp; // probably another inline function

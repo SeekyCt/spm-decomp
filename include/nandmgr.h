@@ -8,6 +8,7 @@
 #define NANDMGR_H
 
 #include <common.h>
+#include <mario_pouch.h>
 #include <nand.h>
 #include <spmario.h>
 
@@ -31,10 +32,10 @@ enum {
 };
 
 typedef struct {
-    u16 flags; // 2 is corrupt?
+    u16 flags; // 2 is corrupt
     u8 unknown_0x2[0x8 - 0x2];
     SpmarioGlobals spmarioGlobals;
-    u8 unknown_0x1b10[0x6a0];
+    MarioPouchWork pouch;
     u8 unknown_0x21b0[0x400];
     u32 checksum;
     u32 checksumNOT;
