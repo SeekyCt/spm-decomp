@@ -71,126 +71,126 @@
     Opcodes
 */
 enum {
-  EVT_OPC_NEXT,
-  EVT_OPC_END_SCRIPT,
-  EVT_OPC_END_EVT,
-  EVT_OPC_LBL,
-  EVT_OPC_GOTO,
-  EVT_OPC_DO,
-  EVT_OPC_WHILE,
-  EVT_OPC_DO_BREAK,
-  EVT_OPC_DO_CONTINUE,
-  EVT_OPC_WAIT_FRM,
-  EVT_OPC_WAIT_MSEC,
-  EVT_OPC_HALT,
-  EVT_OPC_IF_STR_EQUAL,
-  EVT_OPC_IF_STR_NOT_EQUAL,
-  EVT_OPC_IF_STR_SMALL,
-  EVT_OPC_IF_STR_LARGE,
-  EVT_OPC_IF_STR_SMALL_EQUAL,
-  EVT_OPC_IF_STR_LARGE_EQUAL,
-  EVT_OPC_IFF_EQUAL,
-  EVT_OPC_IFF_NOT_EQUAL,
-  EVT_OPC_IFF_SMALL,
-  EVT_OPC_IFF_LARGE,
-  EVT_OPC_IFF_SMALL_EQUAL,
-  EVT_OPC_IFF_LARGE_EQUAL,
-  EVT_OPC_IF_EQUAL,
-  EVT_OPC_IF_NOT_EQUAL,
-  EVT_OPC_IF_SMALL,
-  EVT_OPC_IF_LARGE,
-  EVT_OPC_IF_SMALL_EQUAL,
-  EVT_OPC_IF_LARGE_EQUAL,
-  EVT_OPC_IF_FLAG,
-  EVT_OPC_IF_NOT_FLAG,
-  EVT_OPC_ELSE,
-  EVT_OPC_END_IF,
-  EVT_OPC_SWITCH,
-  EVT_OPC_SWITCHI,
-  EVT_OPC_CASE_EQUAL,
-  EVT_OPC_CASE_NOT_EQUAL,
-  EVT_OPC_CASE_SMALL,
-  EVT_OPC_CASE_LARGE,
-  EVT_OPC_CASE_SMALL_EQUAL,
-  EVT_OPC_CASE_LARGE_EQUAL,
-  EVT_OPC_CASE_ETC,
-  EVT_OPC_CASE_OR,
-  EVT_OPC_CASE_AND,
-  EVT_OPC_CASE_FLAG,
-  EVT_OPC_CASE_END,
-  EVT_OPC_CASE_BETWEEN,
-  EVT_OPC_SWITCH_BREAK,
-  EVT_OPC_END_SWITCH,
-  EVT_OPC_SET,
-  EVT_OPC_SETI,
-  EVT_OPC_SETF,
-  EVT_OPC_ADD,
-  EVT_OPC_SUB,
-  EVT_OPC_MUL,
-  EVT_OPC_DIV,
-  EVT_OPC_MOD,
-  EVT_OPC_ADDF,
-  EVT_OPC_SUBF,
-  EVT_OPC_MULF,
-  EVT_OPC_DIVF,
-  EVT_OPC_SET_READ,
-  EVT_OPC_READ,
-  EVT_OPC_READ2,
-  EVT_OPC_READ3,
-  EVT_OPC_READ4,
-  EVT_OPC_READ_N,
-  EVT_OPC_SET_READF,
-  EVT_OPC_READF,
-  EVT_OPC_READF2,
-  EVT_OPC_READF3,
-  EVT_OPC_READF4,
-  EVT_OPC_READF_N,
-  EVT_OPC_CLAMP_INT,
-  EVT_OPC_SET_USER_WRK,
-  EVT_OPC_SET_USER_FLG,
-  EVT_OPC_ALLOC_USER_WRK,
-  EVT_OPC_AND,
-  EVT_OPC_ANDI,
-  EVT_OPC_OR,
-  EVT_OPC_ORI,
-  EVT_OPC_SET_FRAME_FROM_MSEC,
-  EVT_OPC_SET_MSEC_FROM_FRAME,
-  EVT_OPC_SET_RAM,
-  EVT_OPC_SET_RAMF,
-  EVT_OPC_GET_RAM,
-  EVT_OPC_GET_RAMF,
-  EVT_OPC_SETR,
-  EVT_OPC_SETRF,
-  EVT_OPC_GETR,
-  EVT_OPC_GETRF,
-  EVT_OPC_USER_FUNC,
-  EVT_OPC_RUN_EVT,
-  EVT_OPC_RUN_EVT_ID,
-  EVT_OPC_RUN_CHILD_EVT,
-  EVT_OPC_DELETE_EVT,
-  EVT_OPC_RESTART_EVT,
-  EVT_OPC_SET_PRI,
-  EVT_OPC_SET_SPD,
-  EVT_OPC_SET_TYPE,
-  EVT_OPC_STOP_ALL,
-  EVT_OPC_START_ALL,
-  EVT_OPC_STOP_OTHER,
-  EVT_OPC_START_OTHER,
-  EVT_OPC_STOP_ID,
-  EVT_OPC_START_ID,
-  EVT_OPC_CHK_EVT,
-  EVT_OPC_INLINE_EVT,
-  EVT_OPC_INLINE_EVT_ID,
-  EVT_OPC_END_INLINE,
-  EVT_OPC_BROTHER_EVT,
-  EVT_OPC_BROTHER_EVT_ID,
-  EVT_OPC_END_BROTHER,
-  EVT_OPC_DEBUG_PUT_MSG,
-  EVT_OPC_DEBUG_MSG_CLEAR,
-  EVT_OPC_DEBUG_PUT_REG,
-  EVT_OPC_DEBUG_NAME,
-  EVT_OPC_DEBUG_REM,
-  EVT_OPC_DEBUG_BP
+    EVT_OPC_NEXT,
+    EVT_OPC_END_SCRIPT,
+    EVT_OPC_END_EVT,
+    EVT_OPC_LBL,
+    EVT_OPC_GOTO,
+    EVT_OPC_DO,
+    EVT_OPC_WHILE,
+    EVT_OPC_DO_BREAK,
+    EVT_OPC_DO_CONTINUE,
+    EVT_OPC_WAIT_FRM,
+    EVT_OPC_WAIT_MSEC,
+    EVT_OPC_HALT,
+    EVT_OPC_IF_STR_EQUAL,
+    EVT_OPC_IF_STR_NOT_EQUAL,
+    EVT_OPC_IF_STR_SMALL,
+    EVT_OPC_IF_STR_LARGE,
+    EVT_OPC_IF_STR_SMALL_EQUAL,
+    EVT_OPC_IF_STR_LARGE_EQUAL,
+    EVT_OPC_IFF_EQUAL,
+    EVT_OPC_IFF_NOT_EQUAL,
+    EVT_OPC_IFF_SMALL,
+    EVT_OPC_IFF_LARGE,
+    EVT_OPC_IFF_SMALL_EQUAL,
+    EVT_OPC_IFF_LARGE_EQUAL,
+    EVT_OPC_IF_EQUAL,
+    EVT_OPC_IF_NOT_EQUAL,
+    EVT_OPC_IF_SMALL,
+    EVT_OPC_IF_LARGE,
+    EVT_OPC_IF_SMALL_EQUAL,
+    EVT_OPC_IF_LARGE_EQUAL,
+    EVT_OPC_IF_FLAG,
+    EVT_OPC_IF_NOT_FLAG,
+    EVT_OPC_ELSE,
+    EVT_OPC_END_IF,
+    EVT_OPC_SWITCH,
+    EVT_OPC_SWITCHI,
+    EVT_OPC_CASE_EQUAL,
+    EVT_OPC_CASE_NOT_EQUAL,
+    EVT_OPC_CASE_SMALL,
+    EVT_OPC_CASE_LARGE,
+    EVT_OPC_CASE_SMALL_EQUAL,
+    EVT_OPC_CASE_LARGE_EQUAL,
+    EVT_OPC_CASE_ETC,
+    EVT_OPC_CASE_OR,
+    EVT_OPC_CASE_AND,
+    EVT_OPC_CASE_FLAG,
+    EVT_OPC_CASE_END,
+    EVT_OPC_CASE_BETWEEN,
+    EVT_OPC_SWITCH_BREAK,
+    EVT_OPC_END_SWITCH,
+    EVT_OPC_SET,
+    EVT_OPC_SETI,
+    EVT_OPC_SETF,
+    EVT_OPC_ADD,
+    EVT_OPC_SUB,
+    EVT_OPC_MUL,
+    EVT_OPC_DIV,
+    EVT_OPC_MOD,
+    EVT_OPC_ADDF,
+    EVT_OPC_SUBF,
+    EVT_OPC_MULF,
+    EVT_OPC_DIVF,
+    EVT_OPC_SET_READ,
+    EVT_OPC_READ,
+    EVT_OPC_READ2,
+    EVT_OPC_READ3,
+    EVT_OPC_READ4,
+    EVT_OPC_READ_N,
+    EVT_OPC_SET_READF,
+    EVT_OPC_READF,
+    EVT_OPC_READF2,
+    EVT_OPC_READF3,
+    EVT_OPC_READF4,
+    EVT_OPC_READF_N,
+    EVT_OPC_CLAMP_INT,
+    EVT_OPC_SET_USER_WRK,
+    EVT_OPC_SET_USER_FLG,
+    EVT_OPC_ALLOC_USER_WRK,
+    EVT_OPC_AND,
+    EVT_OPC_ANDI,
+    EVT_OPC_OR,
+    EVT_OPC_ORI,
+    EVT_OPC_SET_FRAME_FROM_MSEC,
+    EVT_OPC_SET_MSEC_FROM_FRAME,
+    EVT_OPC_SET_RAM,
+    EVT_OPC_SET_RAMF,
+    EVT_OPC_GET_RAM,
+    EVT_OPC_GET_RAMF,
+    EVT_OPC_SETR,
+    EVT_OPC_SETRF,
+    EVT_OPC_GETR,
+    EVT_OPC_GETRF,
+    EVT_OPC_USER_FUNC,
+    EVT_OPC_RUN_EVT,
+    EVT_OPC_RUN_EVT_ID,
+    EVT_OPC_RUN_CHILD_EVT,
+    EVT_OPC_DELETE_EVT,
+    EVT_OPC_RESTART_EVT,
+    EVT_OPC_SET_PRI,
+    EVT_OPC_SET_SPD,
+    EVT_OPC_SET_TYPE,
+    EVT_OPC_STOP_ALL,
+    EVT_OPC_START_ALL,
+    EVT_OPC_STOP_OTHER,
+    EVT_OPC_START_OTHER,
+    EVT_OPC_STOP_ID,
+    EVT_OPC_START_ID,
+    EVT_OPC_CHK_EVT,
+    EVT_OPC_INLINE_EVT,
+    EVT_OPC_INLINE_EVT_ID,
+    EVT_OPC_END_INLINE,
+    EVT_OPC_BROTHER_EVT,
+    EVT_OPC_BROTHER_EVT_ID,
+    EVT_OPC_END_BROTHER,
+    EVT_OPC_DEBUG_PUT_MSG,
+    EVT_OPC_DEBUG_MSG_CLEAR,
+    EVT_OPC_DEBUG_PUT_REG,
+    EVT_OPC_DEBUG_NAME,
+    EVT_OPC_DEBUG_REM,
+    EVT_OPC_DEBUG_BP
 };
 
 // Script instruction functions, 800da0b0 - 800ddd5b
@@ -314,73 +314,71 @@ int evt_debug_rem(EvtEntry * entry);
 int evt_debug_bp(EvtEntry * entry);
 
 /*
-  Executes an entry's script until it pauses or finishes
+    Executes an entry's script until it pauses or finishes
 */
 s32 evtmgrCmd(EvtEntry * entry); // 800ddd5c
 
 /*
-  Gets the value of an evt variable
+    Gets the value of an evt variable
 */
 s32 evtGetValue(EvtEntry * entry, s32 data); // 800de594
 
 // evtGetNumber (inlined / unused)
 
 /*
-  Sets the value of an evt variable
+    Sets the value of an evt variable
 */
 s32 evtSetValue(EvtEntry * entry, s32 variable, s32 value); // 800de9b8
 
 /*
-  Gets the value of a float evt variable
+    Gets the value of a float evt variable
 */
 f32 evtGetFloat(EvtEntry * entry, s32 data); // 800dedb8
 
 /*
-  Sets the value of a float evt variable
+    Sets the value of a float evt variable
 */
 f32 evtSetFloat(EvtEntry * entry, s32, f32); // 800df1fc
 
-// TODO: search functions probably static?
-
 /*
-  Returns a pointer to the instruction after the specified label
-  in an entry's script
+    Returns a pointer to the instruction after the specified label
+    in an entry's script
 */
 EvtScriptCode * evtSearchLabel(EvtEntry * entry, int id); // inlined
 
 /*
-  Returns a pointer to the instruction after the next else on the
-  current if else depth in an entry's script
+    Returns a pointer to the instruction after the next else on the
+    current if else depth in an entry's script
 */
 EvtScriptCode * evtSearchElse(EvtEntry * entry); // 800df55c
 
 /*
-  Returns a pointer to the instruction after the next end if on the
-  current if else depth in an entry's script
+    Returns a pointer to the instruction after the next end if on the
+    current if else depth in an entry's script
 */
 EvtScriptCode * evtSearchEndIf(EvtEntry * entry); // 800df620
 
 /*
-  Returns a pointer to the the next end switch on the current switch
-  depth in an entry's script
+    Returns a pointer to the the next end switch on the current switch
+    depth in an entry's script
 */
 EvtScriptCode * evtSearchEndSwitch(EvtEntry * entry); // 800df6d8
 
 /*
-  Returns a pointer to the next case or end switch on the current
-  switch depth in an entry's script
+    Returns a pointer to the next case or end switch on the current
+    switch depth in an entry's script
 */
 EvtScriptCode * evtSearchCase(EvtEntry * entry); // 800df780
 
 /*
-  Returns a pointer to the instruction after the next while on the
-  current do while depth in an entry's script
+    Returns a pointer to the instruction after the next while on the
+    current do while depth in an entry's script
 */
 EvtScriptCode * evtSearchWhile(EvtEntry * entry); // 800df84c
 
 /*
-  Returns a pointer to the next while instruction on the current do
-  while depth in an entry's script
+    Returns a pointer to the next while instruction on the current do
+    while depth in an entry's script
 */
 EvtScriptCode * evtSearchJustBeforeWhile(EvtEntry * entry); // 800df8f8
 
