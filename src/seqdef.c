@@ -8,7 +8,6 @@
 #include <seqdef.h>
 #include <seqdrv.h>
 
-#ifdef GAME_SPM
 SeqDef seq_data[SEQ_COUNT] = {
     {
         .init = &seq_logoInit,
@@ -41,4 +40,3 @@ SeqDef seq_data[SEQ_COUNT] = {
         .exit = &seq_loadExit
     }
 };
-#endif
