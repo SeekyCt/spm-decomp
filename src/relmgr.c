@@ -12,23 +12,27 @@
 #pragma push
 #pragma pool_strings off
 
-static RelHolder relFHolder;
-static RelHolder * relHolder = &relFHolder;
+static RelWork work;
+static RelWork * wp = &work;
 static const char * relDecompName = "relF.rel";
 static const char * relCompName = "relF.bin";
 
-void relInit() {
-    relHolder->loaded = false;
+void relInit()
+{
+    wp->loaded = false;
 }
 
-void relMain() {
+void relMain()
+{
     char relPath[0x48];
 
-    if (relHolder->loaded) return;
+    if (wp->loaded)
+        return;
 
     bool isCompressed = 1;
     sprintf(relPath, "%s/rel/%s", getSpmarioDVDRoot(), relCompName);
-    if (DVDConvertPathToEntrynum(relPath) == -1) {
+    if (DVDConvertPathToEntrynum(relPath) == -1)
+    {
         sprintf(relPath, "%s/rel/%s", getSpmarioDVDRoot(), relDecompName);
         isCompressed = 0;
     }
@@ -36,31 +40,34 @@ void relMain() {
     if (fileAsyncf(0, 0, relPath) == 0) return;
 
     FileRecord * file = fileAllocf(0, relPath);
-    if ((u32) file == 0xffffffff) {
-        relHolder->loaded = true;
+    if ((u32) file == 0xffffffff)
+    {
+        wp->loaded = true;
         return;
     }
 
-    if (!isCompressed) {
-        relHolder->relFile = __memAlloc(0, file->sp->size);
-        memcpy(relHolder->relFile, file->sp->data, file->sp->size);
+    if (!isCompressed)
+    {
+        wp->relFile = __memAlloc(0, file->sp->size);
+        memcpy(wp->relFile, file->sp->data, file->sp->size);
     }
     else {
-        relHolder->relFile = __memAlloc(0, lzss10ParseHeader(file->sp->data).decompSize);
-        lzss10Decompress(file->sp->data, relHolder->relFile);
+        wp->relFile = __memAlloc(0, lzss10ParseHeader(file->sp->data).decompSize);
+        lzss10Decompress(file->sp->data, wp->relFile);
     }
 
     fileFree(file);
 
-    relHolder->bss = __memAlloc(0, relHolder->relFile->bssSize);
-    memset(relHolder->bss, 0, relHolder->relFile->bssSize);
-    OSLink(relHolder->relFile, relHolder->bss);
-    relHolder->relFile->prolog();
-    relHolder->loaded = true;
+    wp->bss = __memAlloc(0, wp->relFile->bssSize);
+    memset(wp->bss, 0, wp->relFile->bssSize);
+    OSLink(wp->relFile, wp->bss);
+    wp->relFile->prolog();
+    wp->loaded = true;
 }
 
-bool isRelLoaded() {
-    return relHolder->loaded;
+bool isRelLoaded()
+{
+    return wp->loaded;
 }
 
 #pragma pop

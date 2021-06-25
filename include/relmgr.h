@@ -6,14 +6,16 @@
 #define RELMGR_H
 
 #include <common.h>
+#include <os.h>
 
 // File is new to SPM and with no asserts, so no names are official here
 
-typedef struct {
+typedef struct
+{
     RelHeader * relFile;
     void * bss;
     bool loaded;
-} RelHolder;
+} RelWork;
 
 /*
     Sets the rel loaded bool to false
