@@ -62,7 +62,7 @@ int evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
         int no = 0;
         int i = 0;
         parseTagGet1("<no>", PARSE_VALUE_TYPE_INT, &no);
-        assertf_alt(144, no >= 0 && no < DUNGEON_MAX, "‚È‚ñ‚©”Ô†‚ª‚¨‚©‚µ‚¢ [%d]", no);
+        assertf(144, no >= 0 && no < DUNGEON_MAX, "‚È‚ñ‚©”Ô†‚ª‚¨‚©‚µ‚¢ [%d]", no);
 
         // Read item id (chest contents in chest rooms, null & unused elsewhere)
         char itemName[64];

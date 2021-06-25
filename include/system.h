@@ -7,12 +7,12 @@
 #include <common.h>
 
 #define assert(line, condition, message) \
-    if (!(condition)) __assert2(__FILE__, line, #condition, message)
+    do { \
+        bool check = (condition); \
+        if (!check) __assert2(__FILE__, line, #condition, message); \
+    } while (0)
 
 #define assertf(line, condition, message, ...) \
-    if (!(condition)) __assert2(__FILE__, line, #condition, message, __VA_ARGS__)
-
-#define assertf_alt(line, condition, message, ...) \
     do { \
         bool check = (condition); \
         if (!check) __assert2(__FILE__, line, #condition, message, __VA_ARGS__); \
