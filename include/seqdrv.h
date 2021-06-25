@@ -24,7 +24,7 @@
   Data matching except SeqWork missing fields (but those are not referenced in seqdrv.c code)
 */
 
-enum
+enum SeqdrvSeq
 {
     SEQ_LOGO = 0,
     SEQ_TITLE,

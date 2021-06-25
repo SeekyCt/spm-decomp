@@ -36,7 +36,9 @@ typedef struct {
     u32 flag;
     int num;
     NPCEntry * entries;
-    u8 unknown_0xc[0xb48 - 0xc];
+    u8 unknown_0xc[0x728 - 0xc];
+    u8 unknown_0x728[0x400];
+    u8 unknown_0xb28[0xb48 - 0xb28];
 } NPCWork;
 
 NPCWork * npcGetWorkPtr();

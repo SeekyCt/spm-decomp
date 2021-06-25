@@ -11,7 +11,7 @@
 
 #define FILE_RECORD_MAX 1024
 
-enum
+enum FileType
 {
     FILETYPE_0, // home button bins, rel (comp & decomp), setup dats, win/card.dat, lyt/title.bin, camera_road.bin
     FILETYPE_1,

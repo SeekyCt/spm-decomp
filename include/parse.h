@@ -1,7 +1,8 @@
 #ifndef PARSE_H
 #define PARSE_H
 
-enum {
+enum ParseValueType
+{
     PARSE_VALUE_TYPE_STRING = 0,
     PARSE_VALUE_TYPE_1 = 1,
     PARSE_VALUE_TYPE_INT = 2,

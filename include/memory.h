@@ -17,14 +17,15 @@
 #define SMART_HEAP_ID 7
 #define SMART_ALLOCATION_MAX 2048
 
-typedef struct {
+typedef struct
+{
     MEMHeapHandle heapHandle[HEAP_COUNT];
     void * heapStart[HEAP_COUNT];
     void * heapEnd[HEAP_COUNT];
 } MemWork;
 
-struct _FileRecord; // from filemgr.h (would be a cyclic include)
-typedef struct _SmartAllocation {
+typedef struct _SmartAllocation
+{
     void * data; // space on the smart heap for user to put their data
     size_t size; // size of the space for data on the smart heap
     struct _FileRecord * fileRecord; // allows special treatment if this allocation is for a file
@@ -36,7 +37,8 @@ typedef struct _SmartAllocation {
     struct _SmartAllocation * prev; // previous item in the allocated or free linked list
 } SmartAllocation;
 
-typedef struct {
+typedef struct
+{
     void * heapStart; // pointer to the block of allocated memory to work with
     SmartAllocation allocations[SMART_ALLOCATION_MAX];
     size_t heapStartSpace; // free space at the beginning of the heap
@@ -47,12 +49,14 @@ typedef struct {
     u32 freedThisFrame; // number of allocations freed this frame
 } SmartWork;
 
-enum HeapSizeType {
+enum HeapSizeType
+{
     HEAPSIZE_PERCENT_REMAINING,
     HEAPSIZE_ABSOLUTE_KB
 };
 
-typedef struct {
+typedef struct
+{
     s32 type;
     s32 size;
 } HeapSize;

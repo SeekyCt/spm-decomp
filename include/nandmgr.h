@@ -21,7 +21,8 @@
 #define NAND_INODE_COUNT 5
 #define NAND_ATTEMPTS_MAX 100
 
-enum {
+enum NandTask
+{
     NANDMGR_TASK_NONE,
     NANDMGR_TASK_CHECK,
     NANDMGR_TASK_WRITE_BANNER,
@@ -31,7 +32,8 @@ enum {
     NANDMGR_TASK_DELETE_SAVE
 };
 
-typedef struct {
+typedef struct
+{
     u16 flags; // 2 is corrupt
     u8 unknown_0x2[0x8 - 0x2];
     SpmarioGlobals spmarioGlobals;
@@ -41,19 +43,20 @@ typedef struct {
     u32 checksumNOT;
 } SaveFile;
 
-typedef struct {
+typedef struct
+{
     u32 flag;
     void * openingBuffer; // used by NANDSafeOpenAsync
     size_t openingBufferSize; // 0x4000
     u8 unknown_0xc[0x10 - 0xc];
     SaveFile * saves; // array of 4
-    void * unknown_0x14;
+    void * tempSaveFile; // 0x25c0 allocation
     char homedir[64];
     NANDFileInfo fileInfo;
     NANDCommandBlock commandBlock;
     NANDBanner * banner;
     u32 bannerSize; // omits unused iconTextures
-    u8 unknown_0x1a4[0x1a8 - 0x1a4];
+    void * tempBanner;
     u32 answer;
     u32 task;
     u32 stage;
