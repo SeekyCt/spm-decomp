@@ -18,7 +18,8 @@ typedef s32 EvtScriptCode;
 #define EVT_FLAG_IN_USE (1 << 0) 
 #define EVT_FLAG_PAUSED (1 << 1)
 
-typedef struct _EvtEntry {
+typedef struct _EvtEntry
+{
     s64 lifetime;
     u8 flags; // bit flags, see defines above
     u8 curDataLength; // number of pieces of data (4 bytes each) belonging to the current instruction
@@ -69,7 +70,8 @@ typedef struct _EvtEntry {
     u8 unknown_0x1a4[0x1a8 - 0x1a4];
 } EvtEntry;
 
-typedef struct {
+typedef struct
+{
     s32 entryCount;
     s32 gw[32];
     u32 gf[3];

@@ -70,7 +70,8 @@
 /*
     Opcodes
 */
-enum {
+enum
+{
     EVT_OPC_NEXT,
     EVT_OPC_END_SCRIPT,
     EVT_OPC_END_EVT,
