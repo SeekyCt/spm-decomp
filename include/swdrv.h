@@ -11,6 +11,12 @@
 
 #include <common.h>
 
+typedef struct
+{
+    int coinId;
+    int gameCoinId;
+} SwWork;
+
 /*
     Zeros all of the evt variables in SpmarioGlobals (GSW, GSWF, LSW, LSWF),
     SpMarioGlobals.unknown_0x1184 and unknown_805adf40[0-1]
