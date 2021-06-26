@@ -170,9 +170,9 @@ int evt_wait_msec(EvtEntry * entry)
     switch(entry->blocked)
     {
         case false:
-            entry->tempU[0] = evtGetValue(entry, *p);
-            entry->tempU[1] = (s32) (time >> 32 & 0xffffffff);
-            entry->tempU[2] = (s32) (time & 0xffffffff);
+            entry->tempS[0] = evtGetValue(entry, *p);
+            entry->tempS[1] = (s32) ((time & 0xffffffff00000000) >> 32);
+            entry->tempS[2] = (s32) (time & 0xffffffff);
             entry->blocked = true;
     }
 
