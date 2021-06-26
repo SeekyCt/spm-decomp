@@ -1,6 +1,7 @@
 #include <common.h>
 #include <evtmgr_cmd.h>
 #include <evtmgr.h>
+#include <memory.h>
 #include <os.h>
 #include <stdio.h>
 #include <string.h>
@@ -152,7 +153,7 @@ int evt_wait_frm(EvtEntry * entry)
     switch (entry->blocked)
     {
         case false:
-            entry->tempS[0] = evtGetValue(entry, *p);
+            entry->tempS[0] = evtGetValue(entry, p[0]);
             entry->blocked = 1;
     }
 
@@ -170,7 +171,7 @@ int evt_wait_msec(EvtEntry * entry)
     switch(entry->blocked)
     {
         case false:
-            entry->tempS[0] = evtGetValue(entry, *p);
+            entry->tempS[0] = evtGetValue(entry, p[0]);
             entry->tempS[1] = (s32) ((time & 0xffffffff00000000) >> 32);
             entry->tempS[2] = (s32) (time & 0xffffffff);
             entry->blocked = true;
@@ -1239,21 +1240,38 @@ int evt_clamp_int(EvtEntry * entry)
     s32 maxVal = evtGetValue(entry, pData[2]);
 
     if (destVal < minVal)
-    {
         evtSetValue(entry, dest, minVal);
-    }
-
     if (destVal > maxVal)
-    {
         evtSetValue(entry, dest, maxVal);
-    }
     
     return EVT_CONTINUE;
 }
 
-// int evt_set_user_wrk(EvtEntry * entry)
-// int evt_set_user_flg(EvtEntry * entry)
-// int evt_alloc_user_wrk(EvtEntry * entry)
+int evt_set_user_wrk(EvtEntry * entry)
+{
+    entry->uw = (s32 *) evtGetValue(entry, entry->pCurData[0]);
+    
+    return EVT_CONTINUE;
+}
+
+int evt_set_user_flg(EvtEntry * entry)
+{
+    entry->uf = (u32 *) evtGetValue(entry, entry->pCurData[0]);
+    
+    return EVT_CONTINUE;
+}
+
+int evt_alloc_user_wrk(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 count = evtGetValue(entry, p[0]);
+    s32 destVar = p[1];
+    entry->uw = __memAlloc(1, count * sizeof(int));
+    evtSetValue(entry, destVar, (s32) entry->uw);
+
+    return EVT_CONTINUE;
+}
+
 // int evt_and(EvtEntry * entry)
 // int evt_andi(EvtEntry * entry)
 // int evt_or(EvtEntry * entry)
