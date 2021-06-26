@@ -623,6 +623,7 @@ int evt_case_equal(EvtEntry * entry)
     if (state <= 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
+
         return EVT_CONTINUE;
     }
     else
@@ -631,6 +632,7 @@ int evt_case_equal(EvtEntry * entry)
             entry->pCurInstruction = evtSearchCase(entry);
         else
             entry->switchStates[depth] = 0;
+
         return EVT_CONTINUE;
     }
 }
@@ -834,8 +836,64 @@ int evt_case_etc(EvtEntry * entry)
     }
 }
 
-// int evt_case_flag(EvtEntry * entry)
-// int evt_case_or(EvtEntry * entry)
+int evt_case_flag(EvtEntry * entry)
+{
+    EvtScriptCode * p = entry->pCurData;
+
+    s32 depth = entry->switchDepth;
+    if (depth < 0)
+        assert(0x449, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+
+    u32 targetMask = (u32) p[0];
+    s32 state = entry->switchStates[depth];
+    s32 inputValue = entry->switchValues[depth];
+
+    if (state <= 0)
+    {
+        entry->pCurInstruction = evtSearchEndSwitch(entry);
+
+        return EVT_CONTINUE;
+    }
+    else
+    {
+        if ((inputValue & targetMask) == 0)
+            entry->pCurInstruction = evtSearchCase(entry);
+        else
+            entry->switchStates[depth] = 0;
+
+        return EVT_CONTINUE;
+    }
+}
+
+int evt_case_or(EvtEntry * entry)
+{
+    EvtScriptCode * p = entry->pCurData;
+
+    s32 depth = entry->switchDepth;
+    if (depth < 0)
+        assert(0x46a, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+
+    s32 targetvalue = evtGetValue(entry, p[0]);
+    s32 inputValue = entry->switchValues[depth];
+    s8 state = entry->switchStates[depth];
+    
+    if (state == 0)
+    {
+        entry->pCurInstruction = evtSearchEndSwitch(entry);
+
+        return EVT_CONTINUE;
+    }
+    else
+    {
+        if (targetvalue == inputValue)
+            entry->switchStates[depth] = -1;
+        else if (state != -1)
+            entry->pCurInstruction = evtSearchCase(entry);
+
+        return EVT_CONTINUE;
+    }
+}
+
 // int evt_case_and(EvtEntry * entry)
 // int evt_case_end(EvtEntry * entry)
 // int evt_switch_break(EvtEntry * entry)
