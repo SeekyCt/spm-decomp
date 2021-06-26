@@ -1118,12 +1118,58 @@ int evt_divf(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// int evt_set_read(EvtEntry * entry)
-// int evt_set_readf(EvtEntry * entry)
-// int evt_read(EvtEntry * entry)
-// int evt_read2(EvtEntry * entry)
-// int evt_read3(EvtEntry * entry)
-// int evt_read4(EvtEntry * entry)
+int evt_set_read(EvtEntry * entry)
+{
+    entry->readAddr = (int *) evtGetValue(entry, entry->pCurData[0]);
+
+    return EVT_CONTINUE;
+}
+
+int evt_set_readf(EvtEntry * entry)
+{
+    entry->readAddr = (int *) evtGetValue(entry, entry->pCurData[0]);
+
+    return EVT_CONTINUE;
+}
+
+int evt_read(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    evtSetValue(entry, p[0], *entry->readAddr++);
+
+    return EVT_CONTINUE;
+}
+
+int evt_read2(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    evtSetValue(entry, p[0], *entry->readAddr++);
+    evtSetValue(entry, p[1], *entry->readAddr++);
+
+    return EVT_CONTINUE;
+}
+
+int evt_read3(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    evtSetValue(entry, p[0], *entry->readAddr++);
+    evtSetValue(entry, p[1], *entry->readAddr++);
+    evtSetValue(entry, p[2], *entry->readAddr++);
+
+    return EVT_CONTINUE;
+}
+
+int evt_read4(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    evtSetValue(entry, p[0], *entry->readAddr++);
+    evtSetValue(entry, p[1], *entry->readAddr++);
+    evtSetValue(entry, p[2], *entry->readAddr++);
+    evtSetValue(entry, p[3], *entry->readAddr++);
+
+    return EVT_CONTINUE;
+}
+
 // int evt_read_n(EvtEntry * entry)
 // int evt_readf(EvtEntry * entry)
 // int evt_readf2(EvtEntry * entry)
