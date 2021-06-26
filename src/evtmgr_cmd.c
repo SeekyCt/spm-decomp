@@ -64,13 +64,13 @@ int evt_goto(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// Not matching
 int evt_do(EvtEntry * entry)
 {
     EvtScriptCode * p = entry->pCurData;
     s32 count = *p++;
 
-    s32 depth = ++entry->dowhileDepth; // missing rlwinm here + scheduling problems
+    entry->dowhileDepth += 1;
+    s32 depth = entry->dowhileDepth;
     if (depth >= 8)
         assert(0x67, 0, "EVTMGR_CMD:While Table Overflow !!");
 
