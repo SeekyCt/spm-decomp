@@ -894,8 +894,79 @@ int evt_case_or(EvtEntry * entry)
     }
 }
 
-// int evt_case_and(EvtEntry * entry)
-// int evt_case_end(EvtEntry * entry)
+int evt_case_and(EvtEntry * entry)
+{
+    EvtScriptCode * p = entry->pCurData;
+
+    s32 depth = entry->switchDepth;
+    if (depth < 0)
+        assert(0x48c, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+
+    s32 targetvalue = evtGetValue(entry, p[0]);
+    s32 inputValue = entry->switchValues[depth];
+    s8 state = entry->switchStates[depth];
+    
+    if (state == 0)
+    {
+        entry->pCurInstruction = evtSearchEndSwitch(entry);
+
+        return EVT_CONTINUE;
+    }
+    else if (state == -2)
+    {
+        entry->pCurInstruction = evtSearchCase(entry);
+
+        return EVT_CONTINUE;
+    }
+    else
+    {
+        if (targetvalue == inputValue)
+        {
+            entry->switchStates[depth] = -1;
+        }
+        else
+        {
+            entry->switchStates[depth] = -2;
+            entry->pCurInstruction = evtSearchCase(entry);
+        }
+
+        return EVT_CONTINUE;
+    }
+}
+
+int evt_case_end(EvtEntry * entry)
+{
+    EvtScriptCode * p = entry->pCurData;
+
+    s32 depth = entry->switchDepth;
+    if (depth < 0)
+        assert(0x4b1, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+
+    s32 inputValue = entry->switchValues[depth];
+    s8 state = entry->switchStates[depth];
+    
+    if (state == 0)
+    {
+        entry->pCurInstruction = evtSearchEndSwitch(entry);
+
+        return EVT_CONTINUE;
+    }
+    else if (state == -1)
+    {
+        entry->switchStates[depth] = 0;
+        entry->pCurInstruction = evtSearchEndSwitch(entry);
+
+        return EVT_CONTINUE;
+    }
+    else
+    {
+        entry->switchStates[depth] = 1;
+        entry->pCurInstruction = evtSearchCase(entry);
+
+        return EVT_CONTINUE;
+    }
+}
+
 // int evt_switch_break(EvtEntry * entry)
 // int evt_end_switch(EvtEntry * entry)
 // int evt_set(EvtEntry * entry)
