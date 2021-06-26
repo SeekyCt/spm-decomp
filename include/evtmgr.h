@@ -46,7 +46,7 @@ typedef struct _EvtEntry
     u32 lf[3];
     void * dowhileStartPtrs[8]; // pointer to do opcodes
     s32 dowhileCounters[8];
-    bool activeSwitches[8];
+    s8 switchStates[8];
     s32 switchValues[8];
     s32 * readAddr;
     s32 * uw;
