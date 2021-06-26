@@ -590,7 +590,23 @@ int evt_switch(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// int evt_switchi(EvtEntry * entry)
+int evt_switchi(EvtEntry * entry)
+{
+    // Required for register usage
+    s32 depth;
+    s32 value;
+
+    value = entry->pCurData[0];
+    entry->switchDepth += 1;
+    depth = entry->switchDepth;
+    if (depth >= 8)
+        assert(0x336, 0, "EVTMGR_CMD:Switch Table Overflow !!");
+
+    entry->switchValues[depth] = value;
+    entry->activeSwitches[depth] = true;
+
+    return EVT_CONTINUE;
+}
 
 // Unfinished, just for string pool
 int evt_case_equal(EvtEntry * entry)

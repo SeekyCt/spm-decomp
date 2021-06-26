@@ -228,7 +228,7 @@ int evt_if_not_flag(EvtEntry * entry);
 int evt_else(EvtEntry * entry);
 int evt_end_if(EvtEntry * entry);
 int evt_switch(EvtEntry * entry);
-// int evt_switchi(EvtEntry * entry);
+int evt_switchi(EvtEntry * entry);
 int evt_case_equal(EvtEntry * entry);
 // int evt_case_not_equal(EvtEntry * entry);
 // int evt_case_small(EvtEntry * entry);
