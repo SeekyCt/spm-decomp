@@ -1019,11 +1019,62 @@ int evt_setf(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// int evt_add(EvtEntry * entry)
-// int evt_sub(EvtEntry * entry)
-// int evt_mul(EvtEntry * entry)
-// int evt_div(EvtEntry * entry)
-// int evt_mod(EvtEntry * entry)
+int evt_add(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 destVar = p[0];
+    s32 param = evtGetValue(entry, p[1]);
+    s32 result = evtGetValue(entry, destVar) + param;
+    evtSetValue(entry, destVar, result);
+    
+    return EVT_CONTINUE;
+}
+
+int evt_sub(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 destVar = p[0];
+    s32 param = evtGetValue(entry, p[1]);
+    s32 result = evtGetValue(entry, destVar) - param;
+    evtSetValue(entry, destVar, result);
+    
+    return EVT_CONTINUE;
+}
+
+int evt_mul(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 destVar = p[0];
+    s32 param = evtGetValue(entry, p[1]);
+    s32 result = evtGetValue(entry, destVar) * param;
+    evtSetValue(entry, destVar, result);
+    
+    return EVT_CONTINUE;
+}
+
+int evt_div(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 destVar = p[0];
+    s32 param = evtGetValue(entry, p[1]);
+    s32 result = evtGetValue(entry, destVar) / param;
+    evtSetValue(entry, destVar, result);
+    
+    return EVT_CONTINUE;
+}
+
+int evt_mod(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 destVar = p[0];
+    s32 param = (s32) (evtGetValue(entry, p[1]) + 0.5f);
+    s32 value = (s32) (evtGetValue(entry, destVar) + 0.5f);
+    s32 result = value % param;
+    evtSetValue(entry, destVar, result);
+    
+    return EVT_CONTINUE;
+}
+
 // int evt_addf(EvtEntry * entry)
 // int evt_subf(EvtEntry * entry)
 // int evt_mulf(EvtEntry * entry)
