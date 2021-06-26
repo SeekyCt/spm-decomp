@@ -48,7 +48,11 @@ typedef struct _EvtEntry
     s32 dowhileCounters[8];
     s8 switchStates[8];
     s32 switchValues[8];
-    s32 * readAddr;
+    union
+    {
+        s32 * readAddr;
+        float * readfAddr;
+    };
     s32 * uw;
     u32 * uf;
     s32 id;
