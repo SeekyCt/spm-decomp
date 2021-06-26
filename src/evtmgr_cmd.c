@@ -989,9 +989,36 @@ int evt_end_switch(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// int evt_set(EvtEntry * entry)
-// int evt_seti(EvtEntry * entry)
-// int evt_setf(EvtEntry * entry)
+int evt_set(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 variable = p[0];
+    s32 value = evtGetValue(entry, p[1]);
+    evtSetValue(entry, variable, value);
+    
+    return EVT_CONTINUE;
+}
+
+int evt_seti(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 variable = p[0];
+    s32 value = p[1];
+    evtSetValue(entry, variable, value);
+    
+    return EVT_CONTINUE;
+}
+
+int evt_setf(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 variable = p[0];
+    float value = evtGetFloat(entry, p[1]);
+    evtSetFloat(entry, variable, value);
+    
+    return EVT_CONTINUE;
+}
+
 // int evt_add(EvtEntry * entry)
 // int evt_sub(EvtEntry * entry)
 // int evt_mul(EvtEntry * entry)
