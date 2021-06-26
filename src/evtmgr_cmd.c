@@ -1075,10 +1075,49 @@ int evt_mod(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// int evt_addf(EvtEntry * entry)
-// int evt_subf(EvtEntry * entry)
-// int evt_mulf(EvtEntry * entry)
-// int evt_divf(EvtEntry * entry)
+int evt_addf(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 destVar = p[0];
+    f32 param = evtGetFloat(entry, p[1]);
+    f32 result = evtGetFloat(entry, destVar) + param;
+    evtSetFloat(entry, destVar, result);
+    
+    return EVT_CONTINUE;
+}
+
+int evt_subf(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 destVar = p[0];
+    f32 param = evtGetFloat(entry, p[1]);
+    f32 result = evtGetFloat(entry, destVar) - param;
+    evtSetFloat(entry, destVar, result);
+    
+    return EVT_CONTINUE;
+}
+int evt_mulf(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 destVar = p[0];
+    f32 param = evtGetFloat(entry, p[1]);
+    f32 result = evtGetFloat(entry, destVar) * param;
+    evtSetFloat(entry, destVar, result);
+    
+    return EVT_CONTINUE;
+}
+
+int evt_divf(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 destVar = p[0];
+    f32 param = evtGetFloat(entry, p[1]);
+    f32 result = evtGetFloat(entry, destVar) / param;
+    evtSetFloat(entry, destVar, result);
+    
+    return EVT_CONTINUE;
+}
+
 // int evt_set_read(EvtEntry * entry)
 // int evt_set_readf(EvtEntry * entry)
 // int evt_read(EvtEntry * entry)
