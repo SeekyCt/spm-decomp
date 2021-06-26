@@ -967,8 +967,28 @@ int evt_case_end(EvtEntry * entry)
     }
 }
 
-// int evt_switch_break(EvtEntry * entry)
-// int evt_end_switch(EvtEntry * entry)
+int evt_switch_break(EvtEntry * entry)
+{
+    if (entry->switchDepth < 0)
+        assert(0x4cf, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+    
+    entry->pCurInstruction = evtSearchEndSwitch(entry);
+
+    return EVT_CONTINUE;
+}
+
+int evt_end_switch(EvtEntry * entry)
+{
+    s32 depth = entry->switchDepth;
+    if (depth < 0)
+        assert(0x4e0, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+
+    entry->switchStates[depth] = 0;
+    entry->switchDepth -= 1;
+
+    return EVT_CONTINUE;
+}
+
 // int evt_set(EvtEntry * entry)
 // int evt_seti(EvtEntry * entry)
 // int evt_setf(EvtEntry * entry)
