@@ -34,16 +34,16 @@
 #define EVTDAT_GW_BASE 50000000
 #define EVTDAT_LW_BASE 30000000
 
-#define UF(id) (id - EVTDAT_UF_BASE)
-#define UW(id) (id - EVTDAT_UW_BASE)
-#define GSW(id) (id - EVTDAT_GSW_BASE)
-#define LSW(id) (id - EVTDAT_LSW_BASE)
-#define GSWF(id) (id - EVTDAT_GSWF_BASE)
-#define LSWF(id) (id - EVTDAT_LSWF_BASE)
-#define GF(id) (id - EVTDAT_GF_BASE)
-#define LF(id) (id - EVTDAT_LF_BASE)
-#define GW(id) (id - EVTDAT_GW_BASE)
-#define LW(id) (id - EVTDAT_LW_BASE)
+#define UF(id) ((id) - EVTDAT_UF_BASE)
+#define UW(id) ((id) - EVTDAT_UW_BASE)
+#define GSW(id) ((id) - EVTDAT_GSW_BASE)
+#define LSW(id) ((id) - EVTDAT_LSW_BASE)
+#define GSWF(id) ((id) - EVTDAT_GSWF_BASE)
+#define LSWF(id) ((id) - EVTDAT_LSWF_BASE)
+#define GF(id) ((id) - EVTDAT_GF_BASE)
+#define LF(id) ((id) - EVTDAT_LF_BASE)
+#define GW(id) ((id) - EVTDAT_GW_BASE)
+#define LW(id) ((id) - EVTDAT_LW_BASE)
 
 /*
     Return values
