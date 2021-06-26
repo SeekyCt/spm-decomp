@@ -458,10 +458,73 @@ int evt_if_not_equal(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// EVT_CMD_FN(if_small)
-// EVT_CMD_FN(if_large)
-// EVT_CMD_FN(if_small_equal)
-// EVT_CMD_FN(if_large_equal)
+int evt_if_small(EvtEntry * entry)
+{
+    EvtScriptCode * p = entry->pCurData;
+
+    s32 val1 = evtGetValue(entry, p[0]);
+    s32 val2 = evtGetValue(entry, p[1]);
+
+    if (val1 >= val2)
+    {
+        entry->pCurInstruction = evtSearchElse(entry);
+
+        return EVT_CONTINUE;
+    }
+
+    return EVT_CONTINUE;
+}
+
+int evt_if_large(EvtEntry * entry)
+{
+    EvtScriptCode * p = entry->pCurData;
+
+    s32 val1 = evtGetValue(entry, p[0]);
+    s32 val2 = evtGetValue(entry, p[1]);
+
+    if (val1 <= val2)
+    {
+        entry->pCurInstruction = evtSearchElse(entry);
+
+        return EVT_CONTINUE;
+    }
+
+    return EVT_CONTINUE;
+}
+
+int evt_if_small_equal(EvtEntry * entry)
+{
+    EvtScriptCode * p = entry->pCurData;
+
+    s32 val1 = evtGetValue(entry, p[0]);
+    s32 val2 = evtGetValue(entry, p[1]);
+
+    if (val1 > val2)
+    {
+        entry->pCurInstruction = evtSearchElse(entry);
+
+        return EVT_CONTINUE;
+    }
+
+    return EVT_CONTINUE;
+}
+
+int evt_if_large_equal(EvtEntry * entry)
+{
+    EvtScriptCode * p = entry->pCurData;
+
+    s32 val1 = evtGetValue(entry, p[0]);
+    s32 val2 = evtGetValue(entry, p[1]);
+
+    if (val1 < val2)
+    {
+        entry->pCurInstruction = evtSearchElse(entry);
+
+        return EVT_CONTINUE;
+    }
+
+    return EVT_CONTINUE;
+}
 
 
 int evt_if_flag(EvtEntry * entry)
@@ -522,7 +585,7 @@ int evt_switch(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// EVT_CMD_FN(switchi)
+// int evt_switchi(EvtEntry * entry)
 
 // Unfinished, just for string pool
 int evt_case_equal(EvtEntry * entry)
