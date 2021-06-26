@@ -575,12 +575,17 @@ int evt_end_if(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// Unfinished, just for string pool
 int evt_switch(EvtEntry * entry)
 {
-    (void) entry;
+    s32 value = evtGetValue(entry, entry->pCurData[0]);
 
-    __dummy_string("EVTMGR_CMD:Switch Table Overflow !!");
+    entry->switchDepth += 1;
+    s32 depth = entry->switchDepth;
+    if (depth >= 8)
+        assert(0x31e, 0, "EVTMGR_CMD:Switch Table Overflow !!");
+
+    entry->switchValues[depth] = value;
+    entry->activeSwitches[depth] = true;
 
     return EVT_CONTINUE;
 }
