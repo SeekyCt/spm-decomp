@@ -221,10 +221,7 @@ void smartInit()
 {
     // Allocate the entire heap for custom use
     u32 size = MEMGetAllocatableSizeForExpHeapEx(wp->heapHandle[SMART_HEAP_ID], 4);
-    void * p = MEMAllocFromExpHeapEx(wp->heapHandle[SMART_HEAP_ID], size, 0x20);
-
-    // "Memory allocation error"
-    assertf(0xdd, p, "ƒƒ‚ƒŠŠm•ÛƒGƒ‰[ [id = %d][size = %d]", SMART_HEAP_ID, size);
+    void * p = __memAlloc(SMART_HEAP_ID, size);
 
     // Space at the start of the heap is the whole heap, allocated list is empty
     swp->heapStart = p;
