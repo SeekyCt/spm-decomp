@@ -1128,7 +1128,7 @@ int evt_set_read(EvtEntry * entry)
 
 int evt_set_readf(EvtEntry * entry)
 {
-    entry->readAddr = (int *) evtGetValue(entry, entry->pCurData[0]);
+    entry->readfAddr = (float *) evtGetValue(entry, entry->pCurData[0]);
 
     return EVT_CONTINUE;
 }
@@ -1587,12 +1587,164 @@ int evt_chk_evt(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// int evt_inline_evt(EvtEntry * entry)
-// int evt_inline_evt_id(EvtEntry * entry)
-// int evt_end_inline(EvtEntry * entry)
-// int evt_brother_evt(EvtEntry * entry)
-// int evt_brother_evt_id(EvtEntry * entry)
-// int evt_end_brother(EvtEntry * entry)
+int evt_inline_evt(EvtEntry * entry)
+{
+    // Required for register usage
+    EvtScriptCode * inlineEnd;
+    s32 opc;
+    EvtScriptCode * script;
+    EvtEntry * evt;
+
+    script = entry->pCurInstruction;
+
+    inlineEnd = script;
+    do
+    {
+        opc = *inlineEnd & 0xffff;
+        inlineEnd += *inlineEnd++ >> 16;
+    }
+    while (opc != EVT_OPC_END_INLINE);
+    entry->pCurInstruction = inlineEnd;
+
+    evt = evtEntryType(script, entry->priority, 0x60, entry->type);
+    evt->uw = entry->uw;
+    evt->uf = entry->uf;
+    evt->ownerNPC = entry->ownerNPC;
+    evt->msgWindowId = entry->msgWindowId;
+    evt->unknown_0x170 = entry->unknown_0x170;
+    evt->unknown_0x178 = entry->unknown_0x178;
+    evt->unknown_0x17c = entry->unknown_0x17c;
+    evt->unknown_0x180 = entry->unknown_0x180;
+    evt->unknown_0x184 = entry->unknown_0x184;
+    evt->msgPri = entry->msgPri;
+    for (int i = 0; i < 16; i++)
+        evt->lw[i] = entry->lw[i];
+    for (int i = 0; i < 3; i++)
+        evt->lf[i] = entry->lf[i];
+
+    return EVT_CONTINUE;
+}
+
+int evt_inline_evt_id(EvtEntry * entry)
+{
+    // Required for register usage
+    EvtScriptCode * inlineEnd;
+    s32 opc;
+    EvtScriptCode * script;
+    EvtEntry * evt;
+    EvtScriptCode * p;
+    s32 destVar;
+
+    p = entry->pCurData;
+    script = entry->pCurInstruction;
+    destVar = p[0];
+
+    inlineEnd = script;
+    do
+    {
+        opc = *inlineEnd & 0xffff;
+        inlineEnd += *inlineEnd++ >> 16;
+    }
+    while (opc != EVT_OPC_END_INLINE);
+    entry->pCurInstruction = inlineEnd;
+
+    evt = evtEntryType(script, entry->priority, 0x60, entry->type);
+    evt->uw = entry->uw;
+    evt->uf = entry->uf;
+    evt->ownerNPC = entry->ownerNPC;
+    evt->msgWindowId = entry->msgWindowId;
+    evt->unknown_0x170 = entry->unknown_0x170;
+    evt->unknown_0x178 = entry->unknown_0x178;
+    evt->unknown_0x17c = entry->unknown_0x17c;
+    evt->unknown_0x180 = entry->unknown_0x180;
+    evt->unknown_0x184 = entry->unknown_0x184;
+    evt->msgPri = entry->msgPri;
+    for (int i = 0; i < 16; i++)
+        evt->lw[i] = entry->lw[i];
+    for (int i = 0; i < 3; i++)
+        evt->lf[i] = entry->lf[i];
+
+    evtSetValue(entry, destVar, evt->id);
+
+    return EVT_CONTINUE;
+}
+
+int evt_end_inline(EvtEntry * entry)
+{
+    evtDelete(entry);
+
+    return EVT_END;
+}
+
+int evt_brother_evt(EvtEntry * entry)
+{
+    // Required for register usage
+    EvtScriptCode * brotherEnd;
+    s32 opc;
+    EvtScriptCode * script;
+    EvtEntry * evt;
+
+    script = entry->pCurInstruction;
+
+    brotherEnd = script;
+    do
+    {
+        opc = *brotherEnd & 0xffff;
+        brotherEnd += *brotherEnd++ >> 16;
+    }
+    while (opc != EVT_OPC_END_BROTHER);
+    entry->pCurInstruction = brotherEnd;
+
+    evt = evtBrotherEntry(entry, script, 0x60);
+    evt->type = entry->type;
+    evt->uw = entry->uw;
+    evt->uf = entry->uf;
+    evt->ownerNPC = entry->ownerNPC;
+    evt->readAddr = entry->readAddr;
+
+    return EVT_CONTINUE;
+}
+
+int evt_brother_evt_id(EvtEntry * entry)
+{
+    // Required for register usage
+    EvtScriptCode * brotherEnd;
+    s32 opc;
+    EvtScriptCode * script;
+    EvtEntry * evt;
+    EvtScriptCode * p;
+    s32 destVar;
+
+    p = entry->pCurData;
+    script = entry->pCurInstruction;
+    destVar = p[0];
+
+    brotherEnd = script;
+    do
+    {
+        opc = *brotherEnd & 0xffff;
+        brotherEnd += *brotherEnd++ >> 16;
+    }
+    while (opc != EVT_OPC_END_BROTHER);
+    entry->pCurInstruction = brotherEnd;
+
+    evt = evtBrotherEntry(entry, script, 0x60);
+    evt->type = entry->type;
+    evt->uw = entry->uw;
+    evt->uf = entry->uf;
+    evt->ownerNPC = entry->ownerNPC;
+
+    evtSetValue(entry, destVar, evt->id);
+
+    return EVT_CONTINUE;
+}
+
+int evt_end_brother(EvtEntry * entry)
+{
+    evtDelete(entry);
+
+    return EVT_BLOCK_WEAK;
+}
 
 int evt_debug_put_msg(EvtEntry * entry)
 {
