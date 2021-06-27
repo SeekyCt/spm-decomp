@@ -285,7 +285,7 @@ int evt_setr(EvtEntry * entry);
 int evt_setrf(EvtEntry * entry);
 int evt_getr(EvtEntry * entry);
 int evt_getrf(EvtEntry * entry);
-// int evt_user_func(EvtEntry * entry);
+int evt_user_func(EvtEntry * entry);
 // int evt_run_evt(EvtEntry * entry);
 // int evt_run_evt_id(EvtEntry * entry);
 // int evt_run_child_evt(EvtEntry * entry);

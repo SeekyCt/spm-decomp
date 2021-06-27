@@ -12,7 +12,7 @@
 #define MAX_EVT_JMPTBL 16
 
 struct _EvtEntry;
-typedef s32 (*user_func)(struct _EvtEntry * entry, bool firstRun);
+typedef s32 (user_func)(struct _EvtEntry * entry, bool firstRun);
 typedef s32 EvtScriptCode;
 
 #define EVT_FLAG_IN_USE (1 << 0) 

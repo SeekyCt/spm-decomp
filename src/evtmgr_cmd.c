@@ -154,7 +154,7 @@ int evt_wait_frm(EvtEntry * entry)
     {
         case false:
             entry->tempS[0] = evtGetValue(entry, p[0]);
-            entry->blocked = 1;
+            entry->blocked = true;
     }
 
     if (entry->tempS[0] == 0)
@@ -1418,7 +1418,28 @@ int evt_getrf(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// int evt_user_func(EvtEntry * entry)
+int evt_user_func(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 ret;
+    user_func * func;
+    switch (entry->blocked)
+    {
+        case false:
+            func = (user_func *) evtGetValue(entry, *p++);
+            entry->userFunc = (user_func *) func;
+            entry->curDataLength -= 1;
+            entry->pCurData = p;
+            entry->blocked = true;
+            ret = (*func)(entry, true);
+            break;
+        default:
+            ret = (*entry->userFunc)(entry, false);
+            break;
+    }
+    return ret;
+}
+
 // int evt_run_evt(EvtEntry * entry)
 // int evt_run_evt_id(EvtEntry * entry)
 // int evt_run_child_evt(EvtEntry * entry)
