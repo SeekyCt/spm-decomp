@@ -1528,13 +1528,65 @@ int evt_set_type(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// int evt_stop_all(EvtEntry * entry)
-// int evt_start_all(EvtEntry * entry)
-// int evt_stop_other(EvtEntry * entry)
-// int evt_start_other(EvtEntry * entry)
-// int evt_stop_id(EvtEntry * entry)
-// int evt_start_id(EvtEntry * entry)
-// int evt_chk_evt(EvtEntry * entry)
+int evt_stop_all(EvtEntry * entry)
+{
+    u32 mask = (u32) evtGetValue(entry, entry->pCurData[0]);
+    evtStopAll(mask);
+
+    return EVT_CONTINUE;
+}
+
+int evt_start_all(EvtEntry * entry)
+{
+    u32 mask = (u32) evtGetValue(entry, entry->pCurData[0]);
+    evtStartAll(mask);
+
+    return EVT_CONTINUE;
+}
+
+int evt_stop_other(EvtEntry * entry)
+{
+    u32 mask = (u32) evtGetValue(entry, entry->pCurData[0]);
+    evtStopOther(entry, mask);
+
+    return EVT_CONTINUE;
+}
+
+int evt_start_other(EvtEntry * entry)
+{
+    u32 mask = (u32) evtGetValue(entry, entry->pCurData[0]);
+    evtStartOther(entry, mask);
+
+    return EVT_CONTINUE;
+}
+
+int evt_stop_id(EvtEntry * entry)
+{
+    s32 id = evtGetValue(entry, entry->pCurData[0]);
+    evtStopID(id);
+
+    return EVT_CONTINUE;
+}
+
+int evt_start_id(EvtEntry * entry)
+{
+    s32 id = evtGetValue(entry, entry->pCurData[0]);
+    evtStartID(id);
+
+    return EVT_CONTINUE;
+}
+
+int evt_chk_evt(EvtEntry * entry)
+{
+    EvtScriptCode * p = entry->pCurData;
+    s32 id = evtGetValue(entry, entry->pCurData[0]);
+    s32 destVar = p[1];
+    s32 result = (s32) evtCheckID(id);
+    evtSetValue(entry, destVar, result);
+
+    return EVT_CONTINUE;
+}
+
 // int evt_inline_evt(EvtEntry * entry)
 // int evt_inline_evt_id(EvtEntry * entry)
 // int evt_end_inline(EvtEntry * entry)

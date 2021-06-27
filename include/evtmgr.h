@@ -153,12 +153,12 @@ void evtSetType(EvtEntry * entry, u32 type); // 800d9bec
 /*
     Pauses execution a entry and all its children & brothers with types included in the mask
 */
-void evtStop(EvtEntry * entry, u8 mask); // 800d9bf4
+void evtStop(EvtEntry * entry, u32 mask); // 800d9bf4
 
 /*
     Resumes execution of a entry and all its children & brothers with types included in the mask
 */
-void evtStart(EvtEntry * entry, u8 mask); // 800d9c98
+void evtStart(EvtEntry * entry, u32 mask); // 800d9c98
 
 /*
     Pauses execution of a entry by id and all its children & brothers
@@ -173,22 +173,22 @@ void evtStartID(s32 id); // 800d9dc8
 /*
     Pauses execution of all entries with types included in the mask
 */
-void evtStopAll(u8 mask); // 800d9e54
+void evtStopAll(u32 mask); // 800d9e54
 
 /*
     Resumes execution of all entries with types included in the mask
 */
-void evtStartAll(u8 mask); // 800d9ed4
+void evtStartAll(u32 mask); // 800d9ed4
 
 /*
     Pauses execution of all entries with types included in the mask other than one specific entry
 */
-void evtStopOther(EvtEntry * entry, u8 mask); // 800d9f54
+void evtStopOther(EvtEntry * entry, u32 mask); // 800d9f54
 
 /*
     Resumes execution of all entries with types included in the mask other than one specific entry
 */
-void evtStartOther(EvtEntry * entry, u8 mask); // 800d9fc8
+void evtStartOther(EvtEntry * entry, u32 mask); // 800d9fc8
 
 /*
     Gets an entry by its index into the array of entries

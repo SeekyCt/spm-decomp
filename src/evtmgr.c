@@ -383,7 +383,7 @@ void evtSetType(EvtEntry * entry, u32 type)
 #pragma push
 #pragma inline_max_auto_size(5)
 
-void evtStop(EvtEntry * entry, u8 mask)
+void evtStop(EvtEntry * entry, u32 mask)
 {
     EvtWork * wp = evtGetWork();
 
@@ -401,7 +401,7 @@ void evtStop(EvtEntry * entry, u8 mask)
         entry->flags |= EVT_FLAG_PAUSED;
 }
 
-void evtStart(EvtEntry * entry, u8 mask)
+void evtStart(EvtEntry * entry, u32 mask)
 {
     EvtWork * wp = evtGetWork();
 
@@ -445,7 +445,7 @@ void evtStartID(s32 id)
     }
 }
 
-void evtStopAll(u8 mask)
+void evtStopAll(u32 mask)
 {
     EvtWork * wp = evtGetWork();
 
@@ -457,7 +457,7 @@ void evtStopAll(u8 mask)
     }
 }
 
-void evtStartAll(u8 mask)
+void evtStartAll(u32 mask)
 {
     EvtWork * wp = evtGetWork();
 
@@ -469,7 +469,7 @@ void evtStartAll(u8 mask)
     }
 }
 
-void evtStopOther(EvtEntry * entry, u8 mask)
+void evtStopOther(EvtEntry * entry, u32 mask)
 {
     EvtWork * wp = evtGetWork();
 
@@ -481,7 +481,7 @@ void evtStopOther(EvtEntry * entry, u8 mask)
     }
 }
 
-void evtStartOther(EvtEntry * entry, u8 mask)
+void evtStartOther(EvtEntry * entry, u32 mask)
 {
     EvtWork * wp = evtGetWork();
 
