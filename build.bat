@@ -1,7 +1,7 @@
 set dolflags=-O4 -proc gekko -lang C99 -S -w all -use_lmw_stmw on -fp hard -str pool -rostr -I- -i include -enc SJIS -inline all -sdata2 4
 
 mwcceppc %dolflags% src/evtmgr.c
-mwcceppc %dolflags% src/evtmgr_cmd.c
+mwcceppc %dolflags% -ipa file src/evtmgr_cmd.c
 mwcceppc %dolflags% src/filemgr.c
 mwcceppc %dolflags% src/main.c
 mwcceppc %dolflags% src/mario_pouch.c
