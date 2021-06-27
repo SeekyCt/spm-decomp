@@ -1338,10 +1338,46 @@ int evt_set_msec_from_frame(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// int evt_set_ram(EvtEntry * entry)
-// int evt_set_ramf(EvtEntry * entry)
-// int evt_get_ram(EvtEntry * entry)
-// int evt_get_ramf(EvtEntry * entry)
+int evt_set_ram(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 value = evtGetValue(entry, p[0]);
+    s32 * addr = (s32 *) p[1];
+    *addr = value;
+    
+    return EVT_CONTINUE;
+}
+
+int evt_set_ramf(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    float value = evtGetFloat(entry, p[0]);
+    float * addr = (float *) p[1];
+    *addr = value;
+    
+    return EVT_CONTINUE;
+}
+
+int evt_get_ram(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 * addr = (s32 *) p[1];
+    s32 value = *addr;
+    evtSetValue(entry, p[0], value);
+    
+    return EVT_CONTINUE;
+}
+
+int evt_get_ramf(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    float * addr = (float *) p[1];
+    float value = *addr;
+    evtSetFloat(entry, p[0], value);
+    
+    return EVT_CONTINUE;
+}
+
 // int evt_setr(EvtEntry * entry)
 // int evt_setrf(EvtEntry * entry)
 // int evt_getr(EvtEntry * entry)
