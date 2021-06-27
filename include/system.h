@@ -22,6 +22,7 @@ const char * getSpmarioDVDRoot(); // 8019c508
 s32 __assert2(char * filename, s32 line, char * assertion, char * message, ...); // 8019c54c
 void fsort(char ** table, size_t size); // 8019c9d4
 void qqsort(char * list, size_t nel, size_t size, void * compare); // 8019cf84
+int rand(); // 8019d150
 void sysWaitDrawSync(); // 8019d4b0
 
 #endif

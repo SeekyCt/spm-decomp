@@ -6,8 +6,8 @@ typedef struct
     u32 flags;
     const char * name_l;
     const char * name_r;
-    const char * name_A2;
-    const char * name_A3;
+    const char * hitName2d;
+    const char * hitName3d;
     const char * destMapName;
     const char * unknown_0x18;
     int unknown_0x1c;
@@ -20,8 +20,8 @@ typedef struct
     u16 _pad_6;
     const char * name;
     const char * mapName;
-    const char * case1Name;
-    const char * case2Name;
+    const char * hitName2d;
+    const char * hitName3d;
     const char * destMapName;
     const char * unknown_0x1c;
 } DokanDesc;

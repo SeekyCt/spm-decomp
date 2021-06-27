@@ -3,6 +3,8 @@
 
 #include <common.h>
 
+#define HITOBJ_FLAG_DISABLE 1
+
 void hitGrpFlagOn(bool allowSubname, const char * name, u32 mask); // 8006c4b4
 void hitGrpFlagOff(bool allowSubname, const char * name, u32 mask); // 8006c6ac
 void hitGetMapEntryBbox(int mapEntryIdx, Vec3 * min, Vec3 * max); // 800703b0
