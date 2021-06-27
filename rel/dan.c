@@ -29,11 +29,47 @@
 #define CHECK_ALL_MASK(num, mask) (((num) & (mask)) == (mask))
 #define CHECK_ANY_MASK(num, mask) (((num) & (mask)) != 0)
 
-static DanWork * wp = NULL;
-static const char * danMapParts[DAN_PARTS_COUNT];
-static MapDoorDesc danMapDoorDescs[2];
-static DokanDesc danChestRoomDokanDesc;
-static MapDoorDesc danChestRoomMapDoorDescs[2];
+static DanWork * wp; // 80f65888
+static const char * danMapParts[DAN_PARTS_COUNT]; // 80e4fef8
+static DokanDesc danDokanDescs[8]; // 80e4ff38
+static MapDoorDesc danMapDoorDescs[2]; // 80e50038
+static int danFlipsideLockItems[2]; // 80e50078
+static int danFlopsideLockItems[2]; // 80e50080
+// dan_lock_interact_evt 80e50088
+// dan_lock_open_evt 80e50160
+// dan_enemy_room_init_evt 80e50198
+static DokanDesc danChestRoomDokanDesc; // 80e50560
+static MapDoorDesc danChestRoomMapDoorDescs[2]; // 80e50580
+// dan_exit_pipe_sign_interact_evt 80e505c0
+// dan_chest_open_evt 80e505f8
+// rotenShopItems 80e50730
+// rotenShopDef 80e50848
+// rotenTribeAnimDefs 80e50860
+// dan_chest_room_init_evt 80e508a0
+// dan_30_map_door_desc 80e510e8
+// dan_30_dokan_desc 80e51108
+// dan_70_dokan_desc 80e51128
+// dan_30_init_evt 80e51148
+// dan_70_init_evt 80e51378
+// dashellTribeAnimDefs 80e515a8
+// dan_30_chest_interact_evt 80e515d0
+// dan_30_chest_open_evt 80e516e8
+// wracktailTribeAnimDefs 80e522f0
+// dan_wracktail_main_evt 80e52338
+// dan_start_wracktail_evt 80e53820
+// dan_70_mario_chest_open_evt 80e53900
+// dan_70_dark_mario_chest_open_evt 80e53988
+// dan_70_peach_chest_open_evt 80e53a10
+// dan_70_dark_peach_chest_open_evt 80e53a98
+// dan_70_bowser_chest_open_evt 80e53b20
+// dan_70_dark_bowser_chest_open_evt 80e53ba8
+// dan_70_luigi_chest_open_evt 80e53c30
+// dan_70_dark_luigi_chest_open_evt 80e53cb8
+// dan_shadoo_main_evt 80e53d40
+// dan_shadoo_fight_evt 80e54588
+// dan_shadoo_defeat_evt 80e54bc8
+// dan_70_reward_appear_evt 80e54ccc
+// dan_start_shadoo_evt 80e55848
 
 int evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
 {
@@ -774,6 +810,8 @@ const char * func_80c83f6c(const char * param_1)
     else
         return param_1;
 }
+
+static DanWork * wp = NULL;
 
 static const char * danMapParts[DAN_PARTS_COUNT] = {
     "parts_05",
