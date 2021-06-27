@@ -993,9 +993,9 @@ int evt_end_switch(EvtEntry * entry)
 int evt_set(EvtEntry * entry)
 {
     s32 * p = entry->pCurData;
-    s32 variable = p[0];
+    s32 destVar = p[0];
     s32 value = evtGetValue(entry, p[1]);
-    evtSetValue(entry, variable, value);
+    evtSetValue(entry, destVar, value);
     
     return EVT_CONTINUE;
 }
@@ -1003,9 +1003,9 @@ int evt_set(EvtEntry * entry)
 int evt_seti(EvtEntry * entry)
 {
     s32 * p = entry->pCurData;
-    s32 variable = p[0];
+    s32 destVar = p[0];
     s32 value = p[1];
-    evtSetValue(entry, variable, value);
+    evtSetValue(entry, destVar, value);
     
     return EVT_CONTINUE;
 }
@@ -1013,9 +1013,9 @@ int evt_seti(EvtEntry * entry)
 int evt_setf(EvtEntry * entry)
 {
     s32 * p = entry->pCurData;
-    s32 variable = p[0];
+    s32 destVar = p[0];
     float value = evtGetFloat(entry, p[1]);
-    evtSetFloat(entry, variable, value);
+    evtSetFloat(entry, destVar, value);
     
     return EVT_CONTINUE;
 }
@@ -1378,10 +1378,46 @@ int evt_get_ramf(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// int evt_setr(EvtEntry * entry)
-// int evt_setrf(EvtEntry * entry)
-// int evt_getr(EvtEntry * entry)
-// int evt_getrf(EvtEntry * entry)
+int evt_setr(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 destVar = evtGetValue(entry, p[0]);
+    s32 value = evtGetValue(entry, p[1]);
+    evtSetValue(entry, destVar, value);
+
+    return EVT_CONTINUE;
+}
+
+int evt_setrf(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 destVar = evtGetValue(entry, p[0]);
+    float value = evtGetFloat(entry, p[1]);
+    evtSetFloat(entry, destVar, value);
+
+    return EVT_CONTINUE;
+}
+
+int evt_getr(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 sourceVar = evtGetValue(entry, p[0]);
+    s32 value = evtGetValue(entry, sourceVar);
+    evtSetValue(entry, p[1], value);
+
+    return EVT_CONTINUE;
+}
+
+int evt_getrf(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 sourceVar = evtGetValue(entry, p[0]);
+    float value = evtGetFloat(entry, sourceVar);
+    evtSetFloat(entry, p[1], value);
+
+    return EVT_CONTINUE;
+}
+
 // int evt_user_func(EvtEntry * entry)
 // int evt_run_evt(EvtEntry * entry)
 // int evt_run_evt_id(EvtEntry * entry)
