@@ -137,7 +137,7 @@ void evtmgrReInit()
 }
 
 // Not matching, includes inline evtEntryRunCheck
-EvtEntry * evtEntry(EvtScriptCode * script, u8 priority, u8 flags)
+EvtEntry * evtEntry(EvtScriptCode * script, u32 priority, u8 flags)
 {
     EvtEntry * entry = work.entries;
     s32 i;
@@ -163,7 +163,7 @@ EvtEntry * evtEntry(EvtScriptCode * script, u8 priority, u8 flags)
     entry->parent = NULL;
     entry->childEntry = NULL;
     entry->brotherEntry = NULL;
-    entry->priority = priority;
+    entry->priority = (u8) priority;
     entry->id = evtId++;
     entry->dowhileDepth = -1;
     entry->switchDepth = -1;
@@ -212,12 +212,12 @@ EvtEntry * evtEntry(EvtScriptCode * script, u8 priority, u8 flags)
 }
 
 // Unfinished, just for string pool
-EvtEntry * evtEntryType(EvtScriptCode * script, s32 param_2, s32 param_3, s32 param_4)
+EvtEntry * evtEntryType(EvtScriptCode * script, u32 priority, u8 flags, u8 type)
 {
     (void) script;
-    (void) param_2;
-    (void) param_3;
-    (void) param_4;
+    (void) priority;
+    (void) flags;
+    (void) type;
 
     __dummy_string("EVTMGR:Pointer Table Overflow !![evtEntryType]");
 
@@ -365,9 +365,9 @@ bool evtCheckID(s32 id)
     return false;
 }
 
-void evtSetPri(EvtEntry * entry, u8 priority)
+void evtSetPri(EvtEntry * entry, u32 priority)
 {
-    entry->priority = priority;
+    entry->priority = (u8) priority;
 }
 
 void evtSetSpeed(EvtEntry * entry, f32 multiplier)
@@ -375,9 +375,9 @@ void evtSetSpeed(EvtEntry * entry, f32 multiplier)
     entry->speed = multiplier * evtSpd;
 }
 
-void evtSetType(EvtEntry * entry, u8 type)
+void evtSetType(EvtEntry * entry, u32 type)
 {
-    entry->type = type;
+    entry->type = (u8) type;
 }
 
 #pragma push

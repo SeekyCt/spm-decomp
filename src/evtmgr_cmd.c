@@ -992,7 +992,7 @@ int evt_end_switch(EvtEntry * entry)
 
 int evt_set(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     s32 value = evtGetValue(entry, p[1]);
     evtSetValue(entry, destVar, value);
@@ -1002,7 +1002,7 @@ int evt_set(EvtEntry * entry)
 
 int evt_seti(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     s32 value = p[1];
     evtSetValue(entry, destVar, value);
@@ -1012,7 +1012,7 @@ int evt_seti(EvtEntry * entry)
 
 int evt_setf(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     float value = evtGetFloat(entry, p[1]);
     evtSetFloat(entry, destVar, value);
@@ -1022,7 +1022,7 @@ int evt_setf(EvtEntry * entry)
 
 int evt_add(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     s32 param = evtGetValue(entry, p[1]);
     s32 result = evtGetValue(entry, destVar) + param;
@@ -1033,7 +1033,7 @@ int evt_add(EvtEntry * entry)
 
 int evt_sub(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     s32 param = evtGetValue(entry, p[1]);
     s32 result = evtGetValue(entry, destVar) - param;
@@ -1044,7 +1044,7 @@ int evt_sub(EvtEntry * entry)
 
 int evt_mul(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     s32 param = evtGetValue(entry, p[1]);
     s32 result = evtGetValue(entry, destVar) * param;
@@ -1055,7 +1055,7 @@ int evt_mul(EvtEntry * entry)
 
 int evt_div(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     s32 param = evtGetValue(entry, p[1]);
     s32 result = evtGetValue(entry, destVar) / param;
@@ -1066,7 +1066,7 @@ int evt_div(EvtEntry * entry)
 
 int evt_mod(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     s32 param = (s32) (evtGetValue(entry, p[1]) + 0.5f);
     s32 value = (s32) (evtGetValue(entry, destVar) + 0.5f);
@@ -1078,7 +1078,7 @@ int evt_mod(EvtEntry * entry)
 
 int evt_addf(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     f32 param = evtGetFloat(entry, p[1]);
     f32 result = evtGetFloat(entry, destVar) + param;
@@ -1089,7 +1089,7 @@ int evt_addf(EvtEntry * entry)
 
 int evt_subf(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     f32 param = evtGetFloat(entry, p[1]);
     f32 result = evtGetFloat(entry, destVar) - param;
@@ -1099,7 +1099,7 @@ int evt_subf(EvtEntry * entry)
 }
 int evt_mulf(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     f32 param = evtGetFloat(entry, p[1]);
     f32 result = evtGetFloat(entry, destVar) * param;
@@ -1110,7 +1110,7 @@ int evt_mulf(EvtEntry * entry)
 
 int evt_divf(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     f32 param = evtGetFloat(entry, p[1]);
     f32 result = evtGetFloat(entry, destVar) / param;
@@ -1135,7 +1135,7 @@ int evt_set_readf(EvtEntry * entry)
 
 int evt_read(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     evtSetValue(entry, p[0], *entry->readAddr++);
 
     return EVT_CONTINUE;
@@ -1143,7 +1143,7 @@ int evt_read(EvtEntry * entry)
 
 int evt_read2(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     evtSetValue(entry, p[0], *entry->readAddr++);
     evtSetValue(entry, p[1], *entry->readAddr++);
 
@@ -1152,7 +1152,7 @@ int evt_read2(EvtEntry * entry)
 
 int evt_read3(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     evtSetValue(entry, p[0], *entry->readAddr++);
     evtSetValue(entry, p[1], *entry->readAddr++);
     evtSetValue(entry, p[2], *entry->readAddr++);
@@ -1162,7 +1162,7 @@ int evt_read3(EvtEntry * entry)
 
 int evt_read4(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     evtSetValue(entry, p[0], *entry->readAddr++);
     evtSetValue(entry, p[1], *entry->readAddr++);
     evtSetValue(entry, p[2], *entry->readAddr++);
@@ -1173,7 +1173,7 @@ int evt_read4(EvtEntry * entry)
 
 int evt_read_n(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 var = p[0];
     s32 idx = evtGetValue(entry, p[1]);
     evtSetValue(entry, var, entry->readAddr[idx]);
@@ -1183,7 +1183,7 @@ int evt_read_n(EvtEntry * entry)
 
 int evt_readf(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     evtSetFloat(entry, p[0], *entry->readfAddr++);
 
     return EVT_CONTINUE;
@@ -1191,7 +1191,7 @@ int evt_readf(EvtEntry * entry)
 
 int evt_readf2(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     evtSetFloat(entry, p[0], *entry->readfAddr++);
     evtSetFloat(entry, p[1], *entry->readfAddr++);
 
@@ -1200,7 +1200,7 @@ int evt_readf2(EvtEntry * entry)
 
 int evt_readf3(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     evtSetFloat(entry, p[0], *entry->readfAddr++);
     evtSetFloat(entry, p[1], *entry->readfAddr++);
     evtSetFloat(entry, p[2], *entry->readfAddr++);
@@ -1210,7 +1210,7 @@ int evt_readf3(EvtEntry * entry)
 
 int evt_readf4(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     evtSetFloat(entry, p[0], *entry->readfAddr++);
     evtSetFloat(entry, p[1], *entry->readfAddr++);
     evtSetFloat(entry, p[2], *entry->readfAddr++);
@@ -1221,7 +1221,7 @@ int evt_readf4(EvtEntry * entry)
 
 int evt_readf_n(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 var = p[0];
     s32 idx = evtGetValue(entry, p[1]);
     evtSetFloat(entry, var, entry->readAddr[idx]); // bug using readAddr?
@@ -1231,7 +1231,7 @@ int evt_readf_n(EvtEntry * entry)
 
 int evt_clamp_int(EvtEntry * entry)
 {
-    s32 * pData = entry->pCurData;
+    EvtScriptCode * pData = entry->pCurData;
 
     s32 dest = pData[0];
     s32 destVal = evtGetValue(entry, dest);
@@ -1263,7 +1263,7 @@ int evt_set_user_flg(EvtEntry * entry)
 
 int evt_alloc_user_wrk(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 count = evtGetValue(entry, p[0]);
     s32 destVar = p[1];
     entry->uw = __memAlloc(1, count * sizeof(int));
@@ -1274,7 +1274,7 @@ int evt_alloc_user_wrk(EvtEntry * entry)
 
 int evt_and(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     s32 param = evtGetValue(entry, p[1]);
     s32 result = evtGetValue(entry, destVar) & param;
@@ -1285,7 +1285,7 @@ int evt_and(EvtEntry * entry)
 
 int evt_andi(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     s32 param = p[1];
     s32 result = evtGetValue(entry, destVar) & param;
@@ -1296,7 +1296,7 @@ int evt_andi(EvtEntry * entry)
 
 int evt_or(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     s32 param = evtGetValue(entry, p[1]);
     s32 result = evtGetValue(entry, destVar) | param;
@@ -1307,7 +1307,7 @@ int evt_or(EvtEntry * entry)
 
 int evt_ori(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     s32 param = p[1];
     s32 result = evtGetValue(entry, destVar) | param;
@@ -1318,7 +1318,7 @@ int evt_ori(EvtEntry * entry)
 
 int evt_set_frame_from_msec(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     s32 msec = evtGetValue(entry, p[1]);
     s32 result = (msec * 60) / 1000; 
@@ -1329,7 +1329,7 @@ int evt_set_frame_from_msec(EvtEntry * entry)
 
 int evt_set_msec_from_frame(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = p[0];
     s32 msec = evtGetValue(entry, p[1]);
     s32 result = (msec * 1000) / 60; 
@@ -1340,7 +1340,7 @@ int evt_set_msec_from_frame(EvtEntry * entry)
 
 int evt_set_ram(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 value = evtGetValue(entry, p[0]);
     s32 * addr = (s32 *) p[1];
     *addr = value;
@@ -1350,7 +1350,7 @@ int evt_set_ram(EvtEntry * entry)
 
 int evt_set_ramf(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     float value = evtGetFloat(entry, p[0]);
     float * addr = (float *) p[1];
     *addr = value;
@@ -1360,7 +1360,7 @@ int evt_set_ramf(EvtEntry * entry)
 
 int evt_get_ram(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 * addr = (s32 *) p[1];
     s32 value = *addr;
     evtSetValue(entry, p[0], value);
@@ -1370,7 +1370,7 @@ int evt_get_ram(EvtEntry * entry)
 
 int evt_get_ramf(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     float * addr = (float *) p[1];
     float value = *addr;
     evtSetFloat(entry, p[0], value);
@@ -1380,7 +1380,7 @@ int evt_get_ramf(EvtEntry * entry)
 
 int evt_setr(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = evtGetValue(entry, p[0]);
     s32 value = evtGetValue(entry, p[1]);
     evtSetValue(entry, destVar, value);
@@ -1390,7 +1390,7 @@ int evt_setr(EvtEntry * entry)
 
 int evt_setrf(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 destVar = evtGetValue(entry, p[0]);
     float value = evtGetFloat(entry, p[1]);
     evtSetFloat(entry, destVar, value);
@@ -1400,7 +1400,7 @@ int evt_setrf(EvtEntry * entry)
 
 int evt_getr(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 sourceVar = evtGetValue(entry, p[0]);
     s32 value = evtGetValue(entry, sourceVar);
     evtSetValue(entry, p[1], value);
@@ -1410,7 +1410,7 @@ int evt_getr(EvtEntry * entry)
 
 int evt_getrf(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 sourceVar = evtGetValue(entry, p[0]);
     float value = evtGetFloat(entry, sourceVar);
     evtSetFloat(entry, p[1], value);
@@ -1420,7 +1420,7 @@ int evt_getrf(EvtEntry * entry)
 
 int evt_user_func(EvtEntry * entry)
 {
-    s32 * p = entry->pCurData;
+    EvtScriptCode * p = entry->pCurData;
     s32 ret;
     user_func * func;
     switch (entry->blocked)
@@ -1440,14 +1440,94 @@ int evt_user_func(EvtEntry * entry)
     return ret;
 }
 
-// int evt_run_evt(EvtEntry * entry)
-// int evt_run_evt_id(EvtEntry * entry)
-// int evt_run_child_evt(EvtEntry * entry)
-// int evt_restart_evt(EvtEntry * entry)
-// int evt_delete_evt(EvtEntry * entry)
-// int evt_set_pri(EvtEntry * entry)
-// int evt_set_spd(EvtEntry * entry)
-// int evt_set_type(EvtEntry * entry)
+int evt_run_evt(EvtEntry * entry)
+{
+    EvtScriptCode * script = (EvtScriptCode *) evtGetValue(entry, entry->pCurData[0]);
+    EvtEntry * evt = evtEntryType(script, entry->priority, 0, entry->type);
+
+    evt->ownerNPC = entry->ownerNPC;
+    for (int i = 0; i < 16; i++)
+        evt->lw[i] = entry->lw[i];
+    for (int i = 0; i < 3; i++)
+        evt->lf[i] = entry->lf[i];
+    evt->uw = entry->uw;
+    evt->uf = entry->uf;
+
+    return EVT_CONTINUE;
+}
+
+int evt_run_evt_id(EvtEntry * entry)
+{
+    EvtScriptCode * p = entry->pCurData;
+
+    EvtScriptCode * script = (EvtScriptCode *) evtGetValue(entry, p[0]);
+    s32 destVar = p[1];
+    EvtEntry * evt = evtEntryType(script, entry->priority, 0, entry->type);
+
+    evt->ownerNPC = entry->ownerNPC;
+    for (int i = 0; i < 16; i++)
+        evt->lw[i] = entry->lw[i];
+    for (int i = 0; i < 3; i++)
+        evt->lf[i] = entry->lf[i];
+    evt->uw = entry->uw;
+    evt->uf = entry->uf;
+
+    evtSetValue(entry, destVar, evt->id);
+
+    return EVT_CONTINUE;
+}
+
+int evt_run_child_evt(EvtEntry * entry)
+{
+    EvtScriptCode * script = (EvtScriptCode *) evtGetValue(entry, entry->pCurData[0]);
+    EvtEntry * evt = evtChildEntry(entry, script, 0);
+
+    entry->curOpcode = EVT_OPC_NEXT;
+
+    return EVT_END;
+}
+
+int evt_restart_evt(EvtEntry * entry)
+{
+    EvtScriptCode * script = (EvtScriptCode *) evtGetValue(entry, entry->pCurData[0]);
+    entry->scriptStart = script;
+    evtRestart(entry);
+    
+    return EVT_CONTINUE;
+}
+
+int evt_delete_evt(EvtEntry * entry)
+{
+    s32 id = evtGetValue(entry, entry->pCurData[0]);
+    evtDeleteID(id);
+
+    return EVT_CONTINUE;
+}
+
+int evt_set_pri(EvtEntry * entry)
+{
+    u32 pri = (u32) evtGetValue(entry, entry->pCurData[0]);
+    evtSetPri(entry, pri);
+
+    return EVT_CONTINUE;
+}
+
+int evt_set_spd(EvtEntry * entry)
+{
+    float pri = evtGetFloat(entry, entry->pCurData[0]);
+    evtSetSpeed(entry, pri);
+
+    return EVT_CONTINUE;
+}
+
+int evt_set_type(EvtEntry * entry)
+{
+    u32 type = (u32) evtGetValue(entry, entry->pCurData[0]);
+    evtSetType(entry, type);
+
+    return EVT_CONTINUE;
+}
+
 // int evt_stop_all(EvtEntry * entry)
 // int evt_start_all(EvtEntry * entry)
 // int evt_stop_other(EvtEntry * entry)

@@ -105,8 +105,8 @@ void evtmgrReInit(); // 800d8b2c
 /*
     Starts execution of a script
 */
-EvtEntry * evtEntry(EvtScriptCode * script, u8 priority, u8 flags); // 800d8b88
-EvtEntry * evtEntryType(EvtScriptCode * script, s32 param_2, s32 param_3, s32 param_4); // 800d8df4
+EvtEntry * evtEntry(EvtScriptCode * script, u32 priority, u8 flags); // 800d8b88
+EvtEntry * evtEntryType(EvtScriptCode * script, u32 priority, u8 flags, u8 type); // 800d8df4
 EvtEntry * evtChildEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags); // 800d9060
 EvtEntry * evtBrotherEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags); // 800d9370
 
@@ -138,7 +138,7 @@ bool evtCheckID(s32 id); // 800d9b88
 /*
     Sets the execution priority of a entry
 */
-void evtSetPri(EvtEntry * entry, u8 pri); // 800d9bd4
+void evtSetPri(EvtEntry * entry, u32 pri); // 800d9bd4
 
 /*
     Sets the execution speed of a entry
@@ -148,7 +148,7 @@ void evtSetSpeed(EvtEntry * entry, f32 multiplier); // 800d9bdc
 /*
     Sets the type mask of a entry
 */
-void evtSetType(EvtEntry * entry, u8 type); // 800d9bec
+void evtSetType(EvtEntry * entry, u32 type); // 800d9bec
 
 /*
     Pauses execution a entry and all its children & brothers with types included in the mask
