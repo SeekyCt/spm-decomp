@@ -1316,8 +1316,28 @@ int evt_ori(EvtEntry * entry)
     return EVT_CONTINUE;
 }
 
-// int evt_set_frame_from_msec(EvtEntry * entry)
-// int evt_set_msec_from_frame(EvtEntry * entry)
+int evt_set_frame_from_msec(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 destVar = p[0];
+    s32 msec = evtGetValue(entry, p[1]);
+    s32 result = (msec * 60) / 1000; 
+    evtSetValue(entry, destVar, result);
+    
+    return EVT_CONTINUE;
+}
+
+int evt_set_msec_from_frame(EvtEntry * entry)
+{
+    s32 * p = entry->pCurData;
+    s32 destVar = p[0];
+    s32 msec = evtGetValue(entry, p[1]);
+    s32 result = (msec * 1000) / 60; 
+    evtSetValue(entry, destVar, result);
+    
+    return EVT_CONTINUE;
+}
+
 // int evt_set_ram(EvtEntry * entry)
 // int evt_set_ramf(EvtEntry * entry)
 // int evt_get_ram(EvtEntry * entry)
