@@ -160,7 +160,7 @@ int evt_wait_frm(EvtEntry * entry)
     if (entry->tempS[0] == 0)
         return EVT_CONTINUE;
     else
-        return !--entry->tempS[0];
+        return --entry->tempS[0] == 0 ? EVT_CONTINUE_WEAK : EVT_BLOCK_WEAK;
 }
 
 /* Unfinished
