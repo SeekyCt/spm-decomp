@@ -1,5 +1,6 @@
-== Dol ==
-        === Game Specific ===
+        ==== Dol ====
+
+== Game Specific ==
 main.c             8001da60 - >=8001da87
 ...
 ac_scissor.c       <=8001e69c - >=80021ffc
@@ -77,12 +78,20 @@ seq_load.c         8017c0a0 - 8017c61b
 seq_game.c         8017c61c - 8017d007
 seq_load_sub.c     8017d008 - 80180ccf
 levelupwindow.c    80180cd0 - 80181923
-...
+charmwindow.c      80181924 - 80182bdb
+nameent.c          80182bdc - 80183faf
+pausewin.c         80183fb0 - 80195103
+charpixlitemwin.c  80195104 - 801991f3
+hud.c              801991f4 - 8019beb3
+treasuremap.c      8019beb4 - 8019c3af
+sptexture.c        8019c3b0 - 8019c4ff
+system.c           8019c500 - 8019e043
 dvdmgr.c           8019e044 - 8019e327
 ...
 filemgr.c          8019e478 - 8019ffb7
 fontmgr.c          8019ffb8 - >=801a37b3
 ...
+himo.c             801a5418 - 801a5dcb
 memory.c           801a5dcc - 801a6e9b
 parse.c            801a6e9c - 801a74ef
 romfont.c          801a74f0 - 801a7ddb
@@ -96,10 +105,26 @@ spmario_snd.c      80237a10 - 8023e433
 relmgr.c           8023e434 - 8023e60b
 nandmgr.c          8023e60c - 8024069f
 ...
-        === Wii SDK ===
 
+== Codewarrior Bundled ==
+MSL_C.PPCEABI.bare.H.a     80255838 - 8026465b
+TRK_Hollywood_Revolution.a 8026465c - 80269d8f
 
-== Rel ==
+== RVL_SDK ==
+NdevExi2A.a 80269d90 - 8026a84f
+exi.a       8026a850 - 8026c5a3
+si.a        8026c5a4 - 8026db43
+base.a      8026db44 - 8026dcb3
+db.a        8026dcb4 - 8026dd9b
+os.a        8026dd9c - 8027a26f
+mtx.a       8027a270 - 8027b8df
+dvd.a       8027b8e0 - ?
+...
+
+== NW4R ==
+...
+
+		==== Rel ====
 ...
 aa3_01.c        ?        - 80c81eaf
 dan.c           80c81eb0 - >=80c83fd3
