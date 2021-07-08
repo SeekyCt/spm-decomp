@@ -322,7 +322,7 @@ s32 evtmgrCmd(EvtEntry * entry); // 800ddd5c
 /*
     Gets the value of an evt variable
 */
-s32 evtGetValue(EvtEntry * entry, s32 data); // 800de594
+s32 evtGetValue(EvtEntry * entry, s32 variable); // 800de594
 
 // evtGetNumber (inlined / unused)
 
@@ -334,12 +334,12 @@ s32 evtSetValue(EvtEntry * entry, s32 variable, s32 value); // 800de9b8
 /*
     Gets the value of a float evt variable
 */
-f32 evtGetFloat(EvtEntry * entry, s32 data); // 800dedb8
+f32 evtGetFloat(EvtEntry * entry, s32 variable); // 800dedb8
 
 /*
     Sets the value of a float evt variable
 */
-f32 evtSetFloat(EvtEntry * entry, s32, f32); // 800df1fc
+f32 evtSetFloat(EvtEntry * entry, s32 variable, f32 value); // 800df1fc
 
 /*
     Returns a pointer to the instruction after the specified label
