@@ -97,14 +97,17 @@ parse.c            801a6e9c - 801a74ef
 romfont.c          801a74f0 - 801a7ddb
 spmario.c          801a7ddc - 801a9097
 DEMOInit.c         801a9098 - 801a963f
-..
-npcdrv.c           <=801a96fc - ?
+npcdrv.c           801a9640 - <=801d2637
 ...
 wpadmgr.c          8023697c - 80237a0f
 spmario_snd.c      80237a10 - 8023e433
 relmgr.c           8023e434 - 8023e60b
 nandmgr.c          8023e60c - 8024069f
 ...
+evt_nand.c         80241408 - 80241807
+homebutton.c       80241808 - 80242937
+...
+search.c           80243958 - ?
 
 == Codewarrior Bundled ==
 MSL_C.PPCEABI.bare.H.a     80255838 - 8026465b
@@ -118,11 +121,40 @@ base.a      8026db44 - 8026dcb3
 db.a        8026dcb4 - 8026dd9b
 os.a        8026dd9c - 8027a26f
 mtx.a       8027a270 - 8027b8df
-dvd.a       8027b8e0 - ?
-...
+dvd.a       8027b8e0 - 8028251b
+vi.a        8028251c - 80286f7f
+DEMOPad.a   80286f80 - 80287053
+ai.a        80287054 - 8028759b
+ax.a        8028759c - 8028a8b7
+axfx.a      8028a8b8 - 8028b91b
+dsp.a       8028b91c - 8028c47b
+gx.a        8028c47c - 80294f9f
+mem.a       80294fa0 - 8029621b
+euart.a     8029621c - 8029658b
+fs.a        8029658c - 8029798f
+ipc.a       80297990 - 80299713
+nand.a      80299714 - 8029c88f
+sc.a        8029c890 - 8029e7fb
+bte.a       8029e7fc - 802cc67f
+usb.a       802cc680 - 802cd71f
+wpad.a      802cd720 - 802da8a7
+wud.a       802da8a8 - 802df1b3
+kpad.a      802df1b4 - 802e22bf
+wenc.a      802e22c0 - 802e2597
+cx.a        802e2598 - 802e2773
+arc.a       802e2774 - 802e30eb
+tpl.a       802e30ec - 802e32ff
+pad.a       802e3300 - 802e45fb
 
 == NW4R ==
-...
+libnw4r_ut.a  802e45fc - 8018b503
+libnw4r_db.a  8018b504 - 802ea15b
+libw4r_lyt.a  802ea15c - 802f4583
+libw4r_math.a 802f4584 - 802f47f3
+libnw4r_snd.a 802f47f4 - 803105a3
+
+== HBM ==
+homebuttonLib.a 803105a4 - 8031beff
 
 		==== Rel ====
 ...
