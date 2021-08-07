@@ -1,129 +1,82 @@
 #include <common.h>
+#include <math.h>
 #include <string.h>
 #include <system.h>
 
-#define MAX_ELEMENT 0xC00
-#define MAX_ELEMENT_SIZE 0x40
+#define RAND_MULT_MAGIC 0x5d588b65
 
-static char * tmp0[MAX_ELEMENT]; // 80513e60, pointers to all items
-static char tmp1[0x100]; // 80516e60, temporary copy of an item being swapped
-static void * comp; // 805ae968, comparison function, passed to fsort indirectly
-/* A bunch of failed attempts at decompiling qqsort, will return to at some point
+static int RANDOM_SEED = 1;
 
-static char * pad() // needed something in the string pool before "system.c", this doesn't actually exist
+static s32 _rand(s32 max) // always inlined
 {
-    return ".";
-}
+    s32 seed;
+    u32 divisor;
+    u32 res;
 
-void qqsort(char * list, size_t nel, size_t size, void * compare)
-{
-    assert(nel < MAX_ELEMENT, "要素数が多すぎてバッファが足りません"); // "Too many elements and not enough buffer"
-    assert(size < MAX_ELEMENT_SIZE, "１要素のサイズが大きくてバッファが足りません"); // "One element is too big and there is not enough buffer"
-    comp = compare;
-    if (nel <= 1)
-        return;
-    char * p = list;
-    for (int i = 0; i < nel; i++)
+    divisor = 0xffffffff;
+    divisor /= (max + 1);
+    if (divisor < 1)
+        divisor = 1;
+
+    seed = RANDOM_SEED;
+    do 
     {
-        tmp0[i] = p;
-        p += size; 
+        seed = seed * RAND_MULT_MAGIC + 1;
+        res = seed / divisor;
     }
-    fsort(tmp0, nel);
-
-    char * item = list;
-    for (int i = 0; i < nel; i++)
-    {
-        if (tmp0[i] != 0 && tmp0[i] != item)
-        {
-            int j = i;
-            char * p = item;
-            memcpy(tmp1, item, size);
-            do
-            {
-                memcpy(p, tmp0[j], size);
-                p = tmp0[j];
-                int n = ((unsigned int) (p - list) / size) * 4;
-                j = n;
-                tmp0[j] = 0;
-            } while (tmp0[j] != item);
-            memcpy(p, tmp1, size);
-        }
-        item += size;
-    }
+    while (res >= max + 1);
+    RANDOM_SEED = seed;
+    
+    return (s32) res;
 }
 
-void qqsort(char * list, size_t nel, size_t size, char * compare)
+// Small regalloc issues
+s32 irand(s32 max)
 {
-    assert(nel < MAX_ELEMENT, "要素数が多すぎてバッファが足りません"); // "Too many elements and not enough buffer"
-    assert(size < MAX_ELEMENT_SIZE, "１要素のサイズが大きくてバッファが足りません"); // "One element is too big and there is not enough buffer"
+    // Calculate absolute value of max - register usage not matching
+    // This isn't converted back to being negative on return
+    s32 abs = max < 0 ? -max : max;
 
-    comp = compare;
-    if (nel > 1)
+    if (abs == 0)
     {
-        char * p = list;
-        for (int i = 0; i < nel; i++)
-        {
-            tmp0[i] = p;
-            p += size; 
-        }
-        fsort(tmp0, nel);
-        char * item = list;
-        for (int i = 0; i < nel; i++) {
-            if (tmp0[i] != 0 && tmp0[i] != item)
-            {
-                char ** r22 = &tmp0[i];
-                char * r21 = item;
-                memcpy(tmp1, item, size);
-                do
-                {
-                    memcpy(r21, *r22, size);
-                    r21 = *r22;
-                    unsigned int n = ((unsigned int) (r21 - list) / size) * 4;
-                    *r22 = 0;
-                    r22 = tmp0 + n;
-                } while (*r22 != item);
-                memcpy(r21, tmp1, size);
-                *r22 = 0;
-            }
-            item += size;
-        }
+        // 0 will always result in zero
+        return 0;
+    }
+    else if (abs == 1)
+    {
+        // Special case for 1
+        // 0-500 is 0, 501-1000 is 1
+        return _rand(1000) > 500;
+    }
+    else if (abs == 100)
+    {
+        // Special case for 100
+        // Selected from 0-1009 and divided by 10 (rounding down)
+        return _rand(1009) / 10;
+    }
+    else
+    {
+        // Calculate value in requested range
+        return _rand(abs);
     }
 }
 
-void qqsort(char * list, size_t nel, size_t size, char * compare)
-{
-    assert(nel < MAX_ELEMENT, "要素数が多すぎてバッファが足りません"); // "Too many elements and not enough buffer"
-    assert(size < MAX_ELEMENT_SIZE, "１要素のサイズが大きくてバッファが足りません"); // "One element is too big and there is not enough buffer"
+float reviseAngle(float angle) {
+    angle = (float) fmod(angle, 360.0);
 
-    comp = compare;
-    if (nel > 1) {
-        for (int i = 0; i < nel; i++)
-        {
-            tmp0[i] = compare;
-            compare += size; 
-        }
-        fsort(tmp0, nel);
-        char * item = list;
-        char ** r24 = tmp0;
-        for (int i = 0; i < nel; i++)
-        {
-            if (*r24 != 0 && *r24 != item)
-            {
-                char ** r22 = r24;
-                char * r21 = item;
-                memcpy(tmp1, item, size);
-                do
-                {
-                    memcpy(r21, *r22, size);
-                    unsigned int n = ((unsigned int) (*r22 - list) / size) * 4;
-                    *r22 = 0;
-                    r22 = tmp0 + n;
-                } while (*r22 != item);
-                memcpy(r21, tmp1, size);
-            }
-            item += size;
-            r24++;
-        }
+    // Seems impossible, maybe true if NaN returned?
+    if (angle != angle)
+        angle = 0.0f;
+    
+    // Convert negative angles to positive
+    if (angle < 0.0f)
+    {
+        angle += 360.0f;
+
+        // Seems impossible?
+        if (angle >= 360.0f)
+            angle = 0.0f;
     }
+
+    return angle;
 }
-*/
