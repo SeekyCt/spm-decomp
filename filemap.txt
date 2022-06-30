@@ -67,9 +67,12 @@ fairy.c            8011bc08 - 8011fa2b
 guide.c            8011fa2c - 80121e17
 mario.c            80121e18 - 8012dac3
 mario_acrobat.c    8012dac4 - 80130a4f
-mario_fairy.c      80130a50 - ?
-...
+mario_fairy.c      80130a50 - 80131487
+mario_hit.c        80131488 - 8014336f
+mario_motion.c     80143370 - 8014c087
 mario_pouch.c      8014c088 - 801501c3
+mario_sbr.c        801501c4 - 80154c7f
+mario_status.c     80154c80 - 8015f063
 ...
 ?                  <=8017719c - 801789f3
 seq_gameover.c     801789f4 - 80178fef
@@ -108,9 +111,8 @@ relmgr.c           8023e434 - 8023e60b
 nandmgr.c          8023e60c - 8024069f
 ...
 evt_nand.c         80241408 - 80241807
-homebutton.c       80241808 - 80242937
-...
-search.c           80243958 - ?
+homebuttondrv.c    80241808 - 80242937
+search.c           80242938 - ?
 
 == Codewarrior Bundled ==
 MSL_C.PPCEABI.bare.H.a     80255838 - 8026465b
@@ -165,5 +167,5 @@ bos_01.c        ?        - 80c7e936
 aa1_01.c        80c7e938 - 80c7ec17
 aa1_02.c        80c7ec18 - 80c809a7
 aa3_01.c        80c809a8 - 80c81eaf
-dan.c           80c81eb0 - >=80c83fd3
+dan.c           80c81eb0 - 80c83fd3
 ...

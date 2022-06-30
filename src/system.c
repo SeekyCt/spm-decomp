@@ -30,12 +30,10 @@ static s32 _rand(s32 max) // always inlined
     return (s32) res;
 }
 
-// Small regalloc issues
 s32 irand(s32 max)
 {
-    // Calculate absolute value of max - register usage not matching
     // This isn't converted back to being negative on return
-    s32 abs = max < 0 ? -max : max;
+    s32 abs = __abs(max);
 
     if (abs == 0)
     {
