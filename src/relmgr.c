@@ -1,21 +1,23 @@
 #include <common.h>
-#include <dvd.h>
-#include <filemgr.h>
-#include <lzss10.h>
-#include <memory.h>
-#include <os.h>
-#include <relmgr.h>
-#include <stdio.h>
-#include <string.h>
-#include <system.h>
+#include <spm/filemgr.h>
+#include <spm/memory.h>
+#include <spm/relmgr.h>
+#include <spm/system.h>
+#include <wii/dvd.h>
+#include <wii/lzss10.h>
+#include <wii/os.h>
+#include <wii/stdio.h>
+#include <wii/string.h>
 
-#pragma push
 #pragma pool_strings off
 
-static RelWork work; // 80534f98
-static RelWork * wp = &work; // 805ae1a0
-static const char * relDecompName = "relF.rel"; // 805ae1a4
-static const char * relCompName = "relF.bin"; // 805ae1a8
+// .bss
+static RelWork work;
+
+// .sdata
+static RelWork * wp = &work;
+static const char * relDecompName = "relF.rel";
+static const char * relCompName = "relF.bin";
 
 void relInit()
 {
@@ -25,11 +27,13 @@ void relInit()
 void relMain()
 {
     char relPath[0x48];
-
+    bool isCompressed;
+    FileEntry * file;
+    
     if (wp->loaded)
         return;
 
-    bool isCompressed = 1;
+    isCompressed = 1;
     sprintf(relPath, "%s/rel/%s", getSpmarioDVDRoot(), relCompName);
     if (DVDConvertPathToEntrynum(relPath) == -1)
     {
@@ -37,9 +41,10 @@ void relMain()
         isCompressed = 0;
     }
 
-    if (fileAsyncf(0, 0, relPath) == 0) return;
+    if (fileAsyncf(0, 0, relPath) == 0)
+        return;
 
-    FileEntry * file = fileAllocf(0, relPath);
+    file = fileAllocf(0, relPath);
     if ((u32) file == 0xffffffff)
     {
         wp->loaded = true;
@@ -51,7 +56,8 @@ void relMain()
         wp->relFile = __memAlloc(0, file->sp->size);
         memcpy(wp->relFile, file->sp->data, file->sp->size);
     }
-    else {
+    else
+    {
         wp->relFile = __memAlloc(0, lzss10ParseHeader(file->sp->data).decompSize);
         lzss10Decompress(file->sp->data, wp->relFile);
     }
@@ -69,5 +75,3 @@ bool isRelLoaded()
 {
     return wp->loaded;
 }
-
-#pragma pop

@@ -1,25 +1,34 @@
 #include <common.h>
-#include <kpad.h>
-#include <memory.h>
-#include <string.h>
-#include <wpad.h>
-#include <wpadmgr.h>
-#include <spmario.h>
+#include <spm/memory.h>
+#include <spm/spmario.h>
+#include <spm/wpadmgr.h>
+#include <wii/kpad.h>
+#include <wii/string.h>
+#include <wii/wpad.h>
 
-static WpadWork wpadWork; // 80528f48
-static WpadWork * wp = &wpadWork; // 805ae198
+// .rodata
+#include "orderdoubles/80343e98_80343ea0.inc"
+
+// .bss
+static WpadWork wpadWork;
+
+// .sdata
+static WpadWork * wp = &wpadWork;
+
+// .sdata2
+#include "orderfloats/805b61f8_805b622c.inc"
 
 WpadWork * wpadGetWork()
 {
     return wp;
 }
 
-static void * wpad_alloc(u32 size) // 80236984
+static void * wpad_alloc(u32 size)
 {
     return __memAlloc(5, size);
 }
 
-static bool wpad_free(void * ptr) // 80236990
+static bool wpad_free(void * ptr)
 {
     // Doesn't even try to free and just tells the library it failed (seems the library doesn't use it anyway?)
     (void) ptr;
@@ -64,80 +73,10 @@ void wpadAllRumbleOff()
         WPADControlMotor(i, 0);
 }
 
-/* Unfinished
-void wpadMain()
+asm void wpadMain() 
 {
-    // Try read all controllers
-    for (s32 i = 0; i < 4; i++)
-        wp->kpadReadRet[i] = KPADRead(i, wp->statuses[i], 0x10);
-
-    // Check if any controllers were valid and had buttons held, log time if so
-    s32 unpressedNum = 0;
-    if ((wp->statuses[0][0].error != 0) || (wp->statuses[0][0].buttonsHeld == 0))
-    {
-        unpressedNum = 1;
-        if ((wp->statuses[1][0].error != 0) || (wp->statuses[1][0].buttonsHeld == 0))
-        {
-            unpressedNum = 2;
-            if ((wp->statuses[2][0].error != 0) || (wp->statuses[2][0].buttonsHeld == 0))
-            {
-                unpressedNum = 3;
-                if ((wp->statuses[3][0].error != 0) || (wp->statuses[3][0].buttonsHeld == 0))
-                    unpressedNum = 4;
-            }
-        }
-    }
-    if (unpressedNum < 4)
-        gp->lastButtonPressTime = gp->time;
-
-    // Handle cursor positions
-    for (s32 i = 0; i < 4; i++)
-    {
-        if (wp->statuses[i][0].error != 0)
-        {
-            wp->statuses[i][0].dpdStatus = 0;
-            wp->statuses[i][0].pointingPos.x = 0.0f;
-            wp->statuses[i][0].pointingPos.y = 0.0f;
-            wp->pointingPos[i].x = 0.0f;
-            wp->pointingPos[i].y = 0.0f;
-        }
-        else
-        {
-            // If errored, use last valid values, otherwise read values
-            if (wp->statuses[i][0].dpdStatus == 0)
-            {
-                wp->statuses[i][0].pointingPos.x = wp->pointingPos[i].x;
-                wp->statuses[i][0].pointingPos.y = wp->pointingPos[i].y;
-            }
-            else
-            {
-                wp->pointingPos[i].x = wp->statuses[i][0].pointingPos.x;
-                wp->pointingPos[i].y = wp->statuses[i][0].pointingPos.y;
-            }
-
-            // Handle enabling / disabling cursor
-            if (wp->flags & WPAD_FLAG_ENABLE_CURSOR)
-            {
-                if (!WPADIsDpdEnabled(i))
-                    KPADEnableDpd(i);
-            }
-            else {
-                if (WPADIsDpdEnabled(i))
-                    KPADDisableDpd(i);
-            }
-        }
-
-        // Backup statuses
-        for (int i = 59; i > 0; i--)
-        {
-            for (int j = 0; j < 4; j++)
-                wp->pastStatuses[j][i] = wp->pastStatuses[j][i - 1];
-        }
-
-        //
-    }
+    #include "asm/80236af8.s"
 }
-*/
 
 void wpadCursorOn()
 {
@@ -151,7 +90,7 @@ void wpadCursorOff()
 
 bool wpadGetCursorStatus()
 {
-    return (bool) (wp->flags & WPAD_FLAG_ENABLE_CURSOR);
+    return (wp->flags & WPAD_FLAG_ENABLE_CURSOR) != 0;
 }
 
 void wpadRumbleOn(s32 controller)
@@ -204,4 +143,7 @@ void func_80237710(s32 controller)
     wp->unknown_0x9d60[controller] = gp->time;
 }
 
-// func_80237750
+asm bool func_80237750()
+{
+    #include "asm/80237750.s"
+}

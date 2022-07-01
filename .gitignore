@@ -1,4 +1,10 @@
+__pycache__
 .vscode
-*.s
-*.o
-*.py
+build
+expected
+out
+*.dol
+*.rel
+*.exe
+*.dll
+build.ninja

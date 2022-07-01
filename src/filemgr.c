@@ -1,17 +1,35 @@
-#include <common.h>
-#include <filemgr.h>
-#include <memory.h>
-#include <os.h>
-#include <string.h>
-#include <tpl.h>
+#include <spm/dvdmgr.h>
+#include <spm/filemgr.h>
+#include <spm/memory.h>
+#include <spm/system.h>
+#include <wii/string.h>
+#include <wii/dvd.h>
+#include <wii/os.h>
+#include <wii/stdio.h>
 
-static FileWork fileWork; // 80516f88
-static FileWork * afp = &fileWork; // 805ae130
+// .rodata
+#include "orderstrings/80337848_80337a63.inc"
+
+// .bss
+static FileWork work;
+static char lbl_80516fa0[1024];
+
+ORDER_BSS_DATA
+{
+    ORDER_BSS(work)
+    ORDER_BSS(lbl_80516fa0)
+}
+
+// .sdata
+static FileWork * afp = &work;
 
 // fileGetWorkPointer inlined, may be needed to match like evtGetWork was
 
 void fileInit()
 {
+    FileEntry * curRecord;
+    s32 i;
+
     // Allocate file entry array
     afp->entries = __memAlloc(0, sizeof(FileEntry[FILE_ENTRY_MAX]));
 
@@ -23,8 +41,8 @@ void fileInit()
     memset(afp->entries, 0, sizeof(FileEntry[FILE_ENTRY_MAX]));
 
     // Initialise free linked list
-    FileEntry * curRecord = afp->entries;
-    for (s32 i = 0; i < FILE_ENTRY_MAX; i++)
+    curRecord = afp->entries;
+    for (i = 0; i < FILE_ENTRY_MAX; i++)
     {
         curRecord->next = curRecord + 1;
         curRecord++;
@@ -36,6 +54,8 @@ void fileInit()
 
 void UnpackTexPalette(TPLHeader * palette)
 {
+    u16 i;
+
     VALIDATE_TPL_VERSION(0x35, palette);
 
     if (IS_TPL_PACKED(palette))
@@ -44,7 +64,7 @@ void UnpackTexPalette(TPLHeader * palette)
         palette->imageTable = (ImageTableEntry *) (palette->imageTableOffset + (u32) palette);
 
         // Unpack all images in table
-        for (u16 i = 0; i < palette->imageCount; i++)
+        for (i = 0; i < palette->imageCount; i++)
         {
             if (palette->imageTable[i].imageOffset != 0)
             {
@@ -77,12 +97,14 @@ void UnpackTexPalette(TPLHeader * palette)
 
 void PackTexPalette(TPLHeader * palette)
 {
+    u16 i;
+
     VALIDATE_TPL_VERSION(0x5e, palette);
 
     if(!IS_TPL_PACKED(palette))
     {
         // Pack all images in table
-        for (u16 i = 0; i < palette->imageCount; i++)
+        for (i = 0; i < palette->imageCount; i++)
         {
             if (palette->imageTable[i].image != NULL)
             {
@@ -117,74 +139,17 @@ void PackTexPalette(TPLHeader * palette)
     }
 }
 
-/* WIP - stopped for now since so much of it is unknown
-typedef union
+#include "jumptable/8042a308.inc"
+asm void fileGarbageDataAdrClear(FileEntry * entry)
 {
-    u32 offset;
-    void * ptr;
+    #include "asm/8019e7e0.s"
 }
-PtrOrOffset;
-typedef struct
-{
-    u8 unknown_0x0[0x14c - 0x0];
-    PtrOrOffset subs[25];
-    // unknown size
-} FileType1;
-typedef struct
-{
-    u8 unknown_0x0[0x24 - 0x0];
-    PtrOrOffset subs[8];
-    // unknown size
-} FileType2;
-typedef struct
-{
-    u8 unknown_0x0[0x48 - 0x0];
-    PtrOrOffset p;
-    // unknown size
-} FileType3;
-typedef struct
-{
-    u8 unknown_0x0[0x14c - 0x0];
-    PtrOrOffset subs[25];
-    // unknown size
-} FileType5;
-void fileGarbageDataAdrClear(FileEntry * entry)
-{
-    switch (entry->fileType) 
-    {
-        // might need case for 0 to match
-        case FILETYPE_1:
-            FileType1 * f1 = entry->sp->data;
-            if (f1->subs[0].offset > (u32) f1)
-            {
-                for (s32 i = 0; i < 25; i++)
-                    f1->subs[i].offset = (u32) f1->subs[i].ptr - (u32) f1;
-            }
-            break;
-        case FILETYPE_2:
-            FileType2 * f2 = entry->sp->data;
-            if (f2->subs[0].offset > (u32) f2)
-            {
-                for (s32 i = 0; i < 8; i++)
-                    f2->subs[i].offset = (u32) f2->subs[i].ptr - (u32) f2;
-            }
-            break;
-        case FILETYPE_3:
-            FileType3 * f3 = entry->sp->data;
-            if (f3->p.offset > (u32) f3)
-                f3->p.offset = (u32) f3->p.ptr - (u32) f3;
-            break;
-        case FILETYPE_TPL:
-            PackTexPalette((TPLHeader *) entry->sp->data);
-            break;
-        case FILETYPE_5:
-            
-            break;
-    }
-}
-*/
 
-// fileGarbageDataAdrSet
+#include "jumptable/8042a338.inc"
+asm void fileGarbageDataAdrSet(void * data, s32 fileType)
+{
+    #include "asm/8019ee2c.s"
+}
 
 void fileGarbageMoveMem(void * dest, FileEntry * src)
 {
@@ -217,11 +182,42 @@ void fileGarbageMoveMem(void * dest, FileEntry * src)
     }
 }
 
-// _fileGarbage
-// fileAllocf
-// fileAlloc
-// _fileAlloc
-// fileFree
-// dvdReadDoneCallback
-// fileAsyncf
-// fileAsync
+asm void _fileGarbage(s32)
+{
+    #include "asm/8019f560.s"
+}
+
+asm FileEntry * fileAllocf(s32 fileType, const char * format, ...)
+{
+    #include "asm/8019f724.s"
+}
+
+asm FileEntry * fileAlloc(const char * path, s32 fileType)
+{
+    #include "asm/8019f7dc.s"
+}
+
+asm FileEntry * _fileAlloc(const char * path, s32 fileType, s32 p3)
+{
+    #include "asm/8019f7e4.s"
+}
+
+asm void fileFree(FileEntry * entry)
+{
+    #include "asm/8019fa8c.s"
+}
+
+static asm UNKNOWN_FUNCTION(dvdReadDoneCallback)
+{
+    #include "asm/8019fb38.s"
+}
+
+asm FileEntry * fileAsyncf(s32 fileType, s32 p2, const char * format, ...)
+{
+    #include "asm/8019fc5c.s"
+}
+
+asm FileEntry * fileAsync(const char * path, s32 fileType, s32 p3)
+{
+    #include "asm/8019fd24.s"
+}

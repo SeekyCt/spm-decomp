@@ -1,23 +1,56 @@
 #include <common.h>
-#include <mario_pouch.h>
-#include <string.h>
-#include <system.h>
+#include <spm/camdrv.h>
+#include <spm/fadedrv.h>
+#include <spm/mario_pouch.h>
+#include <spm/mario.h>
+#include <spm/hud.h>
+#include <spm/seqdrv.h>
+#include <spm/spmario.h>
+#include <spm/spmario_snd.h>
+#include <spm/system.h>
+#include <wii/os.h>
+#include <wii/string.h>
 
-static MarioPouchWork work; // 80511a28
+// .rodata
+#include "orderstrings/80334908_80334bcc.inc"
+
+// .bss
+static MarioPouchWork2 work2;
+static MarioPouchWork work;
+
+// .sdata
+static MarioPouchWork2 * wp2 = &work2;
 
 MarioPouchWork * pouchGetPtr()
 {
     return &work;
 }
 
-// pouchInit
-// pouchReInit
-// pouchMain
-// func_8014d184
-
-void pouchSetLevel(int level)
+asm void pouchInit()
 {
-    MarioPouchWork * pp = pouchGetPtr();
+    #include "asm/8014c094.s"
+}
+
+asm void pouchReInit()
+{
+    #include "asm/8014c728.s"
+}
+
+asm void pouchMain()
+{
+    #include "asm/8014cd90.s"
+}
+
+asm void pouchResetFlip()
+{
+    #include "asm/8014d184.s"
+}
+
+void pouchSetLevel(s32 level)
+{
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
 
     pp->level = level;
 
@@ -28,18 +61,25 @@ void pouchSetLevel(int level)
         pp->level = 1;
 }
 
-int pouchGetLevel()
+s32 pouchGetLevel()
 {
-    MarioPouchWork * pp = pouchGetPtr();
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
 
     return pp->level;
 }
 
-// pouchGetNextLevelXp
-
-void pouchSetAttack(int attack)
+asm s32 pouchGetNextLevelXp()
 {
-    MarioPouchWork * pp = pouchGetPtr();
+    #include "asm/8014d200.s"
+}
+
+void pouchSetAttack(s32 attack)
+{
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
 
     pp->attack = attack;
 
@@ -50,21 +90,28 @@ void pouchSetAttack(int attack)
         pp->attack = 1;
 }
 
-int pouchGetAttack()
+s32 pouchGetAttack()
 {
-    MarioPouchWork * pp = pouchGetPtr();
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
 
     return pp->attack;
 }
 
-void pouchAddAttack(int increase)
+void pouchAddAttack(s32 increase)
 {
-    pouchSetAttack(pouchGetAttack() + increase);
+    s32 attack;
+    
+    attack = pouchGetAttack();
+    pouchSetAttack(attack + increase);
 }
 
-void pouchSetHp(int hp)
+void pouchSetHp(s32 hp)
 {
-    MarioPouchWork * pp = pouchGetPtr();
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
 
     pp->hp = hp;
 
@@ -78,23 +125,26 @@ void pouchSetHp(int hp)
         pp->flipTimer = 10;
 }
 
-int pouchGetHp()
+s32 pouchGetHp()
 {
-    MarioPouchWork * pp = pouchGetPtr();
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
 
     return pp->hp;
 }
 
-// Register usage not matching
-void pouchAddHp(int increase)
+void pouchAddHp(s32 increase)
 {
-    MarioPouchWork * pp = pouchGetPtr();
-
+    MarioPouchWork * pp;
+    s32 maxHp;
+    
+    pp = pouchGetPtr();
+    maxHp = pouchGetMaxHp();    
+    
     pp->hp += increase;
-
-    if (pp->hp > pp->maxHp)
-        pp->hp = pp->maxHp;
-
+    if (pp->hp > maxHp)
+        pp->hp = maxHp;
     if (pp->hp < 0)
         pp->hp = 0;
 
@@ -102,9 +152,11 @@ void pouchAddHp(int increase)
         pp->flipTimer = 10;
 }
 
-void pouchSetMaxHp(int maxHp)
+void pouchSetMaxHp(s32 maxHp)
 {
-    MarioPouchWork * pp = pouchGetPtr();
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
 
     pp->maxHp = maxHp;
 
@@ -115,23 +167,29 @@ void pouchSetMaxHp(int maxHp)
         pp->maxHp = 0;
 }
 
-int pouchGetMaxHp()
+s32 pouchGetMaxHp()
 {
-    MarioPouchWork * pp = pouchGetPtr();
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
 
     return pp->maxHp;
 }
 
-int pouchGetXp()
+s32 pouchGetXp()
 {
-    MarioPouchWork * pp = pouchGetPtr();
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
 
     return pp->xp;
 }
 
-void pouchAddXp(int increase)
+void pouchAddXp(s32 increase)
 {
-    MarioPouchWork * pp = pouchGetPtr();
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
 
     pp->xp += increase;
 
@@ -142,9 +200,11 @@ void pouchAddXp(int increase)
         pp->xp = 0;
 }
 
-void pouchSetCoin(int coins)
+void pouchSetCoin(s32 coins)
 {
-    MarioPouchWork * pp = pouchGetPtr();
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
 
     pp->coins = coins;
 
@@ -155,16 +215,20 @@ void pouchSetCoin(int coins)
         pp->coins = 0;
 }
 
-int pouchGetCoin()
+s32 pouchGetCoin()
 {
-    MarioPouchWork * pp = pouchGetPtr();
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
 
     return pp->coins;
 }
 
-void pouchAddTotalCoin(int increase) // always inlined
+void FORCESTRIP pouchAddTotalCoin(s32 increase) // always inlined
 {
-    MarioPouchWork * pp = pouchGetPtr();
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
 
     pp->totalCoinsCollected += increase;
 
@@ -172,9 +236,11 @@ void pouchAddTotalCoin(int increase) // always inlined
         pp->totalCoinsCollected = 99999;
 }
 
-void pouchAddCoin(int increase)
+void pouchAddCoin(s32 increase)
 {
-    MarioPouchWork * pp = pouchGetPtr();
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
 
     pp->coins += increase;
 
@@ -188,196 +254,202 @@ void pouchAddCoin(int increase)
         pouchAddTotalCoin(increase);
 }
 
-// Not matching
-bool pouchAddItem(short itemId)
+asm bool pouchAddItem(s16 itemId)
 {
-    MarioPouchWork * pp = pouchGetPtr();
-
-    if ((itemId >= ITEM_ID_KEY_START) && (itemId < ITEM_ID_KEY_MAX))
-    {
-        int i;
-        for (i = 0; i < 32; i++)
-        {
-            if (pp->keyItem[i] == 0)
-                break;
-        }
-
-        if (i >= 32)
-            return false;
-        else
-            pp->keyItem[i] = itemId;
-    }
-    else if ((itemId >= ITEM_ID_USE_START) && (itemId < ITEM_ID_USE_MAX))
-    {
-        for (int i = 9; i >= 0; i--)
-        {
-            if (pp->useItem[i] == 0)
-            {
-                // Maybe all an inline function?
-
-                // Move back current items
-                for (int j = 0; j < i; j++)
-                    pp->useItem[i + j] = pp->useItem[i + j - 1];
-
-                // Insert new item at the start
-                pp->useItem[0] = itemId;
-
-                if ((itemId >= ITEM_ID_COOK_START) && (itemId < ITEM_ID_COOK_MAX))
-                    pouchRegisterRecipeKnown(itemId); // inline
-
-                return true;
-            }
-        }
-
-        return false;
-    }
-    else if ((itemId >= ITEM_ID_CHAR_START) && (itemId < ITEM_ID_CHAR_MAX))
-    {
-        // Check if this character is already in inventory
-        int i;
-        for (i = 0; i < 4; i++)
-        {
-            if ((pp->characters[i].id != 0) && (pp->characters[i].id == itemId))
-                break;
-        }
-        if (i < 4)
-            return true;
-        
-        for (i = 0; i < 4; i++)
-        {
-            if (pp->characters[i].id == 0)
-                break;
-        }
-        if (i >= 4)
-            return false;
-        
-        pp->characters[i].selectable = true;
-        pp->characters[i].id = itemId;
-        pp->characters[i].selected = true;   
-    }
-    else if ((itemId >= ITEM_ID_FAIRY_START) && (itemId < ITEM_ID_CHAR_MAX))
-    {
-        // Check if this pixl is already in inventory
-        int i;
-        for (i = 0; i < 16; i++)
-        {
-            if ((pp->pixls[i].id != 0) && (pp->pixls[i].id == itemId))
-                break;
-        }
-        if (i < 16)
-            return true;
-        
-        for (i = 0; i < 4; i++)
-        {
-            if (pp->characters[i].id == 0)
-                break;
-        }
-        if (i >= 16)
-            return false;
-
-        pp->pixls[i].selectable = true;
-        pp->pixls[i].id = itemId;
-        pp->pixls[i].selected = false;
-    }
-    else if ((itemId >= ITEM_ID_MAP_START) && (itemId < ITEM_ID_MAP_MAX))
-    {
-        itemId -= ITEM_ID_MAP_START;
-
-        pp->ownedMaps[itemId / 32] |= 1 << (itemId % 32);
-    }
-    else if ((itemId >= ITEM_ID_CARD_START) && (itemId < ITEM_ID_CARD_MAX))
-    {
-        itemId -= ITEM_ID_CARD_START;
-
-        pp->catchCards[itemId] += 1;
-
-        if (pp->catchCards[itemId] > 99)
-            pp->catchCards[itemId] = 99;
-
-        pp->knownCards[itemId / 32] |= 1 << (itemId % 32);
-    }
-    else
-    {
-        assertf(742, 0, "おかしいで�? id = %d", itemId);
-    }
-
-    return true;
+    #include "asm/8014d5f8.s"
 }
 
-// pouchCheckHaveItem
-
-// Not matching
-void pouchRemoveItem(int itemId)
+asm bool pouchCheckHaveItem(s16 itemId)
 {
-    MarioPouchWork * pp = pouchGetPtr();
-
-    if ((itemId >= ITEM_ID_KEY_START) && (itemId < ITEM_ID_KEY_MAX))
-    {
-        int i;
-        for (i = 0; i < 32; i++)
-        {
-            if (pp->keyItem[i] == itemId)
-                break;
-        }
-        if (i >= 32)
-            return;
-        
-        pp->keyItem[i] = 0;
-
-        for (int j = i; j < 32; j++)
-            pp->keyItem[j] = pp->keyItem[j + 1];
-
-        pp->keyItem[i] = 0;
-    }
-    else if ((itemId >= ITEM_ID_USE_START) && (itemId < ITEM_ID_USE_MAX))
-    {
-        int i;
-        for (i = 0; i < 10; i++)
-        {
-            if (pp->useItem[i] == itemId)
-                break;
-        }
-        if (i >= 10)
-            return;
-        
-        pp->useItem[i] = 0;
-    }
+    #include "asm/8014dbf4.s"
 }
 
-// pouchRemoveItemIdx
-// pouchAddShopItem
-// pouchRemoveShopItem
-// pouchRemoveShopItemIdx
-// pouchGetCharInfo
-// pouchMakeCharSelectable
-// pouchMakeCharNotSelectable
-// pouchGetPixlInfo
-// pouchMakePixlSelectable
-// pouchMakePixlNotSelectable
-// pouchCheckPixlSelected
-// pouchGetCurPixl
-// pouchSetPixlSelected
-// pouchRegisterMapFound
-// pouchRegisterRecipeKnown
-// pouchCheckRecipeKnown
-// pouchGetCardCount
-// pouchCheckCardKnown
-// pouchRegisterJumpCombo
-// pouchRegisterStylishCombo
-// pouchSetEnemiesDefeated
-// pouchGetTotalCoinsCollected
-// pouchGetMaxJumpCombo
-// pouchGetMaxStylishCombo
-// pouchGetEnemiesDefeated
-// pouchGetArcadeTokens
-// pouchSetArcadeTokens
-// pouchCountUseItems
-// pouchCountKeyItems
-// pouchCountShopItems
-// pouchCountChars
-// pouchCountPixls
-// pouchCountPixlsNotSelected
-// pouchCheckFreeUseItem
-// pouchCountMapsOwned
-// pouchCountRecipesKnown
-// pouchCountCardsKnown
+asm void pouchRemoveItem(s16 itemId)
+{
+    #include "asm/8014df4c.s"
+}
+
+asm void pouchRemoveItemIdx(s16 itemId, s32 idx)
+{
+    #include "asm/8014e6d0.s"
+}
+
+asm bool pouchAddShopItem(s16 itemId)
+{
+    #include "asm/8014ea38.s"
+}
+
+asm void pouchRemoveShopItem(s16 itemId)
+{
+    #include "asm/8014eb68.s"
+}
+
+asm void pouchRemoveShopItemIdx(s16 itemId, s32 idx)
+{
+    #include "asm/8014edb8.s"
+}
+
+asm PouchCharOrPixlInfo * pouchGetCharInfo(s32 slot)
+{
+    #include "asm/8014ef98.s"
+}
+
+asm void pouchMakeCharSelectable(s16 itemId)
+{
+    #include "asm/8014efb0.s"
+}
+
+asm void pouchMakeCharNotSelectable(s16 itemId)
+{
+    #include "asm/8014f018.s"
+}
+
+asm PouchCharOrPixlInfo * pouchGetPixlInfo(s32 slot)
+{
+    #include "asm/8014f080.s"
+}
+
+asm void pouchMakePixlSelectable(s16 itemId)
+{
+    #include "asm/8014f098.s"
+}
+
+asm void pouchMakePixlNotSelectable(s16 itemId)
+{
+    #include "asm/8014f154.s"
+}
+
+asm bool pouchCheckPixlSelected(s16 id)
+{
+    #include "asm/8014f210.s"
+}
+
+asm s16 pouchGetCurPixl()
+{
+    #include "asm/8014f31c.s"
+}
+
+asm void pouchSetPixlSelected(s16 itemId)
+{
+    #include "asm/8014f408.s"
+}
+
+asm void pouchRegisterMapFound(s16 itemId)
+{
+    #include "asm/8014f594.s"
+}
+
+asm void pouchRegisterRecipeKnown(s16 itemId)
+{
+    #include "asm/8014f64c.s"
+}
+
+asm bool pouchCheckRecipeKnown(s16 itemId)
+{
+    #include "asm/8014f704.s"
+}
+
+asm s32 pouchGetCardCount(s16 itemId)
+{
+    #include "asm/8014f7c8.s"
+}
+
+asm bool pouchCheckCardKnown(s16 itemId)
+{
+    #include "asm/8014f84c.s"
+}
+
+asm void pouchRegisterJumpCombo(s32 length)
+{
+    #include "asm/8014f910.s"
+}
+
+asm void pouchRegisterStylishCombo(s32 length)
+{
+    #include "asm/8014f944.s"
+}
+
+asm void pouchSetEnemiesDefeated(s32 count)
+{
+    #include "asm/8014f978.s"
+}
+
+asm void pouchGetTotalCoinsCollected(s32 count)
+{
+    #include "asm/8014f99c.s"
+}
+
+asm s32 pouchGetMaxJumpCombo()
+{
+    #include "asm/8014f9ac.s"
+}
+
+asm s32 pouchGetMaxStylishCombo()
+{
+    #include "asm/8014f9bc.s"
+}
+
+asm s32 pouchGetEnemiesDefeated()
+{
+    #include "asm/8014f9cc.s"
+}
+
+asm s32 pouchGetArcadeTokens()
+{
+    #include "asm/8014f9dc.s"
+}
+
+asm void pouchSetArcadeTokens(s32 tokens)
+{
+    #include "asm/8014f9ec.s"
+}
+
+asm s32 pouchCountUseItems()
+{
+    #include "asm/8014fa20.s"
+}
+
+asm s32 pouchCountKeyItems()
+{
+    #include "asm/8014fad0.s"
+}
+
+asm s32 pouchCountShopItems()
+{
+    #include "asm/8014fb78.s"
+}
+
+asm s32 pouchCountChars()
+{
+    #include "asm/8014fc20.s"
+}
+
+asm s32 pouchCountPixls()
+{
+    #include "asm/8014fc70.s"
+}
+
+asm s32 pouchCountPixlsNotSelected()
+{
+    #include "asm/8014fd18.s"
+}
+
+asm bool pouchCheckFreeUseItem()
+{
+    #include "asm/8014fdb0.s"
+}
+
+asm s32 pouchCountMapsOwned()
+{
+    #include "asm/8014fe88.s"
+}
+
+asm s32 pouchCountRecipesKnown()
+{
+    #include "asm/8014ff9c.s"
+}
+
+asm s32 pouchCountCardsKnown()
+{
+    #include "asm/801500b0.s"
+}

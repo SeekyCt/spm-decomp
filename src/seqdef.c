@@ -1,12 +1,12 @@
 #include <common.h>
-#include <seq_game.h>
-#include <seq_gameover.h>
-#include <seq_load.h>
-#include <seq_logo.h>
-#include <seq_mapchange.h>
-#include <seq_title.h>
-#include <seqdef.h>
-#include <seqdrv.h>
+#include <spm/seq_game.h>
+#include <spm/seq_gameover.h>
+#include <spm/seq_load.h>
+#include <spm/seq_logo.h>
+#include <spm/seq_mapchange.h>
+#include <spm/seq_title.h>
+#include <spm/seqdef.h>
+#include <spm/seqdrv.h>
 
 SeqDef seq_data[SEQ_COUNT] = {
     {

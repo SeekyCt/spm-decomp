@@ -1,0 +1,12 @@
+#pragma once
+
+#include <common.h>
+#include <evt_cmd.h>
+
+EVT_UNKNOWN_USER_FUNC(func_800ec2c8)
+EVT_UNKNOWN_USER_FUNC(func_800ec3ac)
+EVT_UNKNOWN_USER_FUNC(func_800ec458)
+EVT_UNKNOWN_USER_FUNC(func_800ec4ec)
+EVT_UNKNOWN_USER_FUNC(func_800ec7e0)
+EVT_UNKNOWN_USER_FUNC(func_800ec8c4)
+EVT_UNKNOWN_USER_FUNC(func_800ec920)

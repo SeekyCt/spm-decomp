@@ -1,0 +1,110 @@
+#########################################################
+# You must re-run configure.py after changing this file #
+#########################################################
+
+# Paths relative to src/
+
+extab.s:
+    extab_:      [0x800064e0, 0x8000fac0]
+    extabindex_: [0x8000fac0, 0x8001da60]
+
+main.c:
+    .text:   [0x8001da60, 0x8001da88]
+
+swdrv.c:
+    .text:   [0x80037eac, 0x800388b4]
+    .rodata: [0x80325cb8, 0x80326360]
+    .bss:    [0x8050a118, 0x8050a120]
+    .sdata:  [0x805adf40, 0x805adf48]
+
+windowdrv.c:
+    .text:   [0x800388b4, 0x8003b26c]
+    .rodata: [0x80326360, 0x80326378]
+    .data:   [0x80406c98, 0x80406d28]
+    .sbss:   [0x805ae790, 0x805ae7a0]
+    .sdata2: [0x805af7e0, 0x805af870]
+
+evtmgr.c:
+    .text:   [0x800d87e4, 0x800da0b0]
+    .rodata: [0x8032eb60, 0x8032eca0]
+    .bss:    [0x8050c990, 0x8050ce30]
+    .sdata:  [0x805ae018, 0x805ae020]
+    .sbss:   [0x805ae8d8, 0x805ae8e8]
+    .sdata2: [0x805b1d48, 0x805b1d50]
+
+evtmgr_cmd.c:
+    .text:   [0x800da0b0, 0x800df9a8]
+    .rodata: [0x8032eca0, 0x8032efe8]
+    .data:   [0x80410608, 0x804107e8]
+    .bss:    [0x8050ce30, 0x8050cf30]
+    .sdata2: [0x805b1d50, 0x805b1d68]
+
+mario_pouch.c:
+    .text:   [0x8014c088, 0x801501c4]
+    .rodata: [0x80334908, 0x80334bd0]
+    .bss:    [0x80511a28, 0x805120e8]
+    .sdata:  [0x805ae060, 0x805ae068]
+    .sdata2: [0x805b28a0, 0x805b28a8]
+
+seqdef.c:
+    .data:   [0x804287a8, 0x804287f0]
+
+seqdrv.c:
+    .text:   [0x8017bf2c, 0x8017c0a0]
+    .bss:    [0x80512360, 0x80512388]
+    .sdata:  [0x805ae0b8, 0x805ae0c8]
+    .sbss:   [0x805ae918, 0x805ae920]
+
+system.c:
+    .text:   [0x8019c500, 0x8019e044]
+    .rodata: [0x803376d0, 0x803377a8]
+    .data:   [0x8042a160, 0x8042a308]
+    .bss:    [0x80513e48, 0x80516f60]
+    .sdata:  [0x805ae118, 0x805ae120]
+    .sbss:   [0x805ae968, 0x805ae988]
+    .sdata2: [0x805b3c38, 0x805b3c88]
+
+filemgr.c:
+    .text:   [0x8019e478, 0x8019ffb8]
+    .rodata: [0x80337848, 0x80337a68]
+    .data:   [0x8042a308, 0x8042a368]
+    .bss:    [0x80516f88, 0x805173a0]
+    .sdata:  [0x805ae130, 0x805ae138]
+
+memory.c:
+    .text:   [0x801a5dcc, 0x801a6e9c]
+    .rodata: [0x80337b18, 0x80337cc0]
+    .data:   [0x8042a408, 0x8042a450]
+    .bss:    [0x805173e0, 0x80525468]
+    .sdata:  [0x805ae168, 0x805ae170]
+    .sbss:   [0x805ae9a8, 0x805ae9b8]
+
+spmario.c:
+    .text:   [0x801a7ddc, 0x801a9098]
+    .rodata: [0x803387f0, 0x80338838]
+    .bss:    [0x80525550, 0x805283a0]
+    .sdata:  [0x805ae178, 0x805ae180]
+    .sbss:   [0x805ae9b8, 0x805ae9d0]
+    .data:   [0x8042a898, 0x8042a908] # TODO: GXRenderModeOBJs from 8042a550
+    .sdata2: [0x805b3d20, 0x805b3d50]
+
+wpadmgr.c:
+    .text:   [0x8023697c, 0x80237a10]
+    .rodata: [0x80343e98, 0x80343ea0]
+    .bss:    [0x80528f48, 0x80532d10]
+    .sdata:  [0x805ae198, 0x805ae1a0]
+    .sdata2: [0x805b61f8, 0x805b6230]
+
+relmgr.c:
+    .text:   [0x8023e434, 0x8023e60c]
+    .rodata: [0x80344468, 0x80344490]
+    .bss:    [0x80534f98, 0x80534fa8]
+    .sdata:  [0x805ae1a0, 0x805ae1b0]
+
+nandmgr.c:
+    .text:   [0x8023e60c, 0x802406a0]
+    .rodata: [0x803494e8, 0x80349538]
+    .data:   [0x804e5008, 0x804e50a8] # TODO: more strings
+    .bss:    [0x80534fa8, 0x80535168]
+    .sdata:  [0x805ae1b0, 0x805ae1b8]
+    .sdata2: [0x805b62a8, 0x805b62b0]

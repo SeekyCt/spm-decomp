@@ -1,24 +1,18 @@
 #include <common.h>
-#include <filemgr.h>
-#include <gx.h>
-#include <mem.h>
-#include <memory.h>
-#include <os.h>
-#include <string.h>
-#include <system.h>
+#include <spm/filemgr.h>
+#include <spm/memory.h>
+#include <spm/system.h>
+#include <wii/exception.h>
+#include <wii/gx.h>
+#include <wii/os.h>
+#include <wii/mem.h>
+#include <wii/string.h>
 
-#define IS_FIRST_SMART_ALLOC(allocation) (allocation->prev == NULL)
-#define IS_LAST_SMART_ALLOC(allocation) (allocation->next == NULL)
-#define GET_SMART_HEAP_SIZE() (MEMGetSizeForMBlockExpHeap(swp->heapStart))
+// .rodata
+#include "orderstrings/80337b18_80337cbb.inc"
 
-static MemWork memWork; // 805173e0
-static MemWork * wp = &memWork; // 805ae168
-static SmartWork smartWork; // 8051744c
-static SmartWork * swp = &smartWork; // 805ae16c
-static bool memInitFlag = false; // 805ae9a8
-s32 g_bFirstSmartAlloc;
-
-static HeapSize size_table[HEAP_COUNT] = // 8042a408
+// .data
+static HeapSize size_table[HEAP_COUNT] =
 {
     // MEM1
     { // 0
@@ -61,16 +55,37 @@ static HeapSize size_table[HEAP_COUNT] = // 8042a408
     }
 };
 
-// Not matching
+// .bss
+static SmartWork smartWork;
+static MemWork work;
+
+// .sdata
+static MemWork * wp = &work;
+static SmartWork * swp = &smartWork;
+
+// .sbss
+static bool memInitFlag = false;
+static MEMHeapHandle fallbackHeap;
+s32 g_bFirstSmartAlloc;
+
+#define IS_FIRST_SMART_ALLOC(allocation) (allocation->prev == NULL)
+#define IS_LAST_SMART_ALLOC(allocation) (allocation->next == NULL)
+#define GET_SMART_HEAP_SIZE() (MEMGetSizeForMBlockExpHeap(swp->heapStart))
+
+// https://decomp.me/scratch/fZFB1
+#ifdef NON_MATCHING
 void memInit()
 {
-    s32 i; // register usage closer to matching
+    // Register usage not matching
+    s32 i;
     u32 max;
-    u8 * min;
+    u32 min;
+    u32 size;
+    u32 space;
 
     // Instruction order doesn't match when geting size_table pointer at the start
 
-    min = OSGetMEM1ArenaLo();
+    min = (u32) OSGetMEM1ArenaLo();
     max = (u32) OSGetMEM1ArenaHi();
 
     // Set up MEM1 absolute size heaps
@@ -78,36 +93,36 @@ void memInit()
     {
         if (size_table[i].type == HEAPSIZE_ABSOLUTE_KB)
         {
-            u32 size = (u32) size_table[i].size * 1024;
+            size = (u32) (size_table[i].size * 1024);
 
-            wp->heapStart[i] = min;
-            wp->heapEnd[i] = min + size;
+            wp->heapStart[i] = (void *) min;
+            wp->heapEnd[i] = (void* ) (min + size);
 
             // "Error: Overheap of heap from arena [%d] \ n"
-            assertf(0x61, (u32)wp->heapEnd[i] <= max, "ERROR: ƒAƒŠ[ƒi‚©‚ç‚Ìƒq[ƒv‚ÌŽæ“¾ƒI[ƒo[‚Å‚·B[%d]\n", i);
+            assertf(0x61, (u32)wp->heapEnd[i] <= max, "ERROR: ã‚¢ãƒªãƒ¼ãƒŠã‹ã‚‰ã®ãƒ’ãƒ¼ãƒ—ã®å–å¾—ã‚ªãƒ¼ãƒãƒ¼ã§ã™ã€‚[%d]\n", i);
 
             min += size;
         }
     }
 
     // Set up MEM1 relative size heaps with remaining space
-    u32 space = (u32) max - (u32) min;
+    space = max - min;
     for (i = 0; i < MEM1_HEAP_COUNT; i++)
     {
         if (size_table[i].type == HEAPSIZE_PERCENT_REMAINING)
         {
-            u32 size = (u32) (((u64) space * size_table[i].size) / 100);
+            size = (u32) (((u64) space * size_table[i].size) / 100);
 
             // "ERROR: Excessive heap acquisition from arena\n"
-            assert(0x6f, size >= 32, "ERROR: ƒAƒŠ[ƒi‚©‚ç‚Ìƒq[ƒv‚ÌŽæ“¾ƒI[ƒo[‚Å‚·B\n");
+            assert(0x6f, size >= 32, "ERROR: ã‚¢ãƒªãƒ¼ãƒŠã‹ã‚‰ã®ãƒ’ãƒ¼ãƒ—ã®å–å¾—ã‚ªãƒ¼ãƒãƒ¼ã§ã™ã€‚\n");
 
             size -= size & 0x1f;
 
-            wp->heapStart[i] = min;
-            wp->heapEnd[i] = min + size;
+            wp->heapStart[i] = (void *) min;
+            wp->heapEnd[i] = (void *) (min + size);
 
             // "ERROR: Overheap of heap from arena [%d] \ n"
-            assertf(0x75, (u32)wp->heapEnd[i] <= max, "ERROR: ƒAƒŠ[ƒi‚©‚ç‚Ìƒq[ƒv‚ÌŽæ“¾ƒI[ƒo[‚Å‚·B[%d]\n", i);
+            assertf(0x75, (u32)wp->heapEnd[i] <= max, "ERROR: ã‚¢ãƒªãƒ¼ãƒŠã‹ã‚‰ã®ãƒ’ãƒ¼ãƒ—ã®å–å¾—ã‚ªãƒ¼ãƒãƒ¼ã§ã™ã€‚[%d]\n", i);
 
             min += size;
         }
@@ -115,12 +130,15 @@ void memInit()
 
     // Pass MEM1 heaps into MEM library
     for (i = 0; i < MEM1_HEAP_COUNT; i++)
-        wp->heapHandle[i] = MEMCreateExpHeapEx(wp->heapStart[i], (u32)wp->heapEnd[i] - (u32)wp->heapStart[i], 0);
+    {
+        size = (u32)wp->heapEnd[i] - (u32)wp->heapStart[i];
+        wp->heapHandle[i]  = MEMCreateExpHeapEx(wp->heapStart[i], size, 0);
+    }
 
     OSSetMEM1ArenaLo((void *) max);
 
     // Register usage for min & max wrong way around from here
-    min = OSGetMEM2ArenaLo();
+    min = (u32) OSGetMEM2ArenaLo();
     max = (u32) OSGetMEM2ArenaHi();
 
     // Set up MEM2 absolute size heaps
@@ -128,36 +146,36 @@ void memInit()
     {
         if (size_table[i].type == HEAPSIZE_ABSOLUTE_KB)
         {
-            u32 size = (u32) size_table[i].size * 1024;
+            size = (u32) (size_table[i].size * 1024);
 
-            wp->heapStart[i] = min;
-            wp->heapEnd[i] = min + size;
+            wp->heapStart[i] = (void *) min;
+            wp->heapEnd[i] = (void *) (min + size);
 
             // "Error: Overheap of heap from arena [%d] \ n"
-            assertf(0x94, (u32)wp->heapEnd[i] <= max, "ERROR: ƒAƒŠ[ƒi‚©‚ç‚Ìƒq[ƒv‚ÌŽæ“¾ƒI[ƒo[‚Å‚·B[%d]\n", i);
+            assertf(0x94, (u32)wp->heapEnd[i] <= max, "ERROR: ã‚¢ãƒªãƒ¼ãƒŠã‹ã‚‰ã®ãƒ’ãƒ¼ãƒ—ã®å–å¾—ã‚ªãƒ¼ãƒãƒ¼ã§ã™ã€‚[%d]\n", i);
 
             min += size;
         }
     }
 
     // Set up MEM2 relative size heaps with remaining space
-    space = (u32) max - (u32) min;
+    space = max - min;
     for (i = MEM1_HEAP_COUNT; i < HEAP_COUNT; i++)
     {
         if (size_table[i].type == HEAPSIZE_PERCENT_REMAINING)
         {
-            u32 size = (u32) (((u64) space * size_table[i].size) / 100);
+            size = (u32) (((u64) space * size_table[i].size) / 100);
 
             // "ERROR: Excessive heap acquisition from arena\n"
-            assert(0xa2, size >= 32, "ERROR: ƒAƒŠ[ƒi‚©‚ç‚Ìƒq[ƒv‚ÌŽæ“¾ƒI[ƒo[‚Å‚·B\n");
+            assert(0xa2, size >= 32, "ERROR: ã‚¢ãƒªãƒ¼ãƒŠã‹ã‚‰ã®ãƒ’ãƒ¼ãƒ—ã®å–å¾—ã‚ªãƒ¼ãƒãƒ¼ã§ã™ã€‚\n");
 
             size -= size & 0x1f;
 
-            wp->heapStart[i] = min;
-            wp->heapEnd[i] = min + size;
+            wp->heapStart[i] = (void *) min;
+            wp->heapEnd[i] = (void *) (min + size);
 
             // "Error: Overheap of heap from arena [%d] \ n"
-            assertf(0xa8, (u32)wp->heapEnd[i] <= max, "ERROR: ƒAƒŠ[ƒi‚©‚ç‚Ìƒq[ƒv‚ÌŽæ“¾ƒI[ƒo[‚Å‚·B[%d]\n", i);
+            assertf(0xa8, (u32)wp->heapEnd[i] <= max, "ERROR: ã‚¢ãƒªãƒ¼ãƒŠã‹ã‚‰ã®ãƒ’ãƒ¼ãƒ—ã®å–å¾—ã‚ªãƒ¼ãƒãƒ¼ã§ã™ã€‚[%d]\n", i);
 
             min += size;
         }
@@ -165,28 +183,25 @@ void memInit()
 
     // Pass MEM2 heaps into MEM library
     for (i = MEM1_HEAP_COUNT; i < HEAP_COUNT; i++)
-        wp->heapHandle[i] = MEMCreateExpHeapEx(wp->heapStart[i], (u32)wp->heapEnd[i] - (u32)wp->heapStart[i], 0);
+    {
+        size = (u32)wp->heapEnd[i] - (u32)wp->heapStart[i];
+        wp->heapHandle[i]  = MEMCreateExpHeapEx(wp->heapStart[i], size, 0);
+    }
 
     OSSetMEM2ArenaLo((void *) max);
     
     // Clear all heaps
     for (i = 0; i < HEAP_COUNT; i++)
-    {
-        // maybe memClear inlined?
-        if (i == SMART_HEAP_ID)
-        {
-            MEMDestroyExpHeap(wp->heapHandle[i]);
-            MEMCreateExpHeapEx(wp->heapStart[i], (u32)wp->heapEnd[i] - (u32)wp->heapStart[i], MEM_FLAG_THREAD_CONTROL);
-        }
-        else
-        {
-            MEMDestroyExpHeap(wp->heapHandle[i]);
-            MEMCreateExpHeapEx(wp->heapStart[i], (u32)wp->heapEnd[i] - (u32)wp->heapStart[i], MEM_FLAG_THREAD_CONTROL | MEM_FLAG_FILL_0);
-        }
-    }
+        memClear(i);
 
     memInitFlag = true;
 }
+#else
+asm void memInit()
+{
+    #include "asm/801a5dcc.s"
+}
+#endif
 
 void memClear(s32 heapId)
 {
@@ -207,7 +222,7 @@ void * __memAlloc(s32 heapId, size_t size)
     void * p = MEMAllocFromExpHeapEx(wp->heapHandle[heapId], size, 0x20);
 
     // "Memory allocation error"
-    assertf(0xdd, p, "ƒƒ‚ƒŠŠm•ÛƒGƒ‰[ [id = %d][size = %d]", heapId, size);
+    assertf(0xdd, p, "ãƒ¡ãƒ¢ãƒªç¢ºä¿ã‚¨ãƒ©ãƒ¼ [id = %d][size = %d]", heapId, size);
 
     return p;
 }
@@ -274,10 +289,10 @@ void smartAutoFree(s32 type)
 void smartFree(SmartAllocation * lp)
 {
     // "Invalid pointer. p=0x%x"
-    assertf(0x193, lp, "–³Œø‚Èƒ|ƒCƒ“ƒ^‚Å‚·Bp=0x%x\n", lp);
+    assertf(0x193, lp, "ç„¡åŠ¹ãªãƒã‚¤ãƒ³ã‚¿ã§ã™ã€‚p=0x%x\n", lp);
 
     // "Already free. p=0x%x"
-    assertf(0x194, lp->flag != 0, "‚·‚Å‚ÉŠJ•ú‚³‚ê‚Ä‚¢‚Ü‚·Bp=0x%x\n", lp);
+    assertf(0x194, lp->flag != 0, "ã™ã§ã«é–‹æ”¾ã•ã‚Œã¦ã„ã¾ã™ã€‚p=0x%x\n", lp);
 
     if (lp->type == 4)
     {
@@ -326,7 +341,7 @@ void smartFree(SmartAllocation * lp)
         {
             // "The list structure is broken"
             // was getting a compiler error with plain sjis
-            assert(0x1be, swp->freeEnd, "ƒŠƒXƒg" "\x8d\x5c\x91\xA2" "‚ª‰ó‚ê‚Ä‚¢‚Ü‚·");
+            assert(0x1be, swp->freeEnd, "ãƒªã‚¹ãƒˆ" "\x8d\x5c\x91\xA2" "ãŒå£Šã‚Œã¦ã„ã¾ã™");
 
             swp->freeEnd->next = lp;
             lp->prev = swp->freeEnd;
@@ -342,7 +357,7 @@ void smartFree(SmartAllocation * lp)
     }
 }
 
-// Not matching
+#ifdef NON_MATCHING
 SmartAllocation * smartAlloc(size_t size, u8 type)
 {
     // Special behaviour if this is the first time running
@@ -363,7 +378,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
     SmartAllocation * new_lp = swp->freeStart;
 
     // "Heap list shortage"
-    assert(0x1e2, new_lp, "ƒq[ƒvƒŠƒXƒg‘«‚è‚È‚¢\n");
+    assert(0x1e2, new_lp, "ãƒ’ãƒ¼ãƒ—ãƒªã‚¹ãƒˆè¶³ã‚Šãªã„\n");
     
     // Update previous item in the free list
     if (IS_FIRST_SMART_ALLOC(new_lp))
@@ -491,13 +506,19 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
         }
 
         // "Garbage collect, but not enough heap"
-        assert(0x280, 0, "smartAlloc: ƒK[ƒx[ƒWƒRƒŒƒNƒg‚µ‚½‚¯‚Çƒq[ƒv‘«‚è‚È‚¢\n");
+        assert(0x280, 0, "smartAlloc: ã‚¬ãƒ¼ãƒ™ãƒ¼ã‚¸ã‚³ãƒ¬ã‚¯ãƒˆã—ãŸã‘ã©ãƒ’ãƒ¼ãƒ—è¶³ã‚Šãªã„\n");
 
         return NULL;
     }
 }
+#else
+asm SmartAllocation * smartAlloc(size_t size, u8 type)
+{
+    #include "asm/801a6794.s"
+}
+#endif
 
-// Not matching
+#ifdef NON_MATCHING
 void smartGarbage()
 {
     sysWaitDrawSync();
@@ -565,6 +586,12 @@ LB_801a6c64:
     // Flush heap from cache
     DCFlushRange(swp->heapStart, GET_SMART_HEAP_SIZE());
 }
+#else
+asm void smartGarbage()
+{
+    #include "asm/801a6b60.s"
+}
+#endif
 
 void * smartTexObj(void * texObj, SmartAllocation * imageAllocation)
 {
@@ -572,19 +599,23 @@ void * smartTexObj(void * texObj, SmartAllocation * imageAllocation)
         GXInitTexObjData(texObj, imageAllocation->data);
     else
         // "There is no smart memory information"
-        assert(0x2d5, 0, "ƒXƒ}[ƒgƒƒ‚ƒŠ‚Ìî•ñ‚ª‚È‚¢‚æ\n");
+        assert(0x2d5, 0, "ã‚¹ãƒžãƒ¼ãƒˆãƒ¡ãƒ¢ãƒªã®æƒ…å ±ãŒãªã„ã‚ˆ\n");
 
     return texObj;
 }
 
-// 801a6d4c
-// __dl__FPv
+asm void * __nw__FUl(size_t size)
+{
+    #include "asm/801a6d4c.s"
+}
 
-void freeToHeap0(void * ptr)
+asm void __dl__FPv(void * ptr)
+{
+    #include "asm/801a6e34.s"
+}
+
+void __sys_free(void * ptr)
 {
     MEMFreeToExpHeap(wp->heapHandle[0], ptr);
 }
 
-#undef IS_FIRST_SMART_ALLOC
-#undef IS_LAST_SMART_ALLOC
-#undef GET_SMART_HEAP_SIZE

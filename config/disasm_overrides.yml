@@ -1,0 +1,5 @@
+manual_sdata2_ranges:
+  # spmario.c has a struct in the middle of the floats
+  - [0x805b3d20, 0x805b3d50]
+  # windowdrv.c has many structs in the middle of the floats
+  - [0x805af7e0, 0x805af870]

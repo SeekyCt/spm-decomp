@@ -1,20 +1,20 @@
-/*
-    Common definitions
-*/
-#ifndef COMMON_H
-#define COMMON_H
+#pragma once
 
-#include <stdbool.h>
+#include <ppcdis.h>
 
-#define NULL ((void*)0)
+#ifdef __INTELLISENSE__ 
+    #define asm
+#endif
+
+// Basic types
 
 typedef unsigned long long u64;
-typedef unsigned int u32;
+typedef unsigned long u32;
 typedef unsigned short u16;
 typedef unsigned char u8;
 
 typedef long long s64;
-typedef int s32;
+typedef long s32;
 typedef short s16;
 typedef char s8;
 
@@ -23,22 +23,19 @@ typedef double f64;
 
 typedef u32 size_t;
 
+#define NULL 0
+
+typedef s32 BOOL;
+
+#ifndef __cplusplus
+
+#define bool _Bool
+
+#define true 1
+#define false 0
+
 typedef u16 wchar_t;
 
-typedef struct
-{
-    float x;
-    float y;
-} Vec2;
-
-typedef struct
-{
-    float x;
-    float y;
-    float z;
-} Vec3;
-
-// Used in un-implemented functions to make string/float pools match when asm is affected
-void __dummy_string(const char *); void __dummy_float(float);
-
 #endif
+
+#define SDA2_BASE 0x805b7260

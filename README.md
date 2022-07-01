@@ -1,25 +1,27 @@
 # spm-decomp
 
-Decompilation of Super Paper Mario (PAL revision 0). Doesn't produce a dol, asm is just checked by compiling with -S (the scripts for automating this are messy and fairly hard-coded to my computer so I don't plan on releasing them, but if you're interested in contributing then let me know and I'll put something together).
+Decompilation of Super Paper Mario PAL revision 0. This will never be a decompilitation of the full game, just specific parts that are useful or interesting, and it certainly won't lead to ports to any other platform. The repo is currently not shiftable (i.e. making changes to the code that causes functions or data to change size or move won't create a working output) but is intended to be at some point. The SDK, NW4R and MSL libraries are out of scope for this project and will not be decompiled (though partial headers will be needed for them to allow other code to be decompiled).
 
-See also https://github.com/SeekyCt/spm-docs for other documentation
+See also https://github.com/SeekyCt/spm-docs for other documentation.
 
-## Address Notes
-- Addresses of global functions and variables are commented in headers, static ones are commented at their c file definitions
-- PAL revision 1's addresses are identical to revision 0's, so information from the decomp is accurate there too
-- Rel addresses are given for the rel loaded in its default position for PAL revisions 0 & 1 (80c45820)
+## Building
+- Dump a copy of the game and extract the main.dol & relF.bin files
+- Extract relF.bin to relF.rel with a tool like [nlzss](https://github.com/magical/nlzss)
+- Place main.dol and relF.rel in the orig folder
+- Place Codewarrior EPPC Version 4.1 Build 60831 in tools/4199_60831
+- Install DevkitPPC, Ninja and Python
+    - DevkitPPC r38 and r41 are known to work, other versions probably do too
+    - Python 3.8+ is supported, earlier versions may work
+- If you didn't use `--recursive` when cloning, run `git submodule update --init --recursive`
+- Install the modules from requirements.txt (`pip install -r requirements.txt`)
+- Run configure.py
+- Run ninja
 
-## Compiler Notes
-### Flags
-The compiler flags probably aren't fully accurate yet, and it's likely that some parts of the game will use different flags.
-### Version
-The project currently uses Codewarrior Version 4.1 build 60831, it's not known if this is the correct version.
-
-## Matching Notes
-- Data sections generally won't match in incomplete files
-    - To match string pools in incomplete files (since they affect asm), functions with strings that haven't been decompiled have temporary replacements that call a fake __dummy_string function to place these strings in the pool
-    - To match float pools in incomplete rel files, __dummy_float is used
+## Contributing
+See [CONTRIBUTING.md](TODO)
 
 ## Credits
-- Various members of the TTYD community for their [documentation](https://github.com/PistonMiner/ttyd-tools) and for porting the demo symbol map to the final game
-- The [PM64 decomp](https://github.com/ethteck/papermario) team for decompiling many of the same functions, which are useful to check against
+- PistonMiner, Zephiles, Jdaster64, Jasper, NWPlayer123, Malleo, SolidifiedGaming and Diagamma for their TTYD documentation
+- All contributors to the [PM64 decomp](https://github.com/ethteck/papermario)
+- All contributors to [asm-differ](https://github.com/simonlindholm/asm-differ)
+- All contributors to [ppcdis](https://github.com/SeekyCt/ppcdis/)

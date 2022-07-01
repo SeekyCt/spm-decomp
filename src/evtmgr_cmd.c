@@ -1,12 +1,22 @@
-#include <common.h>
-#include <evtmgr_cmd.h>
-#include <evtmgr.h>
-#include <memory.h>
-#include <os.h>
-#include <stdio.h>
-#include <string.h>
-#include <swdrv.h>
-#include <system.h>
+#include <spm/evtmgr_cmd.h>
+#include <spm/memory.h>
+#include <spm/swdrv.h>
+#include <spm/system.h>
+#include <wii/string.h>
+#include <wii/stdio.h>
+#include <wii/os.h>
+
+// .rodata
+#ifndef SHIFTABLE
+double lbl_8032eca0 : 0x8032eca0; // casting float
+#else
+double lbl_8032eca0 = 4.503601774854144E15;
+#endif
+#include "orderstrings/8032eca8_8032efe1.inc"
+
+// 0.5f comes early in this file's float pool, suggesting the rounding in evt_mod
+// is an inline, though attempts to match with that failed
+#include "orderfloats/805b1d50_805b1d64.inc"
 
 static float check_float(s32 val) // always inlined
 {
@@ -18,34 +28,36 @@ static float check_float(s32 val) // always inlined
 
 // change_float (inlined/unused)
 
-int evt_end_evt(EvtEntry * entry)
+s32 evt_end_evt(EvtEntry * entry)
 {
     evtDelete(entry);
 
-    return EVT_END;
+    return EVT_RET_END;
 }
 
-int evt_lbl(EvtEntry * entry)
+s32 evt_lbl(EvtEntry * entry)
 {
     (void) entry;
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-// Matching but not good
-int evt_goto(EvtEntry * entry)
+s32 evt_goto(EvtEntry * entry)
 {
-    s32 lbl = evtGetValue(entry, entry->pCurData[0]);
-    EvtScriptCode * r31 = entry->pCurData;
+    s32 lbl;
+    EvtScriptCode * r31;
     EvtScriptCode * dest;
+    s32 n;
 
+    lbl = evtGetValue(entry, entry->pCurData[0]);
+    r31 = entry->pCurData;
+    
     if (lbl < EVTDAT_ADDR_MAX) // TODO: evtSearchLabel inlined
     {
         dest = (EvtScriptCode *) lbl;
     }
     else
     {
-        s32 n;
         for (n = 0; n < MAX_EVT_JMPTBL; n++)
         {
             if (lbl == entry->labelIds[n])
@@ -62,92 +74,100 @@ int evt_goto(EvtEntry * entry)
 
     entry->pCurInstruction = dest;
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_do(EvtEntry * entry)
+s32 evt_do(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 count = *p++;
+    EvtScriptCode * p;
+    s32 count;
+    s32 depth;
 
-    entry->dowhileDepth += 1;
-    s32 depth = entry->dowhileDepth;
+    p = entry->pCurData;
+    count = *p++;
+
+    entry->doWhileDepth += 1;
+    depth = entry->doWhileDepth;
     if (depth >= 8)
         assert(0x67, 0, "EVTMGR_CMD:While Table Overflow !!");
 
-    entry->dowhileStartPtrs[depth] = p;
-    entry->dowhileCounters[depth] = count;
+    entry->doWhileStartPtrs[depth] = p;
+    entry->doWhileCounters[depth] = count;
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_while(EvtEntry * entry)
+s32 evt_while(EvtEntry * entry)
 {
-    s32 count; // only way the register usage of depth's sign extend matched
+    s32 count;
+    s32 depth;
+    s32 ret;
 
-    s32 depth = entry->dowhileDepth;
+    depth = entry->doWhileDepth;
     if (depth < 0)
         assert(0x7b, 0, "EVTMGR_CMD:While Table Underflow !!");
 
-    count = entry->dowhileCounters[depth];
+    count = entry->doWhileCounters[depth];
     if (count == 0)
     {
-        entry->pCurInstruction = entry->dowhileStartPtrs[depth];
+        entry->pCurInstruction = entry->doWhileStartPtrs[depth];
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else
     {
         if (count >= -10000000)
         {
-            entry->dowhileCounters[depth] = --count;
+            entry->doWhileCounters[depth] = --count;
         }
         else
         {
-            s32 ret = evtGetValue(entry, count);
+            ret = evtGetValue(entry, count);
             evtSetValue(entry, count, ret - 1);
             count = ret - 1;
         }
 
         if (count != 0)
         {
-            entry->pCurInstruction = entry->dowhileStartPtrs[depth];
+            entry->pCurInstruction = entry->doWhileStartPtrs[depth];
 
-            return EVT_CONTINUE;
+            return EVT_RET_CONTINUE;
         }
         else
         {
-            entry->dowhileDepth--;
+            entry->doWhileDepth--;
 
-            return EVT_CONTINUE;
+            return EVT_RET_CONTINUE;
         }
     }
 }
 
-int evt_do_break(EvtEntry * entry)
+s32 evt_do_break(EvtEntry * entry)
 {
-    if (entry->dowhileDepth < 0)
+    if (entry->doWhileDepth < 0)
         assert(0xa1, 0, "EVTMGR_CMD:While Table Underflow !!");
 
     entry->pCurInstruction = evtSearchWhile(entry);
-    entry->dowhileDepth -= 1;
+    entry->doWhileDepth -= 1;
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_do_continue(EvtEntry * entry)
+s32 evt_do_continue(EvtEntry * entry)
 {
-    if (entry->dowhileDepth < 0)
+    if (entry->doWhileDepth < 0)
         assert(0xb0, 0, "EVTMGR_CMD:While Table Underflow !!");
 
     entry->pCurInstruction = evtSearchJustBeforeWhile(entry);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_wait_frm(EvtEntry * entry)
+s32 evt_wait_frm(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    
+    p = entry->pCurData;
 
     // Just an if didn't match
     switch (entry->blocked)
@@ -158,44 +178,56 @@ int evt_wait_frm(EvtEntry * entry)
     }
 
     if (entry->tempS[0] == 0)
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     else
-        return --entry->tempS[0] == 0 ? EVT_CONTINUE_WEAK : EVT_BLOCK_WEAK;
+        return --entry->tempS[0] == 0 ? EVT_RET_CONTINUE_WEAK : EVT_RET_BLOCK_WEAK;
 }
 
-/* Unfinished
-int evt_wait_msec(EvtEntry * entry)
+s32 evt_wait_msec(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s64 time = entry->lifetime;
-    switch(entry->blocked)
+    OSTime time;
+    u64 tickDiff;
+    s32 msecDiff;
+    EvtScriptCode * args;
+
+    args = entry->pCurData;
+    time = entry->lifetime;
+    switch (entry->blocked)
     {
+        default:
+            break;
         case false:
-            entry->tempS[0] = evtGetValue(entry, p[0]);
-            entry->tempS[1] = (s32) ((time & 0xffffffff00000000) >> 32);
-            entry->tempS[2] = (s32) (time & 0xffffffff);
+            entry->tempS[0] = evtGetValue(entry, args[0]);
+            entry->tempU[1] = (u32) (((u64)time >> 32) & 0xffffffff);
+            entry->tempU[2] = (u32) (time & 0xffffffff);
             entry->blocked = true;
+            break;
+    }
+    if (entry->tempS[0] == 0)
+    {
+        return EVT_RET_CONTINUE;
     }
 
-    if (entry->tempU[0] == 0)
-        return EVT_CONTINUE;
-    else
-        // Wrong
-        return (OSTicksToMilliseconds((time & 0xffffffff) - entry->tempU[2]) >= entry->tempU[0]);
-}
-*/
-
-int evt_halt(EvtEntry * entry)
-{
-   return evtGetValue(entry, entry->pCurData[0]) ? EVT_BLOCK_WEAK : EVT_CONTINUE;
+    tickDiff = (s32)time - (s32)*(OSTime *)&entry->tempS[1];
+    msecDiff = (s32) OSTicksToMilliseconds(tickDiff);
+    return msecDiff >= entry->tempS[0] ? EVT_RET_CONTINUE_WEAK : EVT_RET_BLOCK_WEAK;
 }
 
-int evt_if_str_equal(EvtEntry * entry)
+s32 evt_halt(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+   return evtGetValue(entry, entry->pCurData[0]) ? EVT_RET_BLOCK_WEAK : EVT_RET_CONTINUE;
+}
 
-    char * s1 = (char *) evtGetValue(entry, p[0]);
-    char * s2 = (char *) evtGetValue(entry, p[1]);
+s32 evt_if_str_equal(EvtEntry * entry)
+{
+    EvtScriptCode * p;
+    char * s1;
+    char * s2;
+    
+    p = entry->pCurData;
+
+    s1 = (char *) evtGetValue(entry, p[0]);
+    s2 = (char *) evtGetValue(entry, p[1]);
 
     if (s1 == NULL)
         s1 = "";
@@ -206,18 +238,22 @@ int evt_if_str_equal(EvtEntry * entry)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_if_str_not_equal(EvtEntry * entry)
+s32 evt_if_str_not_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    char * s1;
+    char * s2;
+    
+    p = entry->pCurData;
 
-    char * s1 = (char *) evtGetValue(entry, p[0]);
-    char * s2 = (char *) evtGetValue(entry, p[1]);
+    s1 = (char *) evtGetValue(entry, p[0]);
+    s2 = (char *) evtGetValue(entry, p[1]);
 
     if (s1 == NULL)
         s1 = "";
@@ -228,18 +264,22 @@ int evt_if_str_not_equal(EvtEntry * entry)
     {
         entry->pCurInstruction = evtSearchElse(entry);
     
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_if_str_small(EvtEntry * entry)
+s32 evt_if_str_small(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    char * s1;
+    char * s2;
+    
+    p = entry->pCurData;
 
-    char * s1 = (char *) evtGetValue(entry, p[0]);
-    char * s2 = (char *) evtGetValue(entry, p[1]);
+    s1 = (char *) evtGetValue(entry, p[0]);
+    s2 = (char *) evtGetValue(entry, p[1]);
 
     if (s1 == NULL)
         s1 = "";
@@ -250,18 +290,22 @@ int evt_if_str_small(EvtEntry * entry)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_if_str_large(EvtEntry * entry)
+s32 evt_if_str_large(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    char * s1;
+    char * s2;
+    
+    p = entry->pCurData;
 
-    char * s1 = (char *) evtGetValue(entry, p[0]);
-    char * s2 = (char *) evtGetValue(entry, p[1]);
+    s1 = (char *) evtGetValue(entry, p[0]);
+    s2 = (char *) evtGetValue(entry, p[1]);
 
     if (s1 == NULL)
         s1 = "";
@@ -272,19 +316,23 @@ int evt_if_str_large(EvtEntry * entry)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
 
-int evt_if_str_small_equal(EvtEntry * entry)
+s32 evt_if_str_small_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    char * s1;
+    char * s2;
+    
+    p = entry->pCurData;
 
-    char * s1 = (char *) evtGetValue(entry, p[0]);
-    char * s2 = (char *) evtGetValue(entry, p[1]);
+    s1 = (char *) evtGetValue(entry, p[0]);
+    s2 = (char *) evtGetValue(entry, p[1]);
 
     if (s1 == NULL)
         s1 = "";
@@ -295,18 +343,22 @@ int evt_if_str_small_equal(EvtEntry * entry)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_if_str_large_equal(EvtEntry * entry)
+s32 evt_if_str_large_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    char * s1;
+    char * s2;
 
-    char * s1 = (char *) evtGetValue(entry, p[0]);
-    char * s2 = (char *) evtGetValue(entry, p[1]);
+    p = entry->pCurData;
+
+    s1 = (char *) evtGetValue(entry, p[0]);
+    s2 = (char *) evtGetValue(entry, p[1]);
 
     if (s1 == NULL)
         s1 = "";
@@ -317,283 +369,341 @@ int evt_if_str_large_equal(EvtEntry * entry)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_iff_equal(EvtEntry * entry)
+s32 evt_iff_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    f32 f1;
+    f32 f2;
 
-    float f1 = evtGetFloat(entry, p[0]);
-    float f2 = evtGetFloat(entry, p[1]);
+    p = entry->pCurData;
+
+    f1 = evtGetFloat(entry, p[0]);
+    f2 = evtGetFloat(entry, p[1]);
 
     if (f1 != f2)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_iff_not_equal(EvtEntry * entry)
+s32 evt_iff_not_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    f32 f1;
+    f32 f2;
 
-    f32 f1 = evtGetFloat(entry, p[0]);
-    f32 f2 = evtGetFloat(entry, p[1]);
+    p = entry->pCurData;
+
+    f1 = evtGetFloat(entry, p[0]);
+    f2 = evtGetFloat(entry, p[1]);
 
     if (f1 == f2)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_iff_small(EvtEntry * entry)
+s32 evt_iff_small(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    f32 f1;
+    f32 f2;
 
-    f32 f1 = evtGetFloat(entry, p[0]);
-    f32 f2 = evtGetFloat(entry, p[1]);
+    p = entry->pCurData;
+
+    f1 = evtGetFloat(entry, p[0]);
+    f2 = evtGetFloat(entry, p[1]);
 
     if (f1 >= f2)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_iff_large(EvtEntry * entry)
+s32 evt_iff_large(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    f32 f1;
+    f32 f2;
 
-    f32 f1 = evtGetFloat(entry, p[0]);
-    f32 f2 = evtGetFloat(entry, p[1]);
+    p = entry->pCurData;
+
+    f1 = evtGetFloat(entry, p[0]);
+    f2 = evtGetFloat(entry, p[1]);
 
     if (f1 <= f2)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_iff_small_equal(EvtEntry * entry)
+s32 evt_iff_small_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    f32 f1;
+    f32 f2;
 
-    f32 f1 = evtGetFloat(entry, p[0]);
-    f32 f2 = evtGetFloat(entry, p[1]);
+    p = entry->pCurData;
+
+    f1 = evtGetFloat(entry, p[0]);
+    f2 = evtGetFloat(entry, p[1]);
 
     if (f1 > f2)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_iff_large_equal(EvtEntry * entry)
+s32 evt_iff_large_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    f32 f1;
+    f32 f2;
 
-    f32 f1 = evtGetFloat(entry, p[0]);
-    f32 f2 = evtGetFloat(entry, p[1]);
+    p = entry->pCurData;
+
+    f1 = evtGetFloat(entry, p[0]);
+    f2 = evtGetFloat(entry, p[1]);
 
     if (f1 < f2)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_if_equal(EvtEntry * entry)
+s32 evt_if_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 val1;
+    s32 val2;
 
-    s32 val1 = evtGetValue(entry, p[0]);
-    s32 val2 = evtGetValue(entry, p[1]);
+    p = entry->pCurData;
+
+    val1 = evtGetValue(entry, p[0]);
+    val2 = evtGetValue(entry, p[1]);
 
     if (val1 != val2)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_if_not_equal(EvtEntry * entry)
+s32 evt_if_not_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 val1;
+    s32 val2;
 
-    s32 val1 = evtGetValue(entry, p[0]);
-    s32 val2 = evtGetValue(entry, p[1]);
+    p = entry->pCurData;
+
+    val1 = evtGetValue(entry, p[0]);
+    val2 = evtGetValue(entry, p[1]);
 
     if (val1 == val2)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_if_small(EvtEntry * entry)
+s32 evt_if_small(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 val1;
+    s32 val2;
 
-    s32 val1 = evtGetValue(entry, p[0]);
-    s32 val2 = evtGetValue(entry, p[1]);
+    p = entry->pCurData;
+
+    val1 = evtGetValue(entry, p[0]);
+    val2 = evtGetValue(entry, p[1]);
 
     if (val1 >= val2)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_if_large(EvtEntry * entry)
+s32 evt_if_large(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 val1;
+    s32 val2;
 
-    s32 val1 = evtGetValue(entry, p[0]);
-    s32 val2 = evtGetValue(entry, p[1]);
+    p = entry->pCurData;
+
+    val1 = evtGetValue(entry, p[0]);
+    val2 = evtGetValue(entry, p[1]);
 
     if (val1 <= val2)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_if_small_equal(EvtEntry * entry)
+s32 evt_if_small_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 val1;
+    s32 val2;
 
-    s32 val1 = evtGetValue(entry, p[0]);
-    s32 val2 = evtGetValue(entry, p[1]);
+    p = entry->pCurData;
+
+    val1 = evtGetValue(entry, p[0]);
+    val2 = evtGetValue(entry, p[1]);
 
     if (val1 > val2)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_if_large_equal(EvtEntry * entry)
+s32 evt_if_large_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 val1;
+    s32 val2;
 
-    s32 val1 = evtGetValue(entry, p[0]);
-    s32 val2 = evtGetValue(entry, p[1]);
+    p = entry->pCurData;
+
+    val1 = evtGetValue(entry, p[0]);
+    val2 = evtGetValue(entry, p[1]);
 
     if (val1 < val2)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
 
-int evt_if_flag(EvtEntry * entry)
+s32 evt_if_flag(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 val;
+    s32 mask;
 
-    s32 val = evtGetValue(entry, p[0]);
-    s32 mask = p[1];
+    p = entry->pCurData;
+
+    val = evtGetValue(entry, p[0]);
+    mask = p[1];
 
     if ((val & mask) == 0)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_if_not_flag(EvtEntry * entry)
+s32 evt_if_not_flag(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 val;
+    s32 mask;
 
-    s32 val = evtGetValue(entry, p[0]);
-    s32 mask = p[1];
+    p = entry->pCurData;
+
+    val = evtGetValue(entry, p[0]);
+    mask = p[1];
 
     if ((val & mask) != 0)
     {
         entry->pCurInstruction = evtSearchElse(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_else(EvtEntry * entry)
+s32 evt_else(EvtEntry * entry)
 {
     entry->pCurInstruction = evtSearchEndIf(entry);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_end_if(EvtEntry * entry)
+s32 evt_end_if(EvtEntry * entry)
 {
     (void) entry;
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_switch(EvtEntry * entry)
+s32 evt_switch(EvtEntry * entry)
 {
-    s32 value = evtGetValue(entry, entry->pCurData[0]);
+    s32 value;
+    s32 depth;
+
+    value = evtGetValue(entry, entry->pCurData[0]);
 
     entry->switchDepth += 1;
-    s32 depth = entry->switchDepth;
+    depth = entry->switchDepth;
     if (depth >= 8)
         assert(0x31e, 0, "EVTMGR_CMD:Switch Table Overflow !!");
 
     entry->switchValues[depth] = value;
     entry->switchStates[depth] = 1;
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_switchi(EvtEntry * entry)
+s32 evt_switchi(EvtEntry * entry)
 {
-    // Required for register usage
     s32 depth;
     s32 value;
 
@@ -606,55 +716,67 @@ int evt_switchi(EvtEntry * entry)
     entry->switchValues[depth] = value;
     entry->switchStates[depth] = 1;
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_case_equal(EvtEntry * entry)
+s32 evt_case_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 depth;
+    s32 targetValue;
+    s32 state;
+    s32 inputValue;
 
-    s32 depth = entry->switchDepth;
+    p = entry->pCurData;
+
+    depth = entry->switchDepth;
     if (depth < 0)
         assert(0x34b, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
-    s32 targetvalue = evtGetValue(entry, p[0]);
-    s32 state = entry->switchStates[depth];
-    s32 inputValue = entry->switchValues[depth];
+    targetValue = evtGetValue(entry, p[0]);
+    state = entry->switchStates[depth];
+    inputValue = entry->switchValues[depth];
 
     if (state <= 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else
     {
-        if (targetvalue != inputValue)
+        if (targetValue != inputValue)
             entry->pCurInstruction = evtSearchCase(entry);
         else
             entry->switchStates[depth] = 0;
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 }
 
-int evt_case_not_equal(EvtEntry * entry)
+s32 evt_case_not_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 depth;
+    s32 targetValue;
+    s32 state;
+    s32 inputValue;
 
-    s32 depth = entry->switchDepth;
+    p = entry->pCurData;
+
+    depth = entry->switchDepth;
     if (depth < 0)
         assert(0x36c, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
-    s32 targetValue = evtGetValue(entry, p[0]);
-    s32 state = entry->switchStates[depth];
-    s32 inputValue = entry->switchValues[depth];
+    targetValue = evtGetValue(entry, p[0]);
+    state = entry->switchStates[depth];
+    inputValue = entry->switchValues[depth];
 
     if (state <= 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else
     {
@@ -663,27 +785,33 @@ int evt_case_not_equal(EvtEntry * entry)
         else
             entry->switchStates[depth] = 0;
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 }
 
-int evt_case_small(EvtEntry * entry)
+s32 evt_case_small(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 depth;
+    s32 targetValue;
+    s32 state;
+    s32 inputValue;
 
-    s32 depth = entry->switchDepth;
+    p = entry->pCurData;
+
+    depth = entry->switchDepth;
     if (depth < 0)
         assert(0x38d, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
-    s32 targetValue = evtGetValue(entry, p[0]);
-    s32 state = entry->switchStates[depth];
-    s32 inputValue = entry->switchValues[depth];
+    targetValue = evtGetValue(entry, p[0]);
+    state = entry->switchStates[depth];
+    inputValue = entry->switchValues[depth];
 
     if (state <= 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else
     {
@@ -692,27 +820,33 @@ int evt_case_small(EvtEntry * entry)
         else
             entry->switchStates[depth] = 0;
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 }
 
-int evt_case_small_equal(EvtEntry * entry)
+s32 evt_case_small_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 depth;
+    s32 targetValue;
+    s32 state;
+    s32 inputValue;
 
-    s32 depth = entry->switchDepth;
+    p = entry->pCurData;
+
+    depth = entry->switchDepth;
     if (depth < 0)
         assert(0x3ae, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
-    s32 targetValue = evtGetValue(entry, p[0]);
-    s32 state = entry->switchStates[depth];
-    s32 inputValue = entry->switchValues[depth];
+    targetValue = evtGetValue(entry, p[0]);
+    state = entry->switchStates[depth];
+    inputValue = entry->switchValues[depth];
 
     if (state <= 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else
     {
@@ -721,28 +855,34 @@ int evt_case_small_equal(EvtEntry * entry)
         else
             entry->switchStates[depth] = 0;
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 }
 
 
-int evt_case_large(EvtEntry * entry)
+s32 evt_case_large(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 depth;
+    s32 targetValue;
+    s32 state;
+    s32 inputValue;
 
-    s32 depth = entry->switchDepth;
+    p = entry->pCurData;
+
+    depth = entry->switchDepth;
     if (depth < 0)
         assert(0x3cf, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
-    s32 targetValue = evtGetValue(entry, p[0]);
-    s32 state = entry->switchStates[depth];
-    s32 inputValue = entry->switchValues[depth];
+    targetValue = evtGetValue(entry, p[0]);
+    state = entry->switchStates[depth];
+    inputValue = entry->switchValues[depth];
 
     if (state <= 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else
     {
@@ -751,27 +891,33 @@ int evt_case_large(EvtEntry * entry)
         else
             entry->switchStates[depth] = 0;
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 }
 
-int evt_case_large_equal(EvtEntry * entry)
+s32 evt_case_large_equal(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 depth;
+    s32 targetValue;
+    s32 state;
+    s32 inputValue;
 
-    s32 depth = entry->switchDepth;
+    p = entry->pCurData;
+
+    depth = entry->switchDepth;
     if (depth < 0)
         assert(0x3f0, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
-    s32 targetValue = evtGetValue(entry, p[0]);
-    s32 state = entry->switchStates[depth];
-    s32 inputValue = entry->switchValues[depth];
+    targetValue = evtGetValue(entry, p[0]);
+    state = entry->switchStates[depth];
+    inputValue = entry->switchValues[depth];
 
     if (state <= 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else
     {
@@ -780,29 +926,36 @@ int evt_case_large_equal(EvtEntry * entry)
         else
             entry->switchStates[depth] = 0;
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 }
 
 
-int evt_case_between(EvtEntry * entry)
+s32 evt_case_between(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 depth;
+    s32 min;
+    s32 max;
+    s32 state;
+    s32 inputValue;
 
-    s32 depth = entry->switchDepth;
+    p = entry->pCurData;
+
+    depth = entry->switchDepth;
     if (depth < 0)
         assert(0x411, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
-    s32 min = evtGetValue(entry, p[0]);
-    s32 max = evtGetValue(entry, p[1]);
-    s32 state = entry->switchStates[depth];
-    s32 inputValue = entry->switchValues[depth];
+    min = evtGetValue(entry, p[0]);
+    max = evtGetValue(entry, p[1]);
+    state = entry->switchStates[depth];
+    inputValue = entry->switchValues[depth];
 
     if (state <= 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else
     {
@@ -811,49 +964,58 @@ int evt_case_between(EvtEntry * entry)
         else
             entry->pCurInstruction = evtSearchCase(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 }
 
-int evt_case_etc(EvtEntry * entry)
+s32 evt_case_etc(EvtEntry * entry)
 {
-    s32 depth = entry->switchDepth;
+    s32 depth;
+    s32 state;
+
+    depth = entry->switchDepth;
     if (depth < 0)
         assert(0x431, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
-    s32 state = entry->switchStates[depth];
+    state = entry->switchStates[depth];
 
     if (state <= 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else
     {
         entry->switchStates[depth] = 0;
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 }
 
-int evt_case_flag(EvtEntry * entry)
+s32 evt_case_flag(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 depth;
+    u32 targetMask;
+    s32 state;
+    s32 inputValue;
 
-    s32 depth = entry->switchDepth;
+    p = entry->pCurData;
+
+    depth = entry->switchDepth;
     if (depth < 0)
         assert(0x449, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
-    u32 targetMask = (u32) p[0];
-    s32 state = entry->switchStates[depth];
-    s32 inputValue = entry->switchValues[depth];
+    targetMask = (u32) p[0];
+    state = entry->switchStates[depth];
+    inputValue = entry->switchValues[depth];
 
     if (state <= 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else
     {
@@ -862,66 +1024,78 @@ int evt_case_flag(EvtEntry * entry)
         else
             entry->switchStates[depth] = 0;
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 }
 
-int evt_case_or(EvtEntry * entry)
+s32 evt_case_or(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 depth;
+    s32 targetValue;
+    s32 inputValue;
+    s8 state;
 
-    s32 depth = entry->switchDepth;
+    p = entry->pCurData;
+
+    depth = entry->switchDepth;
     if (depth < 0)
         assert(0x46a, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
-    s32 targetvalue = evtGetValue(entry, p[0]);
-    s32 inputValue = entry->switchValues[depth];
-    s8 state = entry->switchStates[depth];
+    targetValue = evtGetValue(entry, p[0]);
+    inputValue = entry->switchValues[depth];
+    state = entry->switchStates[depth];
     
     if (state == 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else
     {
-        if (targetvalue == inputValue)
+        if (targetValue == inputValue)
             entry->switchStates[depth] = -1;
         else if (state != -1)
             entry->pCurInstruction = evtSearchCase(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 }
 
-int evt_case_and(EvtEntry * entry)
+s32 evt_case_and(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 depth;
+    s32 targetValue;
+    s32 inputValue;
+    s8 state;
 
-    s32 depth = entry->switchDepth;
+    p = entry->pCurData;
+
+    depth = entry->switchDepth;
     if (depth < 0)
         assert(0x48c, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
-    s32 targetvalue = evtGetValue(entry, p[0]);
-    s32 inputValue = entry->switchValues[depth];
-    s8 state = entry->switchStates[depth];
+    targetValue = evtGetValue(entry, p[0]);
+    inputValue = entry->switchValues[depth];
+    state = entry->switchStates[depth];
     
     if (state == 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else if (state == -2)
     {
         entry->pCurInstruction = evtSearchCase(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else
     {
-        if (targetvalue == inputValue)
+        if (targetValue == inputValue)
         {
             entry->switchStates[depth] = -1;
         }
@@ -931,503 +1105,665 @@ int evt_case_and(EvtEntry * entry)
             entry->pCurInstruction = evtSearchCase(entry);
         }
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 }
 
-int evt_case_end(EvtEntry * entry)
+s32 evt_case_end(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    s32 depth;
+    s32 inputValue;
+    s8 state;
 
-    s32 depth = entry->switchDepth;
+    p = entry->pCurData;
+
+    depth = entry->switchDepth;
     if (depth < 0)
         assert(0x4b1, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
-    s32 inputValue = entry->switchValues[depth];
-    s8 state = entry->switchStates[depth];
+    inputValue = entry->switchValues[depth];
+    state = entry->switchStates[depth];
     
     if (state == 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else if (state == -1)
     {
         entry->switchStates[depth] = 0;
         entry->pCurInstruction = evtSearchEndSwitch(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
     else
     {
         entry->switchStates[depth] = 1;
         entry->pCurInstruction = evtSearchCase(entry);
 
-        return EVT_CONTINUE;
+        return EVT_RET_CONTINUE;
     }
 }
 
-int evt_switch_break(EvtEntry * entry)
+s32 evt_switch_break(EvtEntry * entry)
 {
     if (entry->switchDepth < 0)
         assert(0x4cf, 0, "EVTMGR_CMD:Switch Table Underflow !!");
     
     entry->pCurInstruction = evtSearchEndSwitch(entry);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_end_switch(EvtEntry * entry)
+s32 evt_end_switch(EvtEntry * entry)
 {
-    s32 depth = entry->switchDepth;
+    s32 depth;
+
+    depth = entry->switchDepth;
     if (depth < 0)
         assert(0x4e0, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
     entry->switchStates[depth] = 0;
     entry->switchDepth -= 1;
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_set(EvtEntry * entry)
+s32 evt_set(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    s32 value = evtGetValue(entry, p[1]);
+    EvtScriptCode * p;
+    s32 destVar;
+    s32 value;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    value = evtGetValue(entry, p[1]);
     evtSetValue(entry, destVar, value);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_seti(EvtEntry * entry)
+s32 evt_seti(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    s32 value = p[1];
+    EvtScriptCode * p;
+    s32 destVar;
+    s32 value;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    value = p[1];
     evtSetValue(entry, destVar, value);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_setf(EvtEntry * entry)
+s32 evt_setf(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    float value = evtGetFloat(entry, p[1]);
+    EvtScriptCode * p;
+    s32 destVar;
+    f32 value;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    value = evtGetFloat(entry, p[1]);
     evtSetFloat(entry, destVar, value);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_add(EvtEntry * entry)
+s32 evt_add(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    s32 param = evtGetValue(entry, p[1]);
-    s32 result = evtGetValue(entry, destVar) + param;
+    EvtScriptCode * p;
+    s32 destVar;
+    s32 param;
+    s32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    param = evtGetValue(entry, p[1]);
+    result = evtGetValue(entry, destVar) + param;
     evtSetValue(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_sub(EvtEntry * entry)
+s32 evt_sub(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    s32 param = evtGetValue(entry, p[1]);
-    s32 result = evtGetValue(entry, destVar) - param;
+    EvtScriptCode * p;
+    s32 destVar;
+    s32 param;
+    s32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    param = evtGetValue(entry, p[1]);
+    result = evtGetValue(entry, destVar) - param;
     evtSetValue(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_mul(EvtEntry * entry)
+s32 evt_mul(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    s32 param = evtGetValue(entry, p[1]);
-    s32 result = evtGetValue(entry, destVar) * param;
+    EvtScriptCode * p;
+    s32 destVar;
+    s32 param;
+    s32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    param = evtGetValue(entry, p[1]);
+    result = evtGetValue(entry, destVar) * param;
     evtSetValue(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_div(EvtEntry * entry)
+s32 evt_div(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    s32 param = evtGetValue(entry, p[1]);
-    s32 result = evtGetValue(entry, destVar) / param;
+    EvtScriptCode * p;
+    s32 destVar;
+    s32 param;
+    s32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    param = evtGetValue(entry, p[1]);
+    result = evtGetValue(entry, destVar) / param;
     evtSetValue(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_mod(EvtEntry * entry)
+s32 evt_mod(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    s32 param = (s32) (evtGetValue(entry, p[1]) + 0.5f);
-    s32 value = (s32) (evtGetValue(entry, destVar) + 0.5f);
-    s32 result = value % param;
+    EvtScriptCode * p;
+    s32 destVar;
+    s32 param;
+    s32 value;
+    s32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    param = (s32) (evtGetValue(entry, p[1]) + 0.5f);
+    value = (s32) (evtGetValue(entry, destVar) + 0.5f);
+    result = value % param;
     evtSetValue(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_addf(EvtEntry * entry)
+s32 evt_addf(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    f32 param = evtGetFloat(entry, p[1]);
-    f32 result = evtGetFloat(entry, destVar) + param;
+    EvtScriptCode * p;
+    s32 destVar;
+    f32 param;
+    f32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    param = evtGetFloat(entry, p[1]);
+    result = evtGetFloat(entry, destVar) + param;
     evtSetFloat(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_subf(EvtEntry * entry)
+s32 evt_subf(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    f32 param = evtGetFloat(entry, p[1]);
-    f32 result = evtGetFloat(entry, destVar) - param;
+    EvtScriptCode * p;
+    s32 destVar;
+    f32 param;
+    f32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    param = evtGetFloat(entry, p[1]);
+    result = evtGetFloat(entry, destVar) - param;
     evtSetFloat(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
-int evt_mulf(EvtEntry * entry)
+s32 evt_mulf(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    f32 param = evtGetFloat(entry, p[1]);
-    f32 result = evtGetFloat(entry, destVar) * param;
+    EvtScriptCode * p;
+    s32 destVar;
+    f32 param;
+    f32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    param = evtGetFloat(entry, p[1]);
+    result = evtGetFloat(entry, destVar) * param;
     evtSetFloat(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_divf(EvtEntry * entry)
+s32 evt_divf(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    f32 param = evtGetFloat(entry, p[1]);
-    f32 result = evtGetFloat(entry, destVar) / param;
+    EvtScriptCode * p;
+    s32 destVar;
+    f32 param;
+    f32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    param = evtGetFloat(entry, p[1]);
+    result = evtGetFloat(entry, destVar) / param;
     evtSetFloat(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_set_read(EvtEntry * entry)
+s32 evt_set_read(EvtEntry * entry)
 {
-    entry->readAddr = (int *) evtGetValue(entry, entry->pCurData[0]);
+    entry->readAddr = (s32 *) evtGetValue(entry, entry->pCurData[0]);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_set_readf(EvtEntry * entry)
+s32 evt_set_readf(EvtEntry * entry)
 {
     entry->readfAddr = (float *) evtGetValue(entry, entry->pCurData[0]);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_read(EvtEntry * entry)
+s32 evt_read(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+
+    p = entry->pCurData;
     evtSetValue(entry, p[0], *entry->readAddr++);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_read2(EvtEntry * entry)
+s32 evt_read2(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+
+    p = entry->pCurData;
     evtSetValue(entry, p[0], *entry->readAddr++);
     evtSetValue(entry, p[1], *entry->readAddr++);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_read3(EvtEntry * entry)
+s32 evt_read3(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+
+    p = entry->pCurData;
     evtSetValue(entry, p[0], *entry->readAddr++);
     evtSetValue(entry, p[1], *entry->readAddr++);
     evtSetValue(entry, p[2], *entry->readAddr++);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_read4(EvtEntry * entry)
+s32 evt_read4(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+
+    p = entry->pCurData;
     evtSetValue(entry, p[0], *entry->readAddr++);
     evtSetValue(entry, p[1], *entry->readAddr++);
     evtSetValue(entry, p[2], *entry->readAddr++);
     evtSetValue(entry, p[3], *entry->readAddr++);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_read_n(EvtEntry * entry)
+s32 evt_read_n(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 var = p[0];
-    s32 idx = evtGetValue(entry, p[1]);
+    EvtScriptCode * p;
+    s32 var;
+    s32 idx;
+
+    p = entry->pCurData;
+    var = p[0];
+    idx = evtGetValue(entry, p[1]);
     evtSetValue(entry, var, entry->readAddr[idx]);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_readf(EvtEntry * entry)
+s32 evt_readf(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+
+    p = entry->pCurData;
     evtSetFloat(entry, p[0], *entry->readfAddr++);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_readf2(EvtEntry * entry)
+s32 evt_readf2(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+
+    p = entry->pCurData;
     evtSetFloat(entry, p[0], *entry->readfAddr++);
     evtSetFloat(entry, p[1], *entry->readfAddr++);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_readf3(EvtEntry * entry)
+s32 evt_readf3(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+
+    p = entry->pCurData;
     evtSetFloat(entry, p[0], *entry->readfAddr++);
     evtSetFloat(entry, p[1], *entry->readfAddr++);
     evtSetFloat(entry, p[2], *entry->readfAddr++);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_readf4(EvtEntry * entry)
+s32 evt_readf4(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+
+    p = entry->pCurData;
     evtSetFloat(entry, p[0], *entry->readfAddr++);
     evtSetFloat(entry, p[1], *entry->readfAddr++);
     evtSetFloat(entry, p[2], *entry->readfAddr++);
     evtSetFloat(entry, p[3], *entry->readfAddr++);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_readf_n(EvtEntry * entry)
+s32 evt_readf_n(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 var = p[0];
-    s32 idx = evtGetValue(entry, p[1]);
+    EvtScriptCode * p;
+    s32 var;
+    s32 idx;
+
+    p = entry->pCurData;
+    var = p[0];
+    idx = evtGetValue(entry, p[1]);
     evtSetFloat(entry, var, entry->readAddr[idx]); // bug using readAddr?
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_clamp_int(EvtEntry * entry)
+s32 evt_clamp_int(EvtEntry * entry)
 {
     EvtScriptCode * pData = entry->pCurData;
+    s32 dest;
+    s32 destVal;
+    s32 minVal;
+    s32 maxVal;
 
-    s32 dest = pData[0];
-    s32 destVal = evtGetValue(entry, dest);
+    dest = pData[0];
+    destVal = evtGetValue(entry, dest);
 
-    s32 minVal = evtGetValue(entry, pData[1]);
-    s32 maxVal = evtGetValue(entry, pData[2]);
+    minVal = evtGetValue(entry, pData[1]);
+    maxVal = evtGetValue(entry, pData[2]);
 
     if (destVal < minVal)
         evtSetValue(entry, dest, minVal);
     if (destVal > maxVal)
         evtSetValue(entry, dest, maxVal);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_set_user_wrk(EvtEntry * entry)
+s32 evt_set_user_wrk(EvtEntry * entry)
 {
     entry->uw = (s32 *) evtGetValue(entry, entry->pCurData[0]);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_set_user_flg(EvtEntry * entry)
+s32 evt_set_user_flg(EvtEntry * entry)
 {
     entry->uf = (u32 *) evtGetValue(entry, entry->pCurData[0]);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_alloc_user_wrk(EvtEntry * entry)
+s32 evt_alloc_user_wrk(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 count = evtGetValue(entry, p[0]);
-    s32 destVar = p[1];
-    entry->uw = __memAlloc(1, count * sizeof(int));
+    EvtScriptCode * p;
+    s32 count;
+    s32 destVar;
+
+    p = entry->pCurData;
+    count = evtGetValue(entry, p[0]);
+    destVar = p[1];
+    entry->uw = __memAlloc(1, count * sizeof(s32));
     evtSetValue(entry, destVar, (s32) entry->uw);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_and(EvtEntry * entry)
+s32 evt_and(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    s32 param = evtGetValue(entry, p[1]);
-    s32 result = evtGetValue(entry, destVar) & param;
+    EvtScriptCode * p;
+    s32 destVar;
+    s32 param;
+    s32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    param = evtGetValue(entry, p[1]);
+    result = evtGetValue(entry, destVar) & param;
     evtSetValue(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_andi(EvtEntry * entry)
+s32 evt_andi(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    s32 param = p[1];
-    s32 result = evtGetValue(entry, destVar) & param;
+    EvtScriptCode * p;
+    s32 destVar;
+    s32 param;
+    s32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    param = p[1];
+    result = evtGetValue(entry, destVar) & param;
     evtSetValue(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_or(EvtEntry * entry)
+s32 evt_or(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    s32 param = evtGetValue(entry, p[1]);
-    s32 result = evtGetValue(entry, destVar) | param;
+    EvtScriptCode * p;
+    s32 destVar;
+    s32 param;
+    s32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    param = evtGetValue(entry, p[1]);
+    result = evtGetValue(entry, destVar) | param;
     evtSetValue(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_ori(EvtEntry * entry)
+s32 evt_ori(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    s32 param = p[1];
-    s32 result = evtGetValue(entry, destVar) | param;
+    EvtScriptCode * p;
+    s32 destVar;
+    s32 param;
+    s32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    param = p[1];
+    result = evtGetValue(entry, destVar) | param;
     evtSetValue(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_set_frame_from_msec(EvtEntry * entry)
+s32 evt_set_frame_from_msec(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    s32 msec = evtGetValue(entry, p[1]);
-    s32 result = (msec * 60) / 1000; 
+    EvtScriptCode * p;
+    s32 destVar;
+    s32 msec;
+    s32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    msec = evtGetValue(entry, p[1]);
+    result = (msec * 60) / 1000; 
     evtSetValue(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_set_msec_from_frame(EvtEntry * entry)
+s32 evt_set_msec_from_frame(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = p[0];
-    s32 msec = evtGetValue(entry, p[1]);
-    s32 result = (msec * 1000) / 60; 
+    EvtScriptCode * p;
+    s32 destVar;
+    s32 frame;
+    s32 result;
+
+    p = entry->pCurData;
+    destVar = p[0];
+    frame = evtGetValue(entry, p[1]);
+    result = (frame * 1000) / 60; 
     evtSetValue(entry, destVar, result);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_set_ram(EvtEntry * entry)
+s32 evt_set_ram(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 value = evtGetValue(entry, p[0]);
-    s32 * addr = (s32 *) p[1];
+    EvtScriptCode * p;
+    s32 value;
+    s32 * addr;
+
+
+    p = entry->pCurData;
+    value = evtGetValue(entry, p[0]);
+    addr = (s32 *) p[1];
     *addr = value;
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_set_ramf(EvtEntry * entry)
+s32 evt_set_ramf(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    float value = evtGetFloat(entry, p[0]);
-    float * addr = (float *) p[1];
+    EvtScriptCode * p;
+    f32 value;
+    f32 * addr;
+
+    p = entry->pCurData;
+    value = evtGetFloat(entry, p[0]);
+    addr = (float *) p[1];
     *addr = value;
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_get_ram(EvtEntry * entry)
+s32 evt_get_ram(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 * addr = (s32 *) p[1];
-    s32 value = *addr;
+    EvtScriptCode * p;
+    s32 * addr;
+    s32 value;
+
+    p = entry->pCurData;
+    addr = (s32 *) p[1];
+    value = *addr;
     evtSetValue(entry, p[0], value);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_get_ramf(EvtEntry * entry)
+s32 evt_get_ramf(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    float * addr = (float *) p[1];
-    float value = *addr;
+    EvtScriptCode * p;
+    f32 * addr;
+    f32 value;
+
+    p = entry->pCurData;
+    addr = (f32 *) p[1];
+    value = *addr;
     evtSetFloat(entry, p[0], value);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_setr(EvtEntry * entry)
+s32 evt_setr(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = evtGetValue(entry, p[0]);
-    s32 value = evtGetValue(entry, p[1]);
+    EvtScriptCode * p;
+    s32 destVar;
+    s32 value;
+
+    p = entry->pCurData;
+    destVar = evtGetValue(entry, p[0]);
+    value = evtGetValue(entry, p[1]);
     evtSetValue(entry, destVar, value);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_setrf(EvtEntry * entry)
+s32 evt_setrf(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 destVar = evtGetValue(entry, p[0]);
-    float value = evtGetFloat(entry, p[1]);
+    EvtScriptCode * p;
+    s32 destVar;
+    f32 value;
+
+    p = entry->pCurData;
+    destVar = evtGetValue(entry, p[0]);
+    value = evtGetFloat(entry, p[1]);
     evtSetFloat(entry, destVar, value);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_getr(EvtEntry * entry)
+s32 evt_getr(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 sourceVar = evtGetValue(entry, p[0]);
-    s32 value = evtGetValue(entry, sourceVar);
+    EvtScriptCode * p;
+    s32 sourceVar;
+    s32 value;
+
+    p = entry->pCurData;
+    sourceVar = evtGetValue(entry, p[0]);
+    value = evtGetValue(entry, sourceVar);
     evtSetValue(entry, p[1], value);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_getrf(EvtEntry * entry)
+s32 evt_getrf(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 sourceVar = evtGetValue(entry, p[0]);
-    float value = evtGetFloat(entry, sourceVar);
+    EvtScriptCode * p;
+    s32 sourceVar;
+    f32 value;
+
+    p = entry->pCurData;
+    sourceVar = evtGetValue(entry, p[0]);
+    value = evtGetFloat(entry, sourceVar);
     evtSetFloat(entry, p[1], value);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_user_func(EvtEntry * entry)
+s32 evt_user_func(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
     s32 ret;
-    user_func * func;
+    UserFunc * func;
+
+    p = entry->pCurData;
     switch (entry->blocked)
     {
         case false:
-            func = (user_func *) evtGetValue(entry, *p++);
-            entry->userFunc = (user_func *) func;
+            func = (UserFunc *) evtGetValue(entry, *p++);
+            entry->userFunc = (UserFunc *) func;
             entry->curDataLength -= 1;
             entry->pCurData = p;
             entry->blocked = true;
@@ -1440,156 +1776,193 @@ int evt_user_func(EvtEntry * entry)
     return ret;
 }
 
-int evt_run_evt(EvtEntry * entry)
+s32 evt_run_evt(EvtEntry * entry)
 {
-    EvtScriptCode * script = (EvtScriptCode *) evtGetValue(entry, entry->pCurData[0]);
-    EvtEntry * evt = evtEntryType(script, entry->priority, 0, entry->type);
+    EvtScriptCode * script;
+    EvtEntry * evt;
+    
+    script = (EvtScriptCode *) evtGetValue(entry, entry->pCurData[0]);
+    evt = evtEntryType(script, entry->priority, 0, entry->type);
 
     evt->ownerNPC = entry->ownerNPC;
-    for (int i = 0; i < 16; i++)
+    for (s32 i = 0; i < 16; i++)
         evt->lw[i] = entry->lw[i];
-    for (int i = 0; i < 3; i++)
+    for (s32 i = 0; i < 3; i++)
         evt->lf[i] = entry->lf[i];
     evt->uw = entry->uw;
     evt->uf = entry->uf;
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_run_evt_id(EvtEntry * entry)
+s32 evt_run_evt_id(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
+    EvtScriptCode * p;
+    EvtScriptCode * script;
+    s32 destVar;
+    EvtEntry * evt;
 
-    EvtScriptCode * script = (EvtScriptCode *) evtGetValue(entry, p[0]);
-    s32 destVar = p[1];
-    EvtEntry * evt = evtEntryType(script, entry->priority, 0, entry->type);
+    p = entry->pCurData;
+
+    script = (EvtScriptCode *) evtGetValue(entry, p[0]);
+    destVar = p[1];
+    evt = evtEntryType(script, entry->priority, 0, entry->type);
 
     evt->ownerNPC = entry->ownerNPC;
-    for (int i = 0; i < 16; i++)
+    for (s32 i = 0; i < 16; i++)
         evt->lw[i] = entry->lw[i];
-    for (int i = 0; i < 3; i++)
+    for (s32 i = 0; i < 3; i++)
         evt->lf[i] = entry->lf[i];
     evt->uw = entry->uw;
     evt->uf = entry->uf;
 
     evtSetValue(entry, destVar, evt->id);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_run_child_evt(EvtEntry * entry)
+s32 evt_run_child_evt(EvtEntry * entry)
 {
-    EvtScriptCode * script = (EvtScriptCode *) evtGetValue(entry, entry->pCurData[0]);
-    EvtEntry * evt = evtChildEntry(entry, script, 0);
+    EvtScriptCode * script;
+    EvtEntry * evt;
+    
+    script = (EvtScriptCode *) evtGetValue(entry, entry->pCurData[0]);
+    evt = evtChildEntry(entry, script, 0);
 
     entry->curOpcode = EVT_OPC_NEXT;
 
-    return EVT_END;
+    return EVT_RET_END;
 }
 
-int evt_restart_evt(EvtEntry * entry)
+s32 evt_restart_evt(EvtEntry * entry)
 {
-    EvtScriptCode * script = (EvtScriptCode *) evtGetValue(entry, entry->pCurData[0]);
+    EvtScriptCode * script;
+    
+    script = (EvtScriptCode *) evtGetValue(entry, entry->pCurData[0]);
     entry->scriptStart = script;
     evtRestart(entry);
     
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_delete_evt(EvtEntry * entry)
+s32 evt_delete_evt(EvtEntry * entry)
 {
-    s32 id = evtGetValue(entry, entry->pCurData[0]);
+    s32 id;
+    
+    id = evtGetValue(entry, entry->pCurData[0]);
     evtDeleteID(id);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_set_pri(EvtEntry * entry)
+s32 evt_set_pri(EvtEntry * entry)
 {
-    u32 pri = (u32) evtGetValue(entry, entry->pCurData[0]);
+    u32 pri;
+    
+    pri = (u32) evtGetValue(entry, entry->pCurData[0]);
     evtSetPri(entry, pri);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_set_spd(EvtEntry * entry)
+s32 evt_set_spd(EvtEntry * entry)
 {
-    float pri = evtGetFloat(entry, entry->pCurData[0]);
-    evtSetSpeed(entry, pri);
+    f32 spd;
+    
+    spd = evtGetFloat(entry, entry->pCurData[0]);
+    evtSetSpeed(entry, spd);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_set_type(EvtEntry * entry)
+s32 evt_set_type(EvtEntry * entry)
 {
-    u32 type = (u32) evtGetValue(entry, entry->pCurData[0]);
+    u32 type;
+    
+    type = (u32) evtGetValue(entry, entry->pCurData[0]);
     evtSetType(entry, type);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_stop_all(EvtEntry * entry)
+s32 evt_stop_all(EvtEntry * entry)
 {
-    u32 mask = (u32) evtGetValue(entry, entry->pCurData[0]);
+    u32 mask;
+    
+    mask = (u32) evtGetValue(entry, entry->pCurData[0]);
     evtStopAll(mask);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_start_all(EvtEntry * entry)
+s32 evt_start_all(EvtEntry * entry)
 {
-    u32 mask = (u32) evtGetValue(entry, entry->pCurData[0]);
+    u32 mask;
+    
+    mask = (u32) evtGetValue(entry, entry->pCurData[0]);
     evtStartAll(mask);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_stop_other(EvtEntry * entry)
+s32 evt_stop_other(EvtEntry * entry)
 {
-    u32 mask = (u32) evtGetValue(entry, entry->pCurData[0]);
+    u32 mask;
+    
+    mask = (u32) evtGetValue(entry, entry->pCurData[0]);
     evtStopOther(entry, mask);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_start_other(EvtEntry * entry)
+s32 evt_start_other(EvtEntry * entry)
 {
-    u32 mask = (u32) evtGetValue(entry, entry->pCurData[0]);
+    u32 mask;
+    
+    mask = (u32) evtGetValue(entry, entry->pCurData[0]);
     evtStartOther(entry, mask);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_stop_id(EvtEntry * entry)
+s32 evt_stop_id(EvtEntry * entry)
 {
-    s32 id = evtGetValue(entry, entry->pCurData[0]);
+    s32 id;
+    
+    id = evtGetValue(entry, entry->pCurData[0]);
     evtStopID(id);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_start_id(EvtEntry * entry)
+s32 evt_start_id(EvtEntry * entry)
 {
-    s32 id = evtGetValue(entry, entry->pCurData[0]);
+    s32 id;
+    
+    id = evtGetValue(entry, entry->pCurData[0]);
     evtStartID(id);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_chk_evt(EvtEntry * entry)
+s32 evt_chk_evt(EvtEntry * entry)
 {
-    EvtScriptCode * p = entry->pCurData;
-    s32 id = evtGetValue(entry, entry->pCurData[0]);
-    s32 destVar = p[1];
-    s32 result = (s32) evtCheckID(id);
+    EvtScriptCode * p;
+    s32 id;
+    s32 destVar;
+    s32 result;
+
+    p = entry->pCurData;
+    id = evtGetValue(entry, entry->pCurData[0]);
+    destVar = p[1];
+    result = (s32) evtCheckID(id);
     evtSetValue(entry, destVar, result);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_inline_evt(EvtEntry * entry)
+s32 evt_inline_evt(EvtEntry * entry)
 {
-    // Required for register usage
     EvtScriptCode * inlineEnd;
     s32 opc;
     EvtScriptCode * script;
@@ -1617,17 +1990,16 @@ int evt_inline_evt(EvtEntry * entry)
     evt->unknown_0x180 = entry->unknown_0x180;
     evt->unknown_0x184 = entry->unknown_0x184;
     evt->msgPri = entry->msgPri;
-    for (int i = 0; i < 16; i++)
+    for (s32 i = 0; i < 16; i++)
         evt->lw[i] = entry->lw[i];
-    for (int i = 0; i < 3; i++)
+    for (s32 i = 0; i < 3; i++)
         evt->lf[i] = entry->lf[i];
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_inline_evt_id(EvtEntry * entry)
+s32 evt_inline_evt_id(EvtEntry * entry)
 {
-    // Required for register usage
     EvtScriptCode * inlineEnd;
     s32 opc;
     EvtScriptCode * script;
@@ -1659,26 +2031,25 @@ int evt_inline_evt_id(EvtEntry * entry)
     evt->unknown_0x180 = entry->unknown_0x180;
     evt->unknown_0x184 = entry->unknown_0x184;
     evt->msgPri = entry->msgPri;
-    for (int i = 0; i < 16; i++)
+    for (s32 i = 0; i < 16; i++)
         evt->lw[i] = entry->lw[i];
-    for (int i = 0; i < 3; i++)
+    for (s32 i = 0; i < 3; i++)
         evt->lf[i] = entry->lf[i];
 
     evtSetValue(entry, destVar, evt->id);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_end_inline(EvtEntry * entry)
+s32 evt_end_inline(EvtEntry * entry)
 {
     evtDelete(entry);
 
-    return EVT_END;
+    return EVT_RET_END;
 }
 
-int evt_brother_evt(EvtEntry * entry)
+s32 evt_brother_evt(EvtEntry * entry)
 {
-    // Required for register usage
     EvtScriptCode * brotherEnd;
     s32 opc;
     EvtScriptCode * script;
@@ -1702,12 +2073,11 @@ int evt_brother_evt(EvtEntry * entry)
     evt->ownerNPC = entry->ownerNPC;
     evt->readAddr = entry->readAddr;
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_brother_evt_id(EvtEntry * entry)
+s32 evt_brother_evt_id(EvtEntry * entry)
 {
-    // Required for register usage
     EvtScriptCode * brotherEnd;
     s32 opc;
     EvtScriptCode * script;
@@ -1736,37 +2106,45 @@ int evt_brother_evt_id(EvtEntry * entry)
 
     evtSetValue(entry, destVar, evt->id);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_end_brother(EvtEntry * entry)
+s32 evt_end_brother(EvtEntry * entry)
 {
     evtDelete(entry);
 
-    return EVT_BLOCK_WEAK;
+    return EVT_RET_BLOCK_WEAK;
 }
 
-int evt_debug_put_msg(EvtEntry * entry)
+s32 evt_debug_put_msg(EvtEntry * entry)
 {
     evtGetValue(entry, entry->pCurData[0]);
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_debug_msg_clear(EvtEntry * entry)
+s32 evt_debug_msg_clear(EvtEntry * entry)
 {
     (void) entry;
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_debug_put_reg(EvtEntry * entry)
+s32 evt_debug_put_reg(EvtEntry * entry)
 {
-    static char str[256]; // 8050ce30
+    static char str[256];
 
-    EvtScriptCode * p = entry->pCurData;
-    EvtWork * wp = evtGetWork();
-    s32 reg = *p;
+    EvtScriptCode * p;
+    EvtWork * wp;
+    s32 reg;
+    u32 mask;
+    u32 dat;
+    s32 val;
+    f32 f;
+
+    p = entry->pCurData;
+    wp = evtGetWork();
+    reg = *p;
 
     if (reg <= EVTDAT_ADDR_MAX)
     {
@@ -1774,7 +2152,7 @@ int evt_debug_put_reg(EvtEntry * entry)
     }
     else if (reg <= EVTDAT_FLOAT_MAX)
     {
-        f32 f = check_float(reg);
+        f = check_float(reg);
 
         sprintf(str, "FLOAT    [%4.2f]", f);
     }
@@ -1782,8 +2160,8 @@ int evt_debug_put_reg(EvtEntry * entry)
     {
         reg += EVTDAT_UF_BASE;
 
-        u32 mask = 1U << (reg % 32);
-        u32 dat = entry->uf[reg / 32];
+        mask = 1U << (reg % 32);
+        dat = entry->uf[reg / 32];
 
         sprintf(str, "UF(%3d)  [%d]", reg, mask & dat);
     }
@@ -1791,7 +2169,7 @@ int evt_debug_put_reg(EvtEntry * entry)
     {
         reg += EVTDAT_UW_BASE;
 
-        s32 val = entry->uw[reg];
+        val = entry->uw[reg];
 
         if (val <= EVTDAT_ADDR_MAX)
         {
@@ -1799,7 +2177,7 @@ int evt_debug_put_reg(EvtEntry * entry)
         }
         else if (val <= EVTDAT_FLOAT_MAX)
         {
-            f32 f = check_float(val);
+            f = check_float(val);
 
             sprintf(str, "UW(%3d)  [%4.2f]", reg, f);
         }
@@ -1812,7 +2190,7 @@ int evt_debug_put_reg(EvtEntry * entry)
     {
         reg += EVTDAT_GSW_BASE;
 
-        s32 val = swByteGet(reg);
+        val = swByteGet(reg);
 
         if (val <= EVTDAT_ADDR_MAX)
         {
@@ -1820,7 +2198,7 @@ int evt_debug_put_reg(EvtEntry * entry)
         }
         else if (val <= EVTDAT_FLOAT_MAX)
         {
-            f32 f = check_float(val);
+            f = check_float(val);
 
             sprintf(str, "GSW(%3d) [%4.2f]", reg, f);
         }
@@ -1833,7 +2211,7 @@ int evt_debug_put_reg(EvtEntry * entry)
     {
         reg += EVTDAT_LSW_BASE;
 
-        s32 val = _swByteGet(reg);
+        val = _swByteGet(reg);
 
         if (val <= EVTDAT_ADDR_MAX)
         {
@@ -1841,7 +2219,7 @@ int evt_debug_put_reg(EvtEntry * entry)
         }
         else if (val <= EVTDAT_FLOAT_MAX)
         {
-            f32 f = check_float(val);
+            f = check_float(val);
 
             sprintf(str, "LSW(%3d)  [%4.2f]", reg, f);
         }
@@ -1866,8 +2244,8 @@ int evt_debug_put_reg(EvtEntry * entry)
     {
         reg += EVTDAT_GF_BASE;
 
-        u32 mask = 1U << (reg % 32);
-        u32 dat = wp->gf[reg / 32];
+        mask = 1U << (reg % 32);
+        dat = wp->gf[reg / 32];
 
         sprintf(str, "GF(%3d)  [%d]", reg, mask & dat);
     }
@@ -1875,8 +2253,8 @@ int evt_debug_put_reg(EvtEntry * entry)
     {
         reg += EVTDAT_LF_BASE;
 
-        u32 mask = 1U << (reg % 32);
-        u32 dat = entry->lf[reg / 32];
+        mask = 1U << (reg % 32);
+        dat = entry->lf[reg / 32];
 
         sprintf(str, "LF(%3d)  [%d]", reg, mask & dat);
     }
@@ -1884,7 +2262,7 @@ int evt_debug_put_reg(EvtEntry * entry)
     {
         reg += EVTDAT_GW_BASE;
 
-        s32 val = wp->gw[reg];
+        val = wp->gw[reg];
 
         if (val <= EVTDAT_ADDR_MAX)
         {
@@ -1892,7 +2270,7 @@ int evt_debug_put_reg(EvtEntry * entry)
         }
         else if (val <= EVTDAT_FLOAT_MAX)
         {
-            f32 f = check_float(val);
+            f = check_float(val);
             sprintf(str, "GW(%3d)  [%4.2f]", reg, f);
         }
         else
@@ -1904,7 +2282,7 @@ int evt_debug_put_reg(EvtEntry * entry)
     {
         reg += EVTDAT_LW_BASE;
 
-        s32 val = entry->lw[reg];
+        val = entry->lw[reg];
 
         if (val <= EVTDAT_ADDR_MAX)
         {
@@ -1912,7 +2290,7 @@ int evt_debug_put_reg(EvtEntry * entry)
         }
         else if (val <= EVTDAT_FLOAT_MAX)
         {
-            f32 f = check_float(val);
+            f = check_float(val);
 
             sprintf(str, "LW(%3d)  [%4.2f]", reg, f);
         }
@@ -1926,60 +2304,477 @@ int evt_debug_put_reg(EvtEntry * entry)
         sprintf(str, "         [%d]", reg);
     }
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_debug_name(EvtEntry * entry)
+s32 evt_debug_name(EvtEntry * entry)
 {
     entry->name = (char *) entry->pCurData[0];
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_debug_rem(EvtEntry * entry)
+s32 evt_debug_rem(EvtEntry * entry)
 {
     (void) entry;
 
-    return EVT_CONTINUE;
+    return EVT_RET_CONTINUE;
 }
 
-int evt_debug_bp(EvtEntry * entry)
+s32 evt_debug_bp(EvtEntry * entry)
 {
-    for (s32 i = 0; i < EVT_ENTRY_MAX; i++)
+    s32 i;
+
+    for (i = 0; i < EVT_ENTRY_MAX; i++)
     {
         if (entry == evtGetPtr(i))
             break;
     }
 
-    return EVT_CONTINUE_WEAK;
+    return EVT_RET_CONTINUE_WEAK;
 }
 
-// Unfinished, just for string pool
-int evtmgrCmd(EvtEntry * entry)
+s32 evtmgrCmd(EvtEntry* entry)
 {
-    (void) entry;
-
-    __dummy_string("EVTMGR_CMD:Command Undefined !!");
-
-    return 0;
-}
-
-// evtGetValue
-// evtGetNumber (inlined/unused)
-// evtSetValue
-// evtGetFloat
-// evtSetFloat
-
-// evtSearchLabel (inlined)
-
-EvtScriptCode * evtSearchElse(EvtEntry * entry)
-{
-    s32 ifDepth = 0;
-    EvtScriptCode * pInstr = entry->pCurInstruction;
+    s32 argCount;
+    s32 * p;
+    s32 ret;
 
     while (true)
     {
-        s32 opc = *pInstr & 0xffff;
+        ret = EVT_RET_CONTINUE;
+        switch (entry->curOpcode)
+        {
+            case EVT_OPC_NEXT:
+                entry->pPrevInstruction = entry->pCurInstruction;
+                p = entry->pCurInstruction;
+                entry->curOpcode = (u8) *p;
+                argCount = *p++ >> 0x10;
+                entry->pCurData = p;
+                p += argCount;
+                entry->curDataLength = (u8) argCount;
+                entry->pCurInstruction = p;
+                entry->blocked = false;
+                ret = EVT_RET_BLOCK;
+                break;
+            case EVT_OPC_END_SCRIPT:
+                break;
+            case EVT_OPC_END_EVT:
+                ret = evt_end_evt(entry);
+                break;
+            case EVT_OPC_LBL:
+                ret = evt_lbl(entry);
+                break;
+            case EVT_OPC_GOTO:
+                ret = evt_goto(entry);
+                break;
+            case EVT_OPC_DO:
+                ret = evt_do(entry);
+                break;
+            case EVT_OPC_WHILE:
+                ret = evt_while(entry);
+                break;
+            case EVT_OPC_DO_BREAK:
+                ret = evt_do_break(entry);
+                break;
+            case EVT_OPC_DO_CONTINUE:
+                ret = evt_do_continue(entry);
+                break;
+            case EVT_OPC_WAIT_FRM:
+                ret = evt_wait_frm(entry);
+                break;
+            case EVT_OPC_WAIT_MSEC:
+                ret = evt_wait_msec(entry);
+                break;
+            case EVT_OPC_HALT:
+                ret = evt_halt(entry);
+                break;
+            case EVT_OPC_IF_STR_EQUAL:
+                ret = evt_if_str_equal(entry);
+                break;
+            case EVT_OPC_IF_STR_NOT_EQUAL:
+                ret = evt_if_str_not_equal(entry);
+                break;
+            case EVT_OPC_IF_STR_SMALL:
+                ret = evt_if_str_small(entry);
+                break;
+            case EVT_OPC_IF_STR_LARGE:
+                ret = evt_if_str_large(entry);
+                break;
+            case EVT_OPC_IF_STR_SMALL_EQUAL:
+                ret = evt_if_str_small_equal(entry);
+                break;
+            case EVT_OPC_IF_STR_LARGE_EQUAL:
+                ret = evt_if_str_large_equal(entry);
+                break;
+            case EVT_OPC_IFF_EQUAL:
+                ret = evt_iff_equal(entry);
+                break;
+            case EVT_OPC_IFF_NOT_EQUAL:
+                ret = evt_iff_not_equal(entry);
+                break;
+            case EVT_OPC_IFF_SMALL:
+                ret = evt_iff_small(entry);
+                break;
+            case EVT_OPC_IFF_LARGE:
+                ret = evt_iff_large(entry);
+                break;
+            case EVT_OPC_IFF_SMALL_EQUAL:
+                ret = evt_iff_small_equal(entry);
+                break;
+            case EVT_OPC_IFF_LARGE_EQUAL:
+                ret = evt_iff_large_equal(entry);
+                break;
+            case EVT_OPC_IF_EQUAL:
+                ret = evt_if_equal(entry);
+                break;
+            case EVT_OPC_IF_NOT_EQUAL:
+                ret = evt_if_not_equal(entry);
+                break;
+            case EVT_OPC_IF_SMALL:
+                ret = evt_if_small(entry);
+                break;
+            case EVT_OPC_IF_LARGE:
+                ret = evt_if_large(entry);
+                break;
+            case EVT_OPC_IF_SMALL_EQUAL:
+                ret = evt_if_small_equal(entry);
+                break;
+            case EVT_OPC_IF_LARGE_EQUAL:
+                ret = evt_if_large_equal(entry);
+                break;
+            case EVT_OPC_IF_FLAG:
+                ret = evt_if_flag(entry);
+                break;
+            case EVT_OPC_IF_NOT_FLAG:
+                ret = evt_if_not_flag(entry);
+                break;
+            case EVT_OPC_ELSE:
+                ret = evt_else(entry);
+                break;
+            case EVT_OPC_END_IF:
+                ret = evt_end_if(entry);
+                break;
+            case EVT_OPC_SWITCH:
+                ret = evt_switch(entry);
+                break;
+            case EVT_OPC_SWITCHI:
+                ret = evt_switchi(entry);
+                break;
+            case EVT_OPC_CASE_EQUAL:
+                ret = evt_case_equal(entry);
+                break;
+            case EVT_OPC_CASE_NOT_EQUAL:
+                ret = evt_case_not_equal(entry);
+                break;
+            case EVT_OPC_CASE_SMALL:
+                ret = evt_case_small(entry);
+                break;
+            case EVT_OPC_CASE_SMALL_EQUAL:
+                ret = evt_case_small_equal(entry);
+                break;
+            case EVT_OPC_CASE_LARGE:
+                ret = evt_case_large(entry);
+                break;
+            case EVT_OPC_CASE_LARGE_EQUAL:
+                ret = evt_case_large_equal(entry);
+                break;
+            case EVT_OPC_CASE_ETC:
+                ret = evt_case_etc(entry);
+                break;
+            case EVT_OPC_SWITCH_BREAK:
+                ret = evt_switch_break(entry);
+                break;
+            case EVT_OPC_CASE_OR:
+                ret = evt_case_or(entry);
+                break;
+            case EVT_OPC_CASE_END:
+                ret = evt_case_end(entry);
+                break;
+            case EVT_OPC_CASE_AND:
+                ret = evt_case_and(entry);
+                break;
+            case EVT_OPC_CASE_FLAG:
+                ret = evt_case_flag(entry);
+                break;
+            case EVT_OPC_CASE_BETWEEN:
+                ret = evt_case_between(entry);
+                break;
+            case EVT_OPC_END_SWITCH:
+                ret = evt_end_switch(entry);
+                break;
+            case EVT_OPC_SET:
+                ret = evt_set(entry);
+                break;
+            case EVT_OPC_SETI:
+                ret = evt_seti(entry);
+                break;
+            case EVT_OPC_SETF:
+                ret = evt_setf(entry);
+                break;
+            case EVT_OPC_ADD:
+                ret = evt_add(entry);
+                break;
+            case EVT_OPC_SUB:
+                ret = evt_sub(entry);
+                break;
+            case EVT_OPC_MUL:
+                ret = evt_mul(entry);
+                break;
+            case EVT_OPC_DIV:
+                ret = evt_div(entry);
+                break;
+            case EVT_OPC_MOD:
+                ret = evt_mod(entry);
+                break;
+            case EVT_OPC_ADDF:
+                ret = evt_addf(entry);
+                break;
+            case EVT_OPC_SUBF:
+                ret = evt_subf(entry);
+                break;
+            case EVT_OPC_MULF:
+                ret = evt_mulf(entry);
+                break;
+            case EVT_OPC_DIVF:
+                ret = evt_divf(entry);
+                break;
+            case EVT_OPC_SET_READ:
+                ret = evt_set_read(entry);
+                break;
+            case EVT_OPC_READ:
+                ret = evt_read(entry);
+                break;
+            case EVT_OPC_READ2:
+                ret = evt_read2(entry);
+                break;
+            case EVT_OPC_READ3:
+                ret = evt_read3(entry);
+                break;
+            case EVT_OPC_READ4:
+                ret = evt_read4(entry);
+                break;
+            case EVT_OPC_READ_N:
+                ret = evt_read_n(entry);
+                break;
+            case EVT_OPC_SET_READF:
+                ret = evt_set_readf(entry);
+                break;
+            case EVT_OPC_READF:
+                ret = evt_readf(entry);
+                break;
+            case EVT_OPC_READF2:
+                ret = evt_readf2(entry);
+                break;
+            case EVT_OPC_READF3:
+                ret = evt_readf3(entry);
+                break;
+            case EVT_OPC_READF4:
+                ret = evt_readf4(entry);
+                break;
+            case EVT_OPC_READF_N:
+                ret = evt_readf_n(entry);
+                break;
+            case EVT_OPC_CLAMP_INT:
+                ret = evt_clamp_int(entry);
+                break;
+            case EVT_OPC_SET_USER_WRK:
+                ret = evt_set_user_wrk(entry);
+                break;
+            case EVT_OPC_SET_USER_FLG:
+                ret = evt_set_user_flg(entry);
+                break;
+            case EVT_OPC_ALLOC_USER_WRK:
+                ret = evt_alloc_user_wrk(entry);
+                break;
+            case EVT_OPC_DELETE_EVT:
+                ret = evt_delete_evt(entry);
+                break;
+            case EVT_OPC_AND:
+                ret = evt_and(entry);
+                break;
+            case EVT_OPC_ANDI:
+                ret = evt_andi(entry);
+                break;
+            case EVT_OPC_OR:
+                ret = evt_or(entry);
+                break;
+            case EVT_OPC_ORI:
+                ret = evt_ori(entry);
+                break;
+            case EVT_OPC_SET_FRAME_FROM_MSEC:
+                evt_set_frame_from_msec(entry);
+                break;
+            case EVT_OPC_SET_MSEC_FROM_FRAME:
+                evt_set_msec_from_frame(entry);
+                break;
+            case EVT_OPC_SET_RAM:
+                evt_set_ram(entry);
+                break;
+            case EVT_OPC_SET_RAMF:
+                evt_set_ramf(entry);
+                break;
+            case EVT_OPC_GET_RAM:
+                evt_get_ram(entry);
+                break;
+            case EVT_OPC_GET_RAMF:
+                evt_get_ramf(entry);
+                break;
+            case EVT_OPC_SETR:
+                evt_setr(entry);
+                break;
+            case EVT_OPC_SETRF:
+                evt_setrf(entry);
+                break;
+            case EVT_OPC_GETR:
+                evt_getr(entry);
+                break;
+            case EVT_OPC_GETRF:
+                evt_getrf(entry);
+                break;
+            case EVT_OPC_USER_FUNC:
+                ret = evt_user_func(entry);
+                break;
+            case EVT_OPC_RUN_EVT:
+                ret = evt_run_evt(entry);
+                break;
+            case EVT_OPC_RUN_EVT_ID:
+                ret = evt_run_evt_id(entry);
+                break;
+            case EVT_OPC_RUN_CHILD_EVT:
+                ret = evt_run_child_evt(entry);
+                break;
+            case EVT_OPC_SET_PRI:
+                ret = evt_set_pri(entry);
+                break;
+            case EVT_OPC_SET_SPD:
+                ret = evt_set_spd(entry);
+                break;
+            case EVT_OPC_SET_TYPE:
+                ret = evt_set_type(entry);
+                break;
+            case EVT_OPC_RESTART_EVT:
+                ret = evt_restart_evt(entry);
+                break;
+            case EVT_OPC_STOP_ALL:
+                ret = evt_stop_all(entry);
+                break;
+            case EVT_OPC_START_ALL:
+                ret = evt_start_all(entry);
+                break;
+            case EVT_OPC_STOP_OTHER:
+                ret = evt_stop_other(entry);
+                break;
+            case EVT_OPC_START_OTHER:
+                ret = evt_start_other(entry);
+                break;
+            case EVT_OPC_STOP_ID:
+                ret = evt_stop_id(entry);
+                break;
+            case EVT_OPC_START_ID:
+                ret = evt_start_id(entry);
+                break;
+            case EVT_OPC_CHK_EVT:
+                ret = evt_chk_evt(entry);
+                break;
+            case EVT_OPC_INLINE_EVT:
+                ret = evt_inline_evt(entry);
+                break;
+            case EVT_OPC_END_INLINE:
+                ret = evt_end_inline(entry);
+                break;
+            case EVT_OPC_INLINE_EVT_ID:
+                ret = evt_inline_evt_id(entry);
+                break;
+            case EVT_OPC_BROTHER_EVT:
+                ret = evt_brother_evt(entry);
+                break;
+            case EVT_OPC_BROTHER_EVT_ID:
+                ret = evt_brother_evt_id(entry);
+                break;
+            case EVT_OPC_END_BROTHER:
+                ret = evt_end_brother(entry);
+                break;
+            case EVT_OPC_DEBUG_PUT_MSG:
+                ret = evt_debug_put_msg(entry);
+                break;
+            case EVT_OPC_DEBUG_MSG_CLEAR:
+                ret = evt_debug_msg_clear(entry);
+                break;
+            case EVT_OPC_DEBUG_PUT_REG:
+                ret = evt_debug_put_reg(entry);
+                break;
+            case EVT_OPC_DEBUG_NAME:
+                ret = evt_debug_name(entry);
+                break;
+            case EVT_OPC_DEBUG_REM:
+                ret = evt_debug_rem(entry);
+                break;
+            case EVT_OPC_DEBUG_BP:
+                ret = evt_debug_bp(entry);
+                break;
+            default:
+                assert(0xd07, 0, "EVTMGR_CMD:Command Undefined !!");
+                break;
+        }
+
+        if (ret == EVT_RET_BLOCK)
+            continue;
+
+        if (ret == EVT_RET_END)
+            return -1;
+        
+        if (ret < 0)
+            return 1;
+        
+        if (ret == EVT_RET_BLOCK_WEAK)
+            break;
+        else if (ret == EVT_RET_CONTINUE_WEAK)
+        {
+            entry->curOpcode = 0;
+            break;
+        }
+        else if (ret == EVT_RET_CONTINUE)
+        {
+            entry->curOpcode = 0;
+            continue;            
+        }
+    }
+    return 0;
+}
+
+asm s32 evtGetValue(EvtEntry * entry, s32 variable)
+{
+    #include "asm/800de594.s"
+}
+
+asm s32 evtSetValue(EvtEntry * entry, s32 variable, s32 value)
+{
+    #include "asm/800de9b8.s"
+}
+
+asm float evtGetFloat(EvtEntry * entry, s32 variable)
+{
+    #include "asm/800dedb8.s"
+}
+
+asm float evtSetFloat(EvtEntry * entry, s32 variable, float value)
+{
+    #include "asm/800df1fc.s"
+}
+
+EvtScriptCode * evtSearchElse(EvtEntry * entry)
+{
+    s32 ifDepth;
+    EvtScriptCode * pInstr;
+    s32 opc;
+
+    ifDepth = 0;
+    pInstr = entry->pCurInstruction;
+
+    while (true)
+    {
+        opc = *pInstr & 0xffff;
         pInstr += *pInstr++ >> 16;
 
         switch (opc)
@@ -2008,12 +2803,16 @@ EvtScriptCode * evtSearchElse(EvtEntry * entry)
 
 EvtScriptCode * evtSearchEndIf(EvtEntry * entry)
 {
-    s32 ifDepth = 0;
-    EvtScriptCode * pInstr = entry->pCurInstruction;
+    s32 ifDepth;
+    EvtScriptCode * pInstr;
+    s32 opc;
+
+    ifDepth = 0;
+    pInstr = entry->pCurInstruction;
 
     while (true)
     {
-        s32 opc = *pInstr & 0xffff;
+        opc = *pInstr & 0xffff;
         pInstr += *pInstr++ >> 16;
 
         switch (opc)
@@ -2036,16 +2835,21 @@ EvtScriptCode * evtSearchEndIf(EvtEntry * entry)
 
 EvtScriptCode * evtSearchEndSwitch(EvtEntry * entry)
 {
-    EvtScriptCode * pInstr = entry->pCurInstruction;
-    s32 switchDepth = 1;
+    EvtScriptCode * pInstr;
+    s32 switchDepth;
+    s32 opc;
+    EvtScriptCode * ret;
+
+    pInstr = entry->pCurInstruction;
+    switchDepth = 1;
 
     while (true)
     {
-        s32 opc = *pInstr & 0xffff;
-        EvtScriptCode * ret = pInstr;
+        opc = *pInstr & 0xffff;
+        ret = pInstr;
         pInstr += *pInstr++ >> 16;
 
-        switch(opc)
+        switch (opc)
         {
             case EVT_OPC_END_SCRIPT:
                 assert(0xfc9, 0, "EVTMGR_CMD:'END_SWITCH' Search Error !!");
@@ -2065,16 +2869,21 @@ EvtScriptCode * evtSearchEndSwitch(EvtEntry * entry)
 
 EvtScriptCode * evtSearchCase(EvtEntry * entry)
 {
-    EvtScriptCode * pInstr = entry->pCurInstruction;
-    s32 switchDepth = 1;
+    EvtScriptCode * pInstr;
+    s32 switchDepth;
+    s32 opc;
+    EvtScriptCode * ret;
+
+    pInstr = entry->pCurInstruction;
+    switchDepth = 1;
 
     while (true)
     {
-        s32 opc = *pInstr & 0xffff;
-        EvtScriptCode * ret = pInstr;
+        opc = *pInstr & 0xffff;
+        ret = pInstr;
         pInstr += *pInstr++ >> 16;
 
-        switch(opc)
+        switch (opc)
         {
             case EVT_OPC_END_SCRIPT:
                 assert(0xff1, 0, "EVTMGR_CMD:'CASE' Search Error !!");
@@ -2100,12 +2909,16 @@ EvtScriptCode * evtSearchCase(EvtEntry * entry)
 
 EvtScriptCode * evtSearchWhile(EvtEntry * entry)
 {
-    s32 dowhileDepth = 0;
-    EvtScriptCode * pInstr = entry->pCurInstruction;
+    s32 doWhileDepth;
+    EvtScriptCode * pInstr;
+    s32 opc;
+
+    doWhileDepth = 0;
+    pInstr = entry->pCurInstruction;
 
     while (true)
     {
-        s32 opc = *pInstr & 0xffff;
+        opc = *pInstr & 0xffff;
         pInstr += *pInstr++ >> 16;
 
         switch (opc)
@@ -2114,13 +2927,13 @@ EvtScriptCode * evtSearchWhile(EvtEntry * entry)
                 assert(0x1027, 0, "EVTMGR_CMD:'WHILE' Search Error !!");
 
             case EVT_OPC_WHILE:
-                if (--dowhileDepth >= 0)
+                if (--doWhileDepth >= 0)
                     break;
                 else
                     return pInstr;
 
             case EVT_OPC_DO:
-                dowhileDepth += 1;
+                doWhileDepth += 1;
                 break;
         }
     }
@@ -2128,12 +2941,16 @@ EvtScriptCode * evtSearchWhile(EvtEntry * entry)
 
 EvtScriptCode * evtSearchJustBeforeWhile(EvtEntry * entry)
 {
-    s32 dowhileDepth = 0;
-    EvtScriptCode * pInstr = entry->pCurInstruction;
+    s32 doWhileDepth;
+    EvtScriptCode * pInstr;
+    s32 opc;
+
+    doWhileDepth = 0;
+    pInstr = entry->pCurInstruction;
 
     while (true)
     {
-        s32 opc = *pInstr & 0xffff;
+        opc = *pInstr & 0xffff;
 
         switch (opc)
         {
@@ -2141,13 +2958,13 @@ EvtScriptCode * evtSearchJustBeforeWhile(EvtEntry * entry)
                 assert(0x1049, 0, "EVTMGR_CMD:just before 'WHILE' Search Error !!");
 
             case EVT_OPC_WHILE:
-                if (--dowhileDepth >= 0)
+                if (--doWhileDepth >= 0)
                     break;
                 else
                     return pInstr;
 
             case EVT_OPC_DO:
-                dowhileDepth += 1;
+                doWhileDepth += 1;
                 break;
         }
 

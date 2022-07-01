@@ -1,104 +1,38 @@
 #include <common.h>
-#include <evtmgr_cmd.h>
-#include <guide.h>
-#include <lzss10.h>
-#include <mario.h>
-#include <memory.h>
-#include <nand.h>
-#include <nandmgr.h>
-#include <npcdrv.h>
-#include <os.h>
-#include <string.h>
-#include <system.h>
-#include <tpl.h>
+#include <spm/evtmgr_cmd.h>
+#include <spm/guide.h>
+#include <spm/mario.h>
+#include <spm/mario_pouch.h>
+#include <spm/memory.h>
+#include <spm/nandmgr.h>
+#include <spm/npcdrv.h>
+#include <spm/system.h>
+#include <wii/lzss10.h>
+#include <wii/nand.h>
+#include <wii/os.h>
+#include <wii/stdio.h>
+#include <wii/string.h>
+#include <wii/tpl.h>
+
+// .rodata
+#include "orderstrings/803494e8_80349537.inc"
+extern u8 lz_saveImagesTpl; // TODO: add asset support to ppcdis
+
+// .data
+extern char lbl_804e50a8[]; // TODO: wchar stringbase
+
+// .bss
+static NandWork nandWork;
+
+// .sdata
+static NandWork * wp = &nandWork;
 
 #define flag(value, mask) (value & mask) // needed for assert
 
-static NandWork nandWork; // 80534fa8
-static NandWork * wp = &nandWork; // 805ae1b0
-
-// #include "files/saveImagesTpl.inc"
-static const u8 saveImagesTpl[0x5058] = {1}; // not included in decomp for copyright reasons
-
-// Register usage not matching, might need nandClearSave inlined?
-void nandInit()
+#include "jumptable/804e5008.inc"
+asm void nandInit()
 {
-    memset(wp, 0, sizeof(*wp));
-
-    wp->openingBufferSize = 0x4000;
-    wp->openingBuffer = __memAlloc(0, wp->openingBufferSize);
-
-    wp->saves = __memAlloc(0, sizeof(SaveFile) * 4);
-
-    wp->tempSaveFile = __memAlloc(0, 0x25c0);
-    wp->banner = __memAlloc(0, sizeof(NANDBanner));
-
-    switch (gp->language)
-    {
-        case 0:
-            NANDInitBanner(wp->banner, 0x10, // Some broken japanese strings?
-                        L"\x30FB\x0058\x30FB\x005B\x30FB\x0070\x30FB\x005B\x30FB\x0079\x30FB\x005B\x30FB\x0070\x30FB\x005B\x30FB\x007D\x30FB\x30FB\x30FB\x0049",
-                        L"\x30FB\x0079\x30FB\x30FB\x30FB\x0079\x30FB\x30FB\x30FB\x007D\x30FB\x30FB\x30FB\x0049\x30FB\xFF8C\x30FB\xFF74\x30FB\x30FB\x30FB\xFF73\x30FB\x30FB\x30FB\x0060\x30FB\xFF6F\x30FB\x0049");
-            break;
-
-        case 1:
-        case 2:
-        case 7:
-            NANDInitBanner(wp->banner, 0x10, L"Super Paper Mario", L"An interdimensional adventure!");
-            break;
-
-        case 3:
-            NANDInitBanner(wp->banner, 0x10, L"Super Paper Mario", L"Ein interdimensionales Abenteuer");
-            break;
-
-        case 4:
-            NANDInitBanner(wp->banner, 0x10, L"Super Paper Mario", L"Une aventure interdimensionnelle");
-            break;
-
-        case 5:
-            NANDInitBanner(wp->banner, 0x10, L"Super Paper Mario", L"\xA1Una aventura interdimensional!");
-            break;
-
-        case 6:
-            NANDInitBanner(wp->banner, 0x10, L"Super Paper Mario", L"Un'avventura interdimensionale!");
-            break;
-    }
-
-    TPLHeader * tpl = __memAlloc(0, lzss10GetDecompSize(saveImagesTpl));
-    lzss10Decompress(saveImagesTpl, tpl);
-    UnpackTexPalette(tpl);
-
-    memcpy(wp->banner->bannerTexture, tpl->imageTable[0].image->data, sizeof(wp->banner->bannerTexture));
-    memcpy(wp->banner->iconTextures[0], tpl->imageTable[1].image->data, sizeof(wp->banner->iconTextures[0]));
-    memcpy(wp->banner->iconTextures[1], tpl->imageTable[1].image->data, sizeof(wp->banner->iconTextures[1]));
-    memcpy(wp->banner->iconTextures[2], tpl->imageTable[2].image->data, sizeof(wp->banner->iconTextures[2]));
-
-    wp->banner->iconSpeed = (u16) (wp->banner->iconSpeed & ~3 | 3);
-    wp->banner->iconSpeed = (u16) (wp->banner->iconSpeed & ~0xc | 0xc);
-    wp->banner->iconSpeed = (u16) (wp->banner->iconSpeed & ~0x30 | 0x20);
-    wp->banner->iconSpeed = (u16) (wp->banner->iconSpeed & ~0xc0);
-
-    __memFree(0, tpl);
-
-    wp->bannerSize = sizeof(NANDBanner) - (5 * 0x1200); // don't include unused iconTextures
-
-    for (int i = 0; i < 4; i++)
-    {
-        SaveFile * curSave = &wp->saves[i];
-        memset(curSave, 0, sizeof(*curSave));
-
-        curSave->flags |= 1;
-        curSave->checksum = 0;
-        curSave->checksumNOT = 0xffffffff;
-        u32 checksum = 0;
-        for (int j = 0; j < sizeof(*curSave); j += 2)
-        {
-            checksum += ((u8 *)curSave)[j];
-            checksum += ((u8 *)curSave)[j+1];
-        }
-        curSave->checksum = checksum;
-        curSave->checksumNOT = ~checksum;
-    }
+    #include "asm/8023e60c.s"
 }
 
 void nandMain()
@@ -155,7 +89,7 @@ SaveFile * nandGetSaveFiles()
 void nandCheck()
 {
     // "Already running"
-    assert(0x12c, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    assert(0x12c, !flag(wp->flag, NAND_FLAG_Exec), "縺吶〒縺ｫ螳溯｡御ｸｭ");
  
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_CHECK;
@@ -167,7 +101,7 @@ void nandCheck()
 void nandWriteBanner()
 {
     // "Already running"
-    assert(0x139, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    assert(0x139, !flag(wp->flag, NAND_FLAG_Exec), "縺吶〒縺ｫ螳溯｡御ｸｭ");
 
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_WRITE_BANNER;
@@ -179,7 +113,7 @@ void nandWriteBanner()
 void nandWriteAllSaves()
 {
     // "Already running"
-    assert(0x146, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    assert(0x146, !flag(wp->flag, NAND_FLAG_Exec), "縺吶〒縺ｫ螳溯｡御ｸｭ");
 
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_WRITE_ALL_SAVES;
@@ -191,7 +125,7 @@ void nandWriteAllSaves()
 void nandWriteSave(s32 saveId)
 {
     // "Already running"
-    assert(0x153, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    assert(0x153, !flag(wp->flag, NAND_FLAG_Exec), "縺吶〒縺ｫ螳溯｡御ｸｭ");
 
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_WRITE_SAVE;
@@ -203,7 +137,7 @@ void nandWriteSave(s32 saveId)
 void nandWriteBannerLoadAllSaves()
 {
     // "Already running"
-    assert(0x160, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    assert(0x160, !flag(wp->flag, NAND_FLAG_Exec), "縺吶〒縺ｫ螳溯｡御ｸｭ");
 
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_WRITE_BANNER_LOAD_ALL_SAVES;
@@ -215,7 +149,7 @@ void nandWriteBannerLoadAllSaves()
 void nandDeleteSave(s32 saveId)
 {
     // "Already running"
-    assert(0x16d, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    assert(0x16d, !flag(wp->flag, NAND_FLAG_Exec), "縺吶〒縺ｫ螳溯｡御ｸｭ");
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_DELETE_SAVE;
     wp->code = 0;
@@ -297,29 +231,9 @@ void nandUpdateSave(s32 saveId)
     save->checksumNOT = ~checksum;
 }
 
-// Register usage not matching
-void nandLoadSave(s32 saveId)
+asm void nandLoadSave(s32 saveId)
 {
-    SaveFile * save = &wp->saves[saveId];
-
-    s32 language = gp->language;
-    s32 fps = gp->fps;
-    s32 lastSaveLoaded = gp->lastSaveLoaded;
-
-    memcpy(gp, &save->spmarioGlobals, sizeof(SpmarioGlobals));
-    memcpy(pouchGetPtr(), &save->pouch, sizeof(save->pouch));
-    memcpy(npcGetWorkPtr()->unknown_0x728, &save->unknown_0x21b0, sizeof(save->unknown_0x21b0));
-
-    gp->discIsEjected = 0;
-
-    SpmarioGlobals * _gp = gp; // probably another inline function
-    _gp->lastSaveLoadTime = OSGetTime();
-    _gp->gameSpeed = 1.0f;
-
-    gp->lastSaveLoaded = lastSaveLoaded;
-    gp->language = language;
-    gp->fps = fps;
-    gp->unknown_0xe0 = 0;
+    #include "asm/8023efe0.s"
 }
 
 void nandDisableSaving()
@@ -379,155 +293,33 @@ void nandCheckMain()
     }
 }
 
-// Register usage not matching
-void nandWriteBannerMain()
+#include "jumptable/804e5044.inc"
+asm void nandWriteBannerMain()
 {
-    if (wp->flag & NAND_FLAG_Waiting)
-        return;
-
-    if ((wp->code != NAND_CODE_OK) && (wp->code != NAND_CODE_EXISTS))
-    {
-        wp->task = 0;
-        wp->flag &= ~NAND_FLAG_Exec;
-        wp->flag |= 4;
-    }
-    else
-    {
-        char * dir;
-        s32 tries;
-        NANDFileInfo * fileInfo;
-        const char * filename;
-
-        switch(wp->stage)
-        {
-            // Get game save directory
-            case 0:
-                dir = wp->homedir;
-                wp->flag |= NAND_FLAG_Waiting;
-
-                tries = 0;
-                s32 code; // different since this function doesn't have a callback
-                while (code = NANDGetHomeDir(dir), code == NAND_CODE_BUSY)
-                {
-                    if (++tries > NAND_ATTEMPTS_MAX)
-                    {
-                        code = -128;
-                        break;
-                    }
-                }
-
-                wp->code = code;
-                wp->flag &= ~NAND_FLAG_Waiting;
-                break;
-
-            // Change to game save directory
-            case 1:
-                dir = wp->homedir;
-                wp->flag |= NAND_FLAG_Waiting;
-
-                tries = 0;
-                while (NANDChangeDirAsync(dir, &genericCallback, &wp->commandBlock) == NAND_CODE_BUSY)
-                {
-                    if (++tries > NAND_ATTEMPTS_MAX)
-                    {
-                        wp->code = -128;
-                        wp->flag &= ~NAND_FLAG_Waiting;
-                        break;
-                    }
-                }
-                break;
-
-            // Create banner.bin, may already exist
-            case 2:
-                filename = "banner.bin";
-                wp->flag |= NAND_FLAG_Waiting;
-
-                tries = 0;
-                while (NANDCreateAsync(filename, NAND_PERMISSION_READ_WRITE, 0, &genericCallback,
-                                       &wp->commandBlock) == NAND_CODE_BUSY)
-                {
-                    if (++tries > NAND_ATTEMPTS_MAX)
-                    {
-                        wp->code = -128;
-                        wp->flag &= ~NAND_FLAG_Waiting;
-                        break;
-                    }
-                }
-                break;
-
-            // Open banner.bin
-            case 3:
-                fileInfo = &wp->fileInfo;
-                filename = "banner.bin";
-                wp->flag |= NAND_FLAG_Waiting;
-
-                tries = 0;
-                while (NANDSafeOpenAsync(filename, fileInfo, NAND_MODE_WRITE, wp->openingBuffer, wp->openingBufferSize,
-                                         &genericCallback, &wp->commandBlock) == NAND_CODE_BUSY)
-                {
-                    if (++tries > NAND_ATTEMPTS_MAX)
-                    {
-                        wp->code = -128;
-                        wp->flag &= ~NAND_FLAG_Waiting;
-                        break;
-                    }
-                }
-                break;
-
-            // Write banner data into banner.bin
-            case 4:
-                fileInfo = &wp->fileInfo;
-                NANDBanner * banner = wp->banner;
-                u32 bannerSize = wp->bannerSize;
-                wp->flag |= NAND_FLAG_Waiting;
-
-                tries = 0;
-                while (NANDWriteAsync(fileInfo, banner, bannerSize, &genericCallback, &wp->commandBlock) == NAND_CODE_BUSY)
-                {
-                    if (++tries > NAND_ATTEMPTS_MAX)
-                    {
-                        wp->code = -128;
-                        wp->flag &= ~NAND_FLAG_Waiting;
-                        break;
-                    }
-                }
-                break;
-
-            // Close banner.bin
-            case 5:
-                fileInfo = &wp->fileInfo;
-                wp->flag |= NAND_FLAG_Waiting;
-                tries = 0;
-                while (NANDSafeCloseAsync(fileInfo, &genericCallback, &wp->commandBlock) == NAND_CODE_BUSY)
-                {
-                    if (++tries > NAND_ATTEMPTS_MAX)
-                    {
-                        wp->code = -128;
-                        wp->flag &= ~NAND_FLAG_Waiting;
-                        break;
-                    }
-                }
-                break;
-
-            // End
-            case 6:
-                wp->task = 0;
-                wp->flag &= ~NAND_FLAG_Exec;
-        }
-
-        wp->stage++;
-    }
+    #include "asm/8023f200.s"
 }
 
-// Unfinished, just for string pool
-void nandWriteAllSavesMain()
+#include "jumptable/804e5060.inc"
+asm void nandWriteAllSavesMain()
 {
-    __dummy_string("wiimario%02d");
+    #include "asm/8023f570.s"
 }
 
-// void nandWriteSaveMain();
-// void nandWriteBannerLoadAllSavesMain();
-// void nandDeleteSaveMain();
+asm void nandWriteSaveMain()
+{
+    #include "asm/8023fa24.s"
+}
+
+#include "jumptable/804e507c.inc"
+asm void nandWriteBannerLoadAllSavesMain()
+{
+    #include "asm/8023fd64.s"
+}
+
+asm void nandDeleteSaveMain()
+{
+    #include "asm/80240414.s"
+}
 
 void genericCallback(s32 result, NANDCommandBlock * commandBlock)
 {
@@ -555,5 +347,3 @@ void checkCallback(s32 result, NANDCommandBlock * commandBlock)
     if (wp->answer & 5)
         wp->code = -9;
 }
-
-#undef flag

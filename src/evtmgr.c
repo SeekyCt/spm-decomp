@@ -1,32 +1,34 @@
-#include <common.h>
-#include <evtmgr.h>
-#include <evtmgr_cmd.h>
-#include <evt_msg.h>
-#include <spmario.h>
-#include <memory.h>
-#include <os.h>
-#include <string.h>
-#include <system.h>
+#include <spm/evtmgr.h>
+#include <spm/evtmgr_cmd.h>
+#include <spm/evt_msg.h>
+#include <spm/memory.h>
+#include <spm/system.h>
+#include <spm/spmario.h>
+#include <wii/os.h>
+#include <wii/string.h>
 
-static EvtWork work; // 8050c990
-static s32 priTbl[EVT_ENTRY_MAX]; // 8050ca30
-static s32 priIdTbl[EVT_ENTRY_MAX]; // 8050cc30
+// .rodata
+#include "orderstrings/8032eb60_8032ec9b.inc"
 
-s32 evtMax;
-static s32 priTblNum; // 805ae8dc
-static s32 runMainF; // 805ae8e0
+// .bss
+static EvtWork work;
+static s32 priTbl[EVT_ENTRY_MAX];
+static s32 priIdTbl[EVT_ENTRY_MAX];
 
-static s32 evtId = 1; // 805ae018
-static float evtSpd = 1.0f; // 805ae01c
+// .sdata
+static s32 evtId = 1;
+static float evtSpd = 1.0f;
+s32 evtMax = 0;
+static s32 priTblNum = 0;
+static s32 runMainF = 0;
 
 EvtWork * evtGetWork() // usually inlined in this file
 {
     return &work;
 }
 
-static void make_pri_table() // 800d87f0
+static void make_pri_table()
 {
-    // Register usage didn't match otherwise
     EvtWork * wp;
     EvtEntry * entry;
     s32 n;
@@ -73,27 +75,35 @@ static void make_pri_table() // 800d87f0
     }
 }
 
-// Not matching
-static void make_jump_table(EvtEntry * entry) // 800d890c
+static void make_jump_table(EvtEntry * entry)
 {
-    for (s32 i = 0; i < 16; i++)
+    s32 i;
+    s32 n;
+    EvtScriptCode * pScriptHead;
+    s32 cmd;
+    s32 cmdn;
+    s32 id;
+
+    for (i = 0; i < 16; i++)
     {
         entry->labelIds[i] = -1;
         entry->jumptable[i] = 0;
     }
 
-    s32 n = 0;
-    EvtScriptCode * pScriptHead = entry->pCurInstruction;
+    n = 0;
+    pScriptHead = entry->pCurInstruction;
     while (true)
     {
-        s32 cmd = *pScriptHead & 0xffff;
-        s32 cmdn = *pScriptHead >> 16;
+        cmd = *pScriptHead & 0xffff;
+        cmdn = *pScriptHead >> 16;
         pScriptHead++;
 
-        assert(0x74, cmdn >= 0, "EVTMGR:command line error"); // missing double branch here
-        assert(0x77, cmd < EVT_max, "EVTMGR:command line error"); // missing double branch here
+        if (cmdn < 0)
+            assert(0x74, cmdn >= 0, "EVTMGR:command line error");
+        if (cmd >= EVT_max)
+            assert(0x77, cmd < EVT_max, "EVTMGR:command line error");
 
-        s32 id = *pScriptHead;
+        id = *pScriptHead;
         pScriptHead += cmdn;
 
         switch (cmd)
@@ -106,19 +116,24 @@ static void make_jump_table(EvtEntry * entry) // 800d890c
                 n++;
         }
 
-        assert(0x88, n < MAX_EVT_JMPTBL, "EVTMGR:Jump Table Overflow !![make_jump_table]"); // missing double branch here
+        if (n >= MAX_EVT_JMPTBL)
+            assert(0x88, n < MAX_EVT_JMPTBL, "EVTMGR:Jump Table Overflow !![make_jump_table]");
     }
     end: ; // didn't match when just using return
 }
 
 void evtmgrInit()
 {
-    work.entryCount = EVT_ENTRY_MAX;
-    work.entries = (EvtEntry *) __memAlloc(0, work.entryCount * sizeof(EvtEntry));
-    work.time = gp->time;
-    memset(work.entries, 0, work.entryCount * sizeof(EvtEntry));
-    memset(work.gw, 0, sizeof(work.gw));
-    memset(work.gf, 0, sizeof(work.gf));
+    EvtWork * wp;
+    
+    wp = evtGetWork();
+    
+    wp->entryCount = EVT_ENTRY_MAX;
+    wp->entries = (EvtEntry *) __memAlloc(0, wp->entryCount * sizeof(EvtEntry));
+    wp->time = gp->time;
+    memset(wp->entries, 0, wp->entryCount * sizeof(EvtEntry));
+    memset(wp->gw, 0, sizeof(wp->gw));
+    memset(wp->gf, 0, sizeof(wp->gf));
     evtMax = 0;
     priTblNum = 0;
     runMainF = 0;
@@ -128,200 +143,241 @@ void evtmgrInit()
 
 void evtmgrReInit()
 {
-    work.time = gp->time;
-    memset(work.entries, 0, work.entryCount * sizeof(EvtEntry));
+    EvtWork * wp;
+
+    wp = evtGetWork();    
+    wp->time = gp->time;
+    memset(wp->entries, 0, wp->entryCount * sizeof(EvtEntry));
     evtMax = 0;
     runMainF = 0;
 
     evt_msg_init();
 }
 
-// Not matching, includes inline evtEntryRunCheck
-EvtEntry * evtEntry(EvtScriptCode * script, u32 priority, u8 flags)
+// Regalloc of second evtStopAll inline not matching
+// https://decomp.me/scratch/yhhXt
+#ifdef NON_MATCHING
+EvtEntry * evtEntry(s32* script, u32 priority, u8 flags)
 {
-    EvtEntry * entry = work.entries;
+    EvtEntry* entry;
+    s32 j;
     s32 i;
+    EvtWork * wp;
 
-    for (i = 0; i < work.entryCount; i++)
+    wp = evtGetWork();
+
+    entry = wp->entries;
+    for (i = 0; i < wp->entryCount; i++, entry++)
     {
-        if (entry->flags & EVT_FLAG_IN_USE == 0)
+        if ((entry->flags & EVT_FLAG_IN_USE) == 0)
             break;
-
-        entry++;
     }
-    if (i >= work.entryCount)
-        assert(0x108, 0, "EVTMGR:Pointer Table Overflow !![evtEntry]");
-
+    if (i >= wp->entryCount)
+        assert(0x108, 0, "EVTMGR:Pointer Table Overflow !![evtEntryType]");
     evtMax += 1;
-
-    memset(entry, 0, sizeof(EvtEntry));
+    memset(entry, 0, sizeof(*entry));
     entry->flags = (u8) (flags | EVT_FLAG_IN_USE);
     entry->pCurInstruction = script;
     entry->scriptStart = script;
     entry->pPrevInstruction = script;
-    entry->curOpcode = EVT_OPC_END_EVT;
+    entry->curOpcode = 0;
     entry->parent = NULL;
     entry->childEntry = NULL;
     entry->brotherEntry = NULL;
     entry->priority = (u8) priority;
     entry->id = evtId++;
-    entry->dowhileDepth = -1;
+    entry->doWhileDepth = -1;
     entry->switchDepth = -1;
-    entry->type = 0xff;
+    entry->type = 0xFF;
     entry->name = NULL;
-    entry->speed = 1.0f;
-    entry->unknown_0x160 = 0.0f;
+    entry->speed = evtSpd;
+    entry->timeToRun = 0.0f;
     entry->casedrvId = -1;
-    entry->ownerNPC = 0;
+    entry->ownerNPC = NULL;
     entry->lifetime = 0;
-
-    for (s32 j = 0; j < 16; j++)
-        entry->lw[i] = 0;
-    for (s32 j = 0; j < 3; j++)
+    for (j = 0; j < 16; j++)
+        entry->lw[j] = 0;
+    for (j = 0; j < 3; j++)
         entry->lf[j] = 0;
-
     make_jump_table(entry);
-
-    if ((runMainF != 0) && ((entry->flags & 0x20) != 0))
+    if (runMainF && ((entry->flags & EVT_FLAG_START_IMMEDIATE) != 0))
     {
         priTbl[priTblNum] = i;
-        priIdTbl[priTblNum++] = entry->id;
+        priIdTbl[priTblNum] = entry->id;
+        priTblNum++;
     }
-
-    if (_spmarioSystemLevel == 1)
+    switch (_spmarioSystemLevel)
     {
-        for (s32 i = 0; i < work.entryCount; i++)
-        {
-            if (work.entries[i].flags & EVT_FLAG_IN_USE != 0)
-                evtStop(&work.entries[i], 3);
-        }
+        case 0:
+            break;
+        case 1:
+            evtStopAll(3);
+            break;
+        case 2:
+            evtStopAll(0xff);
+            break;
     }
-    else if ((_spmarioSystemLevel > 0) && (_spmarioSystemLevel < 3))
-    {
-        for (s32 i = 0; i < work.entryCount; i++)
-        {
-            if (work.entries[i].flags & EVT_FLAG_IN_USE != 0)
-                evtStop(&work.entries[i], 0xff);
-        }
-    }
-
     if (evtId == 0)
         evtId = 1;
+    return entry;
+}
+#else
+asm EvtEntry * evtEntry(EvtScriptCode * script, u32 priority, u8 flags)
+{
+    #include "asm/800d8b88.s"
+}
+#endif
 
+asm EvtEntry * evtEntryType(EvtScriptCode * script, u32 priority, u8 flags, u8 type)
+{
+    #include "asm/800d8df4.s"
+}
+
+asm EvtEntry * evtChildEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags)
+{
+    #include "asm/800d9060.s"
+}
+
+asm EvtEntry * evtBrotherEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags)
+{
+    #include "asm/800d9370.s"
+}
+
+EvtEntry* evtRestart(EvtEntry* entry)
+{
+    EvtWork * wp;
+    EvtScriptCode * start;
+
+    wp = evtGetWork();
+    start = entry->scriptStart;
+    entry->curOpcode = 0;
+    entry->pCurInstruction = start;
+    entry->pPrevInstruction = start;
+    entry->speed = 1.0f;
+    entry->timeToRun = 0.0f;
+    entry->doWhileDepth = -1;
+    entry->switchDepth = -1;
+    entry->speed = evtSpd;
+    entry->timeToRun = 0.0f;
+    entry->lifetime = 0;
+    make_jump_table(entry);
+    switch (_spmarioSystemLevel)
+    {
+        case 0:
+            break;
+        case 1:
+            evtStopAll(3);
+            break;
+        case 2:
+            evtStopAll(0xff);
+            break;
+    }
     return entry;
 }
 
-// Unfinished, just for string pool
-EvtEntry * evtEntryType(EvtScriptCode * script, u32 priority, u8 flags, u8 type)
-{
-    (void) script;
-    (void) priority;
-    (void) flags;
-    (void) type;
-
-    __dummy_string("EVTMGR:Pointer Table Overflow !![evtEntryType]");
-
-    return NULL;
-}
-
-// Unfinished, just for string pool
-EvtEntry * evtChildEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags)
-{
-    (void) entry;
-    (void) script;
-    (void) flags;
-
-    __dummy_string("EVTMGR:Pointer Table Overflow !![evtChildEntry]");
-
-    return NULL;
-}
-
-// Unfinished, just for string pool
-EvtEntry * evtBrotherEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags)
-{
-    (void) entry;
-    (void) script;
-    (void) flags;
-
-    __dummy_string("EVTMGR:Pointer Table Overflow !![evtBrotherEntry]");
-
-    return NULL;
-}
-
-// EvtEntry * evtRestart(EvtEntry * entry)
-
-/* Unfinished
 void evtmgrMain()
 {
-    EvtWork * wp = evtGetWork();
+    EvtWork * wp;
+    OSTime delta;
+    s32 i;
+    EvtEntry * entry;
+    s32 shouldBreak;
+    s32 ret;
+
+    wp = evtGetWork();
+
+    // Mark main function as running
     runMainF = 1;
-    s64 timeDif = gp->time - wp->time;
-    if (timeDif < 0)
-    {
-        timeDif = 0;
-    }
-    s64 ms = OSTicksToMilliseconds(gp->time);
-    if (ms > 500)
-    {
-        // this line is iffy
-        timeDif = (1000 / gp->unknown_0x4) * (OSClockSpeed / 1000);
-    }
+
+    // Clamp time delta
+    delta = gp->time - wp->time;
+    if (delta < 0)
+        delta = 0;
+    if (OSTicksToMilliseconds(delta) > 500)
+        delta = OSMillisecondsToTicks(1000 / gp->fps);
+
+    // Update time
     wp->time = gp->time;
+
+    // Sort scripts by priority
     make_pri_table();
-    for (s32 i = 0; i < priTblNum; i++)
+
+    // Execute scripts
+    for (i = 0; i < priTblNum; i++)
     {
-        EvtEntry * entry = &wp->entries[priTbl[i]];
-        if (entry->flags & EVT_FLAG_IN_USE && entry->id == priIdTbl[i] && entry->flags & 0x92)
+        // Get script
+        entry = wp->entries + priTbl[i];
+
+        // Check if script needs to be ran
+        if (((entry->flags & EVT_FLAG_IN_USE) != 0) && entry->id == priIdTbl[i] &&
+            ((entry->flags & (EVT_FLAG_80 | EVT_FLAG_WAIT_CHILD | EVT_FLAG_PAUSED)) == 0))
         {
-            if (entry->flags & 4)
-                entry->lifetime += ms;
-            entry->unknown_0x160 += 1.0f;
-            s32 shouldBreak = 0;
-            while (entry->unknown_0x160 >= 1.0f)
+            // Update lifetiem
+            if ((entry->flags & EVT_FLAG_STOP_TIME) == 0)
+                entry->lifetime += delta;
+
+            // Run instructions until told to stop or time runs out
+            entry->timeToRun += entry->speed;
+            shouldBreak = 0;
+            while (true)
             {
-                entry->unknown_0x160 -= 1.0f;
-                s32 ret = evtmgrCmd(entry);
-                if (ret == 1)
+                // Check if time has ran out
+                if (entry->timeToRun < 1.0f)
+                    break;
+
+                // Decrement time
+                entry->timeToRun -= 1.0f;
+
+                // Execute instruction
+                ret = evtmgrCmd(entry);
+
+                // Handle return
+                if (ret == EVTCMD_RET_END_ALL)
                 {
                     shouldBreak = 1;
                     break;
                 }
-                if (ret == -1)
+                if (ret == EVTCMD_RET_END)
                     break;
             }
+
+            // Check if any more scripts should run
             if (shouldBreak)
                 break;
         }
     }
     runMainF = 0;
 }
-*/
 
 void evtDelete(EvtEntry * entry)
 {
-    EvtWork * wp = evtGetWork();
+    EvtWork * wp;
+    EvtEntry * curEntry;
+    EvtEntry * parent;
+    s32 i;
 
+    wp = evtGetWork();
     if (entry->flags & EVT_FLAG_IN_USE != 0)
     {
         if (entry->childEntry != NULL)
             evtDelete(entry->childEntry);
 
-        EvtEntry * curEntry = wp->entries;
-        for (s32 i = 0; i < wp->entryCount; i++, curEntry++)
+        curEntry = wp->entries;
+        for (i = 0; i < wp->entryCount; i++, curEntry++)
         {
-            if (((curEntry->flags & 1) != 0) && (curEntry->brotherEntry == entry))
+            if (((curEntry->flags & EVT_FLAG_IN_USE) != 0) && (curEntry->brotherEntry == entry))
                 evtDelete(curEntry);
         }
 
-        EvtEntry * parent = entry->parent;
+        parent = entry->parent;
         if (parent != NULL)
         {
-            parent->flags &= ~0x10;
+            parent->flags &= ~EVT_FLAG_WAIT_CHILD;
             parent->childEntry = NULL;
 
-            for (s32 i = 0; i < 16; i++)
+            for (i = 0; i < 16; i++)
                 parent->lw[i] = entry->lw[i];
-            for (s32 i = 0; i < 3; i++)
+            for (i = 0; i < 3; i++)
                 parent->lf[i] = entry->lf[i];
 
             parent->msgWindowId = entry->msgWindowId;
@@ -341,10 +397,13 @@ void evtDelete(EvtEntry * entry)
 
 void evtDeleteID(s32 id)
 {
-    EvtWork * wp = evtGetWork();
+    EvtWork * wp;
+    EvtEntry * entry;
+    s32 i;
 
-    EvtEntry * entry = wp->entries;
-    for (s32 i = 0; i < wp->entryCount; i++, entry++)
+    wp = evtGetWork();
+    entry = wp->entries;
+    for (i = 0; i < wp->entryCount; i++, entry++)
     {
         if (((entry->flags & EVT_FLAG_IN_USE) != 0) && (entry->id == id))
             evtDelete(entry);
@@ -353,9 +412,12 @@ void evtDeleteID(s32 id)
 
 bool evtCheckID(s32 id)
 {
-    EvtWork * wp = evtGetWork();
+    EvtWork * wp;
+    EvtEntry * entry;
+    s32 i;
 
-    EvtEntry * entry = wp->entries;
+    wp = evtGetWork();
+    entry = wp->entries;
     for (s32 i = 0; i < wp->entryCount; i++, entry++)
     {
         if (((entry->flags & EVT_FLAG_IN_USE) != 0) && (entry->id == id))
@@ -380,18 +442,22 @@ void evtSetType(EvtEntry * entry, u32 type)
     entry->type = (u8) type;
 }
 
+// TODO: figure out why this is needed
 #pragma push
 #pragma inline_max_auto_size(5)
 
 void evtStop(EvtEntry * entry, u32 mask)
 {
-    EvtWork * wp = evtGetWork();
+    EvtWork * wp;
+    EvtEntry * curEntry;
+    s32 i;
 
+    wp = evtGetWork();
     if (entry->childEntry)
         evtStop(entry->childEntry, mask);
 
-    EvtEntry * curEntry = wp->entries;
-    for (s32 i = 0; i < wp->entryCount; i++, curEntry++)
+    curEntry = wp->entries;
+    for (i = 0; i < wp->entryCount; i++, curEntry++)
     {
         if (((curEntry->flags & EVT_FLAG_IN_USE) != 0) && (curEntry->brotherEntry == entry))
             evtStop(curEntry, mask);
@@ -403,13 +469,16 @@ void evtStop(EvtEntry * entry, u32 mask)
 
 void evtStart(EvtEntry * entry, u32 mask)
 {
-    EvtWork * wp = evtGetWork();
+    EvtWork * wp;
+    EvtEntry * curEntry;
+    s32 i;
 
+    wp = evtGetWork();
     if (entry->childEntry)
         evtStart(entry->childEntry, mask);
 
-    EvtEntry * curEntry = wp->entries;
-    for (s32 i = 0; i < wp->entryCount; i++, curEntry++)
+    curEntry = wp->entries;
+    for (i = 0; i < wp->entryCount; i++, curEntry++)
     {
         if (((curEntry->flags & EVT_FLAG_IN_USE) != 0) && (curEntry->brotherEntry == entry))
             evtStart(curEntry, mask);
@@ -423,9 +492,12 @@ void evtStart(EvtEntry * entry, u32 mask)
 
 void evtStopID(s32 id)
 {
-    EvtWork * wp = evtGetWork();
+    EvtWork * wp;
+    EvtEntry * entry;
+    s32 i;
 
-    EvtEntry * entry = wp->entries;
+    wp = evtGetWork();
+    entry = wp->entries;
     for (s32 i = 0; i < wp->entryCount; i++, entry++)
     {
         if (((entry->flags & EVT_FLAG_IN_USE) != 0) && (entry->id == id))
@@ -435,10 +507,13 @@ void evtStopID(s32 id)
 
 void evtStartID(s32 id)
 {
-    EvtWork * wp = evtGetWork();
+    EvtWork * wp;
+    EvtEntry * entry;
+    s32 i;
 
-    EvtEntry * entry = wp->entries;
-    for (s32 i = 0; i < wp->entryCount; i++, entry++)
+    wp = evtGetWork();
+    entry = wp->entries;
+    for (i = 0; i < wp->entryCount; i++, entry++)
     {
         if (((entry->flags & EVT_FLAG_IN_USE) != 0) && (entry->id == id))
             evtStart(entry, 0xff);
@@ -447,10 +522,13 @@ void evtStartID(s32 id)
 
 void evtStopAll(u32 mask)
 {
-    EvtWork * wp = evtGetWork();
+    EvtWork * wp;
+    EvtEntry * entry;
+    s32 i;
 
-    EvtEntry * entry = wp->entries;
-    for (s32 i = 0; i < wp->entryCount; i++, entry++)
+    wp = evtGetWork();
+    entry = wp->entries;
+    for (i = 0; i < wp->entryCount; i++, entry++)
     {
         if ((entry->flags & EVT_FLAG_IN_USE) != 0)
             evtStop(entry, mask);
@@ -459,10 +537,13 @@ void evtStopAll(u32 mask)
 
 void evtStartAll(u32 mask)
 {
-    EvtWork * wp = evtGetWork();
+    EvtWork * wp;
+    EvtEntry * entry;
+    s32 i;
 
-    EvtEntry * entry = wp->entries;
-    for (s32 i = 0; i < wp->entryCount; i++, entry++)
+    wp = evtGetWork();
+    entry = wp->entries;
+    for (i = 0; i < wp->entryCount; i++, entry++)
     {
         if ((entry->flags & EVT_FLAG_IN_USE) != 0)
             evtStart(entry, mask);
@@ -471,10 +552,13 @@ void evtStartAll(u32 mask)
 
 void evtStopOther(EvtEntry * entry, u32 mask)
 {
-    EvtWork * wp = evtGetWork();
+    EvtWork * wp;
+    EvtEntry * curEntry;
+    s32 i;
 
-    EvtEntry * curEntry = wp->entries;
-    for (s32 i = 0; i < wp->entryCount; i++, curEntry++)
+    wp = evtGetWork();
+    curEntry = wp->entries;
+    for (i = 0; i < wp->entryCount; i++, curEntry++)
     {
         if (((curEntry->flags & EVT_FLAG_IN_USE) != 0) && (curEntry != entry))
             evtStop(curEntry, mask);
@@ -483,10 +567,13 @@ void evtStopOther(EvtEntry * entry, u32 mask)
 
 void evtStartOther(EvtEntry * entry, u32 mask)
 {
-    EvtWork * wp = evtGetWork();
+    EvtWork * wp;
+    EvtEntry * curEntry;
+    s32 i;
 
-    EvtEntry * curEntry = wp->entries;
-    for (s32 i = 0; i < wp->entryCount; i++, curEntry++)
+    wp = evtGetWork();
+    curEntry = wp->entries;
+    for (i = 0; i < wp->entryCount; i++, curEntry++)
     {
         if (((curEntry->flags & EVT_FLAG_IN_USE) != 0) && (curEntry != entry))
             evtStart(curEntry, mask);
@@ -495,9 +582,11 @@ void evtStartOther(EvtEntry * entry, u32 mask)
 
 EvtEntry * evtGetPtr(s32 index)
 {
-    EvtWork * wp = evtGetWork();
+    EvtWork * wp;
+    EvtEntry * entry;
 
-    EvtEntry * entry = &wp->entries[index];
+    wp = evtGetWork();
+    entry = &wp->entries[index];
     if ((entry->flags & EVT_FLAG_IN_USE) != 0)
     {
         return entry;
@@ -508,10 +597,13 @@ EvtEntry * evtGetPtr(s32 index)
 
 EvtEntry * evtGetPtrID(s32 id)
 {
-    EvtWork * wp = evtGetWork();
+    EvtWork * wp;
+    EvtEntry * curEntry;
+    s32 i;
 
-    EvtEntry * curEntry = wp->entries;
-    for (s32 i = 0; i < wp->entryCount; i++, curEntry++)
+    wp = evtGetWork();
+    curEntry = wp->entries;
+    for (i = 0; i < wp->entryCount; i++, curEntry++)
     {
         if (curEntry->flags & EVT_FLAG_IN_USE != 0 && curEntry->id == id)
             return curEntry;

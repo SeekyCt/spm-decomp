@@ -1,0 +1,15 @@
+###########################################################################
+# You must re-run configure.py after adding/removing sources in this file #
+###########################################################################
+
+# Paths relative to rel/
+
+ctors_dtors.s:
+    .ctors: [0x80ca9ad8, 0x80ca9adc]
+    .dtors: [0x80ca9adc, 0x80ca9ae8]
+
+dan.c:
+    .text:   [0x80c81eb0, 0x80c83fd4]
+    .rodata: [0x80cef8e8, 0x80cf0600]
+    .data:   [0x80e4fef8, 0x80e55858]
+    .bss:    [0x80f65888, 0x80f65890]    
