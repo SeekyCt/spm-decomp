@@ -119,9 +119,17 @@ f32 distABf(f32 x1, f32 z1, f32 x2, f32 z2)
     return (f32) sqrt(xDiff * xDiff + zDiff * zDiff);
 }
 
-asm f32 compAngle(f32 a, f32 b)
-{
-    #include "asm/8019c6bc.s"
+f32 compAngle(f32 a, f32 b) {
+    f32 diff;
+    diff = __fabsf(b - a);
+    if (diff >= 180.0f) {
+        if (b < a) {
+            b += 360.0f;
+        } else {
+            b -= 360.0f;
+        }
+    }
+    return b - a;
 }
 
 asm f32 angleABf(f32 x1, f32 z1, f32 x2, f32 z2)
@@ -181,7 +189,7 @@ static FORCESTRIP s32 _rand(s32 max) // always inlined
 s32 irand(s32 max)
 {
     // This isn't converted back to being negative on return
-    s32 abs = __abs(max);
+    s32 abs = abs(max);
 
     if (abs == 0)
     {
