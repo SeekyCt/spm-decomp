@@ -108,9 +108,15 @@ float reviseAngle(float angle)
     return angle;
 }
 
-asm f32 distABf(f32 x1, f32 z1, f32 x2, f32 z2)
+f32 distABf(f32 x1, f32 z1, f32 x2, f32 z2)
 {
-    #include "asm/8019c688.s"
+    f32 xDiff;
+    f32 zDiff;
+    
+    xDiff = x2 - x1;
+    zDiff = z2 - z1;
+    
+    return (f32) sqrt(xDiff * xDiff + zDiff * zDiff);
 }
 
 asm f32 compAngle(f32 a, f32 b)

@@ -169,7 +169,7 @@ CFLAGS = [
     "-proc gekko",
     "-lang c99",
     "-W all",
-    "-fp hard",
+    "-fp fmadd",
     "-Cpp_exceptions off",
     "-O4",
     "-use_lmw_stmw on",
