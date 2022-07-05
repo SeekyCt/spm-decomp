@@ -8,7 +8,7 @@ import json
 import os
 from subprocess import PIPE, Popen
 from sys import executable as PYTHON, platform
-from typing import Tuple, Union
+from typing import List, Tuple, Union
 
 #############
 # Functions #
@@ -52,6 +52,22 @@ def get_containing_slice(addr: int) -> Tuple[Binary, SourceDesc]:
     else:
         return (Binary.DOL, containing)
 
+def find_headers(dirname: str, base=None) -> List[str]:
+    """Returns a list of all headers in a folder recursively"""
+
+    if base is None:
+        base = dirname
+
+    ret = []
+    for name in os.listdir(dirname):
+        path = dirname + '/' + name
+        if os.path.isdir(path):
+            ret.extend(find_headers(path, base))
+        elif name.endswith('.h'):
+            ret.append(path[len(base)+1:])
+
+    return ret
+
 ################
 # Project dirs #
 ################
@@ -67,6 +83,9 @@ INCDIR = "include"
 
 # Build artifacts directory
 BUILDDIR = "build"
+
+# Build include directory
+BUILD_INCDIR = f"{BUILDDIR}/include"
 
 # Output binaries directory
 OUTDIR = "out"
@@ -86,6 +105,7 @@ CONFIG = "config"
 
 # ppcdis
 PPCDIS = "tools/ppcdis"
+PPCDIS_INCDIR = f"{PPCDIS}/include"
 ANALYSER = f"{PYTHON} {PPCDIS}/analyser.py"
 DISASSEMBLER = f"{PYTHON} {PPCDIS}/disassembler.py"
 ORDERSTRINGS = f"{PYTHON} {PPCDIS}/orderstrings.py"

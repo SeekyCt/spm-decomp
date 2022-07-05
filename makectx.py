@@ -2,39 +2,47 @@
 Creates a context of all headers
 """
 
-from os import listdir
-from os.path import isdir
+import os.path
+from typing import List
+
+import common as c
 
 gIncluded = set()
 
-def process_header(path, base):
+def resolve_path(path: str, bases: List[str]) -> str:
+    ret = None
+    for base in bases:
+        full = f"{base}/{path}"
+        if os.path.exists(full):
+            assert ret is None, f"Name conflict: {full} {ret}"
+            ret = full
+    assert ret is not None, f"Header {path} not found"
+    return ret
+
+def process_header(path: str, bases: List[str]):
     global gIncluded
 
     if path in gIncluded:
         return ""
-
-    ret = ""
-    with open(path) as f:
-        for line in f:
-            if line.startswith("#include"):
-                ret += process_header(base + '/' + line[line.find('<')+1:line.find('>')], base)
-            elif not line.startswith("#pragma once"):
-                ret += line
-    
     gIncluded.add(path)
 
+    full = resolve_path(path, bases)
+
+    ret = ""
+    with open(full) as f:
+        for line in f:
+            if line.startswith("#include"):
+                ret += process_header(line[line.find('<')+1:line.find('>')], bases)
+            elif not line.startswith("#pragma once"):
+                ret += line
+
     return ret
 
-def concat_headers(dirname, base=None):
-    if base is None:
-        base = dirname
+def makectx(bases: List[str]):
     ret = ""
-    for name in listdir(dirname):
-        path = dirname + '/' + name
-        if isdir(path):
-            ret += concat_headers(path, base)
-        elif name.endswith('.h'):
-            ret += (process_header(path, base))
+    for base in bases:
+        for header in c.find_headers(base):
+            ret += process_header(header, bases)
     return ret
-            
-print(concat_headers("include"))
+
+print(makectx([c.INCDIR, c.PPCDIS_INCDIR]))

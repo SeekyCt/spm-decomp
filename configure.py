@@ -158,14 +158,14 @@ n.rule(
 
 n.rule(
     "as",
-    command = f"$as $asflags -I {c.INCDIR} -I $ppcdis/include -c $in -o $out -I orig",
+    command = f"$as $asflags -I {c.INCDIR} -I {c.PPCDIS_INCDIR} -c $in -o $out -I orig",
     description = "AS $in"
 )
 
 # Due to CW dumbness with .d output location, $outstem must be defined without the .o
 n.rule(
     "cc",
-    command = f"$cc $cflags -I- -i {c.INCDIR} -i $ppcdis/include -i $builddir/include -MD -gccdep -c $in -o $out",
+    command = f"$cc $cflags -I- -i {c.INCDIR} -i {c.PPCDIS_INCDIR} -i {c.BUILD_INCDIR} -MD -gccdep -c $in -o $out",
     description = "CC $in",
     deps = "gcc",
     depfile = "$outstem.d"
@@ -173,7 +173,7 @@ n.rule(
 
 n.rule(
     "ccs",
-    command = f"$cc $cflags -I- -i {c.INCDIR} -i $builddir/include -MD -gccdep -c $in -o $out -S",
+    command = f"$cc $cflags -I- -i {c.INCDIR} -i {c.BUILD_INCDIR} -MD -gccdep -c $in -o $out -S",
     description = "CC -S $in",
     deps = "gcc",
     depfile = "$outstem.d"
@@ -233,7 +233,7 @@ class AsmInclude(GeneratedInclude):
 
     def __init__(self, source_name: str, match: str):
         self.addr = match
-        super().__init__(source_name, f"$builddir/include/asm/{self.addr}.s")
+        super().__init__(source_name, f"{c.BUILD_INCDIR}/asm/{self.addr}.s")
 
     def build(self, ctx: SourceContext):
         n.build(
@@ -255,7 +255,7 @@ class JumptableInclude(GeneratedInclude):
 
     def __init__(self, source_name: str, match: str):
         self.addr = match
-        super().__init__(source_name, f"$builddir/include/jumptable/{self.addr}.inc")
+        super().__init__(source_name, f"{c.BUILD_INCDIR}/jumptable/{self.addr}.inc")
 
     def build(self, ctx: SourceContext):
         n.build(
@@ -277,7 +277,7 @@ class StringInclude(GeneratedInclude):
 
     def __init__(self, source_name: str, match: Tuple[str]):
         self.start, self.end = match
-        super().__init__(source_name, f"$builddir/include/orderstrings/{self.start}_{self.end}.inc")
+        super().__init__(source_name, f"{c.BUILD_INCDIR}/orderstrings/{self.start}_{self.end}.inc")
 
     def build(self, ctx: SourceContext):
         n.build(
@@ -299,7 +299,7 @@ class FloatInclude(GeneratedInclude):
     def __init__(self, source_name: str, match: Tuple[str]):
         folder, manual, self.start, self.end = match
         self.manual = manual != ''
-        super().__init__(source_name, f"$builddir/include/{folder}/{self.start}_{self.end}.inc")
+        super().__init__(source_name, f"{c.BUILD_INCDIR}/{folder}/{self.start}_{self.end}.inc")
 
     def build(self, ctx: SourceContext):
         sda = "--sda " if ctx.sdata2_threshold >= 4 else ""
@@ -322,7 +322,7 @@ class DoubleInclude(GeneratedInclude):
 
     def __init__(self, source_name: str, match: Tuple[str]):
         self.start, self.end = match
-        super().__init__(source_name, f"$builddir/include/orderdoubles/{self.start}_{self.end}.inc")
+        super().__init__(source_name, f"{c.BUILD_INCDIR}/orderdoubles/{self.start}_{self.end}.inc")
 
     def build(self, ctx: SourceContext):
         n.build(
