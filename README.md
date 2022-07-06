@@ -5,6 +5,7 @@ Decompilation of Super Paper Mario PAL revision 0. This will never be a decompil
 See also https://github.com/SeekyCt/spm-docs for other documentation.
 
 ## Building
+
 - Dump a copy of the game and extract the main.dol & relF.bin files
 - Extract relF.bin to relF.rel with a tool like [nlzss](https://github.com/magical/nlzss)
 - Place main.dol and relF.rel in the orig folder
@@ -16,6 +17,10 @@ See also https://github.com/SeekyCt/spm-docs for other documentation.
 - Install the modules from requirements.txt (`pip install -r requirements.txt`)
 - Run configure.py
 - Run ninja
+
+## Pulling
+
+When pulling the repo later on, make sure to rerun configure.py and `git submodule update --recursive`
 
 ## Contributing
 See [CONTRIBUTING.md](https://github.com/SeekyCt/spm-decomp/blob/master/CONTRIBUTING.md)
