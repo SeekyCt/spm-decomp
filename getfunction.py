@@ -11,11 +11,11 @@ import common as c
 def get_function(binary: c.Binary, srcflag: str, addr: int) -> str:
     # Get flags for binary
     if binary == c.Binary.DOL:
-        binary = c.DOL
+        binary = c.DOL_YML
         binflags = ""
         anlflags = f"{c.DOL_LABELS} {c.DOL_RELOCS}"
     else:
-        binary = c.REL
+        binary = c.REL_YML
         binflags = c.PPCDIS_REL_FLAGS
         anlflags = f"{c.REL_LABELS} {c.REL_RELOCS}"
 
