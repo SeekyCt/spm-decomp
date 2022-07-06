@@ -85,7 +85,6 @@ n.newline()
 # Tool flags #
 ##############
 
-n.variable("sda", c.SDA)
 n.variable("asflags", c.ASFLAGS)
 n.variable("ldflags", c.LDFLAGS)
 n.variable("ppcdis_analysis_flags", c.PPCDIS_ANALYSIS_FLAGS)
@@ -101,26 +100,26 @@ ALLOW_CHAIN = "cmd /c " if os.name == "nt" else ""
 
 n.rule(
     "analyse",
-    command = "$analyser $in $sda $out $analysisflags",
+    command = "$analyser $in $out $analysisflags",
     description = "ppcdis analysis $in",
     pool="console"
 )
 
 n.rule(
     "disasm_slice",
-    command = "$disassembler $in $sda $out -q $disasmflags -s $slice",
+    command = "$disassembler $in $out -q $disasmflags -s $slice",
     description = "ppcdis disassembly $out",
 )
 
 n.rule(
     "disasm_single",
-    command = "$disassembler $in $sda $out -f $addr -i -q $disasmflags",
+    command = "$disassembler $in $out -f $addr -i -q $disasmflags",
     description = "ppcdis function disassembly $addr"
 )
 
 n.rule(
     "jumptable",
-    command = "$disassembler $in $sda $out -j $addr -q $disasmflags",
+    command = "$disassembler $in $out -j $addr -q $disasmflags",
     description = "Jumptable $addr"
 )
 

@@ -176,8 +176,6 @@ REL_MAP = f"{OUTDIR}/relF.map"
 # Tool Flags #
 ##############
 
-SDA = "805b5f00 805b7260" #r13 r2
-
 ASFLAGS = ' '.join([
     "-m gekko",
     f"-I {INCDIR}",

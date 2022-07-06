@@ -24,7 +24,7 @@ def get_function(binary: c.Binary, srcflag: str, addr: int) -> str:
         try:
             tmp.close()
             ret = system(
-                f"{c.DISASSEMBLER} {binary} {anlflags} {c.SDA} {tmp.name} -f {addr:x} "
+                f"{c.DISASSEMBLER} {binary} {anlflags} {tmp.name} -f {addr:x} "
                 f"-m {c.SYMBOLS} {binflags} {srcflag} -q"
             )
             assert ret == 0, f"Disassembly error code {ret}"
