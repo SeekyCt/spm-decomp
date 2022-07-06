@@ -250,20 +250,20 @@ asm void memcpy_as4(void * dest, const void * source, u32 n)
 
 // Functions used only in the rel currently aren't forced automatically
 FORCEACTIVE_START
-asm UNKNOWN_FUNCTION(func_8019d5c4)
+asm void mtxGetRotationElement(Mtx34 * mtx, Mtx34 * out, char axis1, char axis2)
 {
     #include "asm/8019d5c4.s"
 }
 FORCEACTIVE_END
 
-asm UNKNOWN_FUNCTION(func_8019d8fc)
+asm void mtxGetScaleElement(Mtx34 * mtx, Mtx34 * out)
 {
     #include "asm/8019d8fc.s"
 }
 
-asm UNKNOWN_FUNCTION(func_8019dc6c)
+s32 sysMsec2Frame(s32 msec)
 {
-    #include "asm/8019dc6c.s"
+    return (msec * gp->fps) / 1000;
 }
 
 #include "jumptable/8042a2cc.inc"

@@ -811,9 +811,9 @@ global:
     0x8019d4b0: sysWaitDrawSync
     0x8019d570: memcmp_as4
     0x8019d5a4: memcpy_as4
-    # 0x8019d5c4
-    # 0x8019d8fc
-    # 0x8019dc6c
+    0x8019d5c4: mtxGetRotationElement
+    0x8019d8fc: mtxGetScaleElement
+    0x8019dc6c: sysMsec2Frame
     0x8019dc94: intplGetValue
 
     # dvdmgr.c

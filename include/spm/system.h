@@ -5,6 +5,7 @@
 #pragma once
 
 #include <common.h>
+#include <wii/types.h>
 
 #define assert(line, condition, message) \
     do \
@@ -40,7 +41,7 @@ void sysRandInit();
 void sysWaitDrawSync();
 s32 memcmp_as4(const void * a, const void * b, u32 n);
 void memcpy_as4(void * dest, const void * source, u32 n);
-UNKNOWN_FUNCTION(func_8019d5c4);
-UNKNOWN_FUNCTION(func_8019d8fc);
-UNKNOWN_FUNCTION(func_8019dc6c);
+void mtxGetRotationElement(Mtx34 * mtx, Mtx34 * out, char axis1, char axis2);
+void mtxGetScaleElement(Mtx34 * mtx, Mtx34 * out);
+s32 sysMsec2Frame(s32 msec);
 f32 intplGetValue(f32 min, f32 max, void * mode, u32 progress, u32 progressMax);
