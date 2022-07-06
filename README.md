@@ -18,7 +18,7 @@ See also https://github.com/SeekyCt/spm-docs for other documentation.
 - Run ninja
 
 ## Contributing
-See [CONTRIBUTING.md](TODO)
+See [CONTRIBUTING.md](https://github.com/SeekyCt/spm-decomp/blob/master/CONTRIBUTING.md)
 
 ## Modding
 
