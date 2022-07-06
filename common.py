@@ -184,7 +184,6 @@ ASFLAGS = ' '.join([
 
 CFLAGS = [
     "-nostdinc",
-    "-align powerpc",
     "-enc SJIS",
     "-proc gekko",
     "-lang c99",
