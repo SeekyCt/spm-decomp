@@ -158,7 +158,7 @@ n.rule(
 
 n.rule(
     "as",
-    command = f"$as $asflags -I {c.INCDIR} -I {c.PPCDIS_INCDIR} -c $in -o $out -I orig",
+    command = f"$as $asflags -c $in -o $out",
     description = "AS $in"
 )
 

@@ -179,7 +179,10 @@ REL_MAP = f"{OUTDIR}/relF.map"
 SDA = "805b5f00 805b7260" #r13 r2
 
 ASFLAGS = ' '.join([
-    "-m gekko"
+    "-m gekko",
+    f"-I {INCDIR}",
+    f"-I {PPCDIS_INCDIR}",
+    f"-I orig"
 ])
 
 CFLAGS = [
