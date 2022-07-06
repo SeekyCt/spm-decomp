@@ -41,3 +41,6 @@ typedef u16 wchar_t;
 #define SDA2_BASE 0x805b7260
 
 #define DEG_TO_RAD(a) (a * 0.01745329238474369f)
+
+#define STATIC_ASSERT(cond, msg) typedef char static_assertion_##msg[(cond)?1:-1]
+#define SIZE_ASSERT(type, size) STATIC_ASSERT(sizeof(type) == size, type##_size)
