@@ -165,7 +165,7 @@ n.rule(
 # Due to CW dumbness with .d output location, $outstem must be defined without the .o
 n.rule(
     "cc",
-    command = f"$cc $cflags -I- -i {c.INCDIR} -i {c.PPCDIS_INCDIR} -i {c.BUILD_INCDIR} -MD -gccdep -c $in -o $out",
+    command = f"$cc $cflags -MD -gccdep -c $in -o $out",
     description = "CC $in",
     deps = "gcc",
     depfile = "$outstem.d"
@@ -173,7 +173,7 @@ n.rule(
 
 n.rule(
     "ccs",
-    command = f"$cc $cflags -I- -i {c.INCDIR} -i {c.BUILD_INCDIR} -MD -gccdep -c $in -o $out -S",
+    command = f"$cc $cflags -MD -gccdep -c $in -o $out -S",
     description = "CC -S $in",
     deps = "gcc",
     depfile = "$outstem.d"

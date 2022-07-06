@@ -19,15 +19,13 @@ args = parser.parse_args()
 # Find containing binary
 binary, source = c.get_containing_slice(args.addr)
 
-base_flags = "-lang c99 -enc SJIS -fp hard -O4 -use_lmw_stmw on -str pool -rostr -ipa file -cpp_exceptions off -sym on -W all"
-
-# Get flags for binary (keep in sync with decomp.me templates)
+# Get flags for binary
 if binary == c.Binary.DOL:
     preset = "Super Paper Mario (DOL)"
-    flags = base_flags + " -inline all -sdata 4 -sdata2 4"
+    flags = c.EXTERNAL_DOL_CFLAGS
 else:
     preset = "Super Paper Mario (REL)"
-    flags = base_flags + " -sdata 0 -sdata2 0 -pool off -ordered-fp-compares"
+    flags = c.EXTERNAL_REL_CFLAGS
 
 # Disassemble function
 srcflag = f"-n {source}" if isinstance(source, str) else ""

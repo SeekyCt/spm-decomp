@@ -183,9 +183,7 @@ ASFLAGS = ' '.join([
 ])
 
 CFLAGS = [
-    "-nostdinc",
     "-enc SJIS",
-    "-proc gekko",
     "-lang c99",
     "-W all",
     "-fp fmadd",
@@ -194,21 +192,34 @@ CFLAGS = [
     "-use_lmw_stmw on",
     "-str pool",
     "-rostr",
-    "-maxerrors 1",
     "-sym on",
     "-ipa file"
 ]
-DOL_CFLAGS = ' '.join(CFLAGS + [
+BASE_DOL_CFLAGS = CFLAGS + [
     "-inline all",
     "-sdata 4",
     "-sdata2 4"
-])
-REL_CFLAGS = ' '.join(CFLAGS + [
+]
+BASE_REL_CFLAGS = CFLAGS + [
      "-sdata 0",
      "-sdata2 0",
      "-pool off",
      "-ordered-fp-compares"
-])
+]
+
+LOCAL_CFLAGS = [
+    "-nostdinc",
+    "-proc gekko",
+    "-maxerrors 1",
+    "-I-",
+    f"-i {INCDIR}",
+    f"-i {PPCDIS_INCDIR}",
+    f"-i {BUILD_INCDIR}"
+]
+DOL_CFLAGS = ' '.join(BASE_DOL_CFLAGS + LOCAL_CFLAGS)
+REL_CFLAGS = ' '.join(BASE_REL_CFLAGS + LOCAL_CFLAGS)
+EXTERNAL_DOL_CFLAGS = ' '.join(BASE_DOL_CFLAGS)
+EXTERNAL_REL_CFLAGS = ' '.join(BASE_REL_CFLAGS)
 
 LDFLAGS = ' '.join([
     "-fp hard",
