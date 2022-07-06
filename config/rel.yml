@@ -1,0 +1,4 @@
+path: orig/relF.rel
+address: 0x80c45820
+bss_address: 0x80f64340
+dol: config/dol.yml

@@ -40,11 +40,11 @@ def get_containing_slice(addr: int) -> Tuple[Binary, SourceDesc]:
     """Finds the binary containing an address and its source file
     Source file is empty string if not decompiled"""
 
-    dol_raw = get_cmd_stdout(f"{SLICES} {DOL} {DOL_SLICES} -p {DOL_SRCDIR}/ --containing {addr:x}")
+    dol_raw = get_cmd_stdout(f"{SLICES} {DOL_YML} {DOL_SLICES} -p {DOL_SRCDIR}/ --containing {addr:x}")
     containing = json.loads(dol_raw)
     if containing is None:
         rel_raw = get_cmd_stdout(
-            f"{SLICES} {REL} {REL_SLICES} {PPCDIS_REL_FLAGS} -p {REL_SRCDIR}/ --containing {addr:x}"
+            f"{SLICES} {REL_YML} {REL_SLICES} -p {REL_SRCDIR}/ --containing {addr:x}"
         )
         containing = json.loads(rel_raw)
         assert containing is not None, f"Unknown address {addr:x}"
@@ -146,8 +146,8 @@ DISASM_OVERRIDES = f"{CONFIG}/disasm_overrides.yml"
 # Binaries
 DOL = f"{ORIG}/main.dol" # read in python code
 REL = f"{ORIG}/relF.rel" # read in python code
-REL_ADDR = "80c45820"
-REL_BSS = "80f64340"
+DOL_YML = f"{CONFIG}/dol.yml"
+REL_YML = f"{CONFIG}/rel.yml"
 DOL_SHA = f"{ORIG}/main.dol.sha1"
 REL_SHA = f"{ORIG}/relF.rel.sha1"
 
@@ -229,12 +229,6 @@ LDFLAGS = ' '.join([
     "-linkmode moreram",
     "-maxerrors 1",
     "-mapunused"
-])
-
-PPCDIS_REL_FLAGS = ' '.join([
-    f"-a {REL_ADDR}",
-    f"-b {REL_BSS}",
-    f"-d {DOL}"
 ])
 
 PPCDIS_ANALYSIS_FLAGS = ' '.join([
