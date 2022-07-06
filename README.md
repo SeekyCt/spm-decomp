@@ -1,6 +1,6 @@
 # spm-decomp
 
-Decompilation of Super Paper Mario PAL revision 0. This will never be a decompilitation of the full game, just specific parts that are useful or interesting, and it certainly won't lead to ports to any other platform. The repo is currently not shiftable (i.e. making changes to the code that causes functions or data to change size or move won't create a working output) but is intended to be at some point. The SDK, NW4R and MSL libraries are out of scope for this project and will not be decompiled (though partial headers will be needed for them to allow other code to be decompiled).
+Decompilation of Super Paper Mario PAL revision 0. This will never be a decompilation of the full game, just specific parts that are useful or interesting, and it certainly won't lead to ports to any other platform. The repo is currently not shiftable (i.e. making changes to the code that causes functions or data to change size or move won't create a working output) but is intended to be at some point. The SDK, NW4R and MSL libraries are out of scope for this project and will not be decompiled (though partial headers will be needed for them to allow other code to be decompiled).
 
 See also https://github.com/SeekyCt/spm-docs for other documentation.
 
