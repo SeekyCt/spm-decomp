@@ -801,7 +801,7 @@ global:
     0x8019c6bc: compAngle
     0x8019c6f8: angleABf
     0x8019c8ac: sincosf
-    # 0x8019c930
+    0x8019c930: movePos
     0x8019c9d4: fsort
     0x8019cf84: qqsort
     0x8019d150: rand

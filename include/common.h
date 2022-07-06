@@ -39,3 +39,5 @@ typedef u16 wchar_t;
 #endif
 
 #define SDA2_BASE 0x805b7260
+
+#define DEG_TO_RAD(a) (a * 0.01745329238474369f)

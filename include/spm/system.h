@@ -30,7 +30,7 @@ f32 distABf(f32 x1, f32 z1, f32 x2, f32 z2);
 f32 compAngle(f32 a, f32 b);
 f32 angleABf(f32 x1, f32 z1, f32 x2, f32 z2);
 void sincosf(f32 x, f32 * sinx, f32 * cosx);
-UNKNOWN_FUNCTION(func_8019c930);
+void movePos(f32 distance, f32 angle, f32 * x, f32 * z);
 void fsort(char ** table, size_t size);
 void qqsort(char * list, size_t nel, size_t size, void * compare);
 s32 rand();

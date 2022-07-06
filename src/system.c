@@ -142,9 +142,14 @@ asm void sincosf(f32 x, f32 * sinx, f32 * cosx)
     #include "asm/8019c8ac.s"
 }
 
-asm UNKNOWN_FUNCTION(func_8019c930)
+void movePos(f32 distance, f32 angle, f32 * x, f32 * z)
 {
-    #include "asm/8019c930.s"
+    f32 c;
+    f32 s;
+    s = (float) sin(DEG_TO_RAD(angle));
+    c = (float) cos(DEG_TO_RAD(angle));
+    *x += distance * s;
+    *z -= distance * c;
 }
 
 asm void fsort(char ** table, size_t size)
