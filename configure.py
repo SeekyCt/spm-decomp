@@ -443,6 +443,8 @@ def load_sources(ctx: SourceContext):
 
 def make_progress_msg(path: str, ctx: SourceContext, gen_includes: List[GeneratedInclude],
                       format: str):
+    # Temporarily disabled, labels may not exist yet
+    """
     # TODO: other sections than .text
 
     # Get data
@@ -462,6 +464,9 @@ def make_progress_msg(path: str, ctx: SourceContext, gen_includes: List[Generate
     with open(path, 'w') as f:
         f.write(format.format(decomp=hex(decomp_size), total=hex(total_size),
                               percent=(decomp_size/total_size)*100))
+    """
+    with open(path, 'w') as f:
+        f.write('')
 
 dol_ctx = SourceContext(c.DOL_SRCDIR, c.DOL_CFLAGS, c.DOL_YML, c.DOL_LABELS,
                         c.DOL_RELOCS, c.DOL_SLICES, 4)
