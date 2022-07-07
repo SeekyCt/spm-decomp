@@ -114,6 +114,7 @@ FORCEACTIVE = f"{PYTHON} {PPCDIS}/forceactive.py"
 ELF2DOL = f"{PYTHON} {PPCDIS}/elf2dol.py"
 ELF2REL = f"{PYTHON} {PPCDIS}/elf2rel.py"
 SLICES = f"{PYTHON} {PPCDIS}/slices.py"
+PROGRESS = f"{PYTHON} {PPCDIS}/progress.py"
 
 # Codewarrior
 TOOLS = "tools"
@@ -150,6 +151,10 @@ DOL_YML = f"{CONFIG}/dol.yml"
 REL_YML = f"{CONFIG}/rel.yml"
 DOL_SHA = f"{ORIG}/main.dol.sha1"
 REL_SHA = f"{ORIG}/relF.rel.sha1"
+DOL_PROG = f"{BUILDDIR}/main.dol.prog"
+REL_PROG = f"{BUILDDIR}/relF.rel.prog"
+DOL_OK = f"{BUILDDIR}/main.dol.ok"
+REL_OK = f"{BUILDDIR}/relF.rel.ok"
 
 # Symbols
 SYMBOLS = f"{CONFIG}/symbols.yml"

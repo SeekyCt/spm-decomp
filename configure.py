@@ -149,7 +149,7 @@ n.rule(
 
 n.rule(
     "sha1sum",
-    command = ALLOW_CHAIN + "sha1sum -c $in && touch $out",
+    command = ALLOW_CHAIN + "sha1sum -c $in && cat $prog && touch $out",
     description = "Verify $in",
     pool="console"
 )
@@ -441,6 +441,28 @@ def load_sources(ctx: SourceContext):
     )
     return [Source.make(ctx, s) for s in json.loads(raw)]
 
+def make_progress_msg(path: str, ctx: SourceContext, gen_includes: List[GeneratedInclude],
+                      format: str):
+    # TODO: other sections than .text
+
+    # Get data
+    raw = c.get_cmd_stdout(f"{c.PROGRESS} {ctx.binary} {ctx.labels} {ctx.slices}")
+    dat = json.loads(raw)
+    decomp_size = dat["decomp_slices_size"]
+    total_size = dat["total_size"]
+    func_sizes = dat["symbol_sizes"]
+
+    # Subtract undecompiled functions in decompiled slices
+    for inc in gen_includes:
+        if not isinstance(inc, AsmInclude):
+            continue
+        decomp_size -= func_sizes[inc.addr]
+    
+    # Output
+    with open(path, 'w') as f:
+        f.write(format.format(decomp=hex(decomp_size), total=hex(total_size),
+                              percent=(decomp_size/total_size)*100))
+
 dol_ctx = SourceContext(c.DOL_SRCDIR, c.DOL_CFLAGS, c.DOL_YML, c.DOL_LABELS,
                         c.DOL_RELOCS, c.DOL_SLICES, 4)
 rel_ctx = SourceContext(c.REL_SRCDIR, c.REL_CFLAGS, c.REL_YML, c.REL_LABELS,
@@ -449,10 +471,14 @@ rel_ctx = SourceContext(c.REL_SRCDIR, c.REL_CFLAGS, c.REL_YML, c.REL_LABELS,
 dol_sources = load_sources(dol_ctx)
 dol_c_sources = [source for source in dol_sources if isinstance(source, CSource)]
 dol_gen_includes = [inc for source in dol_c_sources for inc in source.gen_includes]
+make_progress_msg(c.DOL_PROG, dol_ctx, dol_gen_includes,
+                 "main.dol .text section progress: {decomp}/{total} bytes ({percent:.4f}%)\n")
 
 rel_sources = load_sources(rel_ctx)
 rel_c_sources = [source for source in rel_sources if isinstance(source, CSource)]
 rel_gen_includes = [inc for source in rel_c_sources for inc in source.gen_includes]
+make_progress_msg(c.REL_PROG, rel_ctx, rel_gen_includes,
+                  "relF.rel .text section progress: {decomp}/{total} bytes ({percent:.4f}%)\n")
 
 ##########
 # Builds #
@@ -506,12 +532,15 @@ n.build(
 )
 
 n.build(
-    "$builddir/main.dol.ok",
+    c.DOL_OK,
     rule = "sha1sum",
     inputs = c.DOL_SHA,
-    implicit = c.DOL_OUT,
+    implicit = [c.DOL_OUT, c.DOL_PROG],
+    variables={
+        "prog" : c.DOL_PROG
+    }
 )
-n.default("$builddir/main.dol.ok")
+n.default(c.DOL_OK)
 
 n.build(
     c.REL_PLF,
@@ -536,12 +565,15 @@ n.build(
 )
 
 n.build(
-    "$builddir/relF.rel.ok",
+    c.REL_OK,
     rule = "sha1sum",
     inputs = c.REL_SHA,
-    implicit = c.REL_OUT,
+    implicit = [c.REL_OUT, c.REL_PROG],
+    variables={
+        "prog" : c.REL_PROG
+    }
 )
-n.default("$builddir/relF.rel.ok")
+n.default(c.REL_OK)
 
 ##########
 # Ouptut #
