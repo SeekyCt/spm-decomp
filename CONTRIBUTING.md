@@ -64,7 +64,7 @@ A setup for [asm-differ](https://github.com/simonlindholm/asm-differ/blob/main/d
 - First get a matching build and run expected.py
     - If you use the `-o` flag (see below), this will need to be re-ran whenever you add new source files
 - You can now run `diff.py symbolName` to diff a function
-- It's recommended to run it with the flags `-mwo`, see `-h` for details on these and the other flags available
+- It's recommended to run it with the flags `-mwos`, see `-h` for details on these and the other flags available
 - If you want to diff a function in the rel, you'll need to add the `-r` flag
 
 # Project-Specific Tools

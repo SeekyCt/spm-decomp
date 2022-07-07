@@ -18,7 +18,6 @@ def apply(config, args: Namespace):
     config["map_format"] = "mw"
     config["mw_build_dir"] = c.BUILDDIR
     config["objdump_executable"] = c.OBJDUMP
-    config["objdump_flags"] = ["-mpowerpc", "-Mbroadway"]
     config["show_line_numbers_default"] = True
 
 def add_custom_arguments(parser: ArgumentParser):
