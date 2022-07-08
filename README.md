@@ -22,6 +22,10 @@ See also https://github.com/SeekyCt/spm-docs for other documentation.
 
 When pulling the repo later on, make sure to rerun configure.py and `git submodule update --recursive`
 
+## Checking Progress
+
+Running progress.py after a successful build will give the current dol & rel .text section progress.
+
 ## Contributing
 See [CONTRIBUTING.md](https://github.com/SeekyCt/spm-decomp/blob/master/CONTRIBUTING.md)
 

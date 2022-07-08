@@ -2,11 +2,12 @@
 Common functions & definitions
 """
 
+from dataclasses import dataclass
 from enum import Enum
 from hashlib import sha1
 import json
 import os
-from subprocess import PIPE, Popen
+from subprocess import PIPE, run
 from sys import executable as PYTHON, platform
 from typing import List, Tuple, Union
 
@@ -23,11 +24,9 @@ def get_file_sha1(path: str) -> bytes:
 def get_cmd_stdout(cmd: str, text=True) -> str:
     """Run a command and get the stdout output as a string"""
 
-    proc = Popen(cmd.split(), stdout=PIPE, text=text)
-    ret = proc.stdout.read()
-    proc.wait()
-    assert proc.returncode == 0, f"Command '{cmd}' returned {proc.returncode}"
-    return ret
+    ret = run(cmd.split(), stdout=PIPE, text=text)
+    assert ret.returncode == 0, f"Command '{cmd}' returned {ret.returncode}"
+    return ret.stdout
 
 class Binary(Enum):
     DOL = 1
@@ -151,10 +150,10 @@ DOL_YML = f"{CONFIG}/dol.yml"
 REL_YML = f"{CONFIG}/rel.yml"
 DOL_SHA = f"{ORIG}/main.dol.sha1"
 REL_SHA = f"{ORIG}/relF.rel.sha1"
-DOL_PROG = f"{BUILDDIR}/main.dol.prog"
-REL_PROG = f"{BUILDDIR}/relF.rel.prog"
 DOL_OK = f"{BUILDDIR}/main.dol.ok"
 REL_OK = f"{BUILDDIR}/relF.rel.ok"
+DOL_ASM_LIST = f"{BUILDDIR}/main.dol.asml"
+REL_ASM_LIST = f"{BUILDDIR}/relF.rel.asml"
 
 # Symbols
 SYMBOLS = f"{CONFIG}/symbols.yml"
@@ -188,6 +187,9 @@ ASFLAGS = ' '.join([
     f"-I orig"
 ])
 
+DOL_SDATA2_SIZE = 4
+REL_SDATA2_SIZE = 0
+
 CFLAGS = [
     "-enc SJIS",
     "-lang c99",
@@ -204,11 +206,11 @@ CFLAGS = [
 BASE_DOL_CFLAGS = CFLAGS + [
     "-inline all",
     "-sdata 4",
-    "-sdata2 4"
+    f"-sdata2 {DOL_SDATA2_SIZE}"
 ]
 BASE_REL_CFLAGS = CFLAGS + [
      "-sdata 0",
-     "-sdata2 0",
+     f"-sdata2 {REL_SDATA2_SIZE}",
      "-pool off",
      "-ordered-fp-compares"
 ]
@@ -242,6 +244,25 @@ PPCDIS_DISASM_FLAGS = ' '.join([
     f"-m {SYMBOLS}",
     f"-o {DISASM_OVERRIDES}"
 ])
+
+############
+# Contexts #
+############
+
+@dataclass
+class SourceContext:
+    srcdir: str
+    cflags: str
+    binary: str
+    labels: str
+    relocs: str
+    slices: str
+    sdata2_threshold: int
+
+DOL_CTX = SourceContext(DOL_SRCDIR, DOL_CFLAGS, DOL_YML, DOL_LABELS, DOL_RELOCS, DOL_SLICES,
+                        DOL_SDATA2_SIZE)
+REL_CTX = SourceContext(REL_SRCDIR, REL_CFLAGS, REL_YML, REL_LABELS, REL_RELOCS, REL_SLICES,
+                        REL_SDATA2_SIZE)
 
 ####################
 # diff.py Expected #

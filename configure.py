@@ -3,9 +3,9 @@ Creates a build script for ninja
 """
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
 from io import StringIO
 import json
+import pickle
 import os
 import re
 from typing import List, Tuple
@@ -149,7 +149,7 @@ n.rule(
 
 n.rule(
     "sha1sum",
-    command = ALLOW_CHAIN + "sha1sum -c $in && cat $prog && touch $out",
+    command = ALLOW_CHAIN + "sha1sum -c $in && touch $out",
     description = "Verify $in",
     pool="console"
 )
@@ -193,28 +193,19 @@ n.rule(
 # Sources #
 ###########
 
-@dataclass
-class SourceContext:
-    srcdir: str
-    cflags: str
-    binary: str
-    labels: str
-    relocs: str
-    slices: str
-    sdata2_threshold: int
-
 class GeneratedInclude(ABC):
-    def __init__(self, source_name: str, path: str):
+    def __init__(self, ctx: c.SourceContext, source_name: str, path: str):
+        self.ctx = ctx
         self.source_name = source_name
         self.path = path
 
     @abstractmethod
-    def build(self, ctx: SourceContext):
+    def build(self):
         raise NotImplementedError
 
-    def find(source_name: str, txt: str) -> List["GeneratedInclude"]:
+    def find(ctx: c.SourceContext, source_name: str, txt: str) -> List["GeneratedInclude"]:
         return [
-            cl(source_name, match)
+            cl(ctx, source_name, match)
             for cl in (
                 AsmInclude,
                 JumptableInclude,
@@ -228,15 +219,15 @@ class GeneratedInclude(ABC):
 class AsmInclude(GeneratedInclude):
     REGEX = r'#include "asm\/([0-9a-f]{8})\.s"'
 
-    def __init__(self, source_name: str, match: str):
+    def __init__(self, ctx: c.SourceContext, source_name: str, match: str):
         self.addr = match
-        super().__init__(source_name, f"{c.BUILD_INCDIR}/asm/{self.addr}.s")
+        super().__init__(ctx, source_name, f"{c.BUILD_INCDIR}/asm/{self.addr}.s")
 
-    def build(self, ctx: SourceContext):
+    def build(self):
         n.build(
             self.path,
             rule="disasm_single",
-            inputs=[ctx.binary, ctx.labels, ctx.relocs],
+            inputs=[self.ctx.binary, self.ctx.labels, self.ctx.relocs],
             implicit=[c.SYMBOLS, c.DISASM_OVERRIDES],
             variables={
                 "disasmflags" : f"$ppcdis_disasm_flags -n {self.source_name}",
@@ -250,15 +241,15 @@ class AsmInclude(GeneratedInclude):
 class JumptableInclude(GeneratedInclude):
     REGEX = r'#include "jumptable\/([0-9a-f]{8})\.inc"'
 
-    def __init__(self, source_name: str, match: str):
+    def __init__(self, ctx: c.SourceContext, source_name: str, match: str):
         self.addr = match
-        super().__init__(source_name, f"{c.BUILD_INCDIR}/jumptable/{self.addr}.inc")
+        super().__init__(ctx, source_name, f"{c.BUILD_INCDIR}/jumptable/{self.addr}.inc")
 
-    def build(self, ctx: SourceContext):
+    def build(self):
         n.build(
             self.path,
             rule="jumptable",
-            inputs=[ctx.binary, ctx.labels, ctx.relocs],
+            inputs=[self.ctx.binary, self.ctx.labels, self.ctx.relocs],
             implicit=[c.SYMBOLS, c.DISASM_OVERRIDES],
             variables={
                 "disasmflags" : f"$ppcdis_disasm_flags -n {self.source_name}",
@@ -272,15 +263,16 @@ class JumptableInclude(GeneratedInclude):
 class StringInclude(GeneratedInclude):
     REGEX = r'#include "orderstrings\/([0-9a-f]{8})_([0-9a-f]{8})\.inc"'
 
-    def __init__(self, source_name: str, match: Tuple[str]):
+    def __init__(self, ctx: c.SourceContext, source_name: str, match: Tuple[str]):
         self.start, self.end = match
-        super().__init__(source_name, f"{c.BUILD_INCDIR}/orderstrings/{self.start}_{self.end}.inc")
+        super().__init__(ctx, source_name,
+                         f"{c.BUILD_INCDIR}/orderstrings/{self.start}_{self.end}.inc")
 
-    def build(self, ctx: SourceContext):
+    def build(self):
         n.build(
             self.path,
             rule="orderstrings",
-            inputs=ctx.binary,
+            inputs=self.ctx.binary,
             variables={
                 "addrs" : f"{self.start} {self.end}"
             }
@@ -292,18 +284,19 @@ class StringInclude(GeneratedInclude):
 class FloatInclude(GeneratedInclude):
     REGEX = r'#include "(orderfloats(m?))\/([0-9a-f]{8})_([0-9a-f]{8})\.inc"'
 
-    def __init__(self, source_name: str, match: Tuple[str]):
+    def __init__(self, ctx: c.SourceContext, source_name: str, match: Tuple[str]):
         folder, manual, self.start, self.end = match
         self.manual = manual != ''
-        super().__init__(source_name, f"{c.BUILD_INCDIR}/{folder}/{self.start}_{self.end}.inc")
+        super().__init__(ctx, source_name,
+                         f"{c.BUILD_INCDIR}/{folder}/{self.start}_{self.end}.inc")
 
-    def build(self, ctx: SourceContext):
-        sda = "--sda " if ctx.sdata2_threshold >= 4 else ""
+    def build(self):
+        sda = "--sda " if self.ctx.sdata2_threshold >= 4 else ""
         asm = "" if self.manual else "--asm"
         n.build(
             self.path,
             rule="orderfloats",
-            inputs=ctx.binary,
+            inputs=self.ctx.binary,
             variables={
                 "addrs" : f"{self.start} {self.end}",
                 "flags" : f"{sda} {asm}"
@@ -316,15 +309,16 @@ class FloatInclude(GeneratedInclude):
 class DoubleInclude(GeneratedInclude):
     REGEX = r'#include "orderdoubles\/([0-9a-f]{8})_([0-9a-f]{8})\.inc"'
 
-    def __init__(self, source_name: str, match: Tuple[str]):
+    def __init__(self, ctx: c.SourceContext, source_name: str, match: Tuple[str]):
         self.start, self.end = match
-        super().__init__(source_name, f"{c.BUILD_INCDIR}/orderdoubles/{self.start}_{self.end}.inc")
+        super().__init__(ctx, source_name,
+                         f"{c.BUILD_INCDIR}/orderdoubles/{self.start}_{self.end}.inc")
 
-    def build(self, ctx: SourceContext):
+    def build(self):
         n.build(
             self.path,
             rule="orderfloats",
-            inputs=ctx.binary,
+            inputs=self.ctx.binary,
             variables={
                 "addrs" : f"{self.start} {self.end}",
                 "flags" : f"--double"
@@ -346,7 +340,7 @@ class Source(ABC):
     def build(self):
         raise NotImplementedError
     
-    def make(ctx: SourceContext, source: c.SourceDesc):
+    def make(ctx: c.SourceContext, source: c.SourceDesc):
         if isinstance(source, str):
             ext = source.split('.')[-1].lower()
             if ext in ("c", "cpp", "cxx", "cc"):
@@ -359,7 +353,7 @@ class Source(ABC):
             return GenAsmSource(ctx, *source)
 
 class GenAsmSource(Source):
-    def __init__(self, ctx: SourceContext, section: str, start: int, end: int):
+    def __init__(self, ctx: c.SourceContext, section: str, start: int, end: int):
         self.start = start
         self.end = end
         self.ctx = ctx
@@ -384,7 +378,7 @@ class GenAsmSource(Source):
         )
 
 class AsmSource(Source):
-    def __init__(self, ctx: SourceContext, path: str):
+    def __init__(self, ctx: c.SourceContext, path: str):
         super().__init__(True, path, f"$builddir/{path}.o")
 
     def build(self):
@@ -396,13 +390,13 @@ class AsmSource(Source):
 
 
 class CSource(Source):
-    def __init__(self, ctx: SourceContext, path: str):
+    def __init__(self, ctx: c.SourceContext, path: str):
         self.cflags = ctx.cflags
         self.iconv_path = f"$builddir/iconv/{path}"
 
         # Find generated includes
         with open(path, encoding="utf-8") as f:
-            gen_includes = GeneratedInclude.find(path, f.read())
+            gen_includes = GeneratedInclude.find(ctx, path, f.read())
 
         self.s_path = f"$builddir/{path}.s"
         super().__init__(True, path, f"$builddir/{path}.o", gen_includes)
@@ -435,55 +429,32 @@ class CSource(Source):
             }
         )
 
-def load_sources(ctx: SourceContext):
+def load_sources(ctx: c.SourceContext):
     raw = c.get_cmd_stdout(
         f"{c.SLICES} {ctx.binary} {ctx.slices} -o -p {ctx.srcdir}/"
     )
     return [Source.make(ctx, s) for s in json.loads(raw)]
 
-def make_progress_msg(path: str, ctx: SourceContext, gen_includes: List[GeneratedInclude],
-                      format: str):
-    # Temporarily disabled, labels may not exist yet
-    """
-    # TODO: other sections than .text
+def make_asm_list(path: str, gen_includes: List[GeneratedInclude]):
+    with open(path, 'wb') as f:
+        pickle.dump(
+            [
+                inc.addr
+                for inc in gen_includes
+                if isinstance(inc, AsmInclude)
+            ],
+            f
+        )
 
-    # Get data
-    raw = c.get_cmd_stdout(f"{c.PROGRESS} {ctx.binary} {ctx.labels} {ctx.slices}")
-    dat = json.loads(raw)
-    decomp_size = dat["decomp_slices_size"]
-    total_size = dat["total_size"]
-    func_sizes = dat["symbol_sizes"]
-
-    # Subtract undecompiled functions in decompiled slices
-    for inc in gen_includes:
-        if not isinstance(inc, AsmInclude):
-            continue
-        decomp_size -= func_sizes[inc.addr]
-    
-    # Output
-    with open(path, 'w') as f:
-        f.write(format.format(decomp=hex(decomp_size), total=hex(total_size),
-                              percent=(decomp_size/total_size)*100))
-    """
-    with open(path, 'w') as f:
-        f.write('')
-
-dol_ctx = SourceContext(c.DOL_SRCDIR, c.DOL_CFLAGS, c.DOL_YML, c.DOL_LABELS,
-                        c.DOL_RELOCS, c.DOL_SLICES, 4)
-rel_ctx = SourceContext(c.REL_SRCDIR, c.REL_CFLAGS, c.REL_YML, c.REL_LABELS,
-                        c.REL_RELOCS, c.REL_SLICES, 0)
-
-dol_sources = load_sources(dol_ctx)
+dol_sources = load_sources(c.DOL_CTX)
 dol_c_sources = [source for source in dol_sources if isinstance(source, CSource)]
 dol_gen_includes = [inc for source in dol_c_sources for inc in source.gen_includes]
-make_progress_msg(c.DOL_PROG, dol_ctx, dol_gen_includes,
-                 "main.dol .text section progress: {decomp}/{total} bytes ({percent:.4f}%)\n")
+make_asm_list(c.DOL_ASM_LIST, dol_gen_includes)
 
-rel_sources = load_sources(rel_ctx)
+rel_sources = load_sources(c.REL_CTX)
 rel_c_sources = [source for source in rel_sources if isinstance(source, CSource)]
 rel_gen_includes = [inc for source in rel_c_sources for inc in source.gen_includes]
-make_progress_msg(c.REL_PROG, rel_ctx, rel_gen_includes,
-                  "relF.rel .text section progress: {decomp}/{total} bytes ({percent:.4f}%)\n")
+make_asm_list(c.REL_ASM_LIST, rel_gen_includes)
 
 ##########
 # Builds #
@@ -509,11 +480,8 @@ n.build(
     }
 )
 
-for inc in dol_gen_includes:
-    inc.build(dol_ctx)
-
-for inc in rel_gen_includes:
-    inc.build(rel_ctx)
+for inc in dol_gen_includes + rel_gen_includes:
+    inc.build()
 
 for source in dol_sources + rel_sources:
     source.build()
@@ -540,10 +508,7 @@ n.build(
     c.DOL_OK,
     rule = "sha1sum",
     inputs = c.DOL_SHA,
-    implicit = [c.DOL_OUT, c.DOL_PROG],
-    variables={
-        "prog" : c.DOL_PROG
-    }
+    implicit = [c.DOL_OUT]
 )
 n.default(c.DOL_OK)
 
@@ -573,10 +538,7 @@ n.build(
     c.REL_OK,
     rule = "sha1sum",
     inputs = c.REL_SHA,
-    implicit = [c.REL_OUT, c.REL_PROG],
-    variables={
-        "prog" : c.REL_PROG
-    }
+    implicit = [c.REL_OUT]
 )
 n.default(c.REL_OK)
 
