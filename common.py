@@ -198,7 +198,7 @@ CFLAGS = [
     "-use_lmw_stmw on",
     "-str pool",
     "-rostr",
-    "-sym on",
+    "-sym dwarf-2",
     "-ipa file"
 ]
 BASE_DOL_CFLAGS = CFLAGS + [
