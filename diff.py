@@ -3,7 +3,7 @@
 
 ##############################################################
 # Imported from https://github.com/simonlindholm/asm-differ/ #
-# on commit b0ef0c5bf47573c5b1cb76b1627c834d806815e1         #
+# on commit e7d0aaf06ce7f73acc2870bbc0f6ef66c76cb46a         #
 ##############################################################
 
 import argparse
@@ -1959,9 +1959,9 @@ def process(dump: str, config: Config) -> List[Line]:
 
         if not re.match(r"^\s+[0-9a-f]+:\s+", row):
             # This regex is conservative, and assumes the file path does not contain "weird"
-            # characters like colons, tabs, or angle brackets.
+            # characters like tabs or angle brackets.
             if re.match(
-                r"^[^ \t<>:][^\t<>:]*:[0-9]+( \(discriminator [0-9]+\))?$", row
+                r"^[^ \t<>][^\t<>]*:[0-9]+( \(discriminator [0-9]+\))?$", row
             ):
                 source_filename, _, tail = row.rpartition(":")
                 source_line_num = int(tail.partition(" ")[0])
