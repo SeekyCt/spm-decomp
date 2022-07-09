@@ -125,7 +125,7 @@ n.rule(
 
 n.rule(
     "orderstrings",
-    command = "$orderstrings $in $addrs $out $flags --enc shift-jis",
+    command = "$orderstrings $in $addrs $out $flags --enc shift-jis --pool",
     description = "Order strings $in $addrs"
 )
 
