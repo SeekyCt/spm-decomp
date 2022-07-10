@@ -8,7 +8,7 @@ from tempfile import NamedTemporaryFile
 
 import common as c
 
-def get_function(binary: c.Binary, srcflag: str, addr: int) -> str:
+def get_function(binary: c.Binary, srcflag: str, addr: int, extra: bool) -> str:
     # Get flags for binary
     if binary == c.Binary.DOL:
         binary = c.DOL_YML
@@ -20,12 +20,13 @@ def get_function(binary: c.Binary, srcflag: str, addr: int) -> str:
         anlflags = f"{c.REL_LABELS} {c.REL_RELOCS}"
 
     # Disassemble function
+    e = "-e" if extra else ""
     with NamedTemporaryFile(suffix=".c", delete=False) as tmp:
         try:
             tmp.close()
             ret = system(
                 f"{c.DISASSEMBLER} {binary} {anlflags} {tmp.name} -f {addr:x} "
-                f"-m {c.SYMBOLS} {binflags} {srcflag} -q"
+                f"-m {c.SYMBOLS} {binflags} {srcflag} -q {e}"
             )
             assert ret == 0, f"Disassembly error code {ret}"
             with open(tmp.name) as f:
@@ -39,6 +40,8 @@ if __name__=="__main__":
     parser = ArgumentParser()
     hex_int = lambda s: int(s, 16)
     parser.add_argument("addr", type=hex_int)
+    parser.add_argument("-e", "--extra", action="store_true",
+                        help="For --function, include referenced jumptables")
     args = parser.parse_args()
 
     # Find containing binary
@@ -47,4 +50,4 @@ if __name__=="__main__":
     # Get source file name flag
     srcflag = f"-n {source}" if isinstance(source, str) else ""
 
-    print(get_function(binary, srcflag, args.addr))
+    print(get_function(binary, srcflag, args.addr, args.extra))
