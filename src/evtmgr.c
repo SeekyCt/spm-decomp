@@ -277,9 +277,70 @@ EvtEntry * evtEntryType(s32* script, u32 priority, u8 flags, u8 type) {
     return entry;
 }
 
-asm EvtEntry * evtChildEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags)
+EvtEntry * evtChildEntry(EvtEntry * parent, EvtScriptCode * script, u8 flags)
 {
-    #include "asm/800d9060.s"
+    EvtEntry* entry;
+    s32 j;
+    s32 i;
+    EvtWork * wp;
+
+    wp = evtGetWork();
+
+    entry = wp->entries;
+    for (i = 0; i < wp->entryCount; i++, entry++)
+    {
+        if ((entry->flags & EVT_FLAG_IN_USE) == 0)
+            break;
+    }
+    if (i >= wp->entryCount)
+        assert(0x1a6, 0, "EVTMGR:Pointer Table Overflow !![evtChildEntry]");
+    evtMax += 1;
+    parent->childEntry = entry;
+    parent->flags |= 0x10;
+    memset(entry, 0, sizeof(*entry));
+    entry->flags = (u8) (flags | EVT_FLAG_IN_USE);
+    entry->pCurInstruction = script;
+    entry->scriptStart = script;
+    entry->pPrevInstruction = script;
+    entry->curOpcode = 0;
+    entry->parent = parent;
+    entry->childEntry = NULL;
+    entry->brotherEntry = NULL;
+    entry->priority = (u8) (parent->priority + 1);
+    entry->id = evtId++;
+    entry->doWhileDepth = -1;
+    entry->switchDepth = -1;
+    entry->type = parent->type;
+    entry->name = NULL;
+    entry->uw = parent->uw;
+    entry->uf = parent->uf;
+    entry->speed = evtSpd;
+    entry->timeToRun = 0.0f;
+    entry->casedrvId = -1;
+    entry->ownerNPC = parent->ownerNPC;
+    entry->lifetime = 0;
+    entry->msgWindowId = parent->msgWindowId;
+    entry->unknown_0x170 = parent->unknown_0x170;
+    entry->unknown_0x178 = parent->unknown_0x178;
+    entry->unknown_0x17c = parent->unknown_0x17c;
+    entry->unknown_0x180 = parent->unknown_0x180;
+    entry->unknown_0x184 = parent->unknown_0x184;
+    entry->msgPri = parent->msgPri;
+    for (j = 0; j < 16; j++)
+        entry->lw[j] = parent->lw[j];
+    for (j = 0; j < 3; j++)
+        entry->lf[j] = parent->lf[j];
+    make_jump_table(entry);
+    if (runMainF)
+    {
+        priTbl[priTblNum] = i;
+        priIdTbl[priTblNum] = entry->id;
+        priTblNum++;
+    }
+    evtEntryRunCheck();
+    if (evtId == 0)
+        evtId = 1;
+    return entry;
 }
 
 asm EvtEntry * evtBrotherEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags)
