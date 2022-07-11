@@ -135,8 +135,8 @@ void evtEntryRunCheck();
 */
 EvtEntry * evtEntry(EvtScriptCode * script, u32 priority, u8 flags);
 EvtEntry * evtEntryType(EvtScriptCode * script, u32 priority, u8 flags, u8 type);
-EvtEntry * evtChildEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags);
-EvtEntry * evtBrotherEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags);
+EvtEntry * evtChildEntry(EvtEntry * parent, EvtScriptCode * script, u8 flags);
+EvtEntry * evtBrotherEntry(EvtEntry * brother, EvtScriptCode * script, u8 flags);
 
 /*
     Restarts a entry
