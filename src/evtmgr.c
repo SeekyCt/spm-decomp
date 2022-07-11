@@ -154,11 +154,22 @@ void evtmgrReInit()
     evt_msg_init();
 }
 
-// Regalloc of second evtStopAll inline not matching
-// https://decomp.me/scratch/yhhXt
-#ifdef NON_MATCHING
-EvtEntry * evtEntry(s32* script, u32 priority, u8 flags)
+// Always inlined
+void evtEntryRunCheck()
 {
+    switch (_spmarioSystemLevel) {
+        case 0:
+            break;
+        case 1:
+            evtStopAll(3);
+            break;
+        case 2:
+            evtStopAll(0xff);
+            break;
+    }
+}
+
+EvtEntry * evtEntry(s32* script, u32 priority, u8 flags) {
     EvtEntry* entry;
     s32 j;
     s32 i;
@@ -173,7 +184,7 @@ EvtEntry * evtEntry(s32* script, u32 priority, u8 flags)
             break;
     }
     if (i >= wp->entryCount)
-        assert(0x108, 0, "EVTMGR:Pointer Table Overflow !![evtEntryType]");
+        assert(0x108, 0, "EVTMGR:Pointer Table Overflow !![evtEntry]");
     evtMax += 1;
     memset(entry, 0, sizeof(*entry));
     entry->flags = (u8) (flags | EVT_FLAG_IN_USE);
@@ -206,27 +217,11 @@ EvtEntry * evtEntry(s32* script, u32 priority, u8 flags)
         priIdTbl[priTblNum] = entry->id;
         priTblNum++;
     }
-    switch (_spmarioSystemLevel)
-    {
-        case 0:
-            break;
-        case 1:
-            evtStopAll(3);
-            break;
-        case 2:
-            evtStopAll(0xff);
-            break;
-    }
+    evtEntryRunCheck();
     if (evtId == 0)
         evtId = 1;
     return entry;
 }
-#else
-asm EvtEntry * evtEntry(EvtScriptCode * script, u32 priority, u8 flags)
-{
-    #include "asm/800d8b88.s"
-}
-#endif
 
 asm EvtEntry * evtEntryType(EvtScriptCode * script, u32 priority, u8 flags, u8 type)
 {

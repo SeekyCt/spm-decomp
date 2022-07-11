@@ -126,6 +126,11 @@ void evtmgrInit();
 void evtmgrReInit();
 
 /*
+    Stops scripts based on _spmarioSystemLevel
+*/
+void evtEntryRunCheck();
+
+/*
     Starts execution of a script
 */
 EvtEntry * evtEntry(EvtScriptCode * script, u32 priority, u8 flags);
