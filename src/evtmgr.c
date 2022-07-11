@@ -7,9 +7,6 @@
 #include <wii/os.h>
 #include <wii/string.h>
 
-// .rodata
-#include "orderstrings/8032eb60_8032ec9b.inc"
-
 // .bss
 static EvtWork work;
 static s32 priTbl[EVT_ENTRY_MAX];
@@ -191,7 +188,7 @@ EvtEntry * evtEntry(s32* script, u32 priority, u8 flags) {
     entry->pCurInstruction = script;
     entry->scriptStart = script;
     entry->pPrevInstruction = script;
-    entry->curOpcode = 0;
+    entry->curOpcode = EVT_OPC_NEXT;
     entry->parent = NULL;
     entry->childEntry = NULL;
     entry->brotherEntry = NULL;
@@ -245,7 +242,7 @@ EvtEntry * evtEntryType(s32* script, u32 priority, u8 flags, u8 type) {
     entry->pCurInstruction = script;
     entry->scriptStart = script;
     entry->pPrevInstruction = script;
-    entry->curOpcode = 0;
+    entry->curOpcode = EVT_OPC_NEXT;
     entry->parent = NULL;
     entry->childEntry = NULL;
     entry->brotherEntry = NULL;
@@ -296,13 +293,13 @@ EvtEntry * evtChildEntry(EvtEntry * parent, EvtScriptCode * script, u8 flags)
         assert(0x1a6, 0, "EVTMGR:Pointer Table Overflow !![evtChildEntry]");
     evtMax += 1;
     parent->childEntry = entry;
-    parent->flags |= 0x10;
+    parent->flags |= EVT_FLAG_WAIT_CHILD;
     memset(entry, 0, sizeof(*entry));
     entry->flags = (u8) (flags | EVT_FLAG_IN_USE);
     entry->pCurInstruction = script;
     entry->scriptStart = script;
     entry->pPrevInstruction = script;
-    entry->curOpcode = 0;
+    entry->curOpcode = EVT_OPC_NEXT;
     entry->parent = parent;
     entry->childEntry = NULL;
     entry->brotherEntry = NULL;
@@ -366,7 +363,7 @@ EvtEntry * evtBrotherEntry(EvtEntry * brother, EvtScriptCode * script, u8 flags)
     entry->pCurInstruction = script;
     entry->scriptStart = script;
     entry->pPrevInstruction = script;
-    entry->curOpcode = 0;
+    entry->curOpcode = EVT_OPC_NEXT;
     entry->parent = NULL;
     entry->brotherEntry = brother;
     entry->childEntry = NULL;
@@ -407,7 +404,7 @@ EvtEntry* evtRestart(EvtEntry* entry)
 
     wp = evtGetWork();
     start = entry->scriptStart;
-    entry->curOpcode = 0;
+    entry->curOpcode = EVT_OPC_NEXT;
     entry->pCurInstruction = start;
     entry->pPrevInstruction = start;
     entry->speed = 1.0f;
@@ -565,7 +562,7 @@ bool evtCheckID(s32 id)
 
     wp = evtGetWork();
     entry = wp->entries;
-    for (s32 i = 0; i < wp->entryCount; i++, entry++)
+    for (i = 0; i < wp->entryCount; i++, entry++)
     {
         if (((entry->flags & EVT_FLAG_IN_USE) != 0) && (entry->id == id))
             return true;
@@ -645,7 +642,7 @@ void evtStopID(s32 id)
 
     wp = evtGetWork();
     entry = wp->entries;
-    for (s32 i = 0; i < wp->entryCount; i++, entry++)
+    for (i = 0; i < wp->entryCount; i++, entry++)
     {
         if (((entry->flags & EVT_FLAG_IN_USE) != 0) && (entry->id == id))
             evtStop(entry, 0xff);
