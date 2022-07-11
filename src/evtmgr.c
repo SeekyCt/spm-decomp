@@ -223,9 +223,58 @@ EvtEntry * evtEntry(s32* script, u32 priority, u8 flags) {
     return entry;
 }
 
-asm EvtEntry * evtEntryType(EvtScriptCode * script, u32 priority, u8 flags, u8 type)
-{
-    #include "asm/800d8df4.s"
+EvtEntry * evtEntryType(s32* script, u32 priority, u8 flags, u8 type) {
+    EvtEntry* entry;
+    s32 j;
+    s32 i;
+    EvtWork * wp;
+
+    wp = evtGetWork();
+
+    entry = wp->entries;
+    for (i = 0; i < wp->entryCount; i++, entry++)
+    {
+        if ((entry->flags & EVT_FLAG_IN_USE) == 0)
+            break;
+    }
+    if (i >= wp->entryCount)
+        assert(0x155, 0, "EVTMGR:Pointer Table Overflow !![evtEntryType]");
+    evtMax += 1;
+    memset(entry, 0, sizeof(*entry));
+    entry->flags = (u8) (flags | EVT_FLAG_IN_USE);
+    entry->pCurInstruction = script;
+    entry->scriptStart = script;
+    entry->pPrevInstruction = script;
+    entry->curOpcode = 0;
+    entry->parent = NULL;
+    entry->childEntry = NULL;
+    entry->brotherEntry = NULL;
+    entry->priority = (u8) priority;
+    entry->id = evtId++;
+    entry->doWhileDepth = -1;
+    entry->switchDepth = -1;
+    entry->type = type;
+    entry->name = NULL;
+    entry->speed = evtSpd;
+    entry->timeToRun = 0.0f;
+    entry->casedrvId = -1;
+    entry->ownerNPC = NULL;
+    entry->lifetime = 0;
+    for (j = 0; j < 16; j++)
+        entry->lw[j] = 0;
+    for (j = 0; j < 3; j++)
+        entry->lf[j] = 0;
+    make_jump_table(entry);
+    if (runMainF && ((entry->flags & EVT_FLAG_START_IMMEDIATE) != 0))
+    {
+        priTbl[priTblNum] = i;
+        priIdTbl[priTblNum] = entry->id;
+        priTblNum++;
+    }
+    evtEntryRunCheck();
+    if (evtId == 0)
+        evtId = 1;
+    return entry;
 }
 
 asm EvtEntry * evtChildEntry(EvtEntry * entry, EvtScriptCode * script, u8 flags)
