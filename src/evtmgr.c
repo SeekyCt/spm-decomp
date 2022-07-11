@@ -256,17 +256,7 @@ EvtEntry* evtRestart(EvtEntry* entry)
     entry->timeToRun = 0.0f;
     entry->lifetime = 0;
     make_jump_table(entry);
-    switch (_spmarioSystemLevel)
-    {
-        case 0:
-            break;
-        case 1:
-            evtStopAll(3);
-            break;
-        case 2:
-            evtStopAll(0xff);
-            break;
-    }
+    evtEntryRunCheck();
     return entry;
 }
 
