@@ -29,7 +29,7 @@ else:
 
 # Disassemble function
 srcflag = f"-n {source}" if isinstance(source, str) else ""
-asm = get_function(binary, srcflag, args.addr)
+asm = get_function(binary, srcflag, args.addr, True)
 
 # Get diff_label
 lines = asm.splitlines()
