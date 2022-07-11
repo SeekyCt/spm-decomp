@@ -4,29 +4,24 @@ Disassembles a single function
 
 from argparse import ArgumentParser
 from os import system, unlink
+import os.path
 from tempfile import NamedTemporaryFile
 
 import common as c
 
 def get_function(binary: c.Binary, srcflag: str, addr: int, extra: bool) -> str:
-    # Get flags for binary
-    if binary == c.Binary.DOL:
-        binary = c.DOL_YML
-        binflags = ""
-        anlflags = f"{c.DOL_LABELS} {c.DOL_RELOCS}"
-    else:
-        binary = c.REL_YML
-        binflags = c.PPCDIS_REL_FLAGS
-        anlflags = f"{c.REL_LABELS} {c.REL_RELOCS}"
+    # Get context
+    ctx = c.DOL_CTX if binary == c.Binary.DOL else c.REL_CTX
+    assert os.path.exists(ctx.labels), "Error: analysis has not ran!"
 
     # Disassemble function
-    e = "-e" if extra else ""
-    with NamedTemporaryFile(suffix=".c", delete=False) as tmp:
+    extraflag = "-e" if extra else ""
+    with NamedTemporaryFile(suffix=".s", delete=False) as tmp:
         try:
             tmp.close()
             ret = system(
-                f"{c.DISASSEMBLER} {binary} {anlflags} {tmp.name} -f {addr:x} "
-                f"-m {c.SYMBOLS} {binflags} {srcflag} -q {e}"
+                f"{c.DISASSEMBLER} {ctx.binary} {ctx.labels} {ctx.relocs} {tmp.name} -f {addr:x} "
+                f"-m {c.SYMBOLS} {srcflag} -q {extraflag}"
             )
             assert ret == 0, f"Disassembly error code {ret}"
             with open(tmp.name) as f:
