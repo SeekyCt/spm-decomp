@@ -11,13 +11,20 @@ from getfunction import get_function
 
 # Get arguments
 parser = ArgumentParser()
-hex_int = lambda s: int(s, 16)
-parser.add_argument("addr", type=hex_int)
+parser.add_argument("sym", type=str, help="Symbol name or address")
+parser.add_argument("-d", "--dol", action="store_true", help="Prioritise dol-local symbols")
+parser.add_argument("-r", "--rel", action="store_true", help="Prioritise rel-local symbols")
+parser.add_argument("-n", "--source-name", action="store_true",
+                    help="Source C/C++ file name for symbol lookup")
 parser.add_argument("--host", default="https://decomp.me")
 args = parser.parse_args()
 
+# Find address
+assert not (args.dol and args.rel), "--dol and --rel are incompatible"
+addr = c.lookup_sym(args.sym, args.dol, args.rel, args.source_name)
+
 # Find containing binary
-binary, source = c.get_containing_slice(args.addr)
+binary, source = c.get_containing_slice(addr)
 
 # Get flags for binary
 if binary == c.Binary.DOL:
@@ -29,7 +36,7 @@ else:
 
 # Disassemble function
 srcflag = f"-n {source}" if isinstance(source, str) else ""
-asm = get_function(binary, srcflag, args.addr, True)
+asm = get_function(binary, srcflag, addr, True)
 
 # Get diff_label
 lines = asm.splitlines()
