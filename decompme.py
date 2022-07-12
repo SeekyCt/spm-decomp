@@ -14,8 +14,7 @@ parser = ArgumentParser()
 parser.add_argument("sym", type=str, help="Symbol name or address")
 parser.add_argument("-d", "--dol", action="store_true", help="Prioritise dol-local symbols")
 parser.add_argument("-r", "--rel", action="store_true", help="Prioritise rel-local symbols")
-parser.add_argument("-n", "--source-name", action="store_true",
-                    help="Source C/C++ file name for symbol lookup")
+parser.add_argument("-n", "--source-name", type=str, help="Prioritise source-local symbols")
 parser.add_argument("--host", default="https://decomp.me")
 args = parser.parse_args()
 

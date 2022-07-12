@@ -38,8 +38,7 @@ if __name__=="__main__":
                         help="Include referenced jumptables")
     parser.add_argument("-d", "--dol", action="store_true", help="Prioritise dol-local symbols")
     parser.add_argument("-r", "--rel", action="store_true", help="Prioritise rel-local symbols")
-    parser.add_argument("-n", "--source-name", action="store_true",
-                        help="Source C/C++ file name for symbol lookup")
+    parser.add_argument("-n", "--source-name", type=str, help="Prioritise source-local symbols")
     args = parser.parse_args()
 
     # Find address
