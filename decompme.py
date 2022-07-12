@@ -18,9 +18,12 @@ parser.add_argument("-n", "--source-name", type=str, help="Prioritise source-loc
 parser.add_argument("--host", default="https://decomp.me")
 args = parser.parse_args()
 
-# Find address
+# Find address and diff_label
 assert not (args.dol and args.rel), "--dol and --rel are incompatible"
-addr = c.lookup_sym(args.sym, args.dol, args.rel, args.source_name)
+addr, diff_label = c.lookup_sym_full(args.sym, args.dol, args.rel, args.source_name)
+assert addr is not None, f"Symbol {args.sym} not found"
+if diff_label is None:
+    diff_label = f"func_{addr:x}"
 
 # Find containing binary
 binary, source = c.get_containing_slice(addr)
@@ -35,11 +38,6 @@ else:
 
 # Disassemble function
 asm = get_function(binary, source, addr, True)
-
-# Get diff_label
-lines = asm.splitlines()
-assert lines[0].startswith(".global "), "Address doesn't appear to be a function"
-diff_label = lines[0][len(".global "):]
 
 # Get context
 ctx = c.get_cmd_stdout(f"{c.PYTHON} makectx_m2c.py")

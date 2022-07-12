@@ -45,6 +45,7 @@ if __name__=="__main__":
     # Find address
     assert not (args.dol and args.rel), "--dol and --rel are incompatible"
     addr = c.lookup_sym(args.sym, args.dol, args.rel, args.source_name)
+    assert addr is not None, f"Symbol {args.sym} not found"
 
     # Find containing binary
     binary, source = c.get_containing_slice(addr)
