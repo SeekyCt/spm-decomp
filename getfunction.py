@@ -9,13 +9,14 @@ from tempfile import NamedTemporaryFile
 
 import common as c
 
-def get_function(binary: c.Binary, srcflag: str, addr: int, extra: bool) -> str:
+def get_function(binary: c.Binary, source: c.SourceDesc, addr: int, extra: bool) -> str:
     # Get context
     ctx = c.DOL_CTX if binary == c.Binary.DOL else c.REL_CTX
     assert os.path.exists(ctx.labels), "Error: analysis has not ran!"
 
     # Disassemble function
     extraflag = "-e" if extra else ""
+    srcflag = f"-n {source}" if isinstance(source, str) else ""
     with NamedTemporaryFile(suffix=".s", delete=False) as tmp:
         try:
             tmp.close()
@@ -48,7 +49,4 @@ if __name__=="__main__":
     # Find containing binary
     binary, source = c.get_containing_slice(addr)
 
-    # Get source file name flag
-    srcflag = f"-n {source}" if isinstance(source, str) else ""
-
-    print(get_function(binary, srcflag, addr, args.extra))
+    print(get_function(binary, source, addr, args.extra))

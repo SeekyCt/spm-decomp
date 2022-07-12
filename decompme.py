@@ -34,8 +34,7 @@ else:
     flags = c.EXTERNAL_REL_CFLAGS
 
 # Disassemble function
-srcflag = f"-n {source}" if isinstance(source, str) else ""
-asm = get_function(binary, srcflag, addr, True)
+asm = get_function(binary, source, addr, True)
 
 # Get diff_label
 lines = asm.splitlines()
