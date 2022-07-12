@@ -21,7 +21,7 @@ def get_function(binary: c.Binary, srcflag: str, addr: int, extra: bool) -> str:
             tmp.close()
             ret = system(
                 f"{c.DISASSEMBLER} {ctx.binary} {ctx.labels} {ctx.relocs} {tmp.name} -f {addr:x} "
-                f"-m {c.SYMBOLS} {srcflag} -q {extraflag}"
+                f"-m {c.GAME_SYMBOLS} {srcflag} -q {extraflag}"
             )
             assert ret == 0, f"Disassembly error code {ret}"
             with open(tmp.name) as f:
@@ -33,16 +33,23 @@ def get_function(binary: c.Binary, srcflag: str, addr: int, extra: bool) -> str:
 
 if __name__=="__main__":
     parser = ArgumentParser()
-    hex_int = lambda s: int(s, 16)
-    parser.add_argument("addr", type=hex_int)
+    parser.add_argument("sym", type=str, help="Symbol name or address")
     parser.add_argument("-e", "--extra", action="store_true",
-                        help="For --function, include referenced jumptables")
+                        help="Include referenced jumptables")
+    parser.add_argument("-d", "--dol", action="store_true", help="Prioritise dol-local symbols")
+    parser.add_argument("-r", "--rel", action="store_true", help="Prioritise rel-local symbols")
+    parser.add_argument("-n", "--source-name", action="store_true",
+                        help="Source C/C++ file name for symbol lookup")
     args = parser.parse_args()
 
+    # Find address
+    assert not (args.dol and args.rel), "--dol and --rel are incompatible"
+    addr = c.lookup_sym(args.sym, args.dol, args.rel, args.source_name)
+
     # Find containing binary
-    binary, source = c.get_containing_slice(args.addr)
+    binary, source = c.get_containing_slice(addr)
 
     # Get source file name flag
     srcflag = f"-n {source}" if isinstance(source, str) else ""
 
-    print(get_function(binary, srcflag, args.addr, args.extra))
+    print(get_function(binary, srcflag, addr, args.extra))

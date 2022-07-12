@@ -51,6 +51,35 @@ def get_containing_slice(addr: int) -> Tuple[Binary, SourceDesc]:
     else:
         return (Binary.DOL, containing)
 
+def lookup_sym(sym: str, dol=False, rel=False, source_name: str = None) -> int:
+    """Takes a symbol as a name or address and returns the address"""
+
+    # Get binary
+    if dol:
+        binary_name = DOL_YML
+    elif rel:
+        binary_name = REL_YML
+    else:
+        binary_name = None
+
+    # Determine type    
+    try:
+        return int(sym, 16)
+    except ValueError:
+        return get_address(sym, binary_name, source_name)
+
+def get_address(name: str, binary=None, source_name=None) -> int:
+    """Finds the address of a symbol"""
+
+    args = [name]
+    if binary is not None:
+        args.append(f"-b {binary}")
+    if source_name is not None:
+        args.append(f"-n {source_name}")
+    
+    raw = get_cmd_stdout(f"{SYMBOLS} {GAME_SYMBOLS} {' '.join(args)}")
+    return json.loads(raw)
+
 def find_headers(dirname: str, base=None) -> List[str]:
     """Returns a list of all headers in a folder recursively"""
 
@@ -114,6 +143,7 @@ ELF2DOL = f"{PYTHON} {PPCDIS}/elf2dol.py"
 ELF2REL = f"{PYTHON} {PPCDIS}/elf2rel.py"
 SLICES = f"{PYTHON} {PPCDIS}/slices.py"
 PROGRESS = f"{PYTHON} {PPCDIS}/progress.py"
+SYMBOLS = f"{PYTHON} {PPCDIS}/symbols.py"
 
 # Codewarrior
 TOOLS = "tools"
@@ -156,7 +186,7 @@ DOL_ASM_LIST = f"{BUILDDIR}/main.dol.asml"
 REL_ASM_LIST = f"{BUILDDIR}/relF.rel.asml"
 
 # Symbols
-SYMBOLS = f"{CONFIG}/symbols.yml"
+GAME_SYMBOLS = f"{CONFIG}/symbols.yml"
 
 # Analysis outputs
 DOL_LABELS = f"{BUILDDIR}/labels.pickle"
@@ -241,7 +271,7 @@ PPCDIS_ANALYSIS_FLAGS = ' '.join([
 ])
 
 PPCDIS_DISASM_FLAGS = ' '.join([
-    f"-m {SYMBOLS}",
+    f"-m {GAME_SYMBOLS}",
     f"-o {DISASM_OVERRIDES}"
 ])
 

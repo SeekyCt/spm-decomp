@@ -228,7 +228,7 @@ class AsmInclude(GeneratedInclude):
             self.path,
             rule="disasm_single",
             inputs=[self.ctx.binary, self.ctx.labels, self.ctx.relocs],
-            implicit=[c.SYMBOLS, c.DISASM_OVERRIDES],
+            implicit=[c.GAME_SYMBOLS, c.DISASM_OVERRIDES],
             variables={
                 "disasmflags" : f"$ppcdis_disasm_flags -n {self.source_name}",
                 "addr" : self.addr
@@ -250,7 +250,7 @@ class JumptableInclude(GeneratedInclude):
             self.path,
             rule="jumptable",
             inputs=[self.ctx.binary, self.ctx.labels, self.ctx.relocs],
-            implicit=[c.SYMBOLS, c.DISASM_OVERRIDES],
+            implicit=[c.GAME_SYMBOLS, c.DISASM_OVERRIDES],
             variables={
                 "disasmflags" : f"$ppcdis_disasm_flags -n {self.source_name}",
                 "addr" : self.addr
@@ -365,7 +365,7 @@ class GenAsmSource(Source):
             self.src_path,
             rule = "disasm_slice",
             inputs = [self.ctx.binary, self.ctx.labels, self.ctx.relocs],
-            implicit = [c.SYMBOLS, c.DISASM_OVERRIDES],
+            implicit = [c.GAME_SYMBOLS, c.DISASM_OVERRIDES],
             variables = {
                 "slice" : f"{self.start:x} {self.end:x}",
                 "disasmflags" : f"$ppcdis_disasm_flags"
