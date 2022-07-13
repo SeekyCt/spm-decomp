@@ -7,11 +7,7 @@
 #include <wii/os.h>
 
 // .rodata
-#ifndef SHIFTABLE
-double lbl_8032eca0 : 0x8032eca0; // casting float
-#else
-double lbl_8032eca0 = 4.503601774854144E15;
-#endif
+#include "orderdoubles/8032eca0_8032eca8.inc"
 #include "orderstrings/8032eca8_8032efe1.inc"
 
 // 0.5f comes early in this file's float pool, suggesting the rounding in evt_mod
