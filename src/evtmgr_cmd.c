@@ -2739,10 +2739,140 @@ s32 evtmgrCmd(EvtEntry* entry)
     return 0;
 }
 
+// Regswap in the check_float inlines
+// https://decomp.me/scratch/nFkPA
+#ifdef NON_MATCHING
+s32 evtGetValue(EvtEntry * entry, s32 reg)
+{
+    EvtWork * wp;
+    u32 mask;
+    u32 dat;
+    s32 val;
+
+    wp = evtGetWork();
+
+    if (reg <= EVTDAT_ADDR_MAX)
+    {
+        return reg;
+    }
+    else if (reg <= -270000000)
+    {
+        return reg;
+    }
+    else if (reg <= EVTDAT_FLOAT_MAX)
+    {
+        val = (s32) check_float(reg);
+        return val;
+    }
+    else if (reg <= EVTDAT_UF_MAX)
+    {
+        reg += EVTDAT_UF_BASE;
+
+        mask = 1U << (reg % 32);
+        dat = entry->uf[reg / 32];
+        reg = (s32) (mask & dat);
+
+        return reg != 0;
+    }
+    else if (reg <= EVTDAT_UW_MAX)
+    {
+        reg += EVTDAT_UW_BASE;
+
+        val = entry->uw[reg];
+
+        if (val <= EVTDAT_ADDR_MAX)
+            return val;
+
+        if (val <= EVTDAT_FLOAT_MAX)
+            val = (s32) check_float(val);
+
+        return val;
+    }
+    else if (reg <= EVTDAT_GSW_MAX)
+    {
+        reg += EVTDAT_GSW_BASE;
+
+        return swByteGet(reg);
+    }
+    else if (reg <= EVTDAT_LSW_MAX)
+    {
+        reg += EVTDAT_LSW_BASE;
+
+        return _swByteGet(reg);
+    }
+    else if (reg <= EVTDAT_GSWF_MAX)
+    {
+        reg += EVTDAT_GSWF_BASE;
+
+        return swGet(reg);
+    }
+    else if (reg <= EVTDAT_LSWF_MAX)
+    {
+        reg += EVTDAT_LSWF_BASE;
+
+        return _swGet(reg);
+    }
+    else if (reg <= EVTDAT_GF_MAX)
+    {
+        reg += EVTDAT_GF_BASE;
+
+        mask = 1U << (reg % 32);
+        dat = wp->gf[reg / 32];
+        reg = (s32) (mask & dat);
+
+        return reg != 0;
+    }
+    else if (reg <= EVTDAT_LF_MAX)
+    {
+        reg += EVTDAT_LF_BASE;
+
+        mask = 1U << (reg % 32);
+        dat = entry->lf[reg / 32];
+        reg = (s32) (mask & dat);
+
+        return reg != 0;
+    }
+    else if (reg <= EVTDAT_GW_MAX)
+    {
+        reg += EVTDAT_GW_BASE;
+
+        val = wp->gw[reg];
+
+        if (val <= EVTDAT_ADDR_MAX)
+            return val;
+        
+        if (val <= EVTDAT_FLOAT_MAX)
+            val = (s32) check_float(val);
+
+        return val;
+    }
+    else if (reg <= EVTDAT_LW_MAX)
+    {
+        reg += EVTDAT_LW_BASE;
+
+        val = entry->lw[reg];
+
+        if (val <= EVTDAT_ADDR_MAX)
+            return val;
+        
+        if (val <= EVTDAT_FLOAT_MAX)
+            val = (s32) check_float(val);
+
+        return val;
+    }
+    else
+    {
+        return reg;
+    }
+
+    return EVT_RET_CONTINUE;
+}
+#else
 asm s32 evtGetValue(EvtEntry * entry, s32 variable)
 {
     #include "asm/800de594.s"
 }
+#endif
 
 asm s32 evtSetValue(EvtEntry * entry, s32 variable, s32 value)
 {
