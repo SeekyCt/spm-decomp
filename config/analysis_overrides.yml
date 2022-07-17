@@ -45,3 +45,7 @@ sdata_sizes:
 
   # spmario.c RGBA constant
   - [0x805b3d24, 4]
+
+# This function is only ever b'd to, so ppcdis misses it
+forced_types:
+  0x8029a744: FUNCTION
