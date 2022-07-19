@@ -6,9 +6,6 @@
 #include <wii/stdio.h>
 #include <wii/os.h>
 
-// .rodata
-#include "orderdoubles/8032eca0_8032eca8.inc"
-
 // 0.5f comes early in this file's float pool, suggesting the rounding in evt_mod
 // is an inline, though attempts to match with that failed
 #include "orderfloats/805b1d50_805b1d64.inc"
@@ -29,7 +26,15 @@ static f32 check_float(s32 val) // always inlined
 
     return ret;
 }
-// change_float (inlined/unused)
+
+static s32 change_float(f32 val)
+{
+    s32 ret;
+    val *= 1024.0f;
+    ret = (s32) val;
+    ret -= EVTDAT_FLOAT_BASE;
+    return ret;
+}
 
 s32 evt_end_evt(EvtEntry * entry)
 {
@@ -3054,9 +3059,67 @@ f32 evtGetFloat(EvtEntry * entry, s32 reg)
     }
 }
 
-asm float evtSetFloat(EvtEntry * entry, s32 variable, float value)
+f32 evtSetFloat(EvtEntry * entry, s32 reg, f32 value)
 {
-    #include "asm/800df1fc.s"
+    EvtWork * wp;
+    s32 shift;
+    s32 ret;
+    
+    wp = evtGetWork();
+
+    if (reg <= EVTDAT_ADDR_MAX)
+    {
+        return value;
+    }
+    else if (reg <= EVTDAT_FLOAT_MAX)
+    {
+        return value;
+    }
+    else if (reg <= EVTDAT_UW_MAX)
+    {
+        reg += EVTDAT_UW_BASE;
+        ret = entry->uw[reg];
+        entry->uw[reg] = change_float(value);
+        return check_float(ret);
+    }
+    else if (reg <= EVTDAT_GF_MAX)
+    {
+        reg += EVTDAT_GF_BASE;
+        shift = reg % 32;
+        if (value)
+            wp->gf[reg / 32] |= (1 << shift);
+        else
+            wp->gf[reg / 32] &= ~(1 << shift);
+        return value;
+    }
+    else if (reg <= EVTDAT_LF_MAX)
+    {
+        reg += EVTDAT_LF_BASE;
+        shift = reg % 32;
+        if (value)
+            entry->lf[reg / 32] |= (1 << shift);
+        else
+            entry->lf[reg / 32] &= ~(1 << shift);
+        return value;
+    }
+    else if (reg <= EVTDAT_GW_MAX)
+    {
+        reg += EVTDAT_GW_BASE;
+        ret = wp->gw[reg];
+        wp->gw[reg] = change_float(value);
+        return check_float(ret);
+    }
+    else if (reg <= EVTDAT_LW_MAX)
+    {
+        reg += EVTDAT_LW_BASE;
+        ret = entry->lw[reg];
+        entry->lw[reg] = change_float(value);
+        return check_float(ret);
+    }
+    else
+    {
+        return value;
+    }
 }
 
 EvtScriptCode * evtSearchElse(EvtEntry * entry)
