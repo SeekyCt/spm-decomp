@@ -8,7 +8,6 @@
 
 // .rodata
 #include "orderdoubles/8032eca0_8032eca8.inc"
-#include "orderstrings/8032eca8_8032efe1.inc"
 
 // 0.5f comes early in this file's float pool, suggesting the rounding in evt_mod
 // is an inline, though attempts to match with that failed
@@ -2890,13 +2889,11 @@ s32 evtSetValue(EvtEntry * entry, s32 reg, s32 value)
     else if (reg <= EVTDAT_UF_MAX)
     {
         reg += EVTDAT_UF_BASE;
-
         shift = reg % 32;
         if (value)
             entry->uf[reg / 32] |= (1 << shift);
         else
             entry->uf[reg / 32] &= ~(1 << shift);
-
         return value;
     }
     else if (reg <= EVTDAT_UW_MAX)
@@ -2943,7 +2940,6 @@ s32 evtSetValue(EvtEntry * entry, s32 reg, s32 value)
     else if (reg <= EVTDAT_GF_MAX)
     {
         reg += EVTDAT_GF_BASE;
-
         shift = reg % 32;
         if (value)
             wp->gf[reg / 32] |= (1 << shift);
@@ -2955,13 +2951,11 @@ s32 evtSetValue(EvtEntry * entry, s32 reg, s32 value)
     else if (reg <= EVTDAT_LF_MAX)
     {
         reg += EVTDAT_LF_BASE;
-
         shift = reg % 32;
         if (value)
             entry->lf[reg / 32] |= (1 << shift);
         else
             entry->lf[reg / 32] &= ~(1 << shift);
-
         return value;
     }
     else if (reg <= EVTDAT_GW_MAX)
@@ -2984,9 +2978,80 @@ s32 evtSetValue(EvtEntry * entry, s32 reg, s32 value)
     }
 }
 
-asm float evtGetFloat(EvtEntry * entry, s32 variable)
+f32 evtGetFloat(EvtEntry * entry, s32 reg)
 {
-    #include "asm/800dedb8.s"
+    EvtWork * wp;
+    u32 mask;
+    u32 dat;
+
+    wp = evtGetWork();
+
+    if (reg <= EVTDAT_ADDR_MAX)
+    {
+        return (f32) reg;
+    }
+    else if (reg <= -270000000)
+    {
+        return (f32) reg;
+    }
+    else if (reg <= EVTDAT_FLOAT_MAX)
+    {
+        return check_float(reg);
+    }
+    else if (reg <= EVTDAT_UW_MAX)
+    {
+        reg += EVTDAT_UW_BASE;
+        reg = entry->uw[reg];
+        return check_float(reg);
+    }
+    else if (reg <= EVTDAT_GSW_MAX)
+    {
+        reg += EVTDAT_GSW_BASE;
+        reg = swByteGet(reg);
+        return check_float(reg);
+    }
+    else if (reg <= EVTDAT_LSW_MAX)
+    {
+        reg += EVTDAT_LSW_BASE;
+        reg = _swByteGet(reg);
+        return check_float(reg);
+    }
+    else if (reg <= EVTDAT_GF_MAX)
+    {
+        reg += EVTDAT_GF_BASE;
+        mask = 1U << (reg % 32);
+        dat = wp->gf[reg / 32];
+        if (mask & dat)
+            return 1.0f;
+        else
+            return 0.0f;
+    }
+    else if (reg <= EVTDAT_LF_MAX)
+    {
+        reg += EVTDAT_LF_BASE;
+        mask = 1U << (reg % 32);
+        dat = entry->lf[reg / 32];
+        if (mask & dat)
+            return 1.0f;
+        else
+            return 0.0f;
+    }
+    else if (reg <= EVTDAT_GW_MAX)
+    {
+        reg += EVTDAT_GW_BASE;
+        reg = wp->gw[reg];
+        return check_float(reg);
+    }
+    else if (reg <= EVTDAT_LW_MAX)
+    {
+        reg += EVTDAT_LW_BASE;
+        reg = entry->lw[reg];
+        return check_float(reg);
+    }
+    else
+    {
+        return check_float(reg);
+    }
 }
 
 asm float evtSetFloat(EvtEntry * entry, s32 variable, float value)
