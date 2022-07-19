@@ -6,10 +6,6 @@
 #include <wii/stdio.h>
 #include <wii/os.h>
 
-// 0.5f comes early in this file's float pool, suggesting the rounding in evt_mod
-// is an inline, though attempts to match with that failed
-#include "orderfloats/805b1d50_805b1d64.inc"
-
 static f32 check_float(s32 val) // always inlined
 {
     f32 ret;
@@ -27,7 +23,7 @@ static f32 check_float(s32 val) // always inlined
     return ret;
 }
 
-static s32 change_float(f32 val)
+static s32 change_float(f32 val) // always inlined
 {
     s32 ret;
     val *= 1024.0f;
@@ -53,34 +49,9 @@ s32 evt_lbl(EvtEntry * entry)
 s32 evt_goto(EvtEntry * entry)
 {
     s32 lbl;
-    EvtScriptCode * r31;
-    EvtScriptCode * dest;
-    s32 n;
 
     lbl = evtGetValue(entry, entry->pCurData[0]);
-    r31 = entry->pCurData;
-    
-    if (lbl < EVTDAT_ADDR_MAX) // TODO: evtSearchLabel inlined
-    {
-        dest = (EvtScriptCode *) lbl;
-    }
-    else
-    {
-        for (n = 0; n < MAX_EVT_JMPTBL; n++)
-        {
-            if (lbl == entry->labelIds[n])
-            {
-                r31 = entry->jumptable[n];
-                break;
-            }
-        }
-        if (n >= MAX_EVT_JMPTBL)
-            assertf(0xf2e, 0, "EVTMGR_CMD:Jump Table Search error !!\n [lbl=%d, n=%d]", lbl, n);
-
-        dest = r31;
-    }
-
-    entry->pCurInstruction = dest;
+    entry->pCurInstruction = evtSearchLabel(entry, lbl);
 
     return EVT_RET_CONTINUE;
 }
@@ -3120,6 +3091,30 @@ f32 evtSetFloat(EvtEntry * entry, s32 reg, f32 value)
     {
         return value;
     }
+}
+
+EvtScriptCode * evtSearchLabel(EvtEntry * entry, s32 lbl)
+{
+    EvtScriptCode * ret;
+    s32 n;
+
+    ret = entry->pCurData;
+    
+    if (lbl < EVTDAT_ADDR_MAX)
+        return (EvtScriptCode *) lbl;
+
+    for (n = 0; n < MAX_EVT_JMPTBL; n++)
+    {
+        if (lbl == entry->labelIds[n])
+        {
+            ret = entry->jumptable[n];
+            break;
+        }
+    }
+    if (n >= MAX_EVT_JMPTBL)
+        assertf(0xf2e, 0, "EVTMGR_CMD:Jump Table Search error !!\n [lbl=%d, n=%d]", lbl, n);
+
+    return ret;
 }
 
 EvtScriptCode * evtSearchElse(EvtEntry * entry)
