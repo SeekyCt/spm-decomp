@@ -586,9 +586,6 @@ void evtSetType(EvtEntry * entry, u32 type)
     entry->type = (u8) type;
 }
 
-// TODO: figure out why this is needed
-#pragma push
-#pragma inline_max_auto_size(5)
 
 void evtStop(EvtEntry * entry, u32 mask)
 {
@@ -599,6 +596,9 @@ void evtStop(EvtEntry * entry, u32 mask)
     wp = evtGetWork();
     if (entry->childEntry)
         evtStop(entry->childEntry, mask);
+    else
+        // FAKEMATCH: stops recursive inlining
+        (void) 0;
 
     curEntry = wp->entries;
     for (i = 0; i < wp->entryCount; i++, curEntry++)
@@ -620,6 +620,9 @@ void evtStart(EvtEntry * entry, u32 mask)
     wp = evtGetWork();
     if (entry->childEntry)
         evtStart(entry->childEntry, mask);
+    else
+        // FAKEMATCH: stops recursive inlining
+        (void) 0;
 
     curEntry = wp->entries;
     for (i = 0; i < wp->entryCount; i++, curEntry++)
@@ -631,8 +634,6 @@ void evtStart(EvtEntry * entry, u32 mask)
     if (entry->type & mask)
         entry->flags &= ~EVT_FLAG_PAUSED;
 }
-
-#pragma pop
 
 void evtStopID(s32 id)
 {
