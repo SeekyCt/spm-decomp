@@ -162,15 +162,14 @@ asm void qqsort(char * list, size_t nel, size_t size, void * compare)
     #include "asm/8019cf84.s"
 }
 
-// TODO: irand(0x7fff) inlined
-asm s32 rand()
+static s32 _rand_advance()
 {
-    #include "asm/8019d150.s"
+    randomSeed = randomSeed * RAND_MULT_MAGIC + 1;
+    return randomSeed;
 }
 
 static FORCESTRIP s32 _rand(s32 max) // always inlined
 {
-    s32 seed;
     u32 divisor;
     u32 res;
 
@@ -179,35 +178,40 @@ static FORCESTRIP s32 _rand(s32 max) // always inlined
     if (divisor < 1)
         divisor = 1;
 
-    seed = randomSeed;
     do 
     {
-        seed = seed * RAND_MULT_MAGIC + 1;
-        res = seed / divisor;
+        res = _rand_advance() / divisor;
     }
     while (res >= max + 1);
-    randomSeed = seed;
     
     return (s32) res;
+}
+
+s32 rand()
+{
+    return irand(0x7fff);
 }
 
 s32 irand(s32 max)
 {
     // This isn't converted back to being negative on return
-    s32 abs = abs(max);
+    max = abs(max);
 
-    if (abs == 0)
+    if (max == 0)
     {
         // 0 will always result in zero
         return 0;
     }
-    else if (abs == 1)
+    else if (max == 1)
     {
         // Special case for 1
         // 0-500 is 0, 501-1000 is 1
-        return _rand(1000) > 500;
+        if (_rand(1000) <= 500)
+            return 0;
+        else
+            return 1;
     }
-    else if (abs == 100)
+    else if (max == 100)
     {
         // Special case for 100
         // Selected from 0-1009 and divided by 10 (rounding down)
@@ -216,7 +220,7 @@ s32 irand(s32 max)
     else
     {
         // Calculate value in requested range
-        return _rand(abs);
+        return _rand(max);
     }
 }
 
