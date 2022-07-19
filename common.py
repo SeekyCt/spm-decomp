@@ -199,7 +199,7 @@ ICONV = f"{PYTHON} tools/sjis.py" # TODO: get actual iconv working(?)
 DOL_SLICES = f"{CONFIG}/dol_slices.yml"
 REL_SLICES = f"{CONFIG}/rel_slices.yml"
 
-# Overrides (TODO: do these need to be separate for rel?)
+# Overrides
 ANALYSIS_OVERRIDES = f"{CONFIG}/analysis_overrides.yml"
 DISASM_OVERRIDES = f"{CONFIG}/disasm_overrides.yml"
 
