@@ -142,14 +142,14 @@ void _swClear(s32 id)
     gp->lswf[id / 32] &= ~(1U << (id % 32));
 }
 
-void _swByteSet(s32 id, s8 num)
+void _swByteSet(s32 id, u8 num)
 {
-    gp->lsw[id] = (s8) num;
+    gp->lsw[id] = num;
 }
 
 s32 _swByteGet(s32 id)
 {
-    return gp->lsw[id] & 0xff;
+    return gp->lsw[id];
 }
 
 asm UNKNOWN_FUNCTION(func_80038204)

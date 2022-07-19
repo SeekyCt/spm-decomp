@@ -14,12 +14,20 @@
 // is an inline, though attempts to match with that failed
 #include "orderfloats/805b1d50_805b1d64.inc"
 
-static float check_float(s32 val) // always inlined
+static f32 check_float(s32 val) // always inlined
 {
+    f32 f;
     if (val <= EVTDAT_FLOAT_MAX)
-        return (val + EVTDAT_FLOAT_BASE) / 1024.0f;
+    {
+        val += EVTDAT_FLOAT_BASE;
+        f = val;
+        return f / 1024.0f;
+    }
     else
-        return val;
+    {
+        f = val;
+        return f;
+    }
 }
 
 // change_float (inlined/unused)
@@ -2864,8 +2872,6 @@ s32 evtGetValue(EvtEntry * entry, s32 reg)
     {
         return reg;
     }
-
-    return EVT_RET_CONTINUE;
 }
 #else
 asm s32 evtGetValue(EvtEntry * entry, s32 variable)
@@ -2874,10 +2880,127 @@ asm s32 evtGetValue(EvtEntry * entry, s32 variable)
 }
 #endif
 
+// Regswap in the check_float inlines
+// https://decomp.me/scratch/nFkPA
+#ifdef NON_MATCHING
+s32 evtSetValue(EvtEntry * entry, s32 reg, s32 value)
+{
+    EvtWork * wp;
+    s32 shift;
+    s32 ret;
+
+    wp = evtGetWork();
+
+    if (reg <= EVTDAT_ADDR_MAX)
+    {
+        return value;
+    }
+    else if (reg <= EVTDAT_FLOAT_MAX)
+    {
+        return (s32) check_float(value);
+    }
+    else if (reg <= EVTDAT_UF_MAX)
+    {
+        reg += EVTDAT_UF_BASE;
+
+        shift = reg % 32;
+        if (value)
+            entry->uf[reg / 32] |= (1 << shift);
+        else
+            entry->uf[reg / 32] &= ~(1 << shift);
+
+        return value;
+    }
+    else if (reg <= EVTDAT_UW_MAX)
+    {
+        reg += EVTDAT_UW_BASE;
+        ret = entry->uw[reg];
+        entry->uw[reg] = value;
+        return ret;
+    }
+    else if (reg <= EVTDAT_GSW_MAX)
+    {
+        reg += EVTDAT_GSW_BASE;
+        ret = swByteGet(reg);
+        swByteSet(reg, value);
+        return ret;
+    }
+    else if (reg <= EVTDAT_LSW_MAX)
+    {
+        reg += EVTDAT_LSW_BASE;
+        ret = _swByteGet(reg);
+        _swByteSet(reg, (u8)value);
+        return ret;
+    }
+    else if (reg <= EVTDAT_GSWF_MAX)
+    {
+        reg += EVTDAT_GSWF_BASE;
+        ret = swGet(reg);
+        if (value)
+            swSet(reg);
+        else
+            swClear(reg);
+        return ret;
+    }
+    else if (reg <= EVTDAT_LSWF_MAX)
+    {
+        reg += EVTDAT_LSWF_BASE;
+        ret = _swGet(reg);
+        if (value)
+            _swSet(reg);
+        else
+            _swClear(reg);
+        return ret;
+    }
+    else if (reg <= EVTDAT_GF_MAX)
+    {
+        reg += EVTDAT_GF_BASE;
+
+        shift = reg % 32;
+        if (value)
+            wp->gf[reg / 32] |= (1 << shift);
+        else
+            wp->gf[reg / 32] &= ~(1 << shift);
+
+        return value;
+    }
+    else if (reg <= EVTDAT_LF_MAX)
+    {
+        reg += EVTDAT_LF_BASE;
+
+        shift = reg % 32;
+        if (value)
+            entry->lf[reg / 32] |= (1 << shift);
+        else
+            entry->lf[reg / 32] &= ~(1 << shift);
+
+        return value;
+    }
+    else if (reg <= EVTDAT_GW_MAX)
+    {
+        reg += EVTDAT_GW_BASE;
+        ret = wp->gw[reg];
+        wp->gw[reg] = value;
+        return ret;
+    }
+    else if (reg <= EVTDAT_LW_MAX)
+    {
+        reg += EVTDAT_LW_BASE;
+        ret = entry->lw[reg];
+        entry->lw[reg] = value;
+        return ret;
+    }
+    else
+    {
+        return value;
+    }
+}
+#else
 asm s32 evtSetValue(EvtEntry * entry, s32 variable, s32 value)
 {
     #include "asm/800de9b8.s"
 }
+#endif
 
 asm float evtGetFloat(EvtEntry * entry, s32 variable)
 {

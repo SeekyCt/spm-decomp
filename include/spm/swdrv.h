@@ -82,11 +82,11 @@ void _swClear(s32 id);
 /*
     Sets a local saved work value
 */
-void _swByteSet(s32 id, s8 num);
+void _swByteSet(s32 id, u8 num);
 
 /*
     Returns a local saved work value
-    Note: return is technically just s8 but calls used wrong casts when it was set to that
+    Note: return is technically just u8 but calls used wrong casts when it was set to that
 */
 s32 _swByteGet(s32 id);
 

@@ -38,7 +38,7 @@ typedef struct
     u32 gswf[256]; // 8192 flags
     s8 gsw[2048];
     u32 lswf[16]; // 512 flags
-    s8 lsw[1024];
+    u8 lsw[1024];
     u8 unknown_0x1184[0x900]; // coin related?
     u8 unknown_0x1a84[0x1b08 - 0x1a84];
 } SpmarioGlobals;
