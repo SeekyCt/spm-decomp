@@ -224,11 +224,18 @@ s32 irand(s32 max)
     }
 }
 
-// TODO: limit * ((float) irand(0x7fff) / 32767.0f) inlined
+// Regalloc
+#ifdef NON_MATCHING
+float frand(f32 limit)
+{
+    return limit * (irand(0x7fff) / 32767.0f);
+}
+#else
 asm float frand(f32 limit)
 {
     #include "asm/8019d354.s"
 }
+#endif
 
 void sysRandInit()
 {
