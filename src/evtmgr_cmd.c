@@ -16,20 +16,20 @@
 
 static f32 check_float(s32 val) // always inlined
 {
-    f32 f;
+    f32 ret;
     if (val <= EVTDAT_FLOAT_MAX)
     {
         val += EVTDAT_FLOAT_BASE;
-        f = val;
-        return f / 1024.0f;
+        ret = val;
+        ret /= 1024.0f;
     }
     else
     {
-        f = val;
-        return f;
+        ret = val;
     }
-}
 
+    return ret;
+}
 // change_float (inlined/unused)
 
 s32 evt_end_evt(EvtEntry * entry)
@@ -2747,9 +2747,6 @@ s32 evtmgrCmd(EvtEntry* entry)
     return 0;
 }
 
-// Regswap in the check_float inlines
-// https://decomp.me/scratch/nFkPA
-#ifdef NON_MATCHING
 s32 evtGetValue(EvtEntry * entry, s32 reg)
 {
     EvtWork * wp;
@@ -2873,16 +2870,7 @@ s32 evtGetValue(EvtEntry * entry, s32 reg)
         return reg;
     }
 }
-#else
-asm s32 evtGetValue(EvtEntry * entry, s32 variable)
-{
-    #include "asm/800de594.s"
-}
-#endif
 
-// Regswap in the check_float inlines
-// https://decomp.me/scratch/nFkPA
-#ifdef NON_MATCHING
 s32 evtSetValue(EvtEntry * entry, s32 reg, s32 value)
 {
     EvtWork * wp;
@@ -2995,12 +2983,6 @@ s32 evtSetValue(EvtEntry * entry, s32 reg, s32 value)
         return value;
     }
 }
-#else
-asm s32 evtSetValue(EvtEntry * entry, s32 variable, s32 value)
-{
-    #include "asm/800de9b8.s"
-}
-#endif
 
 asm float evtGetFloat(EvtEntry * entry, s32 variable)
 {
