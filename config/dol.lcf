@@ -32,6 +32,12 @@ SECTIONS {
     _eti_init_info_ = 0x80007290;
 }
 
+// Only referenced in rel
+// TODO: ppcdis automation
+FORCEACTIVE {
+    mtxGetRotationElement
+}
+
 __dummy_str = 0;
 __dummy_float = 0;
 __dummy_double = 0;
