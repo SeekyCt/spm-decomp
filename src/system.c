@@ -242,16 +242,55 @@ asm void sysWaitDrawSync()
     #include "asm/8019d4b0.s"
 }
 
-// Seems like handwritten asm
-asm s32 memcmp_as4(const void * a, const void * b, u32 n)
+// The use of r11/12 and placement of the return 1 pretty much guarantee inline asm
+asm s32 memcmp_as4(register const void * a, register const void * b, register u32 n)
 {
-    #include "asm/8019d570.s"
+    // Offset a & b for lwzu
+    // Divide n by 4 and move to count register
+    subi a, a, 4
+    srwi n, n, 2
+    subi b, b, 4
+    mtctr n
+
+    // Run n/4 times
+top:
+    // Compare a[i] to b[i]
+    lwzu r11, 4 (a)
+    lwzu r12, 4 (b)
+    cmplw r11, r12
+    bne diff
+
+    bdnz top
+
+    // Return 0
+    li r3, 0
+    blr
+
+    // Return 1
+diff:
+    li r3, 1
+    blr
 }
 
-// Seems like handwritten asm
-asm void memcpy_as4(void * dest, const void * source, u32 n)
+// The use of r11/12 pretty much guarantees inline asm
+asm void memcpy_as4(register void * dest, register const void * source, register u32 n)
 {
-    #include "asm/8019d5a4.s"
+    // Offset dest & source for stwu/lwzu
+    // Divide n by 4 and move to count register
+    subi dest, dest, 4
+    srwi n, n, 2
+    subi source, source, 4
+    mtctr n
+
+    // Run n/4 times
+top:
+    // Copy source[i] to dest[i]
+    lwzu r11, 4 (source)
+    stwu r11, 4 (dest)
+
+    bdnz top
+
+    blr
 }
 
 // Functions used only in the rel currently aren't forced automatically
