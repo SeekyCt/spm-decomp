@@ -3,7 +3,7 @@
 #include <common.h>
 #include <evt_cmd.h>
 
-// evt_npc_set_position(const char * instanceName, float x, float y, float z)
+// evt_npc_set_position(const char * instanceName, f32 x, f32 y, f32 z)
 EVT_DECLARE_USER_FUNC(evt_npc_set_position, 4)
 
 // evt_npc_entry(const char * instanceName, const char * animPoseName, s32 instanceId)
@@ -42,15 +42,15 @@ EVT_DECLARE_USER_FUNC(evt_npc_teleport_effect, 2)
 
 EVT_UNKNOWN_USER_FUNC(func_80105b94)
 
-// evt_npc_get_position(const char * name, float& x, float& y, float& z)
+// evt_npc_get_position(const char * name, f32& x, f32& y, f32& z)
 EVT_DECLARE_USER_FUNC(evt_npc_get_position, 4)
 
-// evt_npc_jump_to(const char * name, float destX, float destY, float destZ, float height, s32 length)
+// evt_npc_jump_to(const char * name, f32 destX, f32 destY, f32 destZ, f32 height, s32 length)
 EVT_DECLARE_USER_FUNC(evt_npc_jump_to, 6)
 
 EVT_UNKNOWN_USER_FUNC(evt_npc_glide_to)
 
-// evt_npc_get_axis_movement_unit(const char * name, float& ret)
+// evt_npc_get_axis_movement_unit(const char * name, f32& ret)
 EVT_DECLARE_USER_FUNC(evt_npc_get_axis_movement_unit, 2)
 
 // evt_npc_set_camid(const char * name, s32 camId)

@@ -18,7 +18,7 @@ typedef struct
     u8 unknown_0x14[0x18 - 0x14];
     u16 framebufferWidth;
     u16 framebufferHeight;
-    float gameSpeed;
+    f32 gameSpeed;
     char saveName[32];
     s32 lastSaveLoaded;
     char mapName[32];

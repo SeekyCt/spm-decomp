@@ -14,7 +14,7 @@ static s32 priIdTbl[EVT_ENTRY_MAX];
 
 // .sdata
 static s32 evtId = 1;
-static float evtSpd = 1.0f;
+static f32 evtSpd = 1.0f;
 s32 evtMax = 0;
 static s32 priTblNum = 0;
 static s32 runMainF = 0;

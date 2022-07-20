@@ -26,7 +26,7 @@ typedef struct
 ItemWork * itemGetWork();
 void itemInit();
 void itemMain();
-ItemEntry * itemEntry(float x, float y, float z, const char * instanceName, s32 itemId,
+ItemEntry * itemEntry(f32 x, f32 y, f32 z, const char * instanceName, s32 itemId,
                       s32 behaviour, void * pickupScript, s32 switchNumber);
 s32 itemTypeNameToId(const char * itemName);
 bool itemCheckForId(s32 itemId);

@@ -1346,7 +1346,7 @@ s32 evt_set_read(EvtEntry * entry)
 
 s32 evt_set_readf(EvtEntry * entry)
 {
-    entry->readfAddr = (float *) evtGetValue(entry, entry->pCurData[0]);
+    entry->readfAddr = (f32 *) evtGetValue(entry, entry->pCurData[0]);
 
     return EVT_RET_CONTINUE;
 }
@@ -1641,7 +1641,7 @@ s32 evt_set_ramf(EvtEntry * entry)
 
     p = entry->pCurData;
     value = evtGetFloat(entry, p[0]);
-    addr = (float *) p[1];
+    addr = (f32 *) p[1];
     *addr = value;
     
     return EVT_RET_CONTINUE;

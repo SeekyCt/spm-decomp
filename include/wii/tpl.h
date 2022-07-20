@@ -24,7 +24,7 @@ typedef struct
     u32 wrapT;
     u32 minFilter;
     u32 magFilter;
-    float LODBias;
+    f32 LODBias;
     bool edgeLODEnable;
     u8 minLOD;
     u8 maxLOD;

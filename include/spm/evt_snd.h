@@ -32,7 +32,7 @@ EVT_UNKNOWN_USER_FUNC(func_800d31a0)
 EVT_UNKNOWN_USER_FUNC(func_800d22d8)
 EVT_UNKNOWN_USER_FUNC(evt_snd_bgmon_f_d)
 
-// evt_snd_sfxon_3d(const char * name, float x, float y, float z)
+// evt_snd_sfxon_3d(const char * name, f32 x, f32 y, f32 z)
 EVT_DECLARE_USER_FUNC(evt_snd_sfxon_3d, 4)
 
 // evt_snd_sfxon(const char * name)

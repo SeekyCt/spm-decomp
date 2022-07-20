@@ -10,6 +10,6 @@ typedef struct {
 
 void dispInit();
 
-void dispEntry(s8 cameraId, u8 renderMode, float z, DispCallback * cb, void * cbParam);
+void dispEntry(s8 cameraId, u8 renderMode, f32 z, DispCallback * cb, void * cbParam);
 
 DispEntry * dispGetCurWork();

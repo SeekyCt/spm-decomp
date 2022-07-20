@@ -569,7 +569,7 @@ s32 evt_dan_get_enemy_spawn_pos(EvtEntry * entry, bool isInitialCall)
     doorPos.z = 0.0f;
 
     // Unknown, outputs coords with some changes if needed
-    float f1, f2, f3, f4, f5, f6, f7;
+    f32 f1, f2, f3, f4, f5, f6, f7;
     f4 = 1000.0f;
     if (hitCheckFilter(doorPos.x, doorPos.y, 0.0f, 0.0f, -1.0f, 0.0f, NULL, &f1, &f2, &f3, &f4, &f5, &f6, &f7))
     {

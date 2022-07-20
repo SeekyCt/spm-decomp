@@ -87,9 +87,9 @@ asm s32 __assert2(const char * filename, s32 line, const char * assertion, const
     #include "asm/8019c54c.s"
 }
 
-float reviseAngle(float angle)
+f32 reviseAngle(f32 angle)
 {
-    angle = (float) fmod(angle, 360.0);
+    angle = (f32) fmod(angle, 360.0);
 
     // Seems impossible, maybe true if NaN returned?
     if (angle != angle)
@@ -146,8 +146,8 @@ void movePos(f32 distance, f32 angle, f32 * x, f32 * z)
 {
     f32 c;
     f32 s;
-    s = (float) sin(DEG_TO_RAD(angle));
-    c = (float) cos(DEG_TO_RAD(angle));
+    s = (f32) sin(DEG_TO_RAD(angle));
+    c = (f32) cos(DEG_TO_RAD(angle));
     *x += distance * s;
     *z -= distance * c;
 }

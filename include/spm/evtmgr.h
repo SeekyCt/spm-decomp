@@ -74,13 +74,13 @@ typedef struct _EvtEntry
     union
     {
         s32 * readAddr;
-        float * readfAddr;
+        f32 * readfAddr;
     }; // Current addr for read/readf instructions
     s32 * uw; // User Work variables pointer
     u32 * uf; // User Flag variables pointer
     s32 id; // Script id
-    float speed; // timeToRun given per frame
-    float timeToRun; // Number of instructions to execute this frame
+    f32 speed; // timeToRun given per frame
+    f32 timeToRun; // Number of instructions to execute this frame
     s32 casedrvId;
     void * ownerNPC;
     void * ownerMOBJ;

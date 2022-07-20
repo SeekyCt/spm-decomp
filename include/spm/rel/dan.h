@@ -78,7 +78,7 @@ EVT_DECLARE_USER_FUNC(evt_dan_handle_dokans, 1)
     Select which doors to use as the entrance and exit randomly based on this map's <door> entries
     Outputs the names of the enter & exit doors and the co-ordinates for the lock to spawn at
 */
-// evt_dan_handle_doors(s32 no, s32 room, &char * enterDoor, &char * exitDoor, &float lockX, &float lockY, &float lockZ)
+// evt_dan_handle_doors(s32 no, s32 room, &char * enterDoor, &char * exitDoor, &f32 lockX, &f32 lockY, &f32 lockZ)
 EVT_DECLARE_USER_FUNC(evt_dan_handle_doors, 7)
 
 /*
@@ -109,7 +109,7 @@ EVT_DECLARE_USER_FUNC(evt_dan_make_spawn_table, 1)
     Returns the spawn coordinates for an enemy which is within the group at <enemyIdx>
     num is a counter of how many enemies have spawned before this one (in any group)
 */
-// evt_dan_get_enemy_spawn_pos(s32 num, s32 no, s32 enemyIdx, &float x, &float y, &float z)
+// evt_dan_get_enemy_spawn_pos(s32 num, s32 no, s32 enemyIdx, &f32 x, &f32 y, &f32 z)
 EVT_DECLARE_USER_FUNC(evt_dan_get_enemy_spawn_pos, 6)
 
 /*

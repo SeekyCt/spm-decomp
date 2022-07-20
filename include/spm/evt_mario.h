@@ -6,10 +6,10 @@
 EVT_UNKNOWN_USER_FUNC(evt_mario_key_on)
 EVT_UNKNOWN_USER_FUNC(evt_mario_key_off)
 
-// evt_mario_get_pos(float& x, float& y, float& z)
+// evt_mario_get_pos(f32& x, f32& y, f32& z)
 EVT_DECLARE_USER_FUNC(evt_mario_get_pos, 3)
 
-// evt_mario_get_pos(float x, float y, float z)
+// evt_mario_get_pos(f32 x, f32 y, f32 z)
 EVT_DECLARE_USER_FUNC(evt_mario_set_pos, 3)
 
 EVT_UNKNOWN_USER_FUNC(func_800efce0)
