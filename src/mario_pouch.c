@@ -224,7 +224,7 @@ s32 pouchGetCoin()
     return pp->coins;
 }
 
-void FORCESTRIP pouchAddTotalCoin(s32 increase) // always inlined
+void pouchAddTotalCoin(s32 increase) // always inlined
 {
     MarioPouchWork * pp;
     

@@ -168,7 +168,7 @@ static s32 _rand_advance()
     return randomSeed;
 }
 
-static FORCESTRIP s32 _rand(s32 max) // always inlined
+static s32 _rand(s32 max) // always inlined
 {
     u32 divisor;
     u32 res;

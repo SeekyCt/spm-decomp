@@ -453,7 +453,7 @@ s32 evt_dan_get_enemy_info(EvtEntry * entry, bool isFirstCall)
     }
 }
 
-inline void FORCESTRIP danPushSpawnTable(s32 doorId)
+inline void danPushSpawnTable(s32 doorId)
 {
     wp->spawnTable[wp->spawnTableCount++] = doorId;
 }
