@@ -9,8 +9,6 @@
 #include <wii/stdio.h>
 #include <wii/string.h>
 
-#define RAND_MULT_MAGIC 0x5d588b65
-
 // .bss
 static OSMutex sysMutex;
 static char * tmp0[0xc00];
@@ -164,7 +162,7 @@ asm void qqsort(char * list, size_t nel, size_t size, void * compare)
 
 static s32 _rand_advance()
 {
-    randomSeed = randomSeed * RAND_MULT_MAGIC + 1;
+    randomSeed = randomSeed * 0x5d588b65 + 1;
     return randomSeed;
 }
 
