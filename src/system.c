@@ -168,6 +168,11 @@ static s32 _rand_advance()
     return randomSeed;
 }
 
+static f32 _frand()
+{
+    return irand(0x7fff) / 32767.0f;
+}
+
 static s32 _rand(s32 max) // always inlined
 {
     u32 divisor;
@@ -224,18 +229,10 @@ s32 irand(s32 max)
     }
 }
 
-// Regalloc
-#ifdef NON_MATCHING
-float frand(f32 limit)
+f32 frand(f32 limit)
 {
-    return limit * (irand(0x7fff) / 32767.0f);
+    return limit * _frand();
 }
-#else
-asm float frand(f32 limit)
-{
-    #include "asm/8019d354.s"
-}
-#endif
 
 void sysRandInit()
 {
