@@ -27,7 +27,7 @@ When pulling the repo later on, make sure to rerun configure.py and `git submodu
 Running progress.py after a successful build will give the current dol & rel .text section progress.
 
 ## Contributing
-See [CONTRIBUTING.md](https://github.com/SeekyCt/spm-decomp/blob/master/CONTRIBUTING.md)
+See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Modding
 
