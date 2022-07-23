@@ -67,6 +67,7 @@ n.newline()
 
 n.variable("python", c.PYTHON)
 n.variable("ppcdis", c.PPCDIS)
+n.variable("relextern", c.RELEXTERN)
 n.variable("analyser", c.ANALYSER)
 n.variable("disassembler", c.DISASSEMBLER)
 n.variable("orderstrings", c.ORDERSTRINGS)
@@ -97,6 +98,12 @@ n.newline()
 
 # Windows can't use && without this
 ALLOW_CHAIN = "cmd /c " if os.name == "nt" else ""
+
+n.rule(
+    "relextern",
+    command = "$relextern $out $in",
+    description = "ppcdis rel extern $in"
+)
 
 n.rule(
     "analyse",
@@ -461,10 +468,16 @@ make_asm_list(c.REL_ASM_LIST, rel_gen_includes)
 ##########
 
 n.build(
+    c.EXTERNS,
+    rule = "relextern",
+    inputs = c.REL_YML
+)
+
+n.build(
     [c.REL_LABELS, c.REL_RELOCS],
     rule = "analyse",
     inputs = c.REL_YML,
-    implicit = c.ANALYSIS_OVERRIDES,
+    implicit = [c.ANALYSIS_OVERRIDES, c.EXTERNS],
     variables = {
         "analysisflags" : "$ppcdis_analysis_flags"
     }
@@ -474,9 +487,9 @@ n.build(
     [c.DOL_LABELS, c.DOL_RELOCS],
     rule = "analyse",
     inputs = c.DOL_YML,
-    implicit = [c.ANALYSIS_OVERRIDES, c.REL_LABELS],
+    implicit = [c.ANALYSIS_OVERRIDES, c.EXTERNS],
     variables = {
-        "analysisflags" : f"$ppcdis_analysis_flags -l {c.REL_LABELS}"
+        "analysisflags" : f"$ppcdis_analysis_flags"
     }
 )
 

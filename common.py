@@ -164,6 +164,7 @@ CONFIG = "config"
 # ppcdis
 PPCDIS = "tools/ppcdis"
 PPCDIS_INCDIR = f"{PPCDIS}/include"
+RELEXTERN = f"{PYTHON} {PPCDIS}/relextern.py"
 ANALYSER = f"{PYTHON} {PPCDIS}/analyser.py"
 DISASSEMBLER = f"{PYTHON} {PPCDIS}/disassembler.py"
 ORDERSTRINGS = f"{PYTHON} {PPCDIS}/orderstrings.py"
@@ -219,6 +220,7 @@ REL_ASM_LIST = f"{BUILDDIR}/relF.rel.asml"
 GAME_SYMBOLS = f"{CONFIG}/symbols.yml"
 
 # Analysis outputs
+EXTERNS = f"{BUILDDIR}/externs.pickle"
 DOL_LABELS = f"{BUILDDIR}/labels.pickle"
 DOL_RELOCS = f"{BUILDDIR}/relocs.pickle"
 REL_LABELS = f"{BUILDDIR}/rel_labels.pickle"
@@ -297,7 +299,8 @@ LDFLAGS = ' '.join([
 ])
 
 PPCDIS_ANALYSIS_FLAGS = ' '.join([
-    f"-o {ANALYSIS_OVERRIDES}"
+    f"-o {ANALYSIS_OVERRIDES}",
+    f"-l {EXTERNS}"
 ])
 
 PPCDIS_DISASM_FLAGS = ' '.join([
