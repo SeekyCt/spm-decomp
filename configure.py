@@ -543,7 +543,7 @@ n.build(
     rule="elf2rel",
     inputs=[c.REL_PLF, c.DOL_ELF],
     variables={
-        "flags" : f"-n 18 -r {c.REL_YML}"
+        "flags" : f"-n 18 --name-size 0x40 -r {c.REL_YML}"
     }
 )
 
