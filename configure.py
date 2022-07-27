@@ -35,7 +35,8 @@ rel_hash = c.get_file_sha1(c.REL)
 if rel_hash == bytes.fromhex("29c78007559996dee6b615005fa3369d4cc1f5e3"):
     assert 0, "Error: Base rel is from PAL revision 1, the decomp currently requires revision 0"
 else:
-    assert rel_hash == bytes.fromhex("9b9b92c370b1aab68cf6ff5a3eb824fdab6a55ff")
+    assert rel_hash == bytes.fromhex("9b9b92c370b1aab68cf6ff5a3eb824fdab6a55ff"), \
+        "Error: Base rel hash isn't correct"
 
 # Check submodules added
 assert os.path.exists(c.PPCDIS), \
