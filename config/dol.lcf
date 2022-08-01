@@ -32,10 +32,9 @@ SECTIONS {
     _eti_init_info_ = 0x80007290;
 }
 
-// Only referenced in rel
-// TODO: ppcdis automation
+// Auto generated rel exports list
 FORCEACTIVE {
-    mtxGetRotationElement
+    PPCDIS_FORCEACTIVE
 }
 
 __dummy_str = 0;

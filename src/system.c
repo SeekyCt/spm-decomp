@@ -293,7 +293,6 @@ top:
     blr
 }
 
-// Functions used only in the rel currently aren't forced automatically
 asm void mtxGetRotationElement(Mtx34 * mtx, Mtx34 * out, char axis1, char axis2)
 {
     #include "asm/8019d5c4.s"

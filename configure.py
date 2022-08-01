@@ -73,6 +73,7 @@ n.variable("analyser", c.ANALYSER)
 n.variable("disassembler", c.DISASSEMBLER)
 n.variable("orderstrings", c.ORDERSTRINGS)
 n.variable("orderfloats", c.ORDERFLOATS)
+n.variable("forceactivegen", c.FORCEACTIVEGEN)
 n.variable("elf2dol", c.ELF2DOL)
 n.variable("elf2rel", c.ELF2REL)
 n.variable("codewarrior", c.CODEWARRIOR)
@@ -141,6 +142,12 @@ n.rule(
     "orderfloats",
     command = "$orderfloats $in $addrs $out $flags",
     description = "Order floats $in $addrs"
+)
+
+n.rule(
+    "forceactivegen",
+    command = "$forceactivegen $in $out",
+    description = "LCF FORCEACTIVE generation $in"
 )
 
 n.rule(
@@ -499,6 +506,12 @@ for inc in dol_gen_includes + rel_gen_includes:
 
 for source in dol_sources + rel_sources:
     source.build()
+
+n.build(
+    c.DOL_LCF,
+    rule="forceactivegen",
+    inputs=[c.DOL_LCF_TEMPLATE, c.DOL_YML, c.DOL_LABELS, c.GAME_SYMBOLS, c.EXTERNS]
+)
 
 n.build(
     c.DOL_ELF,
