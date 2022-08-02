@@ -3,6 +3,7 @@ Creates a build script for ninja
 """
 
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from io import StringIO
 import json
 import pickle
@@ -73,6 +74,8 @@ n.variable("analyser", c.ANALYSER)
 n.variable("disassembler", c.DISASSEMBLER)
 n.variable("orderstrings", c.ORDERSTRINGS)
 n.variable("orderfloats", c.ORDERFLOATS)
+n.variable("assetrip", c.ASSETRIP)
+n.variable("assetinc", c.ASSETINC)
 n.variable("forceactivegen", c.FORCEACTIVEGEN)
 n.variable("elf2dol", c.ELF2DOL)
 n.variable("elf2rel", c.ELF2REL)
@@ -145,6 +148,18 @@ n.rule(
 )
 
 n.rule(
+    "assetrip",
+    command = "$assetrip $in $addrs $out",
+    description = "Asset rip $out"
+)
+
+n.rule(
+    "assetinc",
+    command = "$assetinc $in $out",
+    description = "Asset include generation $out"
+)
+
+n.rule(
     "forceactivegen",
     command = "$forceactivegen $in $out",
     description = "LCF FORCEACTIVE generation $in"
@@ -204,6 +219,26 @@ n.rule(
     description = "iconv $in",
 )
 
+##########
+# Assets #
+##########
+
+@dataclass
+class Asset:
+    binary: str
+    path: str
+    start: int
+    end: int
+
+    def load(yml_path: str):
+        return {
+            asset : Asset(binary, asset, *adat["addrs"])
+            for binary, bdat in c.load_from_yaml(yml_path).items()
+            for asset, adat in bdat.items()
+        }
+
+assets = Asset.load(c.ASSETS_YML)
+
 ###########
 # Sources #
 ###########
@@ -226,7 +261,8 @@ class GeneratedInclude(ABC):
                 JumptableInclude,
                 StringInclude,
                 FloatInclude,
-                DoubleInclude
+                DoubleInclude,
+                AssetInclude
             )
             for match in re.findall(cl.REGEX, txt)
         ]
@@ -342,6 +378,33 @@ class DoubleInclude(GeneratedInclude):
 
     def __repr__(self):
         return f"DoubleInclude({self.start}, {self.end})"
+
+class AssetInclude(GeneratedInclude):
+    REGEX = r'#include "assets\/(.+)\.inc"'
+
+    def __init__(self, ctx: c.SourceContext, source_name: str, match: Tuple[str]):
+        self.asset = assets[match]
+        self.asset_path = f"{c.ASSETS}/{self.asset.path}"
+        assert ctx.binary == self.asset.binary, f"Tried to include from other binary"
+        super().__init__(ctx, source_name, f"{c.BUILD_INCDIR}/assets/{self.asset.path}.inc")
+
+    def build(self):
+        n.build(
+            self.asset_path,
+            rule="assetrip",
+            inputs=self.asset.binary,
+            variables={
+                "addrs" : f"{self.asset.start:x} {self.asset.end:x}"
+            }
+        )
+        n.build(
+            self.path,
+            rule="assetinc",
+            inputs=self.asset_path
+        )
+
+    def __repr__(self):
+        return f"AssetInclude({self.asset})"
 
 class Source(ABC):
     def __init__(self, decompiled: bool, src_path: str, o_path: str,

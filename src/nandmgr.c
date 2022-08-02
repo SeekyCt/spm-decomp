@@ -15,8 +15,10 @@
 #include <wii/tpl.h>
 
 // .rodata
+const u8 lz_saveImagesTpl[] = {
+    #include "assets/saveImages.tpl.lz.inc"
+};
 #include "orderstrings/803494e8_80349537.inc"
-extern u8 lz_saveImagesTpl; // TODO: add asset support to ppcdis
 
 // .data
 extern char lbl_804e50a8[]; // TODO: wchar stringbase

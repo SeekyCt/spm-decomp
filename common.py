@@ -11,6 +11,12 @@ from subprocess import PIPE, run
 from sys import executable as PYTHON, platform
 from typing import List, Tuple, Union
 
+import yaml
+try:
+    from yaml import CLoader as Loader
+except ImportError:
+    from yaml import Loader
+
 #############
 # Functions #
 #############
@@ -126,6 +132,17 @@ def find_headers(dirname: str, base=None) -> List[str]:
 
     return ret
 
+def load_from_yaml(path: str, default=None):
+    """Loads an object from a yaml file"""
+
+    if default is None:
+        default = {}
+    with open(path) as f:
+        ret = yaml.load(f.read(), Loader)
+        if ret is None:
+            ret = default
+        return ret
+
 ################
 # Project dirs #
 ################
@@ -157,6 +174,9 @@ TOOLS = "tools"
 # Config directory
 CONFIG = "config"
 
+# Extracted assets directory
+ASSETS = "assets"
+
 #########
 # Tools #
 #########
@@ -169,6 +189,8 @@ ANALYSER = f"{PYTHON} {PPCDIS}/analyser.py"
 DISASSEMBLER = f"{PYTHON} {PPCDIS}/disassembler.py"
 ORDERSTRINGS = f"{PYTHON} {PPCDIS}/orderstrings.py"
 ORDERFLOATS = f"{PYTHON} {PPCDIS}/orderfloats.py"
+ASSETRIP = f"{PYTHON} {PPCDIS}/assetrip.py"
+ASSETINC = f"{PYTHON} {PPCDIS}/assetinc.py"
 FORCEACTIVEGEN = f"{PYTHON} {PPCDIS}/forceactivegen.py"
 ELF2DOL = f"{PYTHON} {PPCDIS}/elf2dol.py"
 ELF2REL = f"{PYTHON} {PPCDIS}/elf2rel.py"
@@ -218,6 +240,9 @@ REL_ASM_LIST = f"{BUILDDIR}/relF.rel.asml"
 
 # Symbols
 GAME_SYMBOLS = f"{CONFIG}/symbols.yml"
+
+# Assets
+ASSETS_YML = f"{CONFIG}/assets.yml"
 
 # Analysis outputs
 EXTERNS = f"{BUILDDIR}/externs.pickle"

@@ -1,0 +1,4 @@
+config/dol.yml:
+    # TODO: add lz decompression & recompression?
+    saveImages.tpl.lz:
+        addrs: [0x80344490, 0x803494e7]
