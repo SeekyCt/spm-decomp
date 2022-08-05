@@ -63,6 +63,9 @@ n.variable("tools", c.TOOLS)
 n.variable("config", c.CONFIG)
 n.newline()
 
+# This script requires the build folder
+os.makedirs(c.BUILDDIR, exist_ok=True)
+
 #########
 # Tools #
 #########
