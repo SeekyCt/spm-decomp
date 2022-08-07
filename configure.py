@@ -3,6 +3,7 @@ Creates a build script for ninja
 """
 
 from abc import ABC, abstractmethod
+from collections import defaultdict
 from dataclasses import dataclass
 from io import StringIO
 import json
@@ -277,17 +278,32 @@ class AsmInclude(GeneratedInclude):
         self.addr = match
         super().__init__(ctx, source_name, f"{c.BUILD_INCDIR}/asm/{self.addr}.s")
 
-    def build(self):
-        n.build(
-            self.path,
-            rule="disasm_single",
-            inputs=[self.ctx.binary, self.ctx.labels, self.ctx.relocs],
-            implicit=[c.GAME_SYMBOLS, c.DISASM_OVERRIDES],
-            variables={
-                "disasmflags" : f"$ppcdis_disasm_flags -n {self.source_name}",
-                "addr" : self.addr
-            }
-        )
+    def build(includes: List["AsmInclude"]):
+        # Skip empty list
+        if len(includes) == 0:
+            return
+
+        # Get ctx from first include (all should be equal)
+        ctx = includes[0].ctx
+
+        # Sort by source name
+        batches = defaultdict(list)
+        for inc in includes:
+            batches[inc.source_name].append(inc)
+        
+        # Compile by source name
+        # TODO: subdivide large batches
+        for source_name, incs in batches.items():
+            n.build(
+                [inc.path for inc in incs],
+                rule="disasm_single",
+                inputs=[ctx.binary, ctx.labels, ctx.relocs],
+                implicit=[c.GAME_SYMBOLS, c.DISASM_OVERRIDES],
+                variables={
+                    "disasmflags" : f"$ppcdis_disasm_flags -n {source_name}",
+                    "addr" : ' '.join(inc.addr for inc in incs)
+                }
+            )
     
     def __repr__(self):
         return f"AsmInclude({self.addr})"
@@ -298,18 +314,33 @@ class JumptableInclude(GeneratedInclude):
     def __init__(self, ctx: c.SourceContext, source_name: str, match: str):
         self.addr = match
         super().__init__(ctx, source_name, f"{c.BUILD_INCDIR}/jumptable/{self.addr}.inc")
+    
+    def build(includes: List["JumptableInclude"]):
+        # Skip empty list
+        if len(includes) == 0:
+            return
 
-    def build(self):
-        n.build(
-            self.path,
-            rule="jumptable",
-            inputs=[self.ctx.binary, self.ctx.labels, self.ctx.relocs],
-            implicit=[c.GAME_SYMBOLS, c.DISASM_OVERRIDES],
-            variables={
-                "disasmflags" : f"$ppcdis_disasm_flags -n {self.source_name}",
-                "addr" : self.addr
-            }
-        )
+        # Get context from first include (all should be equal)
+        ctx = includes[0].ctx
+
+        # Sort by source name
+        batches = defaultdict(list)
+        for inc in includes:
+            batches[inc.source_name].append(inc)
+        
+        # Compile by source name
+        # TODO: subdivide large batches
+        for source_name, incs in batches.items():
+            n.build(
+                [inc.path for inc in incs],
+                rule="jumptable",
+                inputs=[ctx.binary, ctx.labels, ctx.relocs],
+                implicit=[c.GAME_SYMBOLS, c.DISASM_OVERRIDES],
+                variables={
+                    "disasmflags" : f"$ppcdis_disasm_flags -n {source_name}",
+                    "addr" : ' '.join(inc.addr for inc in incs)
+                }
+            )
 
     def __repr__(self):
         return f"JumptableInclude({self.addr})"
@@ -322,15 +353,24 @@ class StringInclude(GeneratedInclude):
         super().__init__(ctx, source_name,
                          f"{c.BUILD_INCDIR}/orderstrings/{self.start}_{self.end}.inc")
 
-    def build(self):
-        n.build(
-            self.path,
-            rule="orderstrings",
-            inputs=self.ctx.binary,
-            variables={
-                "addrs" : f"{self.start} {self.end}"
-            }
-        )
+    def build(includes: List["StringInclude"]):
+        # Skip empty list
+        if len(includes) == 0:
+            return
+
+        # Get context from first include (all should be equal)
+        ctx = includes[0].ctx
+
+        # Build
+        for inc in includes:
+            n.build(
+                inc.path,
+                rule="orderstrings",
+                inputs=ctx.binary,
+                variables={
+                    "addrs" : f"{inc.start} {inc.end}"
+                }
+            )
 
     def __repr__(self):
         return f"StringInclude({self.start}, {self.end})"
@@ -344,18 +384,27 @@ class FloatInclude(GeneratedInclude):
         super().__init__(ctx, source_name,
                          f"{c.BUILD_INCDIR}/{folder}/{self.start}_{self.end}.inc")
 
-    def build(self):
-        sda = "--sda " if self.ctx.sdata2_threshold >= 4 else ""
-        asm = "" if self.manual else "--asm"
-        n.build(
-            self.path,
-            rule="orderfloats",
-            inputs=self.ctx.binary,
-            variables={
-                "addrs" : f"{self.start} {self.end}",
-                "flags" : f"{sda} {asm}"
-            }
-        )
+    def build(includes: List["FloatInclude"]):
+        # Skip empty list
+        if len(includes) == 0:
+            return
+
+        # Get context from first include (all should be equal)
+        ctx = includes[0].ctx
+
+        # Build
+        for inc in includes:
+            sda = "--sda " if ctx.sdata2_threshold >= 4 else ""
+            asm = "" if inc.manual else "--asm"
+            n.build(
+                inc.path,
+                rule="orderfloats",
+                inputs=inc.ctx.binary,
+                variables={
+                    "addrs" : f"{inc.start} {inc.end}",
+                    "flags" : f"{sda} {asm}"
+                }
+            )
 
     def __repr__(self):
         return f"FloatInclude({self.start}, {self.end})"
@@ -368,16 +417,25 @@ class DoubleInclude(GeneratedInclude):
         super().__init__(ctx, source_name,
                          f"{c.BUILD_INCDIR}/orderdoubles/{self.start}_{self.end}.inc")
 
-    def build(self):
-        n.build(
-            self.path,
-            rule="orderfloats",
-            inputs=self.ctx.binary,
-            variables={
-                "addrs" : f"{self.start} {self.end}",
-                "flags" : f"--double"
-            }
-        )
+    def build(includes: List["DoubleInclude"]):
+        # Skip empty list
+        if len(includes) == 0:
+            return
+
+        # Get context from first include (all should be equal)
+        ctx = includes[0].ctx
+
+        # Build
+        for inc in includes:
+            n.build(
+                inc.path,
+                rule="orderfloats",
+                inputs=ctx.binary,
+                variables={
+                    "addrs" : f"{inc.start} {inc.end}",
+                    "flags" : f"--double"
+                }
+            )
 
     def __repr__(self):
         return f"DoubleInclude({self.start}, {self.end})"
@@ -391,20 +449,26 @@ class AssetInclude(GeneratedInclude):
         assert ctx.binary == self.asset.binary, f"Tried to include from other binary"
         super().__init__(ctx, source_name, f"{c.BUILD_INCDIR}/assets/{self.asset.path}.inc")
 
-    def build(self):
-        n.build(
-            self.asset_path,
-            rule="assetrip",
-            inputs=self.asset.binary,
-            variables={
-                "addrs" : f"{self.asset.start:x} {self.asset.end:x}"
-            }
-        )
-        n.build(
-            self.path,
-            rule="assetinc",
-            inputs=self.asset_path
-        )
+    def build(includes: List["AssetInclude"]):
+        # Skip empty list
+        if len(includes) == 0:
+            return
+
+        # Build
+        for inc in includes:
+            n.build(
+                inc.asset_path,
+                rule="assetrip",
+                inputs=inc.asset.binary,
+                variables={
+                    "addrs" : f"{inc.asset.start:x} {inc.asset.end:x}"
+                }
+            )
+            n.build(
+                inc.path,
+                rule="assetinc",
+                inputs=inc.asset_path
+            )
 
     def __repr__(self):
         return f"AssetInclude({self.asset})"
@@ -457,6 +521,39 @@ class GenAsmSource(Source):
             rule="as",
             inputs=self.src_path
         )
+    
+    def batch_build(sources: List["GenAsmSource"], batch_size=20):
+        # TODO: configure batch size based on cpu core count
+
+        # Skip empty list
+        if len(sources) == 0:
+            return
+
+        # Get context from first include (all should be equal)
+        ctx = sources[0].ctx
+
+        for src in sources:
+            n.build(
+                src.o_path,
+                rule="as",
+                inputs=src.src_path
+            )
+
+        while len(sources) > 0:
+            batch, sources = sources[:batch_size], sources[batch_size:]
+            n.build(
+                [src.src_path for src in batch],
+                rule = "disasm_slice",
+                inputs = [ctx.binary, ctx.labels, ctx.relocs],
+                implicit = [c.GAME_SYMBOLS, c.DISASM_OVERRIDES],
+                variables = {
+                    "slice" : ' '.join(
+                        f"{src.start:x} {src.end:x}"
+                        for src in batch
+                    ),
+                    "disasmflags" : f"$ppcdis_disasm_flags"
+                }
+            )
 
 class AsmSource(Source):
     def __init__(self, ctx: c.SourceContext, path: str):
@@ -516,6 +613,17 @@ def load_sources(ctx: c.SourceContext):
     )
     return [Source.make(ctx, s) for s in json.loads(raw)]
 
+def find_gen_includes(sources: List[Source]):
+    ret = defaultdict(list)
+    for source in sources:
+        if not isinstance(source, CSource):
+            continue
+        
+        for inc in source.gen_includes:
+            ret[type(inc)].append(inc)
+
+    return ret
+
 def make_asm_list(path: str, gen_includes: List[GeneratedInclude]):
     with open(path, 'wb') as f:
         pickle.dump(
@@ -528,14 +636,12 @@ def make_asm_list(path: str, gen_includes: List[GeneratedInclude]):
         )
 
 dol_sources = load_sources(c.DOL_CTX)
-dol_c_sources = [source for source in dol_sources if isinstance(source, CSource)]
-dol_gen_includes = [inc for source in dol_c_sources for inc in source.gen_includes]
-make_asm_list(c.DOL_ASM_LIST, dol_gen_includes)
+dol_gen_includes = find_gen_includes(dol_sources)
+make_asm_list(c.DOL_ASM_LIST, dol_gen_includes[AsmInclude])
 
 rel_sources = load_sources(c.REL_CTX)
-rel_c_sources = [source for source in rel_sources if isinstance(source, CSource)]
-rel_gen_includes = [inc for source in rel_c_sources for inc in source.gen_includes]
-make_asm_list(c.REL_ASM_LIST, rel_gen_includes)
+rel_gen_includes = find_gen_includes(rel_sources)
+make_asm_list(c.REL_ASM_LIST, rel_gen_includes[AsmInclude])
 
 ##########
 # Builds #
@@ -567,11 +673,27 @@ n.build(
     }
 )
 
-for inc in dol_gen_includes + rel_gen_includes:
-    inc.build()
+for cl, includes in dol_gen_includes.items():
+    cl.build(includes)
 
-for source in dol_sources + rel_sources:
-    source.build()
+for cl, includes in rel_gen_includes.items():
+    cl.build(includes)
+
+dol_gen_asm = []
+for source in dol_sources:
+    if isinstance(source, GenAsmSource):
+        dol_gen_asm.append(source)
+    else:
+        source.build()
+GenAsmSource.batch_build(dol_gen_asm)
+
+rel_gen_asm = []
+for source in rel_sources:
+    if isinstance(source, GenAsmSource):
+        rel_gen_asm.append(source)
+    else:
+        source.build()
+GenAsmSource.batch_build(rel_gen_asm)
 
 n.build(
     c.DOL_LCF,
