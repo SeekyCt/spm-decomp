@@ -624,13 +624,12 @@ def find_gen_includes(sources: List[Source]):
 
     return ret
 
-def make_asm_list(path: str, gen_includes: List[GeneratedInclude]):
+def make_asm_list(path: str, asm_includes: List[AsmInclude]):
     with open(path, 'wb') as f:
         pickle.dump(
             [
                 inc.addr
-                for inc in gen_includes
-                if isinstance(inc, AsmInclude)
+                for inc in asm_includes
             ],
             f
         )
