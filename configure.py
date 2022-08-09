@@ -122,9 +122,15 @@ n.rule(
 )
 
 n.rule(
+    "disasm",
+    command = "$disassembler $in $out -q $disasmflags",
+    description = "ppcdis full disassembly $out"
+)
+
+n.rule(
     "disasm_slice",
     command = "$disassembler $in $out -q $disasmflags -s $slice",
-    description = "ppcdis disassembly $out",
+    description = "ppcdis disassembly $out"
 )
 
 n.rule(
@@ -755,6 +761,27 @@ n.build(
     implicit = [c.REL_OUT]
 )
 n.default(c.REL_OK)
+
+# Optional full binary disassembly
+n.build(
+    c.DOL_FULL,
+    rule = "disasm",
+    inputs=[c.DOL_YML, c.DOL_LABELS, c.DOL_RELOCS],
+    implicit=[c.GAME_SYMBOLS, c.DISASM_OVERRIDES],
+    variables={
+        "disasmflags" : "$ppcdis_disasm_flags"
+    }
+)
+
+n.build(
+    c.REL_FULL,
+    rule = "disasm",
+    inputs=[c.REL_YML, c.REL_LABELS, c.REL_RELOCS],
+    implicit=[c.GAME_SYMBOLS, c.DISASM_OVERRIDES],
+    variables={
+        "disasmflags" : "$ppcdis_disasm_flags"
+    }
+)
 
 ##########
 # Ouptut #
