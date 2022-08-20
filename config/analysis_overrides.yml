@@ -32,6 +32,9 @@ blocked_pointer_ranges:
   # Some VI data
   - [0x804F8F40, 0x804F94D0]
 
+blocked_targets:
+  - 0x80100000
+
 sdata_sizes:
   # windowdrv.c RGBA constants
   - [0x805af7e0, 4]
