@@ -265,8 +265,8 @@ DOL_MAP = f"{OUTDIR}/main.map"
 REL_MAP = f"{OUTDIR}/relF.map"
 
 # Optional full disassembly
-DOL_FULL = "dol.s"
-REL_FULL = "rel.s"
+DOL_FULL = f"{OUTDIR}/dol.s"
+REL_FULL = f"{OUTDIR}/rel.s"
 
 ##############
 # Tool Flags #
