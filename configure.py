@@ -634,7 +634,7 @@ def make_asm_list(path: str, asm_includes: List[AsmInclude]):
     with open(path, 'wb') as f:
         pickle.dump(
             [
-                inc.addr
+                int(inc.addr, 16)
                 for inc in asm_includes
             ],
             f
