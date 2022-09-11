@@ -211,6 +211,7 @@ if platform != "win32":
 DEVKITPPC = os.environ.get("DEVKITPPC")
 AS = os.path.join(DEVKITPPC, "bin", "powerpc-eabi-as")
 OBJDUMP = os.path.join(DEVKITPPC, "bin", "powerpc-eabi-objdump")
+CPP = os.path.join(DEVKITPPC, "bin", "powerpc-eabi-cpp")
 
 ICONV = f"{PYTHON} tools/sjis.py" # TODO: get actual iconv working(?)
 
@@ -277,6 +278,13 @@ ASFLAGS = ' '.join([
     f"-I {INCDIR}",
     f"-I {PPCDIS_INCDIR}",
     f"-I orig"
+])
+
+CPPFLAGS = ' '.join([
+    "-nostdinc",
+    f"-I {INCDIR}",
+    f"-I {PPCDIS_INCDIR}",
+    f"-I {BUILD_INCDIR}"
 ])
 
 DOL_SDATA2_SIZE = 4

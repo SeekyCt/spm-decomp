@@ -88,6 +88,7 @@ n.variable("cc", c.CC)
 n.variable("ld", c.LD)
 n.variable("devkitppc", c.DEVKITPPC)
 n.variable("as", c.AS)
+n.variable("cpp", c.CPP)
 n.variable("iconv", c.ICONV)
 n.newline()
 
@@ -96,6 +97,7 @@ n.newline()
 ##############
 
 n.variable("asflags", c.ASFLAGS)
+n.variable("cppflags", c.CPPFLAGS)
 n.variable("ldflags", c.LDFLAGS)
 n.variable("ppcdis_analysis_flags", c.PPCDIS_ANALYSIS_FLAGS)
 n.variable("ppcdis_disasm_flags", c.PPCDIS_DISASM_FLAGS)
@@ -200,21 +202,20 @@ n.rule(
     description = "AS $in"
 )
 
-# Due to CW dumbness with .d output location, $outstem must be defined without the .o
 n.rule(
     "cc",
-    command = f"$cc $cflags -MD -gccdep -c $in -o $out",
+    command = ALLOW_CHAIN + f"$cpp -M $in -MF $out.d $cppflags && $cc $cflags -c $in -o $out",
     description = "CC $in",
     deps = "gcc",
-    depfile = "$outstem.d"
+    depfile = "$out.d"
 )
 
 n.rule(
     "ccs",
-    command = f"$cc $cflags -MD -gccdep -c $in -o $out -S",
+    command = ALLOW_CHAIN + f"$cpp -M $in -MF $out.d $cppflags && $cc $cflags -S $in -o $out",
     description = "CC -S $in",
     deps = "gcc",
-    depfile = "$outstem.d"
+    depfile = "$out.d"
 )
 
 n.rule(
@@ -597,8 +598,7 @@ class CSource(Source):
             inputs = self.iconv_path,
             implicit = [inc.path for inc in self.gen_includes],
             variables = {
-                "cflags" : self.cflags,
-                "outstem" : self.o_stem
+                "cflags" : self.cflags
             }
         )
         # Optional manual debug target
@@ -608,8 +608,7 @@ class CSource(Source):
             inputs = self.iconv_path,
             implicit = [inc.path for inc in self.gen_includes],
             variables = {
-                "cflags" : self.cflags,
-                "outstem" : self.o_stem
+                "cflags" : self.cflags
             }
         )
 
