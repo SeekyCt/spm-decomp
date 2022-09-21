@@ -2701,10 +2701,10 @@ s32 evtmgrCmd(EvtEntry* entry)
             continue;
 
         if (ret == EVT_RET_END)
-            return -1;
+            return EVTCMD_RET_END;
         
         if (ret < 0)
-            return 1;
+            return EVTCMD_RET_END_ALL;
         
         if (ret == EVT_RET_BLOCK_WEAK)
             break;
@@ -2719,7 +2719,7 @@ s32 evtmgrCmd(EvtEntry* entry)
             continue;            
         }
     }
-    return 0;
+    return EVTCMD_RET_CONTINUE;
 }
 
 s32 evtGetValue(EvtEntry * entry, s32 reg)
