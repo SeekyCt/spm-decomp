@@ -31,7 +31,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Modding
 
-In it's current state, the repo isn't really ready for direct editing (the DOL isn't shiftable, the REL might be but it's not been thoroughly tested), but functions can be copied into rel mods and edited there, and the documentation is still useful. 
+In its current state, the repo isn't really ready for direct editing (the DOL isn't shiftable, the REL might be but it's not been thoroughly tested), but functions can be copied into REL mods and edited there, and the documentation is still useful. 
 
 ## Credits
 - PistonMiner, Zephiles, Jdaster64, Jasper, NWPlayer123, Malleo, SolidifiedGaming and Diagamma for their TTYD documentation
