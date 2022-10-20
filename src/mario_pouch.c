@@ -55,10 +55,10 @@ void pouchResetFlip()
     pp2 = pouch2GetPtr();
 
     pp->flipTimer = 10;
-    pp2->unknown_0x0c = 0;
-    pp2->unknown_0x08 = 0;
-    pp2->unknown_0x04 = 0;
-    pp2->unknown_0x00 = 0;
+    pp2->unknown_0xc = 0;
+    pp2->unknown_0x8 = 0;
+    pp2->unknown_0x4 = 0;
+    pp2->unknown_0x0 = 0;
     pp2->unknown_0x14 = 0;
     pouch2GetPtr()->unknown_0x10 = 0;
 }
