@@ -69,10 +69,17 @@ typedef struct
 
 typedef struct
 {
-    u8 unknown_0x0[0x20 - 0x0];
+    s32 unknown_0x0;
+    s32 unknown_0x4;
+    s32 unknown_0x8;
+    s32 unknown_0xc;
+    s32 unknown_0x10;
+    s32 unknown_0x14;
+    u8 unknown_0x18[0x20 - 0x18];
 } MarioPouchWork2;
 
 MarioPouchWork * pouchGetPtr();
+MarioPouchWork2 * pouch2GetPtr();
 void pouchInit();
 void pouchReInit();
 void pouchMain();
