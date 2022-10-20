@@ -26,6 +26,11 @@ MarioPouchWork * pouchGetPtr()
     return &work;
 }
 
+MarioPouchWork2 * pouch2GetPtr()
+{
+    return wp2;
+}
+
 asm void pouchInit()
 {
     #include "asm/8014c094.s"
@@ -41,9 +46,21 @@ asm void pouchMain()
     #include "asm/8014cd90.s"
 }
 
-asm void pouchResetFlip()
+void pouchResetFlip()
 {
-    #include "asm/8014d184.s"
+    MarioPouchWork * pp;
+    MarioPouchWork2 * pp2;
+
+    pp = pouchGetPtr();
+    pp2 = pouch2GetPtr();
+
+    pp->flipTimer = 10;
+    pp2->unknown_0x0c = 0;
+    pp2->unknown_0x08 = 0;
+    pp2->unknown_0x04 = 0;
+    pp2->unknown_0x00 = 0;
+    pp2->unknown_0x14 = 0;
+    pouch2GetPtr()->unknown_0x10 = 0;
 }
 
 void pouchSetLevel(s32 level)
