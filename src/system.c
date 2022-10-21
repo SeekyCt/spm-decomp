@@ -245,6 +245,8 @@ asm void sysWaitDrawSync()
 // The use of r11/12 and placement of the return 1 pretty much guarantee inline asm
 asm s32 memcmp_as4(register const void * a, register const void * b, register u32 n)
 {
+    // clang-format off
+
     // Offset a & b for lwzu
     // Divide n by 4 and move to count register
     subi a, a, 4
@@ -270,11 +272,15 @@ top:
 diff:
     li r3, 1
     blr
+
+    // clang-format on
 }
 
 // The use of r11/12 pretty much guarantees inline asm
 asm void memcpy_as4(register void * dest, register const void * source, register u32 n)
 {
+    // clang-format off
+
     // Offset dest & source for stwu/lwzu
     // Divide n by 4 and move to count register
     subi dest, dest, 4
@@ -291,6 +297,8 @@ top:
     bdnz top
 
     blr
+
+    // clang-format on
 }
 
 asm void mtxGetRotationElement(Mtx34 * mtx, Mtx34 * out, char axis1, char axis2)
