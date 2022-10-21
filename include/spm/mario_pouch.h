@@ -21,7 +21,7 @@ typedef struct
 {
     bool selectable;
     bool selected;
-    s16 id;
+    u16 id;
 } PouchCharOrPixlInfo;
 
 typedef struct
@@ -41,9 +41,9 @@ typedef struct
     s32 flipTimer;
     s32 xp;
     s32 coins;
-    s16 keyItem[32];
-    s16 useItem[10];
-    s16 shopItem[32];
+    u16 keyItem[32];
+    u16 useItem[10];
+    u16 shopItem[32];
     PouchCharOrPixlInfo characters[4];
     PouchCharOrPixlInfo pixls[16];
     s32 shopPoints;
@@ -109,23 +109,23 @@ bool pouchAddShopItem(s16 itemId);
 void pouchRemoveShopItem(s16 itemId);
 void pouchRemoveShopItemIdx(s16 itemId, s32 idx);
 PouchCharOrPixlInfo * pouchGetCharInfo(s32 slot);
-void pouchMakeCharSelectable(s16 itemId);
-void pouchMakeCharNotSelectable(s16 itemId);
+void pouchMakeCharSelectable(s16 id);
+void pouchMakeCharNotSelectable(s16 id);
 PouchCharOrPixlInfo * pouchGetPixlInfo(s32 slot);
-void pouchMakePixlSelectable(s16 itemId);
-void pouchMakePixlNotSelectable(s16 itemId);
+void pouchMakePixlSelectable(s16 id);
+void pouchMakePixlNotSelectable(s16 id);
 bool pouchCheckPixlSelected(s16 itemId);
-s16 pouchGetCurPixl();
+u16 pouchGetCurPixl();
 void pouchSetPixlSelected(s16 itemId);
 void pouchRegisterMapFound(s16 itemId);
 void pouchRegisterRecipeKnown(s16 itemId);
 bool pouchCheckRecipeKnown(s16 itemId);
-s32 pouchGetCardCount(s16 itemId);
+s8 pouchGetCardCount(s16 itemId);
 bool pouchCheckCardKnown(s16 itemId);
 void pouchRegisterJumpCombo(s32 length);
 void pouchRegisterStylishCombo(s32 length);
 void pouchSetEnemiesDefeated(s32 count);
-void pouchGetTotalCoinsCollected(s32 count);
+s32 pouchGetTotalCoinsCollected();
 s32 pouchGetMaxJumpCombo();
 s32 pouchGetMaxStylishCombo();
 s32 pouchGetEnemiesDefeated();
