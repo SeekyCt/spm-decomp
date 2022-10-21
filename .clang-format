@@ -25,3 +25,4 @@ IndentCaseLabels: true
 IndentPPDirectives: BeforeHash
 
 PointerAlignment: Middle
+SortIncludes: CaseInsensitive
