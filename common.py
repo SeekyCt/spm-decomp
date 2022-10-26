@@ -201,8 +201,8 @@ SYMBOLS = f"{PYTHON} {PPCDIS}/symbols.py"
 # Codewarrior
 TOOLS = "tools"
 CODEWARRIOR = os.path.join(TOOLS, "4199_60831")
-CC = os.path.join(CODEWARRIOR, "mwcceppc")
-LD = os.path.join(CODEWARRIOR, "mwldeppc")
+CC = os.path.join(CODEWARRIOR, "mwcceppc.exe")
+LD = os.path.join(CODEWARRIOR, "mwldeppc.exe")
 if platform != "win32":
     CC = f"wine {CC}"
     LD = f"wine {LD}"
