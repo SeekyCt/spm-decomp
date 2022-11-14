@@ -197,6 +197,7 @@ ELF2REL = f"{PYTHON} {PPCDIS}/elf2rel.py"
 SLICES = f"{PYTHON} {PPCDIS}/slices.py"
 PROGRESS = f"{PYTHON} {PPCDIS}/progress.py"
 SYMBOLS = f"{PYTHON} {PPCDIS}/symbols.py"
+MAKESRC = f"{PYTHON} {PPCDIS}/makesrc.py"
 
 # Codewarrior
 TOOLS = "tools"
