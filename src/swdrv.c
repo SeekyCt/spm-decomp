@@ -159,7 +159,6 @@ s32 func_80038204()
     char *mapname;
     s32 i;
     CoinThing *pCVar3;
-    CoinThing *pCVar2;
     s32 id;
     pCoinThings = gp->coinThings;
 
@@ -173,6 +172,7 @@ s32 func_80038204()
     
     if (i >= MAX_COIN_MAP)
     {
+        // TODO: fix shadowing
         s32 i;
         CoinThing *pCVar2;
         pCVar3 = gp->coinThings;
