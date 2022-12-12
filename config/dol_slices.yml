@@ -108,3 +108,19 @@ nandmgr.c:
     .bss:    [0x80534fa8, 0x80535168]
     .sdata:  [0x805ae1b0, 0x805ae1b8]
     .sdata2: [0x805b62a8, 0x805b62b0]
+
+#mario.c: # no .sdata or .sbss2
+#    .text:   [0x80121e18, 0x8012dac4]
+#    .rodata: [0x80333648, 0x80333c20]
+#    .data:   [0x804265e8, 0x80426840]
+#    .bss:    [0x80510450, 0x80511a28]
+#    .sbss:   [0x805ae8e8, 0x805ae8f8]
+#    .sdata2: [0x805b23c8, 0x805b2578]
+
+#npcdrv.c: # no .sbss
+#    .text:   [0x801a9640, 0x801d25f4]
+#    .rodata: [0x80338868, 0x8033a2d8]
+#    .data:   [0x8042a908, 0x80454940]
+#    .bss:    [0x805283e0, 0x80528f28]
+#    .sdata:  [0x805ae188, 0x805ae18c]
+#    .sdata2: [0x805b3d58, 0x805b3f14]

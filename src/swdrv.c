@@ -67,7 +67,7 @@ void swInit()
     memset(gp->lswf, 0, sizeof(gp->lswf));
     memset(gp->lsw, 0, sizeof(gp->lsw));
 
-    memset(gp->unknown_0x1184, 0, sizeof(gp->unknown_0x1184));
+    memset(gp->coinThings, 0, sizeof(gp->coinThings));
 
     wp->coinId = 0;
     wp->gameCoinId = 0;
@@ -80,7 +80,7 @@ void swReInit()
     memset(gp->lswf, 0, sizeof(gp->lswf));
     memset(gp->lsw, 0, sizeof(gp->lsw));
 
-    memset(gp->unknown_0x1184, 0, sizeof(gp->unknown_0x1184));
+    memset(gp->coinThings, 0, sizeof(gp->coinThings));
 
     wp->coinId = 0;
 }
@@ -172,19 +172,40 @@ asm UNKNOWN_FUNCTION(func_80038550)
     #include "asm/80038550.s"
 }
 
-asm UNKNOWN_FUNCTION(func_8003863c)
+void func_8003863c()
 {
-    #include "asm/8003863c.s"
+    wp->coinId = 0;
 }
 
-asm UNKNOWN_FUNCTION(func_8003864c)
+void func_8003864c()
 {
-    #include "asm/8003864c.s"
+    wp->gameCoinId = 0;
 }
 
-asm UNKNOWN_FUNCTION(func_8003865c)
-{
-    #include "asm/8003865c.s"
+s32 func_8003865c(void) {
+    char *mapName;
+    u32 i;
+    s32 output = 0;
+
+    if (seqGetSeq() != SEQ_MAPCHANGE)
+        return -1;
+
+    mapName = gp->mapName;
+    
+    for (i = 0; i < 32; i++) {
+        if (strcmp(mapName, assign_tbl[i].mapName) == 0) break;
+        output += assign_tbl[i].num;
+    }
+    
+    if (i >= 32) // why
+        return -1;
+
+    output += wp->gameCoinId;
+    wp->gameCoinId++;
+    
+    // Coin's flag overflowed
+    assert(505, (wp->gameCoinId-1) < assign_tbl[i].num, "コインのフラグが溢れました");
+    return output;
 }
 
 asm UNKNOWN_FUNCTION(func_8003875c)

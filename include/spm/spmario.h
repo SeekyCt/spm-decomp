@@ -8,6 +8,11 @@
 #include <wii/os.h>
 #include <wii/types.h>
 
+typedef struct {
+    char mapName[32];
+    u8 _20[0x48-0x20];
+} CoinThing;
+
 typedef struct
 {
     u32 flags;
@@ -39,7 +44,7 @@ typedef struct
     s8 gsw[2048];
     u32 lswf[16]; // 512 flags
     u8 lsw[1024];
-    u8 unknown_0x1184[0x900]; // coin related?
+    CoinThing coinThings[32]; // coin related?
     u8 unknown_0x1a84[0x1b08 - 0x1a84];
 } SpmarioGlobals;
 extern SpmarioGlobals * gp;
