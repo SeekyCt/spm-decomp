@@ -67,7 +67,7 @@ void swInit()
     memset(gp->lswf, 0, sizeof(gp->lswf));
     memset(gp->lsw, 0, sizeof(gp->lsw));
 
-    memset(gp->unknown_0x1184, 0, sizeof(gp->unknown_0x1184));
+    memset(gp->coinThings, 0, sizeof(gp->coinThings));
 
     wp->coinId = 0;
     wp->gameCoinId = 0;
@@ -80,7 +80,7 @@ void swReInit()
     memset(gp->lswf, 0, sizeof(gp->lswf));
     memset(gp->lsw, 0, sizeof(gp->lsw));
 
-    memset(gp->unknown_0x1184, 0, sizeof(gp->unknown_0x1184));
+    memset(gp->coinThings, 0, sizeof(gp->coinThings));
 
     wp->coinId = 0;
 }
@@ -152,9 +152,53 @@ s32 _swByteGet(s32 id)
     return gp->lsw[id];
 }
 
-asm UNKNOWN_FUNCTION(func_80038204)
+// Shoutouts to an anonymous decomp.me user (Grumpy Nighingale) for matching it from 95.34% to 100%
+s32 func_80038204()
 {
-    #include "asm/80038204.s"
+    CoinThing *pCoinThings;
+    char *mapname;
+    s32 i;
+    CoinThing *pCVar3;
+    CoinThing *pCVar2;
+    s32 id;
+    pCoinThings = gp->coinThings;
+
+    if (seqGetSeq() != SEQ_MAPCHANGE)
+      return -1;
+      
+    mapname = gp->mapName;
+    for (i = 0; i < MAX_COIN_MAP; i++)
+        if (strcmp(mapname, pCoinThings[i].mapName) == 0)
+            break;
+    
+    if (i >= MAX_COIN_MAP)
+    {
+        s32 i;
+        CoinThing *pCVar2;
+        pCVar3 = gp->coinThings;
+        pCVar2 = gp->coinThings;
+        if (strncmp(mapname, pCVar2[0].mapName, 3) != 0 && strncmp(mapname, "bos", 3) != 0)
+        {
+            memset(pCVar3, 0, 0x900);
+            wp->coinId = 0;
+        }
+        pCVar2 = &gp->coinThings[0];
+        for (i = 0; i < MAX_COIN_MAP; i++)
+        {
+            if (strcmp(pCVar2->mapName, "") == 0) break;
+            pCVar2++;
+        }
+
+        // Coin flag's save location not found
+        assert(245, i < MAX_COIN_MAP, "コインフラグの保存場所がみつかりません");
+        strcpy(pCVar2[0].mapName, gp->mapName);
+        wp->coinId = 0;
+    }
+    id = wp->coinId++;
+    
+    // Coin flags have overflowed
+    assert(253, wp->coinId < MAX_COIN_BIT, "コインのフラグが溢れました");
+    return id;
 }
 
 asm UNKNOWN_FUNCTION(func_800383a0)
@@ -172,19 +216,41 @@ asm UNKNOWN_FUNCTION(func_80038550)
     #include "asm/80038550.s"
 }
 
-asm UNKNOWN_FUNCTION(func_8003863c)
+void func_8003863c()
 {
-    #include "asm/8003863c.s"
+    wp->coinId = 0;
 }
 
-asm UNKNOWN_FUNCTION(func_8003864c)
+void func_8003864c()
 {
-    #include "asm/8003864c.s"
+    wp->gameCoinId = 0;
 }
 
-asm UNKNOWN_FUNCTION(func_8003865c)
+s32 func_8003865c(void)
 {
-    #include "asm/8003865c.s"
+    char *mapName;
+    u32 i;
+    s32 output = 0;
+
+    if (seqGetSeq() != SEQ_MAPCHANGE)
+        return -1;
+
+    mapName = gp->mapName;
+    
+    for (i = 0; i < MAX_COIN_MAP; i++)
+    {
+        if (strcmp(mapName, assign_tbl[i].mapName) == 0) break;
+        output += assign_tbl[i].num;
+    }
+    
+    if (i >= MAX_COIN_MAP)
+        return -1;
+
+    output += wp->gameCoinId++;
+    
+    // Coin flags have overflowed
+    assert(505, (wp->gameCoinId-1) < assign_tbl[i].num, "コインのフラグが溢れました");
+    return output;
 }
 
 asm UNKNOWN_FUNCTION(func_8003875c)

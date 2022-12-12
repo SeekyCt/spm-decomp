@@ -22,6 +22,10 @@ typedef struct
     s32 gameCoinId;
 } SwWork;
 
+
+#define MAX_COIN_MAP 32
+#define MAX_COIN_BIT 0x200
+
 /*
     Zeros all of the evt variables in SpmarioGlobals (GSW, GSWF, LSW, LSWF),
     SpMarioGlobals.unknown_0x1184, coinId and gameCoinId
@@ -91,12 +95,12 @@ void _swByteSet(s32 id, u8 num);
 s32 _swByteGet(s32 id);
 
 // New to SPM so no symbols:
-UNKNOWN_FUNCTION(func_80038204);
+s32 func_80038204();
 UNKNOWN_FUNCTION(func_800383a0);
 UNKNOWN_FUNCTION(func_80038478);
 UNKNOWN_FUNCTION(func_80038550);
 UNKNOWN_FUNCTION(func_8003863c);
 UNKNOWN_FUNCTION(func_8003864c);
-UNKNOWN_FUNCTION(func_8003865c);
+s32 func_8003865c();
 UNKNOWN_FUNCTION(func_8003875c);
 UNKNOWN_FUNCTION(func_800387d8);
