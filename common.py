@@ -215,6 +215,7 @@ OBJDUMP = os.path.join(DEVKITPPC, "bin", "powerpc-eabi-objdump")
 CPP = os.path.join(DEVKITPPC, "bin", "powerpc-eabi-cpp")
 
 ICONV = f"{PYTHON} tools/sjis.py" # TODO: get actual iconv working(?)
+NLZSS = f"{PYTHON} tools/lzss3.py"
 
 #########
 # Files #
@@ -231,6 +232,7 @@ DISASM_OVERRIDES = f"{CONFIG}/disasm_overrides.yml"
 # Binaries
 DOL = f"{ORIG}/main.dol" # read in python code
 REL = f"{ORIG}/relF.rel" # read in python code
+REL_COMPR = f"{ORIG}/relF.bin" # read in python code
 DOL_YML = f"{CONFIG}/dol.yml"
 REL_YML = f"{CONFIG}/rel.yml"
 DOL_SHA = f"{ORIG}/main.dol.sha1"
