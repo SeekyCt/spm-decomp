@@ -6,6 +6,7 @@ expected
 out
 *.dol
 *.rel
+relF.bin
 *.exe
 *.dll
 build.ninja

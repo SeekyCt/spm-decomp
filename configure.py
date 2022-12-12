@@ -25,6 +25,19 @@ assert os.path.exists("tools/4199_60831/mwcceppc.exe") and \
        os.path.exists("tools/4199_60831/mwldeppc.exe"), \
        "Error: Codewarrior not found in tools/4199_60831"
 
+# Check if provided REL is compressed
+if not os.path.exists(c.REL) and os.path.exists(c.REL_COMPR):
+    # Check the binary is correct
+    rel_compr_hash = c.get_file_sha1(c.REL_COMPR)
+    if rel_compr_hash == bytes.fromhex("a28a2e23f72f848bd80062e83aba3892951c2e9f"):
+        assert 0, "Error: Base rel is from PAL revision 1, the decomp currently requires revision 0"
+    else:
+        assert rel_compr_hash == bytes.fromhex("3ca98a7ddca976107413c05f3812813af79908f8"), \
+            "Error: Base rel hash isn't correct"
+
+    # All good, decompress it
+    os.system(f"{c.NLZSS} {c.REL_COMPR} >{c.REL}")
+
 # Check binaries were added
 assert os.path.exists(c.DOL) and os.path.exists(c.REL), \
        "Error: Base binaries not found"
@@ -783,7 +796,7 @@ n.build(
 )
 
 ##########
-# Ouptut #
+# Output #
 ##########
 
 with open("build.ninja", 'w') as f:

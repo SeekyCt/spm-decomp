@@ -7,8 +7,7 @@ See also https://github.com/SeekyCt/spm-docs for other documentation.
 ## Building
 
 - Dump a copy of the game and extract the main.dol & relF.bin files
-- Extract relF.bin to relF.rel with a tool like [nlzss](https://github.com/magical/nlzss)
-- Place main.dol and relF.rel in the orig folder
+- Place main.dol and relF.bin in the orig folder
 - Place Codewarrior EPPC Version 4.1 Build 60831 in tools/4199_60831
 - Install DevkitPPC, Ninja and Python
     - DevkitPPC r38 and r41 are known to work, other versions probably do too
