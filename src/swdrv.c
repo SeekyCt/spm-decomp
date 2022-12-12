@@ -155,9 +155,9 @@ s32 _swByteGet(s32 id)
 // Shoutouts to an anonymous decomp.me user (Grumpy Nighingale) for matching it from 95.34% to 100%
 s32 func_80038204()
 {
-    CoinThing *pCoinThings; // at r31
+    CoinThing *pCoinThings;
     char *mapname;
-    s32 i; // at r29
+    s32 i;
     CoinThing *pCVar3;
     CoinThing *pCVar2;
     s32 id;
@@ -168,7 +168,8 @@ s32 func_80038204()
       
     mapname = gp->mapName;
     for (i = 0; i < MAX_COIN_MAP; i++)
-        if (strcmp(mapname, pCoinThings[i].mapName) == 0) break;
+        if (strcmp(mapname, pCoinThings[i].mapName) == 0)
+            break;
     
     if (i >= MAX_COIN_MAP)
     {
@@ -176,7 +177,7 @@ s32 func_80038204()
         CoinThing *pCVar2;
         pCVar3 = gp->coinThings;
         pCVar2 = gp->coinThings;
-        if (strncmp(mapname, pCVar2[0].mapName, 3) && strncmp(mapname, "bos", 3))
+        if (strncmp(mapname, pCVar2[0].mapName, 3) != 0 && strncmp(mapname, "bos", 3) != 0)
         {
             memset(pCVar3, 0, 0x900);
             wp->coinId = 0;
@@ -188,14 +189,14 @@ s32 func_80038204()
             pCVar2++;
         }
 
-        /* Coin flag's save location not found */
+        // Coin flag's save location not found
         assert(245, i < MAX_COIN_MAP, "コインフラグの保存場所がみつかりません");
         strcpy(pCVar2[0].mapName, gp->mapName);
         wp->coinId = 0;
     }
     id = wp->coinId++;
     
-    /* Coin flags have overflowed */
+    // Coin flags have overflowed
     assert(253, wp->coinId < MAX_COIN_BIT, "コインのフラグが溢れました");
     return id;
 }
@@ -242,12 +243,12 @@ s32 func_8003865c(void)
         output += assign_tbl[i].num;
     }
     
-    if (i >= MAX_COIN_MAP) // why
+    if (i >= MAX_COIN_MAP)
         return -1;
 
     output += wp->gameCoinId++;
     
-    /* Coin flags have overflowed */
+    // Coin flags have overflowed
     assert(505, (wp->gameCoinId-1) < assign_tbl[i].num, "コインのフラグが溢れました");
     return output;
 }
