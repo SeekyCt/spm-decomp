@@ -1,0 +1,758 @@
+/* OS Globals */
+
+800000e4:currentThread
+800030c8:firstRel
+800030cc:lastRel
+// more
+
+/* Dol */
+
+// Runtime.PPCEABI.H.a
+// __mem.c
+80004000:memcpy
+80004104:memset
+
+// mapdata.c
+// text
+800294e0:mapDataPtr
+// data
+804031b8:mapDataList
+
+// mobjdrv.c
+8002c834:mobjNameToPtr
+8002c8e8:mobjNameToPtrNoAssert
+// more
+
+// msgdrv.c
+8003270c:msgSearch
+// more
+
+// swdrv.c
+80037eac:swInit
+80037f48:swReInit
+80037fac:swSet
+80037fec:swGet
+80038034:swClear
+80038074:swByteSet
+800380f8:swByteGet
+8003811c:_swSet
+8003815c:_swGet
+800381a4:_swClear
+800381e4:_swByteSet
+800381f4:_swByteGet
+// more
+
+// windowdrv.c
+8003ab80:windowDispGX2_Waku_col
+// more
+
+// animdrv.c
+8004249c:animPoseEntry
+80043410:animPoseSetAnim
+80045288:animPoseMain
+800497c8:animPoseDrawMtx
+80049fc4:animPoseRelease
+8004a5bc:animPoseAutoRelease
+8004c828:animPoseGetAnimBaseDataPtr
+// more
+
+// camdrv.c
+80055b24:camGetPtr
+80055b38:camGetCurPtr
+80058294:getScreenPoint
+// more
+
+// casedrv.c
+8005abe4:caseCheckHitObj
+// more
+
+// dispdrv.c
+8005af04:dispEntry
+// more
+
+// effdrv.c
+80061d78:func_80061d78
+
+// fadedrv.c
+800677f8:fadeIsFinish
+800678e8:fadeSetMapChangeTransition
+// more
+805ae828:fadedrvWp2
+
+// hitdrv.c
+8006f920:hitNameToPtr
+// more
+
+// hitdrv.c
+8006c4b4:hitGrpFlagOn
+8006c6ac:hitGrpFlagOff
+8006ee2c:hitCheckFilter
+8006ffe4:hitObjGetPos
+800703b0:hitGetMapEntryBbox
+// more
+
+// icondrv.c
+800731b0:iconDispGx
+// more
+
+// itemdrv.c
+80077660:itemGetWork
+80078b3c:itemEntry
+8007bccc:itemTypeNameToId
+8007d8b4:itemCheckForId
+// more
+
+// item_data.c
+803f5f98:itemDataTable
+// more
+
+// item_event_data.c
+803fbc10:itemEventDataTable
+// more
+
+// mapdrv.c
+8008cf30:mapGrpFlagOn
+8008d2fc:mapGrpFlagOff
+8008e11c:mapGrpFlag4On
+// more
+
+// somewhere
+800b426c:func_800b426c
+800cd554:func_800cd554
+
+// evt_snd.c
+800d2148:evt_snd_bgmon
+800d36f4:func_800d36f4
+// more
+
+// evt_sub.c
+800d37d8:evt_sub_intpl_msec_init
+800d3878:evt_sub_intpl_msec_get_value
+800d40a4:evt_sub_random
+800d4de4:func_800d4de4
+800d4774:evt_sub_get_entername
+800d74a0:func_800d74a0
+// more
+
+// evtmgr.c
+800d87e4:evtGetWork
+800d8b88:evtEntry
+800d8df4:evtEntryType
+800d9060:evtChildEntry
+800d9370:evtBrotherEntry
+800d9b88:evtCheckID
+// more
+
+// evtmgr_cmd.c
+// text
+800ddd5c:evtmgrCmd
+800dd500:evt_debug_put_msg
+800dd534:evt_debug_put_reg
+800de594:evtGetValue
+800de9b8:evtSetValue
+800df1fc:evtSetFloat
+// bss
+8050ce30:evt_debug_put_reg_str
+// more
+
+// evt_door.c
+// text
+800e11e0:evt_door_wait_flag
+800e11b0:evtDoorGetActiveDoorDesc
+800e2610:evt_door_set_door_descs
+800e3588:evt_door_set_dokan_descs
+800e4118:evt_door_set_map_door_descs
+800e4308:evt_door_enable_disable_map_door_desc
+// more
+// data
+8041a2b0:door_init_evt
+// more
+// sdata
+805ae020:evt_door_wp
+
+// evt_fade.c
+800e7100:evt_fade_end_wait
+// more
+
+// evt_fairy.c
+800e8214:evt_fairy_flag_onoff
+// more
+
+// evt_guide.c
+800ea87c:evt_guide_flag2_onoff
+800ea984:evt_guide_check_flag0
+// more
+
+// evt_hit.c
+800eb72c:evt_hitobj_attr_onoff
+// more
+
+// evt_map.c
+800edf24:evt_mapobj_flag_onoff
+800edfec:evt_mapobj_flag4_onoff
+800ed6c0:evt_mapobj_trans
+800edb54:evt_mapobj_color
+// more
+
+// evt_mario.c
+800ef4c0:evt_mario_flag8_onoff
+800ef650:evt_mario_key_off
+800ef62c:evt_mario_key_on
+800efa4c:evt_mario_get_pos
+800f25b0:evt_set_gravity
+// more
+
+// evt_mobj.c
+// text
+800f3608:evt_mobj_delete
+800f380c:evt_mobj_flag_onoff
+800f5ad8:evt_mobj_zyo
+800f61ac:evt_mobj_thako
+800f6440:evt_mobj_kan
+800f6610:evt_mobj_arrow
+800f8be8:evt_mobj_blk
+// more
+// data
+8041b6d8:mobj_save_blk_sysevt
+// more
+
+// evt_msg.c
+800fba54:evt_msg_print
+800fbe74:evt_msg_continue
+// more
+
+// evt_npc.c
+800fe21c:evt_npc_set_position
+80102f5c:evt_npc_entry
+80103054:func_80103054
+80103108:evt_npc_set_anim
+80104694:func_80104694
+8010368c:evt_npc_flag8_onoff
+801039b8:evt_npc_animflag_onoff
+80104c94:evt_npc_set_property
+80104fac:evt_npc_modify_part
+801059d0:func_801059d0
+80106724:evt_npc_entry_from_template
+80107cfc:func_80107cfc
+80107d20:func_80107d20
+80108194:func_80108194
+8010a910:evt_npc_teleport_effect
+// more
+
+// evt_seq.c
+8010d028:evt_seq_set_seq
+8010d0a0:evt_seq_wait
+// more
+
+// evt_shop.c
+80111d1c:evt_shop_set_defs
+// more
+
+// mario.c
+80121f48:marioGetPtr
+80122b68:marioCtrlOffChk
+80122b7c:marioKeyOffChk
+80122bf4:marioKeyOff
+80122c2c:marioKeyOn
+8012b50c:marioSetGravity
+// more
+
+// mario_motion.c
+801433dc:marioChgMot
+80146f0c:func_80146f0c
+// more
+
+// mario_pouch.c
+8014c088:pouchGetPtr
+8014d458:pouchGetHp
+8014d468:pouchAddHp
+8014d4f8:pouchGetXp
+8014d508:pouchAddXp
+8014d5f8:pouchAddItem
+8014dbf4:pouchCheckHaveItem
+8014df4c:pouchRemoveItem
+8014eb68:pouchRemoveShopItem
+8014f31c:pouchGetCurPixl
+8014fa20:pouchCountUseItems
+8014fad0:pouchCountKeyItems
+8014fb78:pouchCountShopItems
+8014fc20:pouchCountChars
+8014fc70:pouchCountPixls
+// more
+
+// seq_logo.c
+80179140:seq_logoMain
+// more
+
+// seq_mapchange.c
+8017af98:_unload
+// more
+
+// seq_title.c
+8017bc4c:getNextDanMapname
+// more
+
+// seq_game.c
+8017ce44:seq_gameInit
+// more
+
+// seqdrv.c
+// text
+8017bf2c:seqInit_SPMARIO
+8017bf6c:seqMain
+8017c074:seqSetSeq
+8017c084:seqGetSeq
+// data
+80512360:seqWork
+
+// pausewin.c
+// text
+80184c18:pausewinEntry
+80185088:pausewinMoveTo
+801850d8:pausewinAppear
+80185110:pausewinDisappear
+80185148:pausewinDelete
+801853cc:pausewinPauseGame
+80185510:pausewinUnpauseGame
+80188508:pausewinSetMessage
+80189cf0:pluswinChapterWinOpen
+// more
+// data
+805ae0f0:pluswinWp
+805ae930:pausewinWp
+// more
+
+// charpixlitemwin.c
+80195f98:charPixlItemWinIsClosed
+// more
+
+// hud.c
+80199490:hudLoadStats
+80199ad0:hudHide
+80199cc4:hudStartCountdown
+// more
+
+// system.c
+8019d150:rand
+8019d254:irand
+8019c54c:__assert2
+// more
+
+// debug.c
+8019e33c:OSPanic
+// more
+
+// dvdmgr.c
+8019e08c:DVDMgrOpen
+8019e1e4:DVDMgrRead
+8019e2e0:DVDMgrClose
+8019e320:DVDMgrGetLength
+// more
+
+// filemgr.c
+8019f724:fileAllocf
+8019fa8c:fileFree
+8019fc5c:fileAsyncf
+// more
+
+// fontmgr.c
+801a0070:FontDrawStart
+801a0150:FontDrawStart_alpha
+801a0228:FontDrawEdge
+801a0234:FontDrawEdgeOff
+801a0240:FontDrawRainbowColor
+801a02e0:FontDrawRainbowColorOff
+801a02e8:FontDrawNoise
+801a03f4:FontDrawNoiseOff
+801a0420:FontDrawColorIDX
+801a04b8:FontDrawColor
+801a0554:FontDrawColor_
+801a05dc:FontGetDrawColor
+801a05e4:FontDrawScale
+801a05fc:FontDrawCode
+801a09d4:FontDrawString
+801a151c:FontDrawMessage
+801a1d50:FontDrawMessageMtx
+801a28ac:FontGetMessageWidth
+// more
+
+// gxsub.c
+801a37b4:gxsubInit_Tpl
+801a38f4:gxsubDrawTextureMtx
+801a3c28:gxsubDrawTexture
+801a3f98:gxsubGetTexWidth
+801a3ff0:gxsubGetTexHeight
+801a4048:gxsubEnableTexAlpha
+801a4058:gxsubInit
+801a416c:gxsubInit_Cam
+801a41a0:gxsubInit_Colour
+801a42d8:gxsubDrawQuad
+801a44a4:gxsubDrawQuadMtx
+801a4678:gxsubDrawQuadGradient
+801a4890:gxsubDrawLineSquare
+801a4a84:gxsubDrawLineSquareMtx
+801a4ca4:gxsubDrawDottedLine
+801a5134:gxsubDrawLine
+801a52e0:gxsubDrawSphere
+
+// memory.c
+// text
+801a626c:__memAlloc
+801a62f0:__memFree
+801a6e34:__dl__FPv
+// data
+8042a408:size_table
+// sdata
+805ae168:memoryWp
+805ae16c:memorySwp
+
+// parse.c
+801a6e9c:parseInit
+801a6ebc:getTag
+801a6f40:parsePush
+801a70f4:parsePop
+801a710c:parsePopNext
+801a7140:parseGet1Next
+801a7488:parseTagGet1
+
+// romfont.c
+// text
+801a773c:romFontPrintGX
+801a7c44:romFontGetWidth
+// more
+// sdata
+805ae170:romfont_wp
+
+// spmario.c
+// text
+801a7ddc:spmarioInit
+801a84d8:spmarioMain
+801a8748:spmarioDisp
+801a8770:spmarioSystemLevel
+801a87ec:spmarioGetSystemLevel
+801a87f4:viPostCallback
+801a898c:wiiDvdCheckThread
+801a8db4:wiiRumbleCheck
+// 801a9068
+// 801a9074
+// 801a9080
+// 801a908c
+// sdata
+805ae178:gp
+// sbss
+805ae9c1:spmario_doShutdown
+
+// seqdef.c
+804287a8:seq_data
+
+// DEMOInit.c
+801a94c8:DEMOBeforeRender
+801a9590:DEMODoneRender
+// more
+
+// npcdrv.c
+// text
+801adef0:npcDispMain
+801b6f2c:npcNameToPtr
+801bfc48:npcSearchAnimDefs
+801c9adc:npcGetWorkPtr
+801e3a1c:npcDropItem
+// more
+// data
+8043bf30:npcTribes
+80449888:npcEnemyTemplates
+// more
+
+// wpadmgr.c
+80237688:wpadGetButtonsHeld
+802376b0:wpadGetButtonsPressed
+802376c4:wpadGetButtonsHeldRepeat
+// more
+
+// spmario_snd.c
+80238598:spsndExit
+8023c93c:spsndBGMOn
+8023c948:spsndBGMOff_f_d
+8023d1b0:spsndCheckBgmPlaying
+// more
+
+// relmgr.c
+// text
+8023e434:relInit
+8023e444:loadRel
+8023e600:isRelLoaded
+// sdata
+805ae1a0:relmgr_wp
+805ae1a4:relDecompName
+805ae1a8:relCompName
+
+// nandmgr.c
+8023e9ec:nandGetSaveFiles
+8023edcc:nandUpdateSave
+8023efe0:nandLoadSave
+// more
+
+// homebuttondrv.c
+// text
+80241914:homebuttonMain
+// more
+// data
+805ae1b8:homebuttondrv_wp
+
+// lz_embedded.c
+8036afc0:pitText
+// more
+
+// Runtime.PPCEABI.H.a
+// runtime.c
+802560a4:__div2i
+// more
+
+// MSL_C.PPCEABI.bare.H.a
+// printf.c
+8025cf40:vsprintf
+8025cfc0:snprintf
+8025d098:sprintf
+// scanf.c
+8025e784:sscanf
+// string.c
+8025ec04:strstr
+// more
+
+// string.c
+8025a874:memmove
+8025e8fc:strcpy
+8025e9bc:strncpy
+8025ea78:strcmp
+8025eb94:strncmp
+8025ebd4:strchr
+80267018:strlen
+// more
+
+// s_cos.c
+80263ea0:cos
+
+// s_sin.c
+802642ac:sin
+
+// os.a
+// OSCache.c
+80270050:DCFlushRange
+802700d8:ICInvalidateRange
+// more
+// OSContext.c
+80270934:OSDumpContext
+// more
+// OSError.c
+// text
+80270c60:OSReport
+80270f78:__OSUnhandledException
+802729b8:OSFatal
+// more
+// rodata
+804ea600:__OSUnhandledException_msg1
+804ea6ac:__OSUnhandledException_msg2
+804ea710:__OSUnhandledException_msg3
+// OSFont.c
+80273494:OSGetFontEncode
+80273868:OSLoadFont
+80273c48:OSGetFontTexel
+// more
+// OSInterrupt.c
+80273ed8:OSDisableInterrupts
+80273f00:OSRestoreInterrupts
+// OSLink.c
+80274c0c:OSLink
+// more
+// OSReset.c
+80275fd4:OSShutdownSystem
+// more
+// OSThread.c
+80277ffc:OSSuspendThread
+// OSTime
+80278370:OSGetTime
+// more
+
+// mtx.a
+// mtx.c
+8027a270:PSMTXIdentity
+8027a7b4:PSMTXTrans
+8027a7e8:PSMTXTransApply
+8027a834:PSMTXScale
+8027a85c:PSMTXScaleApply
+8027afac:C_MTXOrtho
+// more
+
+// dvd.a
+// dvdfs.c
+8027b910:DVDConvertPathToEntrynum
+// more
+// dvd_broadway.c
+805ae2d8:devDiStr
+// more
+
+// vi.a
+// vi.c
+802837a8:VIWaitForRetrace
+8028472c:VIFlush
+802848ac:VISetBlack
+// more
+
+// gx.a
+8028e1b4:GXSetVtxDesc
+8028ea44:GXClearVtxDesc
+8028ea78:GXSetVtxAttrFmt
+8028f3b4:GXSetNumTexGens
+8028ff30:GXBegin
+802901f8:GXSetCullMode
+802912f4:GXSetNumChans
+80291318:GXSetChanCtrl
+802929d4:GXSetTevOp
+80292e10:GXSetAlphaCompare
+80292ed4:GXSetTevOrder
+80293030:GXSetNumTevStages
+80293054:GXSetFog
+802933a4:GXSetBlendMode
+8029344c:GXSetZMode
+80293480:GXSetZCompLoc
+80294214:GXSetProjection
+80294304:GXLoadPosMtxImm
+802943ac:GXSetCurrentMtx
+// more
+
+// mem.a
+// mem_expHeap.c
+80295cb8:MEMGetAllocatableSizeForExpHeapEx
+80295d90:MEMGetSizeForMBlockExpHeap
+
+// ipc.a
+80298268:IOS_Open
+80298448:IOS_Close
+80298e68:IOS_Ioctlv
+// more
+
+// NAND.a
+8029983c:NANDCreateAsync
+802999dc:NANDDeleteAsync
+80299bdc:NANDReadAsync
+80299cbc:NANDWriteAsync
+8029a73c:NANDSafeOpenAsync
+8029ac98:NANDSafeCloseAsync
+8029bbe4:NANDChangeDirAsync
+8029bdf8:NANDGetHomeDir
+8029c5b0:NANDCheckAsync
+// more
+
+// exi.a
+// text
+8026a940:EXIImm
+8026ad58:EXISync
+8026b058:__EXIProbe
+8026b3a8:EXISelect
+8026b4d8:EXIDeselect
+8026bb3c:EXILock
+8026bc38:EXIUnlock
+8026bd38:EXIGetID
+// more
+// bss
+80537ed8:Ecb
+
+// cx.a
+802e2598:CXGetUncompressedSize
+802e25d8:CXUncompressLZ
+802e270c:CXGetCompressionHeader
+
+// tpl.c
+802e30ec:TPLBind
+// more
+
+/* Rel */
+
+// Sections:
+//   00000000 0 none
+//   80c458fc 1 .text 
+//   80ca9ad8 2 .ctors 
+//   80ca9adc 3 .dtors 
+//   80ca9ae8 4 .rodata 
+//   80cf5180 5 .data 
+//   80f64340 6 .bss 
+
+// machi.c
+1,1,000052e4:evt_machi_set_elv_descs
+// more
+
+// dan.c
+// text
+1,1,3c5b4:evt_dan_read_data
+1,1,3c88c:evt_dan_handle_map_parts
+1,1,3cb4c:evt_dan_handle_dokans
+1,1,3cda0:evt_dan_handle_doors
+1,1,3d1c0:evt_dan_get_door_names
+1,1,3d228:evt_dan_get_exit_door_name_l
+1,1,3d260:evt_dan_get_enemy_info
+1,1,3d43c:evt_dan_make_spawn_table
+1,1,3d944:evt_dan_get_enemy_spawn_pos
+1,1,3db40:evt_dan_decide_key_enemy
+1,1,3dbec:danCountdownDone
+1,1,3dbfc:evt_dan_start_countdown
+1,1,3dc2c:danCheckKeyInMapBbox
+1,1,3dd1c:danCheckKeyEnemyInMapBbox
+1,1,3de48:evt_dan_handle_key_failsafe
+1,1,3df80:evt_dan_handle_chest_room_dokans_and_doors
+1,1,3e02c:evt_dan_get_chest_room_item
+1,1,3e094:evt_dan_boss_room_set_door_name
+1,1,3e0d0:func_80c839cc
+1,1,3e140:wracktailDispCb
+1,1,3e308:evt_dan_set_wracktail_disp_cb
+1,1,3e34c:func_80c83c48
+1,1,3e39c:screenBlinkDisp
+1,1,3e62c:evt_dan_screen_blink
+1,1,3e670:func_80c83f6c
+// data
+1,5,15ad78:danMapParts
+1,5,15adb8:danDokanDescs
+1,5,15aeb8:danMapDoorDescs
+1,5,15aef8:danFlipsideLockItems
+1,5,15af00:danFlopsideLockItems
+1,5,15af08:dan_lock_interact_evt
+1,5,15afe0:dan_lock_open_evt
+1,5,15b018:dan_enemy_room_init_evt
+1,5,15b3e0:danChestRoomDokanDesc
+1,5,15b400:danChestRoomMapDoorDescs
+1,5,15b440:dan_exit_pipe_sign_interact_evt
+1,5,15b478:dan_chest_open_evt
+1,5,15b5b0:rotenShopItems
+1,5,15b6c8:rotenShopDef
+1,5,15b6e0:rotenTribeAnimDefs
+1,5,15b720:dan_chest_room_init_evt
+1,5,15bf68:dan_30_map_door_desc
+1,5,15bf88:dan_30_dokan_desc
+1,5,15bfa8:dan_70_dokan_desc
+1,5,15bfc8:dan_30_init_evt
+1,5,15c1f8:dan_70_init_evt
+1,5,15c428:dashellTribeAnimDefs
+1,5,15c450:dan_30_chest_interact_evt
+1,5,15c568:dan_30_chest_open_evt
+1,5,15d170:wracktailTribeAnimDefs
+1,5,15d1b8:dan_wracktail_main_evt
+1,5,15e6a0:dan_start_wracktail_evt
+1,5,15e780:dan_70_mario_chest_open_evt
+1,5,15e808:dan_70_dark_mario_chest_open_evt
+1,5,15e890:dan_70_peach_chest_open_evt
+1,5,15e918:dan_70_dark_peach_chest_open_evt
+1,5,15e9a0:dan_70_bowser_chest_open_evt
+1,5,15ea28:dan_70_dark_bowser_chest_open_evt
+1,5,15eab0:dan_70_luigi_chest_open_evt
+1,5,15eb38:dan_70_dark_luigi_chest_open_evt
+1,5,15ebc0:dan_shadoo_main_evt
+1,5,15f408:dan_shadoo_fight_evt
+1,5,15fa48:dan_shadoo_defeat_evt
+1,5,15fb4c:dan_70_reward_appear_evt
+1,5,1606c8:dan_start_shadoo_evt
+// bss
+1,6,1548:dan_wp
+
+// wa1_02.c
+1,5,d2820:sammerDefsCh6
+1,5,d2cd0:sammerDefsEndgame
+// more

@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/ingydotnet/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/SeekyCt/spm-headers.git
+	branch = master
+	commit = c567b04edc6e677d41f8286877e11d1a349d9b03
+	parent = ceadcd548ce6fbac2bb117a3f288d219f1d96ef6
+	method = merge
+	cmdver = 0.4.5
