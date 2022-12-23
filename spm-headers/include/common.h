@@ -60,7 +60,7 @@ typedef u16 Unk16;
 typedef u8 unk8;
 
 // Use CW special static assert
-#if __cplusplus < 201103
+#ifdef __MWERKS__
     #define static_assert(cond, msg) __static_assert(cond, msg) 
 #endif
 
