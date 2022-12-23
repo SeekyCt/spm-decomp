@@ -39,4 +39,4 @@ Currently, symbols are manually added and ported as needed. Any symbols that are
 
 # Contributing
 
-See (CONTRIBUTING.md)[CONTRIBUTING.md] for guidelines on contributing.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on contributing.
