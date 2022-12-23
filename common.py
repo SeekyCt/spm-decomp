@@ -184,7 +184,7 @@ ASSETS = "assets"
 # ppcdis
 PPCDIS = "tools/ppcdis"
 PPCDIS_INCDIR = f"{PPCDIS}/include"
-SPM_HEADERS = f"../spm-headers/"
+SPM_HEADERS = "spm-headers"
 RELEXTERN = f"{PYTHON} {PPCDIS}/relextern.py"
 ANALYSER = f"{PYTHON} {PPCDIS}/analyser.py"
 DISASSEMBLER = f"{PYTHON} {PPCDIS}/disassembler.py"
