@@ -9,7 +9,7 @@
 #include <spm/spmario_snd.h>
 #include <spm/system.h>
 #include <wii/os.h>
-#include <wii/string.h>
+#include <msl/string.h>
 
 // .rodata
 #include "orderstrings/80334908_80334bcc.inc"
@@ -391,7 +391,7 @@ asm void pouchSetEnemiesDefeated(s32 count)
     #include "asm/8014f978.s"
 }
 
-asm void pouchGetTotalCoinsCollected(s32 count)
+asm s32 pouchGetTotalCoinsCollected()
 {
     #include "asm/8014f99c.s"
 }

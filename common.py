@@ -184,6 +184,7 @@ ASSETS = "assets"
 # ppcdis
 PPCDIS = "tools/ppcdis"
 PPCDIS_INCDIR = f"{PPCDIS}/include"
+SPM_HEADERS = f"../spm-headers/"
 RELEXTERN = f"{PYTHON} {PPCDIS}/relextern.py"
 ANALYSER = f"{PYTHON} {PPCDIS}/analyser.py"
 DISASSEMBLER = f"{PYTHON} {PPCDIS}/disassembler.py"
@@ -285,9 +286,13 @@ ASFLAGS = ' '.join([
 
 CPPFLAGS = ' '.join([
     "-nostdinc",
+    "-DDECOMP",
+    "-DSPM_EU0",
     f"-I {INCDIR}",
     f"-I {PPCDIS_INCDIR}",
-    f"-I {BUILD_INCDIR}"
+    f"-I {BUILD_INCDIR}",
+    f"-I {SPM_HEADERS}/decomp",
+    f"-I {SPM_HEADERS}/include"
 ])
 
 DOL_SDATA2_SIZE = 4
@@ -304,7 +309,9 @@ CFLAGS = [
     "-str pool",
     "-rostr",
     "-sym dwarf-2",
-    "-ipa file"
+    "-ipa file",
+    "-d DECOMP",
+    "-d SPM_EU0",
 ]
 BASE_DOL_CFLAGS = CFLAGS + [
     "-inline all",
@@ -325,7 +332,9 @@ LOCAL_CFLAGS = [
     "-I-",
     f"-i {INCDIR}",
     f"-i {PPCDIS_INCDIR}",
-    f"-i {BUILD_INCDIR}"
+    f"-i {BUILD_INCDIR}",
+    f"-i {SPM_HEADERS}/decomp",
+    f"-i {SPM_HEADERS}/include",
 ]
 DOL_CFLAGS = ' '.join(BASE_DOL_CFLAGS + LOCAL_CFLAGS)
 REL_CFLAGS = ' '.join(BASE_REL_CFLAGS + LOCAL_CFLAGS)

@@ -5,7 +5,7 @@
 #include <spm/spmario.h>
 #include <spm/swdrv.h>
 #include <spm/system.h>
-#include <wii/string.h>
+#include <msl/string.h>
 
 // .rodata
 static const s32 lbl_80325cb8[] = {
@@ -152,6 +152,8 @@ s32 _swByteGet(s32 id)
     return gp->lsw[id];
 }
 
+// TODO: somehow this broke with shared headers
+#ifdef NON_MATCHING
 // Shoutouts to an anonymous decomp.me user (Grumpy Nighingale) for matching it from 95.34% to 100%
 s32 func_80038204()
 {
@@ -172,7 +174,6 @@ s32 func_80038204()
     
     if (i >= MAX_COIN_MAP)
     {
-        // TODO: fix shadowing
         s32 i;
         CoinThing *pCVar2;
         pCVar3 = gp->coinThings;
@@ -200,6 +201,12 @@ s32 func_80038204()
     assert(253, wp->coinId < MAX_COIN_BIT, "コインのフラグが溢れました");
     return id;
 }
+#else
+asm s32 func_80038204()
+{
+    #include "asm/80038204.s"
+}
+#endif
 
 asm UNKNOWN_FUNCTION(func_800383a0)
 {

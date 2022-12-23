@@ -3,11 +3,11 @@
 #include <spm/spmario.h>
 #include <spm/system.h>
 #include <wii/gx.h>
-#include <wii/math.h>
 #include <wii/mtx.h>
 #include <wii/os.h>
-#include <wii/stdio.h>
-#include <wii/string.h>
+#include <msl/math.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
 
 // .bss
 static OSMutex sysMutex;

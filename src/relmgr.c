@@ -4,10 +4,10 @@
 #include <spm/relmgr.h>
 #include <spm/system.h>
 #include <wii/dvd.h>
-#include <wii/lzss10.h>
+#include <wii/cx.h>
 #include <wii/os.h>
-#include <wii/stdio.h>
-#include <wii/string.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
 
 #pragma pool_strings off
 
@@ -58,8 +58,8 @@ void relMain()
     }
     else
     {
-        wp->relFile = __memAlloc(0, lzss10ParseHeader(file->sp->data).decompSize);
-        lzss10Decompress(file->sp->data, wp->relFile);
+        wp->relFile = __memAlloc(0, CXGetCompressionHeader(file->sp->data).decompSize);
+        CXUncompressLZ(file->sp->data, wp->relFile);
     }
 
     fileFree(file);

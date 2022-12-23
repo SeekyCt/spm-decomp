@@ -36,7 +36,7 @@ blocked_targets:
   - 0x80100000
 
 sdata_sizes:
-  # windowdrv.c RGBA constants
+  # windowdrv.c GXColor constants
   - [0x805af7e0, 4]
   - [0x805af7e8, 4]
   - [0x805af820, 4]
@@ -46,5 +46,5 @@ sdata_sizes:
   - [0x805af860, 4]
   - [0x805af86c, 4]
 
-  # spmario.c RGBA constant
+  # spmario.c GXColor constant
   - [0x805b3d24, 4]

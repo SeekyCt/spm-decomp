@@ -1,6 +1,6 @@
 #include <common.h>
 #include <spm/main.h>
-#include <spm/DEMOInit.h>
+#include <wii/DEMOInit.h>
 #include <spm/spmario.h>
 
 int main(int argc, char ** argv)

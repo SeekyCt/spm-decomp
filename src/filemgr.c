@@ -2,10 +2,10 @@
 #include <spm/filemgr.h>
 #include <spm/memory.h>
 #include <spm/system.h>
-#include <wii/string.h>
 #include <wii/dvd.h>
 #include <wii/os.h>
-#include <wii/stdio.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
 
 // .rodata
 #include "orderstrings/80337848_80337a63.inc"

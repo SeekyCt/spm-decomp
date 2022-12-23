@@ -9,7 +9,7 @@
 #include <spm/windowdrv.h>
 #include <wii/gx.h>
 #include <wii/mtx.h>
-#include <wii/string.h>
+#include <msl/string.h>
 
 // .rodata
 static const f64 lbl_80326360 = 4503599627370496.0; // casting float
@@ -22,20 +22,20 @@ static u32 lbl_805ae794;
 static WindowEntry * wp;
 
 // .sdata2
-const RGBA lbl_805af7e0 = {0xff, 0xff, 0xff, 0xff};
+const GXColor lbl_805af7e0 = {0xff, 0xff, 0xff, 0xff};
 #include "orderfloatsm/805af7e4_805af7e8.inc"
-const RGBA lbl_805af7e8 = {0xff, 0xff, 0xff, 0xff};
+const GXColor lbl_805af7e8 = {0xff, 0xff, 0xff, 0xff};
 #include "orderfloatsm/805af7ec_805af820.inc"
-const RGBA lbl_805af820 = {0xff, 0xff, 0xff, 0x00};
+const GXColor lbl_805af820 = {0xff, 0xff, 0xff, 0x00};
 #include "orderfloatsm/805af824_805af82c.inc"
-const RGBA lbl_805af82c = {0x3d, 0x00, 0x89, 0x00};
-const RGBA lbl_805af830 = {0xff, 0xff, 0xff, 0x00};
+const GXColor lbl_805af82c = {0x3d, 0x00, 0x89, 0x00};
+const GXColor lbl_805af830 = {0xff, 0xff, 0xff, 0x00};
 #include "orderfloatsm/805af834_805af83c.inc"
-const RGBA lbl_805af83c = {0xff, 0xff, 0xff, 0x00};
+const GXColor lbl_805af83c = {0xff, 0xff, 0xff, 0x00};
 #include "orderfloatsm/805af840_805af860.inc"
-const RGBA lbl_805af860 = {0xff, 0xff, 0xff, 0x00};
+const GXColor lbl_805af860 = {0xff, 0xff, 0xff, 0x00};
 #include "orderfloatsm/805af864_805af86c.inc"
-const RGBA lbl_805af86c = {0xff, 0xff, 0xff, 0x00};
+const GXColor lbl_805af86c = {0xff, 0xff, 0xff, 0x00};
 
 void windowInit()
 {
@@ -44,7 +44,7 @@ void windowInit()
     for (s32 i = 0; i < WINDOW_MAX; i++)
     {
         entries[i].flags = 0;
-        entries[i].unknown_0x28 = 0;
+        entries[i].speakerSp = 0;
     }
 }
 
@@ -54,7 +54,7 @@ void windowReInit()
     for (s32 i = 0; i < WINDOW_MAX; i++)
     {
         entries[i].flags = 0;
-        entries[i].unknown_0x28 = 0;
+        entries[i].speakerSp = 0;
     }
 }
 
@@ -67,7 +67,7 @@ s32 windowEntry(u16 pri)
         {
             memset(entry, 0, sizeof(*entry));
             entry->flags = 1;
-            entry->pri = pri;
+            entry->priority = pri;
             return i;
         }
     }
@@ -80,7 +80,7 @@ bool windowDelete(WindowEntry * entry)
         entry->deleteFunc(entry);
 
     entry->flags = 0;
-    entry->unknown_0x28 = 0;
+    entry->speakerSp = 0;
 
     return true;
 }
@@ -120,7 +120,7 @@ asm UNKNOWN_FUNCTION(func_80038fb8)
 }
 
 #include "jumptable/80406c98.inc"
-asm UNKNOWN_FUNCTION(windowDispGX_Kanban)
+asm void windowDispGX_Kanban(s32 type, GXColor * colour, f32 x, f32 y, f32 width, f32 height)
 {
     #include "asm/80039188.s"
 }
@@ -130,7 +130,7 @@ asm UNKNOWN_FUNCTION(func_800393c8)
     #include "asm/800393c8.s"
 }
 
-asm UNKNOWN_FUNCTION(windowDispGX_System)
+asm void windowDispGX_System(s32 type, u8 alpha, f32 x, f32 y, f32 width, f32 height)
 {
     #include "asm/800396e0.s"
 }
@@ -147,24 +147,24 @@ asm UNKNOWN_FUNCTION(func_80039d40)
     #include "asm/80039d40.s"
 }
 
-asm UNKNOWN_FUNCTION(windowDispGX_Message)
+asm void windowDispGX_Message(s32 type, Unk param_2, u8 alpha, f32 x, f32 y, f32 width, f32 height, f32, f32)
 {
     #include "asm/8003a440.s"
 }
 
-asm UNKNOWN_FUNCTION(windowDispGX_ItemBox)
+asm void windowDispGX_ItemBox(Unk param_1, GXColor * colour, f32 x, f32 y, f32 width, f32 height)
 {
     #include "asm/8003a5e4.s"
 }
 
-asm UNKNOWN_FUNCTION(windowDispGX2_Waku_col)
+asm void windowDispGX2_Waku_col(Mtx34 * mtx, u32 gxTexMapId, const GXColor * colour, f32 x, f32 y, f32 width, f32 height, f32 curve)
 {
     #include "asm/8003ab80.s"
 }
 
 s32 windowCheckID(s32 id)
 {
-    return (int) wp[id].flags & 2;
+    return wp[id].flags & 2;
 }
 
 WindowEntry * windowGetPointer(s32 id)
@@ -177,7 +177,7 @@ bool windowCheckOpen()
     WindowEntry * entry = wp;
     for (s32 i = 0; i < WINDOW_MAX; i++, entry++)
     {
-        if ((entry->flags & 1) && (entry->unknown_0x8 != 1))
+        if ((entry->flags & 1) && (entry->type != 1))
             return true;
     }
 

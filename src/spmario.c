@@ -5,7 +5,7 @@
 #include <spm/camdrv.h>
 #include <spm/casedrv.h>
 #include <spm/debug.h>
-#include <spm/DEMOInit.h>
+#include <wii/DEMOInit.h>
 #include <spm/dispdrv.h>
 #include <spm/dvdmgr.h>
 #include <spm/evtmgr.h>
@@ -48,12 +48,12 @@
 #include <wii/dvd.h>
 #include <wii/gx.h>
 #include <wii/mtx.h>
-#include <wii/nw4r_snd.h>
 #include <wii/os.h>
 #include <wii/sc.h>
-#include <wii/string.h>
 #include <wii/vi.h>
 #include <wii/wpad.h>
+#include <nw4r/snd.h>
+#include <msl/string.h>
 
 // This file has other data mixed in with the floats, so currently can't use literals in asm
 
@@ -84,16 +84,16 @@ SpmarioGlobals * gp = &spmario;
 static OSThread * pMainThread;
 s32 _spmarioSystemLevel;
 static s32 resetCode;
-static s8 doReturnToMenu;
-static s8 doHomeButtonRestart;
-static s8 doShutdown;
-static s8 doResetButtonRestart;
+static bool doReturnToMenu;
+static bool doHomeButtonRestart;
+static bool doShutdown;
+static bool doResetButtonRestart;
 static s32 startTick;
 static s32 unusedZero;
 
 // .sdata2
 #include "orderfloatsm/805b3d20_805b3d24.inc"
-const RGBA lbl_805b3d24 = {0xff, 0xff, 0xff, 0xff};
+const GXColor lbl_805b3d24 = {0xff, 0xff, 0xff, 0xff};
 #include "orderfloatsm/805b3d28_805b3d50.inc"
 
 // .data
@@ -182,20 +182,20 @@ asm void wiiRumbleCheck()
 
 void resetButtonRestart()
 {
-    doResetButtonRestart = 1;
+    doResetButtonRestart = true;
 }
 
 void shutdownConsole()
 {
-    doShutdown = 1;
+    doShutdown = true;
 }
 
 void homeButtonRestart()
 {
-    doHomeButtonRestart = 1;
+    doHomeButtonRestart = true;
 }
 
 void returnToWiiMenu()
 {
-    doReturnToMenu = 1;
+    doReturnToMenu = true;
 }

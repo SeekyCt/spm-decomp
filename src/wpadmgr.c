@@ -3,17 +3,17 @@
 #include <spm/spmario.h>
 #include <spm/wpadmgr.h>
 #include <wii/kpad.h>
-#include <wii/string.h>
 #include <wii/wpad.h>
+#include <msl/string.h>
 
 // .rodata
 #include "orderdoubles/80343e98_80343ea0.inc"
 
 // .bss
-static WpadWork wpadWork;
+static WpadWork work;
 
 // .sdata
-static WpadWork * wp = &wpadWork;
+static WpadWork * wp = &work;
 
 // .sdata2
 #include "orderfloats/805b61f8_805b622c.inc"

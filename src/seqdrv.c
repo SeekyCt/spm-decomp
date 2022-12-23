@@ -2,7 +2,7 @@
 #include <spm/seqdrv.h>
 #include <spm/seqdef.h>
 #include <spm/system.h>
-#include <wii/string.h>
+#include <msl/string.h>
 
 // .bss
 static SeqWork seqWork;
@@ -13,8 +13,8 @@ static s32 next_seq = -1;
 static s32 prev_seq = -1;
 
 // .sbss
-static char * next_p1; // map name
-static char * next_p0; // door name
+static const char * next_p1; // map name
+static const char * next_p0; // door name
 
 void seqInit_SPMARIO()
 {
@@ -56,7 +56,7 @@ void seqMain()
         (*seqWork.afterFunc)(&seqWork);
 }
 
-void seqSetSeq(s32 seq, char * p0, char * p1)
+void seqSetSeq(s32 seq, const char * p0, const char * p1)
 {
     next_seq = seq;
     next_p0 = p0;

@@ -22,30 +22,235 @@ global:
     # main.c
     0x8001da60: main
 
+    # item_data.c
+    0x803f5f98: itemDataTable
+
+    # item_event_data.c
+        # .text
+    0x80025164: getItemUseEvt
+    0x800251dc: getItemUseMsg
+    # 0x80025250
+    0x80025700: evt_item_event_free_work
+    0x8002573c: itemEventDataExit
+    # 0x8002574c
+    # 0x80025ac4
+    # 0x80025b20
+    # 0x80025b70
+    0x80025bf4: evt_item_event_apply_statuses
+    # 0x80025c50
+    # 0x80025c84
+    # 0x80025d9c
+    # 0x80025e80
+    # 0x80026364
+    # 0x800264d4
+    # 0x8002650c
+    # 0x80026550
+    # 0x80026584
+    # 0x800265f8
+    # 0x8002691c
+    # 0x80026a70
+    # 0x80026c1c
+    # 0x80027020
+    # 0x80027410
+    # 0x80027484
+    # 0x800274b4
+    # 0x800274e4
+    # 0x800276e8
+    # 0x800277fc
+    # 0x8002792c
+    # 0x80027b74
+    # 0x80027c14
+    # 0x80027cd4
+    # 0x80027d38
+    # 0x80027db4
+    # 0x80027ed8
+    # 0x80027f54
+    # 0x80028040
+    # 0x800283bc
+    # 0x80028418
+    # 0x80028460
+    # 0x800284d8
+    # 0x80028550
+    # 0x800285bc
+    # 0x80028604
+    # 0x800286a0
+    # 0x80028724
+    # 0x80028774
+    # 0x80028828
+    # 0x80028bc0
+    # 0x80028f8c
+    # 0x8002904c
+    # 0x8002912c
+    0x80029190: evt_item_event_get_item_hp_gain
+    # 0x800291f0
+    # 0x800292f8
+    # 0x80029374
+    # 0x800293a8
+    0x80029434: evt_item_event_get_return_pipe_info
+        # .data
+    0x803fbc10: itemEventDataTable
+
+    # map_data.c
+        # .text
+    0x800294e0: mapDataPtr
+    0x800295a8: mapDataEvtPtr
+        # .data
+    0x804031b8: mapData
+
+    # setup_data.c
+        # .text
+    0x80029680: setupSpawnItems
+    0x80029730: setupReadItemInfo
+        # .data
+    0x805adf08: setupItemTemplates
+
     # mobjdrv.c
+    # 0x800297c0
+    # 0x80029c34
+    # 0x80029e50
+    # 0x8002a03c
+    # 0x8002a0bc
+    # 0x8002a150
+    # 0x8002a1d4
+    # 0x8002a258
+    # 0x8002a31c
     0x8002a3f4: mobjInit
-    # ...
+    0x8002a46c: mobjReset
+    0x8002a4b8: mobjHitEntry
+    0x8002b390: mobjEntry
+    0x8002b664: mobjDelete
+    0x8002b72c: mobjSetPosition
     0x8002b82c: mobjMain
     0x8002c834: mobjNameToPtr
-    # ...
+    0x8002c8e8: mobjNameToPtrNoAssert
+    0x8002c980: mobjRunEvent
+    0x8002ca04: mobjCalcMtx
+    0x8002cdf4: mobjCalcMtx2
+    # 0x8002cf0c
+    # 0x8002cfcc
+    # 0x8002d2c0
+    0x8002d560: mobjHitOn
+    0x8002d640: mobjHitOff
+    # 0x8002d720
+    # 0x8002d7d8
+    # 0x8002d890
+    # 0x8002d89c
+    # 0x8002d8a8
+    # 0x8002d914
+    # 0x8002d9bc
+    # 0x8002de94
+    # 0x8002dfc4
+    # 0x8002e278
+    # 0x8002e4c8
+    # 0x8002e940
+    0x8002e954: mobjDropFromCatch
+    # 0x8002e968
+    # 0x8002e980
+    # 0x8002e9bc
+    # 0x8002ea0c
+    # 0x8002ea54
+    # 0x8002eb0c
+    0x8002eb38: mobjGetModelName
+    # 0x8002eb60
+    # 0x8002ed80
+    # 0x8002ed90
 
-    # message.c
-    # ...
+    # msgdrv.c
+    0x8002eda0: dvdCb
     0x8002edd0: msgInit
-    0x8002ef48: msgMain
-    # ...
+    0x8002ef48: msgdrvMain
+    0x8002f130: msgLoad
+    0x8002f35c: msgUnload
+    0x8002f37c: msgPreLoad
+    0x8002f3f4: msgSpeakerInit
+    0x8002f51c: msgMain
+    0x8002fccc: msgDisp
+    0x80030998: msgDispKeyWait
+    0x80030bb4: msgDispKeyWait_render
+    0x80030c34: msgAnalize
+    0x800326c4: msg_compare
+    0x8003270c: msgSearch
+    0x800327e4: msgSearchNoFallback
+    0x800328b0: _ismbblead
+    0x800328fc: msgGetCommand
+    0x8003299c: msgIconStr2ID
+    0x80032a20: msgSetTalkPose
+    0x80032b30: msgSetStayPose
+    0x80032c40: msgWindow_Entry
+    0x80032f40: msgWindow_Delete
+    0x80032f84: msgWindow_Add
+    0x80032ff8: msgWindow_Continue
+    0x80033088: msgWindow_Repeat
+    0x800330fc: msgWindow_ForceClose
+    0x800331ac: msgWindow_ForceCloseAll
+    0x80033234: msgWindow_Main
+    0x80033a40: msgWindow_Clear_Main
+    0x80033d40: msgWindow_disp
+    0x80034528: selectWindow_Main
+    0x8003490c: selectWindow_Disp
 
     # offscreendrv.c
     0x80034b44: offscreenInit
-    # ...
+    0x80034b88: offscreenReset
+    0x80034ba0: offscreenEntry
+    0x80034d2c: offscreenDisp
     0x80034e80: offscreenMain
-    # ...
+    0x80034f08: offscreenAddBoundingBox
+    # 0x800350a0
+    # 0x800350fc
+    0x8003516c: offscreenNameToId
+    # 0x8003521c
+    # 0x800352b4
+    # 0x800352cc
+    # 0x800353c4
+    # 0x80035478
+    # 0x800354d8
 
     # shadow.c
-    # ...
     0x800355d4: shadowInit
     0x80035694: shadowMain
-    # ...
+    0x80035840: shadowDisp
+    0x80035ed8: shadowCharShadowInit
+    0x80035fc0: polygonInit
+    0x80036174: textureInit
+    0x8003636c: _filter
+    0x80036410: shadowCharShadowDisp_Collision
+    0x80036684: shadowCharShadowDisp_Projection
+    0x80036ab0: shadowCharShadowDisp_Polygon
+    0x80036c0c: shadowCharShadowDisp_Texture
+    0x80036dec: cylinder
+    0x80036f94: cylinderShadowDraw
+    0x800372f0: shadowEntry
+    0x8003745c: shadowEntryMode
+    0x800375cc: shadowSetType
+    # 0x800375e4
+    # 0x800375fc
+    # 0x8003763c
+    # 0x8003765c
+    0x80037678: shadowSetVolumeDecay
+    0x80037694: shadowSetSize
+    0x800376ac: shadowSetCollision
+    0x800376e0: shadowFlagOff
+    0x800376fc: shadowGetCharShadowTexObj
+    0x80037720: shadowGetCharShadowProjTexMtx
+    0x8003772c: shadowGetCharShadowColor
+    0x80037738: shadowGetCharShadowProjection
+    0x80037744: shadowGetRamp8TexObj
+    0x80037750: shadowGetRamp16TexObj
+    0x8003775c: shadowDepthShadowDrawCountUp
+    0x80037770: shadowGetDepthShadowTexObj
+    0x80037794: shadowGetDepthShadowDepthMtx
+    0x800377a0: shadowGetDepthShadowProjTexMtx
+    0x800377ac: shadowGetDepthShadowColor
+    0x80037840: shadowGetDepthShadowConfig
+    0x8003785c: shadowProjShadowDrawCountUp
+    0x80037870: shadowGetProjShadowTexObj
+    0x80037894: shadowGetProjShadowProjTexMtx
+    0x800378a0: shadowGetProjShadowColor
+    0x800378ac: shadowGetProjShadowConfig
+    # 0x800378c8
+    0x80037a8c: projShadowEnd
+    0x80037cc0: depthShadowEnd
 
     # swdrv.c
     0x80037eac: swInit
@@ -106,23 +311,103 @@ global:
     0x8003bc2c: winMgrSetSize
     0x8003bc58: winMgrSetPriority
 
-    # ac.c
+    # acdrv.c
+        # .text
     0x8003eb4c: acInit
     0x8003eba0: acReInit
-    # ...
+    # 0x8003ebb8
+    # 0x8003ec24
     0x8003ee44: acMain
-    # ...
+    0x8003f388: acEntry
+    0x8003f5e0: acDelete
+    0x8003f63c: acPauseAll
+    0x8003f67c: acUnpauseAll
+    # 0x8003f6bc
+    0x8003f730: acIsRunning
+    0x8003f780: acNameToPtr
+    0x8003f818: acMsgDisp
+    # 0x8003f934
+    # 0x8004077c
+    # 0x80040dac
+    # 0x80040eb4
 
     # animdrv.c
     0x8004158c: animGetPtr
-    # ...
+    0x80041594: animTimeGetTime
+    0x800415c4: testAlloc
     0x800416c8: animInit
     0x800418fc: animMain
-    # ...
+    0x80041918: textureGroupEntry
+    0x80041a58: animGroupEntry
+    0x80041bf4: animPoseRefresh
+    0x8004249c: animPoseEntry
+    0x80042de8: animPaperPoseEntry
+    # 0x80042ec8
+    0x80042f6c: animPosePeraOff
+    0x80043040: animPoseSetLocalTimeRate
+    0x8004311c: animPoseSetLocalTime
+    0x80043324: animPoseSetStartTime
+    0x80043410: animPoseSetAnim
+    0x80043598: animPaperPoseGetId
+    0x80043660: animPoseSetPaperAnimGroup
+    0x80043914: animPoseSetPaperAnim
+    # 0x80043b90
+    # 0x80043ca4
+    0x80043dd8: animPoseSetEffect
+    0x8004435c: animPoseSetEffectAnim
+    0x80044578: animPoseSetGXFunc
+    0x80044664: animPoseGetLoopTimes
+    0x80044734: animPoseSetFlagF0On
+    0x80044818: animPoseSetFlagF0Off
+    0x800448fc: animPoseSetFlagF4On
+    0x800449e0: animPoseSetFlagF4Off
+    0x80044ac4: animPoseSetMaterialLightFlagOn
+    0x80044ba8: animPoseSetMaterialLightFlagOff
+    0x80044c8c: animPoseSetMaterialEvtColor
+    0x80044d84: animPoseSetMaterialAnmColor
+    0x80044e68: animPoseGetFlagF0
+    0x80044f38: animPoseGetFlagF4
+    0x80045008: animPoseGetMaterialEvtColor
+    0x800450d8: animPoseSetDispCallBack2
+    # 0x800451c4
+    0x80045288: animPoseMain
+    0x800466c4: pushGXModelMtx_TransformNode__
+    0x80046c2c: pushGXModelMtx_JointNode__
+    # 0x80047170
+    0x8004729c: animSetMaterial_Texture
+    0x80047908: animSetMaterial_ChangeTexture
+    0x80047a4c: materialProc
+    0x80047eec: renderProc
+    0x80048c48: dispProc
+    0x80048ffc: animPoseDraw
+    0x80049068: _animPoseDrawMtx
+    0x800497c8: animPoseDrawMtx
+    0x80049f50: animSetPaperTexObj
+    0x80049fc4: animPoseRelease
+    0x8004a3b8: animPaperPoseRelease
+    0x8004a5bc: animPoseAutoRelease
+    0x8004a9a0: animPaperPoseDisp
+    0x8004aa18: animPaperPoseDispSub
+    0x8004b338: animPoseDisp_MakeExtTexture
+    0x8004c44c: animSetPaperTexMtx
+    0x8004c518: animGroupBaseAsync
+    0x8004c660: animPoseGetAnimPosePtr
+    0x8004c72c: animPoseGetAnimDataPtr
+    0x8004c828: animPoseGetAnimBaseDataPtr
+    0x8004c910: animPoseGetCurrentAnim
+    # 0x8004ca08
+    # 0x8004caec
+    # 0x8004cd30
+    # 0x8004cfa8
+    0x8004d0c8: evalProc
+    0x8004d284: animPoseWorldPositionEvalOn
+    0x8004d3d8: animPoseWorldMatrixEvalOn
     0x8004d52c: animPoseSetDispCallback
-    # ...
+    0x8004d618: animPoseDrawShape
+    # 0x8004d96c
+    0x8004dcdc: animPoseGetShapeIdx
     0x8004de18: animPoseGetGroupIdx
-    # ...
+    0x8004df54: animPoseGetGroupIdxSubname
 
     # bgdrv.c
     # ...
@@ -132,42 +417,114 @@ global:
     # ...
 
     # camdrv.c
-    # ...
+        # .text
     0x80054804: camInit
-    # ...
+    0x80054c00: camEntryPersp
+    0x80054e60: camEntryOrtho
+    # 0x800550f8
     0x80055208: camMain
-    # ...
     0x800556f4: camDraw
-    # ...
+    0x8005583c: camLoadRoadAsync
+    0x800559ac: camLoadRoadNoRead
+    0x80055a60: camUnloadRoad
     0x80055b24: camGetPtr
     0x80055b38: camGetCurPtr
-    # ...
+    0x80055b50: camGetCurNo
+    # 0x80055b58
+    # 0x80055bb4
+    # 0x80055c10
+    # 0x80055ce0
+    # 0x80056948
+    0x80056a60: cam3dMain
+    # 0x80057cb0
+    # 0x80057cc8
+    # 0x80057ce0
+    # 0x80057da0
+    # 0x80057e4c
+    # 0x80057ec4
+    # 0x80057ee8
+    # 0x80058128
+    0x80058294: getScreenPoint
     0x80058364: camCheck3d
-    # ...
+    # 0x80058388
+    # 0x800583b4
+    # 0x80058404
+    # 0x8005869c
+    # 0x800586c8
+    # 0x80058700
+    # 0x800587a0
+    # 0x80058800
+    # 0x8005881c
+    # 0x80058840
+    0x80058854: camUnusedCheck
+    # 0x8005885c
+    # 0x80058b14
+    # 0x80058c80
+        # .bss
+    0x8050b580: camPtrTbl
 
     # casedrv.c
     0x80058d58: caseInit
     0x80058da8: caseReInit
     0x80058de8: caseEntry
     0x80059108: caseDelete
-    # ...
+    # 0x80059268
     0x800595dc: caseMain
-    # ...
+    0x8005abe4: caseCheckHitObj
+    0x8005acf8: caseCheckHitObj2
+    0x8005adcc: caseIdToPtr
+    # 0x8005adec
+    # 0x8005ae08
+    # 0x8005ae24
+    # 0x8005ae64
 
     # dispdrv.c
     0x8005aea4: dispInit
-    # ...
+    0x8005aef4: dispReInit
     0x8005af04: dispEntry
-    # ...
+    0x8005b088: dispSetCurScissor
+    0x8005b0dc: dispSetScissor
+    0x8005b188: dispSort
+    0x8005b1a0: dispDraw
+    0x8005b46c: dispCalcZ
     0x8005b524: dispGetCurWork
+    # 0x8005b52c
 
     # effdrv.c
     0x800614e0: effInit
-    # ...
     0x80061588: effGetTexObj
-    # ...
+    # 0x800615cc
+    0x800615e0: effGetTexObjN64
+    0x80061624: effAutoRelease
+    0x800616dc: effEntry
+    0x800616e4: effEntryType
+    0x800617fc: effSetName
     0x800618b0: effMain
-    # ...
+    # 0x80061a34
+    # 0x80061a44
+    0x80061a74: effDelete
+    0x80061af4: effSoftDelete
+    0x80061b90: effNameToPtr
+    # 0x80061c28
+    # 0x80061cd0
+    # 0x80061d78
+    # 0x80061e18
+    # 0x80061eb8
+    # 0x800623f8
+    # 0x80062d04
+    # 0x80062f9c
+    # 0x800630b8
+    # 0x80063130
+    # 0x80063198
+    # 0x800631a4
+    # 0x800631ac
+    # 0x800631b8
+    # 0x800632ec
+    # 0x800632fc
+    # 0x80063308
+    # 0x80063374
+    # 0x8006339c
+    # 0x800633fc
 
     # envdrv.c
     0x80063408: envInit
@@ -184,84 +541,477 @@ global:
     0x80064f78: extMakeTexture
     0x80065318: extReset
     0x800653ec: extMain
-    # ...
+    0x8006583c: extGetPosePtr
+    # 0x80065848
+    0x80065854: extDraw
+    0x80065940: extLoadRenderMode
+    0x800659a0: extLoadVertex
+    0x80065a38: extLoadTexture
+    0x80065b60: extLoadTextureExit
+    0x80065b64: extLoadTev
 
     # fadedrv.c
     0x80065c78: fadeInit
     0x80065d60: fadeEntry
+    # 0x80066558
     0x8006656c: fadeMain
-    # ...
+    # 0x80066e4c
+    # 0x80067588
     0x800677f8: fadeIsFinish
-    # ...
+    # 0x80067824
+    # 0x8006783c
+    # 0x800678d0
+    # 0x800678dc
+    0x800678e8: fadeSetMapChangeTransition
+    # 0x800678fc
+    # 0x80067908
+    # 0x80067914
+    # 0x80067928
+    # 0x800679d0
+    # 0x800679d8
 
     # framedrv.c
     0x80067ab8: frameInit
     0x80067b0c: frameReInit
     0x80067b24: frameMain
+    # 0x80067c94
+    # 0x800680a4
+    # 0x80068254
+    # 0x800682d8
+    # 0x80068358
+    # 0x80068708
+    # 0x80068b84
+    # 0x80068e34
+    # 0x80068e60
+    # 0x80069050
+    # 0x800691c0
+    # 0x80069284
+    # 0x80069334
+    # 0x80069420
+    # 0x8006958c
+    # 0x8006966c
+    # 0x8006972c
+    # 0x800697ec
+    # 0x800698ac
+    # 0x80069a48
+    # 0x80069b8c
+    # 0x8006a1b0
+    # 0x8006a3ac
+    # 0x8006ad9c
 
-    # hitdrv.c
     0x8006aec8: hitInit
-    # ...
+    0x8006aecc: hitReinit
+    0x8006af6c: _hitEnt
+    0x8006b4bc: hitEntrySub
+    0x8006b72c: hitEntry
+    0x8006b8cc: hitEntryMOBJ
+    0x8006bac0: hitDelete
     0x8006bb8c: hitMain
     0x8006bcc8: hitRecalcMatrices
-    # ...
+    0x8006bd80: hitObjFlagOn
+    0x8006be08: hitObjFlagOff
+    0x8006be90: hitFlgOn
+    0x8006c1a0: hitFlgOff
     0x8006c4b4: hitGrpFlagOn
     0x8006c6ac: hitGrpFlagOff
-    # ...
+    0x8006c890: hitObjAttrOn
+    0x8006c918: hitObjAttrOff
+    0x8006c9a0: hitAtrOn
+    0x8006ccb0: hitAtrOff
+    0x8006cfc4: hitGrpAttrOn
+    0x8006d1bc: hitGrpAttrOff
+    0x8006d3a0: hitReCalcMatrix
+    0x8006d400: hitReCalcMatrix2
+    0x8006d560: hitCalcVtxPosition
+    # 0x8006da4c
+    # 0x8006debc
+    # 0x8006e160
+    # 0x8006e400
+    0x8006e780: hitCheckVecFilter
     0x8006ee2c: hitCheckFilter
-    # ...
+    # 0x8006ef1c
+    0x8006f018: chkFilterAttr
+    0x8006f030: hitCheckAttr
+    # 0x8006f128
+    # 0x8006f47c
+    # 0x8006f710
+    # 0x8006f7cc
+    # 0x8006f884
+    0x8006f920: hitNameToPtr
+    0x8006f9cc: hitSubNameToPtr
+    0x8006fa78: hitObjGetPosSub
     0x8006ffe4: hitObjGetPos
-    # ...
+    0x8007035c: hitObjGetNormal
     0x800703b0: hitGetMapEntryBbox
-    # ...
+    # 0x8007058c
+    # 0x80070790
+    0x80070898: hitGetName
+    0x80070980: hitGetAttr
+    0x80070998: hitBindMapObj
+    0x80070a24: hitBindUpdate
+    0x80070b1c: hitCheckVecFilter2
+    # 0x800710b4
+    # 0x800717d8
+    # 0x80071f44
 
     # icondrv.c
     0x80072188: iconInit
     0x800721dc: iconReInit
     0x800721f4: iconMain
-    # ...
+    0x80072710: iconEntry
+    0x800729ac: iconEntry2D
+    0x80072c48: iconDelete
+    0x80072cdc: iconDisp
+    # 0x80072da0
+    0x80072ea8: iconDispGxAlpha
+    0x800731b0: iconDispGx
+    0x800731b8: iconDispGx2
+    0x80073444: iconDispGxCol
+    0x800736b4: iconGetTexObj
+    0x80073844: iconGetTexObj2
+    0x80073898: iconGetWidthHight
+    0x80073980: iconGX
+    0x80074690: iconNameToPtr
+    0x80074720: iconSetPos
+    0x80074814: iconFlagOn
+    0x800748a0: iconFlagOff
+    0x8007492c: iconSetScale
+    0x800749d0: iconSetAlpha
+    0x80074a54: iconNumberDispGx
+    # 0x80074f80
+    # 0x80074fe8
 
     # imgdrv.c
+    # 0x8007508c
+    # 0x80075290
+    # 0x80075530
+    # 0x80075554
+    # 0x80075b40
+    # 0x8007634c
+    # 0x80076620
+    # 0x80076750
+    # 0x80076abc
     0x80076b70: imgInit
+    # 0x80076bb4
+    # 0x80076c8c
     0x80076ea0: imgMain
-    # ...
+    # 0x8007706c
+    # 0x8007711c
+    # 0x80077178
+    # 0x80077188
+    # 0x80077240
 
     # itemdrv.c
     0x80077660: itemGetWork
     0x80077668: itemInit
     0x800776dc: itemReInit
-    0x800777a8: handleItemPickup
+    # 0x80077724
+    0x800777a8: itemHandlePickupEffect
+    # 0x80077c48
+    # 0x80077c90
     0x80077cd8: itemMain
-    # ...
     0x80078b3c: itemEntry
-    # ...
+    0x80079338: itemDelete
+    0x800793e4: itemNameToPtr
+    # 0x80079468
+    # 0x800795b8
+    # 0x80079814
+    # 0x80079df4
+    # 0x8007a2e0
+    # 0x8007a598
+    # 0x8007a758
+    0x8007b5cc: itemCollect
+    # 0x8007bc2c
     0x8007bccc: itemTypeNameToId
-    # ...
+    # 0x8007be24
+    # 0x8007bee4
+    # 0x8007c3b8
+    # 0x8007c8ec
+    # 0x8007ce34
+    # 0x8007cfc0
+    # 0x8007d1f4
+    # 0x8007d454
+    # 0x8007d568
+    # 0x8007d684
+    0x8007d7c4: itemSetAnim
+    # 0x8007d868
     0x8007d8b4: itemCheckForId
+    # 0x8007d8fc
+    # 0x8007dc24
+    # 0x8007dd50
+    # 0x8007dd60
+    # 0x8007de50
+    # 0x8007e0e4
 
     # lightdrv.c
     0x8007e1a8: lightInit
     0x8007e35c: lightReInit
     0x8007e374: lightMain
-    # ...
+    0x8007e4a4: lightEntry
+    0x8007e7d4: lightNameToPtr
+    0x8007e864: _sort
+    0x8007e88c: lightGetNearObj
+    0x8007eb30: lightGetAmbient
+    0x8007eb74: lightGetCharaAmbient
+    0x8007ebb8: lightCheckCharaLight
+    0x8007ebfc: lightGetPaper
 
     # mapdrv.c
         # .text
-    # ...
+    0x8007ec34: mapErrorEntry
+    # 0x8007ecc4
+    # 0x8007ee24
+    # 0x8007eff0
+    0x8007f1bc: mapDispOff
+    0x8007f1cc: mapDispOn
+    0x8007f1dc: mapGetWork
+    0x8007f1f0: mapGetJointsSub
+    0x8007f498: mapGetJoints
+    0x8007f778: mapGetBoundingBox
     0x8007f95c: mapInit
-    # ...
+    0x8007fb00: mapReset
+    0x8007fbd4: mapBuildTexture
+    0x8007fe10: _mapEnt
+    0x800803f8: mapEntrySub
+    0x80080668: makeDisplayList
+    # 0x800808f0
+    0x800809b4: mapSearchAnmObj
+    0x80080a58: mapCheckAnimation
+    0x80080b6c: mapPlayAnimationLv
+    0x80080db4: mapEntryAnimation
+    0x800810f0: mapDeleteAnimation
+    0x800811a4: mapPauseAnimation
+    0x80081258: mapReStartAnimation
+    0x8008130c: mapPauseAnimationAll
+    0x8008136c: mapReStartAnimationAll
+    0x800813cc: mapSetPlayRate
+    0x80081484: mapSetPlayProgress
+    0x80081568: mapGetPlayDuration
+    0x80081618: mapUnLoad
+    0x8008181c: mapLoad
+    # 0x80083aa4
+    0x80083abc: mapCalcAnimMatrix
+    # 0x80083eb4
+    # 0x80084098
+    # 0x80084274
+    0x80084474: mapReCalcMatrix
     0x80084594: mapMain
-    # ...
+    0x80084a60: _mapDispMapObj
+    0x80085094: _mapDispMapGrp
+    0x80085308: mapDispMapObj
+    0x8008530c: mapDispMapGrp
+    0x80085580: mapDispMapObj_off
+    0x80085604: mapDispMapGrp_off
+    0x800858c4: _mapDispMapObj_NoMaterial
+    0x800859e4: _mapDispMapGrp_NoMaterial
+    0x80085d58: mapDispMapObj_bbox
+    0x80085db8: mapDispMapGrp_bbox
     0x80086154: mapDisp
-    # ...
+    0x80086980: mapSetLight
+    0x80086b48: mapSetMaterialTev
+    0x8008932c: mapSetMaterialLastStageBlend
+    0x800896c0: mapSetMaterialFog
+    0x80089928: mapSetMaterialFogMapObj
+    0x80089ba8: mapSetTextureMatrix
+    0x80089f20: mapSetMaterial
+    0x8008a628: mapSetPaperAmbColor
+    0x8008a650: mapResetPaperAmbColor
+    0x8008a690: mapSetMaterialLight
+    0x8008acb4: mapSetPolygon
+    0x8008b304: mapSetPolygonVtxDesc
+    # 0x8008b4c8
+    0x8008b95c: mapSearchDmdJointSub
+    0x8008bedc: mapSearchDmdJointSub2
+    0x8008c2ec: mapSearchDmdMaterial
+    0x8008c398: mapGetMapObj
+    0x8008c440: mapObjFlagOn
+    0x8008c618: mapObjFlagOff
+    0x8008c7dc: mapFlgOn
+    0x8008cc1c: mapFlgOff
     0x8008cf30: mapGrpFlagOn
     0x8008d2fc: mapGrpFlagOff
-    # ...
+    0x8008d62c: mapObjFlag4On
+    0x8008d804: mapObjFlag4Off
+    0x8008d9c8: mapFlg4On
+    0x8008de08: mapFlg4Off
     0x8008e11c: mapGrpFlag4On
-    # ...
+    0x8008e4e8: mapGrpFlag4Off
+    0x8008e818: _setOffScrnId
+    0x8008eab0: mapObjSetOffScreen
+    0x8008ebe0: mapGrpSetOffScreen
+    0x8008ee58: mapObjClearOffScreen
+    0x8008efd4: mapGrpClearOffScreen
+    # 0x8008f2a4
+    # 0x8008f324
+    0x8008f3a8: mapObjRotate
+    0x8008f528: mapObjTranslate
+    0x8008f664: mapObjScale
+    0x8008f77c: mapObjGetPosSub
+    0x8008fce8: mapObjGetPos
+    # 0x800900cc
+    # 0x80090270
+    0x800903f8: mapSetFog
+    0x80090448: mapFogOn
+    0x80090468: mapFogOff
+    0x80090488: mapSetBlend
+    0x800904c8: mapSetBlend2
+    0x80090508: mapGetBlend
+    0x80090584: mapGetBlend2
+    0x80090600: mapBlendOff
+    0x80090620: mapBlendOff2
+    0x80090640: mapSetColor
+    0x80090680: mapObjSetColor
+    0x8009075c: setColor
+    0x80090a80: mapGrpSetColor
+    0x80090cbc: spline_maketable
+    0x800912a8: spline_getvalue
+    0x80091438: Locate
+    0x80091594: mapTestXLU
         # .sbss
     # ...
     0x805ae878: __mapdrv_make_dl
+
+    # eff_spm_confetti.c
+    # ...
+    0x800b426c: effSpmConfetti
+    # ...
+
+    # eff_zunbaba.c
+    # 0x800c1838
+    # 0x800c1938
+    # 0x800c1944
+    # 0x800c1a48
+
+    # eff_small_star.c
+    # ...
+    0x800cd554: effSmallStar
+    # ...
+
+    # evt_snd.c
+    0x800d2148: evt_snd_bgmon
+    0x800d218c: evt_snd_bgmon_f_d
+    0x800d21f8: evt_snd_bgmoff
+    0x800d2224: evt_snd_bgmoff_f_d
+    # 0x800d2268
+    # 0x800d2294
+    # 0x800d22d8
+    # 0x800d231c
+    # 0x800d2388
+    # 0x800d23cc
+    # 0x800d2438
+    # 0x800d247c
+    0x800d24b8: evt_snd_get_bgm_wait_time
+    0x800d2794: evt_snd_get_bgm_name
+    0x800d2800: evt_snd_sfxon
+    # 0x800d2834
+    # 0x800d2894
+    0x800d28fc: evt_snd_sfxon_character
+    0x800d29cc: evt_snd_sfxon_3d
+    # 0x800d2a58
+    0x800d2af4: evt_snd_sfxon_npc
+    0x800d2b64: evt_snd_sfxon_npc_delay
+    0x800d2c00: evt_snd_sfxon_3d_player
+    # 0x800d2c58
+    0x800d2cd8: evt_snd_sfxon_3d_player_character
+    # 0x800d2db8
+    # 0x800d2ed0
+    0x800d2f74: evt_snd_sfxoff
+    # 0x800d2fa4
+    # 0x800d3000
+    0x800d3030: evt_snd_get_last_sfx_id
+    # 0x800d3060
+    # 0x800d30e8
+    # 0x800d3144
+    # 0x800d31a0
+    # 0x800d31d0
+    # 0x800d3248
+    0x800d32a4: evt_snd_sfx_wait
+    0x800d32e4: evt_snd_sfx_wait_name
+    0x800d3324: evt_snd_sfx_flag_on
+    0x800d3380: evt_snd_sfx_flag_off
+    # 0x800d33dc
+    0x800d3430: evt_snd_envon
+    0x800d3464: evt_snd_envon_f
+    # 0x800d34b8
+    # 0x800d34e4
+    # 0x800d3528
+    # 0x800d3594
+    # 0x800d35d8
+    # 0x800d3644
+    # 0x800d3688
+    0x800d36f4: evt_snd_set_sfx_reverb_mode
+    0x800d3724: evt_snd_flag_on
+    0x800d3758: evt_snd_flag_off
+
+    # evt_sub.c
+    # 0x800d378c
+    0x800d37d8: evt_sub_intpl_msec_init
+    0x800d3878: evt_sub_intpl_msec_get_value
+    0x800d3954: evt_sub_intpl_msec_get_value_para
+    0x800d3a70: evt_sub_spline_init
+    0x800d3b74: evt_sub_spline_get_value
+    0x800d3dac: evt_sub_spline_get_value_manual
+    0x800d3ef8: evt_sub_spline_free
+    0x800d3f48: evt_sub_get_sincos
+    0x800d401c: evt_sub_rumble_onoff
+    0x800d40a4: evt_sub_random
+    0x800d4110: evt_sub_get_stopwatch
+    # 0x800d41a8
+    0x800d41fc: evt_sub_get_dist
+    0x800d4314: evt_sub_get_dir
+    0x800d442c: evt_sub_get_system_flag
+    # 0x800d4460
+    0x800d44b0: evt_key_get_button
+    0x800d4504: evt_key_get_buttonrep
+    0x800d4558: evt_key_get_buttontrg
+    # 0x800d45ac
+    # 0x800d45dc
+    # 0x800d46a4
+    # 0x800d46d8
+    0x800d470c: evt_sub_get_mapname
+    0x800d4774: evt_sub_get_entername
+    0x800d47a8: evt_sub_set_entername
+    # 0x800d47e4
+    0x800d4960: evt_sub_get_language
+    0x800d4994: evt_sub_animgroup_async
+    0x800d49d4: evt_sub_file_async
+    0x800d4a54: evt_sub_load_mapdata_bin
+    0x800d4a84: evt_sub_get_fps
+    0x800d4ab8: evt_sub_fmt_str_int
+    # 0x800d4b4c
+    # 0x800d4b60
+    0x800d4d30: evt_sub_hud_configure
+    # 0x800d4db0
+    # 0x800d4de4
+    # 0x800d4e48
+    # 0x800d5004
+    # 0x800d52a8
+    # 0x800d5588
+    # 0x800d59ac
+    # 0x800d59f0
+    # 0x800d5a24
+    # 0x800d5a60
+    # 0x800d5a94
+    # 0x800d5acc
+    # 0x800d5e80
+    # 0x800d6148
+    # 0x800d61ac
+    # 0x800d6230
+    # 0x800d6298
+    # 0x800d6308
+    # 0x800d6644
+    # 0x800d6674
+    # 0x800d74a0
+    # 0x800d776c
+    # 0x800d7858
+    0x800d7888: evt_sub_get_save_name
+    0x800d78bc: evt_sub_zero_vector
+    # 0x800d7930
+    # 0x800d7b9c
+    # 0x800d7e70
+    # 0x800d815c
+    # 0x800d8498
+    # 0x800d8700
 
     # evtmgr.c
         # .text
@@ -424,229 +1174,1135 @@ global:
     0x800df84c: evtSearchWhile
     0x800df8f8: evtSearchJustBeforeWhile
 
-    # evt_snd.c
-    0x800d2148: evt_snd_bgmon
-    0x800d218c: evt_snd_bgmon_f_d
-    0x800d21f8: evt_snd_bgmoff
-    0x800d2224: evt_snd_bgmoff_f_d
-    # ...
-    0x800d24b8: evt_snd_get_bgm_wait_time
-    # ...
-    0x800d2800: evt_snd_sfxon
-    # ...
-    0x800d29cc: evt_snd_sfxon_3d
-    # ...
-    0x800d2af4: evt_snd_sfxon_npc
-    # ...
-    0x800d2c00: evt_snd_sfxon_3d_player
-    # ...
-    0x800d2cd8: evt_snd_sfxon_3d_player_character
-    # ...
-    0x800d2f74: evt_snd_sfxoff
-    # ...
-    0x800d3030: evt_snd_get_last_sfx_id
-    # ...
-    0x800d36f4: evt_snd_set_sfx_reverb_mode
-    # ...
-
-    # evt_sub.c
-    0x800d37d8: evt_sub_intpl_msec_init
-    0x800d3878: evt_sub_intpl_msec_get_value
-    # ...
-    0x800d40a4: evt_sub_random
-    # ...
-    0x800d4994: evt_sub_animgroup_async
-    # ...
-    
     # evt_cam.c
-    # ...
+    0x800dfc80: evt_cam_flag_onoff
+    0x800dfd08: evt_cam_get_at
+    0x800dfd88: evt_cam_get_pos
     0x800dfe08: evt_cam_shake
     0x800dff20: evt_cam3d_evt_zoom_in
-    # ...
+    # 0x800e01f8
+    # 0x800e02bc
+    # 0x800e0430
+    # 0x800e04fc
+    # 0x800e0720
+    # 0x800e07bc
+    # 0x800e0890
+    # 0x800e08f8
+    # 0x800e092c
+    0x800e0994: evt_cam_check_dimension
+    # 0x800e0a14
+    # 0x800e0a84
+    # 0x800e0b58
+    # 0x800e0b8c
+    # 0x800e0bbc
+    # 0x800e0c40
 
     # evt_door.c
         # .text
-    # ...
+    0x800e0fb0: evtDoorInit
+    0x800e0fc0: evt_door_flag_onoff
+    # 0x800e1040
+    # 0x800e1058
+    # 0x800e1070
+    0x800e1080: evtDoorCheckMapDoorDescExists
+    0x800e1118: evtDoorCheckMapDoorDescInUnkMask
+    0x800e11b0: evtDoorGetActiveDoorDesc
+    # 0x800e11d0
     0x800e11e0: evt_door_wait_flag
-    # ...
+    # 0x800e120c
+    0x800e1580: evt_door_cmd
+    # 0x800e186c
+    # 0x800e18d0
+    # 0x800e1934
+    # 0x800e1c6c
+    # 0x800e1d34
+    # 0x800e1f34
+    # 0x800e200c
+    0x800e219c: evt_door_set_active_door_desc
+    # 0x800e21d0
+    # 0x800e21d8
+    # 0x800e21e0
     0x800e2450: evt_door_get_desc
-    # ...
+    # 0x800e2500
+    0x800e260c: roomBottomlesssCb
     0x800e2610: evt_door_set_door_descs
     0x800e2908: evt_door_enable_disable_door_desc
-    # ...
+    # 0x800e2b78
+    # 0x800e3050
+    # 0x800e32a0
+    # 0x800e333c
+    # 0x800e34f0
     0x800e3588: evt_door_set_dokan_descs
     0x800e3804: evt_door_enable_disable_dokan_desc
-    # ...
+    # 0x800e3ad4
+    # 0x800e3b08
+    # 0x800e3b60
+    # 0x800e3ef4
+    # 0x800e3f74
+    # 0x800e4014
+    # 0x800e40e0
     0x800e4118: evt_door_set_map_door_descs
     0x800e4308: evt_door_enable_disable_map_door_desc
     0x800e44f4: evt_door_add_map_door_desc_to_unk_mask
-    # ...
+    # 0x800e45c8
+    # 0x800e468c
     0x800e46e4: evt_door_get_map_door_desc
-    # ...
+    # 0x800e47a8
+    # 0x800e56b4
+    0x800e578c: evt_door_get_dokan_descs
+    0x800e5798: evt_door_get_dokan_desc_num
+    0x800e57a4: evt_door_get_map_door_descs
+    0x800e57b0: evt_door_get_map_door_desc_num
         # .data
+    # 0x80417e10
     0x8041a2b0: door_init_evt
 
     # evt_eff.c
-    # ...
+    # 0x800e57bc
     0x800e6148: evt_eff_softdelete
-    # ...
+    # 0x800e617c
+    # 0x800e61b0
+    # 0x800e61e0
+    # 0x800e6210
+    # 0x800e6250
+
+    # evt_fade.c
+    0x800e7050: evt_fade_entry
+    0x800e7100: evt_fade_end_wait
+    # 0x800e715c
+    # 0x800e71dc
+    # 0x800e720c
+    # 0x800e7268
 
     # evt_fairy.c
-    # ...
+    0x800e72c4: evt_fairy_get_num
+    # 0x800e7324
+    # 0x800e7380
+    # 0x800e73b0
+    # 0x800e73e0
+    # 0x800e7404
+    # 0x800e7428
+    # 0x800e7458
+    # 0x800e747c
     0x800e74ec: evt_fairy_set_pos
-    # ...
+    0x800e759c: evt_fairy_set_pos_all
+    0x800e7620: evt_fairy_get_pos
+    # 0x800e76d4
+    # 0x800e7784
+    # 0x800e77d0
+    # 0x800e7868
+    # 0x800e7900
+    # 0x800e7aec
+    # 0x800e7b78
+    # 0x800e7bdc
+    # 0x800e7d88
+    # 0x800e7f3c
+    # 0x800e80ec
+    0x800e8164: evt_fairy_flag_onoff
+    0x800e8214: evt_fairy_flag_onoff_all
+    # 0x800e82dc
+    # 0x800e8350
+    # 0x800e840c
+    # 0x800e8468
     0x800e84e4: evt_fairy_reset
-    # ...
+    # 0x800e8518
+    # 0x800e86dc
+    # 0x800e8748
+    # 0x800e87ac
+    # 0x800e8824
+    
+    # evt_frame.c
+    # 0x800e8854
+    # 0x800e88d0
+    # 0x800e89d4
+    # 0x800e8a58
+    # 0x800e8ab4
+    # 0x800e8b48
+    # 0x800e8be8
+    # 0x800e8cd0
+    # 0x800e8d0c
+    # 0x800e8d98
+    # 0x800e8e2c
+    # 0x800e8e94
+    # 0x800e8f4c
+    # 0x800e902c
+    # 0x800e90e4
+    # 0x800e9178
+
+    # evt_guide.c
+    0x800e9bb4: evt_guide_set_pos
+    0x800e9c70: evt_guide_get_pos
+    # 0x800e9ce8
+    # 0x800e9da4
+    # 0x800e9ddc
+    # 0x800e9e14
+    # 0x800e9ff8
+    # 0x800ea05c
+    # 0x800ea0a8
+    # 0x800ea25c
+    # 0x800ea3ec
+    # 0x800ea584
+    # 0x800ea718
+    # 0x800ea748
+    0x800ea7a0: evt_guide_enter_run_mode_1
+    0x800ea7c4: evt_guide_enter_runmode_2
+    # 0x800ea7e8
+    # 0x800ea858
+    0x800ea87c: evt_guide_flag2_onoff
+    0x800ea908: evt_guide_flag0_onoff
+    0x800ea984: evt_guide_check_flag0
+    # 0x800ea9f4
+    # 0x800eaa88
+    # 0x800eaadc
 
     # evt_hit.c
-    # ...
+    # 0x800eab1c
+    # 0x800eabb8
     0x800eac54: evt_hitobj_onoff
-    # ...
+    # 0x800ead20
+    # 0x800eadec
+    # 0x800eaed0
+    # 0x800eb15c
     0x800eb458: evt_hit_bind_mapobj
     0x800eb500: evt_hit_bind_update
-    # ...
+    # 0x800eb564
+    # 0x800eb5dc
+    # 0x800eb654
     0x800eb72c: evt_hitobj_attr_onoff
-    # ...
+    # 0x800eb7f4
+    # 0x800eb8bc
+    # 0x800ebd74
+
+    # evt_img.c
+    # 0x800ec2c8
+    # 0x800ec30c
+    # 0x800ec3ac
+    # 0x800ec458
+    # 0x800ec4ec
+    # 0x800ec7e0
+    # 0x800ec87c
+    # 0x800ec8c4
+    # 0x800ec920
+    # 0x800ec998
+    # 0x800eca64
+    # 0x800ecae0
+    # 0x800ecb5c
+    # 0x800ecbd8
 
     # evt_item.c
     0x800ecc84: evt_item_entry
-    # ...
+    # 0x800ecd70
+    # 0x800ecda0
+    # 0x800ece50
     0x800eced8: evt_item_flag_onoff
-    # ...
+    # 0x800ecf80
+    # 0x800ed020
+    # 0x800ed0bc
     0x800ed12c: evt_item_wait_collected
-    # ...
+    # 0x800ed188
+    # 0x800ed1dc
+    # 0x800ed468
+    # 0x800ed66c
 
     # evt_map.c
     0x800ed6c0: evt_mapobj_trans
-    # ...
+    0x800ed75c: evt_mapobj_rotate
+    # 0x800ed7f8
+    0x800ed894: evt_map_set_fog
+    0x800ed970: evt_map_fog_onoff
+    # 0x800ed9b0
+    # 0x800eda74
+    # 0x800edab4
     0x800edb54: evt_mapobj_color
-    # ...
+    0x800edc30: evt_map_playanim
+    # 0x800edca8
+    0x800edcd8: evt_map_checkanim
+    # 0x800edd50
+    # 0x800eddb4
+    0x800ede18: evt_map_set_playrate
+    # 0x800ede70
+    # 0x800edec8
     0x800edf24: evt_mapobj_flag_onoff
     0x800edfec: evt_mapobj_flag4_onoff
-    # ...
+    # 0x800ee0b4
+    # 0x800ee13c
     0x800ee1c4: evt_mapobj_get_position
-    # ...
+    # 0x800ee290
+    # 0x800ee51c
+    0x800ee55c: evt_mapdisp_onoff
+    # 0x800ee59c
+    0x800ee834: evt_mapobj_blendmode
+    # 0x800ee9f4
+    # 0x800eec8c
+    # 0x800eee68
+    # 0x800ef198
 
     # evt_mario.c
-    # ...
+    0x800ef3c8: evt_mario_flag0_onoff
+    0x800ef444: evt_mario_flag4_onoff
     0x800ef4c0: evt_mario_flag8_onoff
-    # ...
+    # 0x800ef53c
+    0x800ef5ec: evt_mario_cont_onoff
     0x800ef62c: evt_mario_key_on
     0x800ef650: evt_mario_key_off
-    # ...
+    0x800ef7f0: evt_mario_key_off2
+    # 0x800ef814
+    # 0x800ef8c8
     0x800ef908: evt_mario_get_character
-    # ...
+    0x800ef958: evt_mario_set_character
     0x800ef988: evt_mario_set_pos
     0x800efa4c: evt_mario_get_pos
-    # ...
+    # 0x800efac4
+    # 0x800efb50
+    # 0x800efbdc
+    # 0x800efc54
+    # 0x800efce0
+    # 0x800efd28
+    # 0x800efd58
+    # 0x800efd88
+    # 0x800eff6c
     0x800effb8: evt_mario_face_npc
-    # ...
+    # 0x800f0074
+    # 0x800f013c
+    # 0x800f0160
+    # 0x800f01ac
+    # 0x800f0210
+    0x800f025c: evt_mario_face
+    0x800f02e0: evt_mario_face_free
+    # 0x800f0304
+    # 0x800f046c
+    # 0x800f05b0
+    # 0x800f074c
+    # 0x800f09c4
+    # 0x800f0c28
+    # 0x800f0d58
+    # 0x800f119c
+    # 0x800f1684
+    # 0x800f1778
+    # 0x800f1810
+    # 0x800f1858
     0x800f1954: evt_mario_set_pose
     0x800f19c0: evt_mario_wait_anim
-    # ...
+    # 0x800f1a08
+    # 0x800f1a4c
+    # 0x800f1abc
+    # 0x800f1b08
+    # 0x800f1ba8
+    # 0x800f1c1c
+    # 0x800f1c88
+    # 0x800f1d0c
+    # 0x800f1d80
+    # 0x800f1e30
+    # 0x800f1eb0
+    # 0x800f1f30
+    # 0x800f1f9c
+    # 0x800f2008
+    # 0x800f2074
+    # 0x800f2124
+    # 0x800f212c
+    # 0x800f2144
+    # 0x800f2310
+    # 0x800f23e4
+    # 0x800f240c
+    # 0x800f2450
+    0x800f2478: evt_mario_swim_onoff
+    # 0x800f24d8
+    # 0x800f2544
+    0x800f25b0: evt_set_gravity
+    0x800f25e0: evt_get_gravity
+    # 0x800f262c
+    # 0x800f267c
+    # 0x800f26c0
+    # 0x800f27f4
+    # 0x800f2974
+    # 0x800f29c8
+    0x800f2ae8: evt_mario_tamara_onoff
+    0x800f2b28: evt_mario_tamara_chg_mode
+    # 0x800f2c00
+    # 0x800f2c98
+    # 0x800f2cbc
+    # 0x800f2cfc
+    # 0x800f2d74
+    # 0x800f2df4
+    # 0x800f2e30
+    # 0x800f2e54
+    0x800f2ea0: evt_mario_set_bottomless_cb
+    0x800f2f00: evt_mario_get_bottomless_cb
     0x800f2f68: evt_mario_set_anim_change_handler
-    # ...
+    # 0x800f2fa8
+    # 0x800f2fec
+    # 0x800f3074
+    # 0x800f30bc
+    # 0x800f315c
+    0x800f3180: evt_mario_set_pane_boundaries
+    0x800f31b0: evt_mario_get_pane_for_pos
+    0x800f3244: evt_mario_set_pane
+    0x800f3284: evt_mario_pane_change_func
+    0x800f32c4: evt_mario_get_pane_change_func
+    # 0x800f3310
+    # 0x800f3334
+    0x800f3364: evt_mario_check_3d
+    # 0x800f33b0
+    0x800f3514: evt_mario_calc_damage_to_enemy
 
     # evt_mobj.c
     0x800f358c: evt_mobj_entry
     0x800f3608: evt_mobj_delete
     0x800f3638: evt_mobj_exec_cancel
     0x800f36b0: evt_mobj_hit_onoff
-    # ...
+    # 0x800f3714
+    # 0x800f379c
     0x800f380c: evt_mobj_flag_onoff
-    # ...
+    # 0x800f38d8
+    # 0x800f3980
     0x800f39e4: evt_mobj_get_position
     0x800f3a88: evt_mobj_set_position
     0x800f3b90: evt_mobj_set_scale
     0x800f3c98: evt_mobj_set_rotation
-    # ...
+    0x800f3da0: evt_mobj_set_anim
     0x800f3e34: evt_mobj_wait_animation_end
-    # ...
+    0x800f3ec8: evt_mobj_set_interact_script
+    0x800f3f38: evt_mobj_set_item
+    # 0x800f3fa8
+    # 0x800f4018
+    0x800f422c: evt_mobj_check
+    # 0x800f429c
+    0x800f430c: mobj_sui
+    0x800f46a8: mobj_sui_15
+    0x800f49bc: evt_mobj_sui
+    0x800f4c94: mobj_jump_kumo
+    0x800f4d68: mobj_big_jump_kumo
+    0x800f4e94: evt_mobj_jump_kumo
+    0x800f50fc: mobj_jumpstand
+    0x800f52a4: evt_mobj_jumpstand
+    0x800f53e4: mobj_hunmer_blk
+    0x800f548c: evt_mobj_hunmer_blk
+    0x800f5608: mobj_zyo
+    # 0x800f5a48
     0x800f5ad8: evt_mobj_zyo
-    # ...
+    0x800f5c78: mobj_thako
     0x800f61ac: evt_mobj_thako
-    # ...
+    0x800f6390: mobj_kan
     0x800f6440: evt_mobj_kan
-    # ...
+    0x800f6608: mobj_arrow
     0x800f6610: evt_mobj_arrow
-    # ...
+    0x800f6754: mobj_blk_decideItem
+    0x800f6888: mobj_blk
+    # 0x800f71d8
+    # 0x800f7680
+    # 0x800f7ac0
+    # 0x800f7bac
+    # 0x800f7d7c
+    # 0x800f8030
+    # 0x800f8214
+    # 0x800f821c
+    # 0x800f8408
+    # 0x800f8a08
+    0x800f8be8: evt_mobj_blk
+    0x800f9400: mobj_eria_block
+    0x800f9688: evt_mobj_eria_block
+    # 0x800f97f0
+    # 0x800f9b14
+    0x800f9df0: mobj_fire_block
+    0x800fa024: evt_mobj_fire_block
+    0x800fa3dc: mobj_hip_kui
+    0x800fa75c: evt_mobj_hip_kui
+    0x800fa9ac: mobj_kaze
+    # 0x800fab28
+    # 0x800fab88
+    # 0x800fac0c
+    0x800fac74: evt_mobj_kaze
+    0x800faf44: mobj_save_blk
+    0x800fb118: evt_mobj_save_blk
 
     # evt_msg.c
     0x800fb27c: evt_msg_init
-    # ...
+    0x800fb280: _evt_msg_print
     0x800fba54: evt_msg_print
-    # ...
+    0x800fbad8: evt_msg_print_insert
+    0x800fbc64: evt_msg_print_add
+    0x800fbd00: evt_msg_print_add_insert
+    0x800fbe74: evt_msg_continue
+    0x800fbec8: evt_msg_repeat
+    0x800fbf1c: evt_msg_close
+    0x800fbf4c: evt_msg_select
+    0x800fc02c: evt_msg_toge
+    0x800fc0ac: evt_msg_togelr
+    0x800fc138: evt_msg_pri
+    0x800fc174: evtMsgFmtStr
+    0x800fd0c4: evt_msg_fmt_str
+    0x800fd16c: evtMsgFmtInt
+    0x800fdbc4: evt_msg_fmt_int
+    # 0x800fdc6c
 
     # evt_npc.c
-    # ...
+    0x800fdcc0: _intplGetFloat
+    0x800fde94: evtNpcNameToPtr
+    0x800fdfd4: evtNpcNameToPtr_NoAssert
     0x800fe124: evt_npc_get_position
     0x800fe21c: evt_npc_set_position
-    # ...
+    # 0x800fe338
+    # 0x800fe404
+    # 0x800fe4e8
+    0x800fe5b8: evt_npc_get_rotation
+    0x800fe668: evt_npc_rotate
+    # 0x800fe760
+    # 0x800fe82c
+    # 0x800fe92c
+    # 0x800fea70
+    # 0x800feb54
+    # 0x800fec04
+    # 0x800fecd0
+    # 0x800fed9c
+    # 0x800fee80
+    # 0x800fef30
+    # 0x800feffc
+    # 0x800ff100
+    # 0x800ff1cc
+    # 0x800ff2a8
+    # 0x800ff3ec
+    # 0x800ff470
+    # 0x800ff5a4
+    # 0x800ff6f4
+    # 0x800ff86c
+    # 0x800ff8f8
+    # 0x800ff9a4
+    # 0x800ffab4
+    0x800ffbd8: evt_npc_walk_to
     0x801004c0: evt_npc_jump_to
-    # ...
+    # 0x801006fc
+    # 0x80100df8
+    # 0x80101328
+    # 0x8010144c
+    # 0x8010159c
+    # 0x801017b8
+    # 0x80101e60
+    # 0x80101f48
+    # 0x80102424
     0x80102574: evt_npc_glide_to
-    # ...
+    # 0x80102bf8
     0x80102c7c: evt_npc_get_hp
     0x80102d3c: evt_npc_get_max_hp
-    # ...
+    0x80102dfc: evt_npc_set_hp
     0x80102e68: evt_npc_delete
-    # ...
+    # 0x80102eb8
     0x80102f5c: evt_npc_entry
-    # ...
+    # 0x80102fe4
+    0x80103054: evt_npc_add_flip_part
     0x80103108: evt_npc_set_anim
-    # ...
+    # 0x801031a0
+    # 0x80103268
+    0x8010330c: evt_npc_get_cur_anim
+    0x80103368: evt_npc_search_anim_defs
+    # 0x80103410
+    # 0x80103574
     0x8010368c: evt_npc_flag8_onoff
-    # ...
+    0x80103718: evt_npc_flagC_onoff
+    0x801037a4: evt_npc_flag46C_onoff
+    0x80103830: evt_npc_flag10_onoff
+    0x801038bc: evt_npc_part_flag_onoff
     0x801039b8: evt_npc_animflag_onoff
-    # ...
+    # 0x80103a44
+    # 0x80103b40
+    # 0x80103c24
+    # 0x80103d20
+    0x80103dbc: evt_npc_get_unitwork
     0x80103ea8: evt_npc_set_unitwork
-    # ...
+    0x80103f94: evt_npc_get_partswork
+    0x80104084: evt_npc_set_partswork
+    # 0x80104174
+    # 0x80104230
+    # 0x80104304
+    # 0x801043c0
+    # 0x80104494
+    # 0x80104508
+    # 0x8010457c
+    # 0x801045ac
+    # 0x801045dc
+    # 0x80104638
+    # 0x80104694
+    # 0x801046f4
+    # 0x80104750
+    # 0x801047ac
+    # 0x8010480c
+    # 0x8010486c
+    # 0x801048cc
+    # 0x8010495c
+    # 0x801049ec
+    # 0x80104a3c
+    # 0x80104a94
+    # 0x80104af0
+    # 0x80104b4c
+    # 0x80104ba8
+    # 0x80104c10
     0x80104c94: evt_npc_set_property
-    # ...
+    0x80104edc: modifyPartProperty
     0x80104fac: evt_npc_modify_part
-    # ...
+    0x8010508c: evt_npc_get_property
+    # 0x80105248
+    # 0x801053b4
+    # 0x80105548
+    0x80105550: evt_npc_wait_flip_finished
+    0x801055a4: evt_npc_finish_flip_instant
+    0x801055ec: evt_npc_check_3d
+    0x80105708: evt_npc_flip_to
+    0x80105768: evt_npc_flip
+    # 0x801057cc
+    # 0x80105828
+    # 0x801058c8
     0x80105924: evt_npc_get_axis_movement_unit
-    # ...
+    # 0x801059d0
+    # 0x80105a30
+    # 0x80105b00
+    # 0x80105b94
+    # 0x80105bdc
+    # 0x8010611c
+    # 0x801061c8
+    # 0x80106260
+    # 0x801062b0
+    # 0x80106300
+    0x80106390: evt_read_setup_file
     0x80106724: evt_npc_entry_from_template
-    # ...
+    # 0x80106904
+    0x80106b84: someEvtNpcTemplateSpawn2
+    0x80106db4: evt_npc_spawn_sammer_guy
+    # 0x80106f78
+    # 0x80106ffc
+    # 0x80107044
+    # 0x801070a4
+    # 0x8010712c
+    # 0x80107190
+    # 0x801071f4
+    # 0x801072a4
+    # 0x801072f8
+    0x801073f4: evt_npc_get_coin_drop_count
+    0x801074b0: evt_npc_get_drop_item_type
+    0x80107540: evt_npc_id_to_name
+    # 0x801075b8
+    # 0x80107600
+    # 0x80107648
+    0x8010773c: evt_npc_get_timer_start
+    # 0x8010781c
+    # 0x80107910
+    # 0x801079f0
+    # 0x80107a5c
+    # 0x80107ac8
+    # 0x80107b34
+    # 0x80107b80
     0x80107bcc: evt_npc_set_camid
-    # ...
+    # 0x80107c38
+    # 0x80107cfc
+    # 0x80107d20
+    # 0x80107d44
+    # 0x80107d90
+    # 0x80107ddc
+    # 0x80107e40
+    # 0x80107ec0
+    # 0x80107f78
+    # 0x80108054
+    # 0x80108194
+    # 0x80108224
+    # 0x801082f0
+    # 0x801083d8
+    # 0x80108440
+    # 0x801084fc
+    # 0x801085e4
+    # 0x801086fc
+    # 0x8010874c
+    # 0x801087d8
+    # 0x80108930
+    # 0x801089d0
+    # 0x80108a2c
+    # 0x80108ac0
+    # 0x80108b8c
+    # 0x80108bd4
+    # 0x80108cc0
+    0x80108d98: evt_npc_set_part_attack_power
+    # 0x80108ebc
+    # 0x80108f50
+    # 0x80108fe4
+    # 0x80109078
+    # 0x801090f4
+    # 0x801091e0
+    # 0x80109250
+    # 0x801092c0
+    # 0x80109370
+    # 0x801093e0
+    # 0x80109434
+    # 0x801094b4
+    # 0x80109548
+    # 0x801095b8
+    # 0x80109628
+    # 0x80109698
+    # 0x801097b0
+    # 0x8010982c
+    0x80109900: marioLuigiNpcDispCb
+    # 0x80109980
+    # 0x80109a00
+    # 0x80109b10
+    # 0x80109c20
+    # 0x80109ca0
+    # 0x80109d20
+    0x80109da0: evt_npc_set_disp_callback
+    # 0x80109e18
+    # 0x80109e94
+    # 0x80109f18
+    # 0x8010a008
+    # 0x8010a060
+    # 0x8010a0e8
+    # 0x8010a148
+    # 0x8010a1c4
+    # 0x8010a1e8
+    # 0x8010a298
+    0x8010a2f8: evt_npc_try_catch_card
+    # 0x8010a37c
+    # 0x8010a418
+    # 0x8010a4ec
+    # 0x8010a5ec
+    # 0x8010a788
+    # 0x8010a808
+    0x8010a910: evt_npc_teleport_effect
+    # 0x8010aadc
+    # 0x8010ab58
+    # 0x8010abd4
+    # 0x8010ac50
+    # 0x8010b550
+    # 0x8010bc44
+    # 0x8010bcf0
+    0x8010be00: evt_npc_agb_async
     0x8010be80: evt_npc_tribe_agb_async
-    # ...
+    # 0x8010bf5c
+    # 0x8010bfa8
+    0x8010c028: evt_npc_handle_hit_xp
+    # 0x8010c088
+    # 0x8010c110
+    # 0x8010c16c
+    # 0x8010c1e8
+    # 0x8010c264
+    # 0x8010c2e0
+    # 0x8010c35c
+    # 0x8010c3e8
+    # 0x8010c440
+
+    # evt_offscreen.c
+    # 0x8010c4a4
+    # 0x8010c4d4
+    # 0x8010c504
+
+    # evt_paper.c
+    # 0x8010c600
+    # 0x8010c660
 
     # evt_pouch.c
-    # ...
+    0x8010c698: evt_pouch_set_hp
+    0x8010c6c8: evt_pouch_get_hp
+    0x8010c714: evt_pouch_add_hp
+    0x8010c744: evt_pouch_get_max_hp
+    0x8010c790: evt_pouch_set_max_hp
+    0x8010c7c0: evt_pouch_get_xp
+    0x8010c80c: evt_pouch_add_xp
+    0x8010c83c: evt_pouch_set_attack
+    0x8010c86c: evt_pouch_get_attack
+    0x8010c8b8: evt_pouch_add_attack
+    0x8010c8e8: evt_pouch_set_coins
+    0x8010c918: evt_pouch_get_coins
+    0x8010c964: evt_pouch_add_coins
     0x8010c994: evt_pouch_add_item
     0x8010c9c4: evt_pouch_check_have_item
-    # ...
+    0x8010ca18: evt_pouch_remove_item
+    0x8010ca48: evt_pouch_remove_item_idx
+    0x8010caa4: evt_pouch_add_shop_itme
+    0x8010cad4: evt_pouch_remove_shop_item
+    0x8010cb04: evt_pouch_remove_shop_item_idx
     0x8010cb60: evt_pouch_set_pixl_selected
-    # ...
+    0x8010cb90: evt_pouch_count_use_items
+    0x8010cbdc: evt_pouch_count_free_shop_items
+    0x8010cc28: evt_pouch_count_shop_items
+    0x8010cc74: evt_pouch_check_free_use_item
+    0x8010ccc0: evt_pouch_change_char_selectable
+    0x8010cd24: evt_pouch_change_pixl_selectable
+    0x8010cd88: evt_pouch_get_level
+    0x8010cdd4: evt_pouch_set_level
+    0x8010ce04: evt_pouch_get_next_level_xp
+    0x8010ce50: evt_pouch_get_arcade_tokens
+    0x8010ce9c: evt_pouch_set_arcade_tokens
+    0x8010cecc: evt_pouch_get_total_coins_collected
+    0x8010cf18: evt_pouch_get_max_jump_combo
+    0x8010cf64: evt_pouch_get_max_stylish_combo
+    0x8010cfb0: evt_pouch_get_enemies_defeated
+    0x8010cffc: evt_pouch_increment_enemies_defeated
+
+    # evt_seq.c
+    0x8010d028: evt_seq_set_seq
+    0x8010d0a0: evt_seq_wait
+    0x8010d0f0: evt_seq_mapchange
 
     # evt_shop.c
-    # ...
+    0x8010d194: evt_shop_wait_coin_sfx
+    # 0x8010d2b8
+    0x8010d304: evt_shop_get_name_items
+    # 0x8010d3d4
+    0x8010d4b0: evt_shop_get_fortune_message
+    # 0x8010d5b8
+    # 0x8010d674
+    # 0x8010da90
+    # 0x8010db80
+    # 0x8010dc04
+    # 0x8010e020
+    # 0x8010e110
+    0x8010e194: evt_shop_get_point_reward
+    0x8010e270: evt_shop_set_point_reward_collected
+    0x8010e2f4: evt_shop_get_shop_points
+    0x8010e340: evt_shop_add_shop_point
+    0x8010e380: evt_shop_clear_shop_points
+    0x8010e3b0: evt_shop_howzit_select_item
+    0x8010e5a8: evt_shop_build_howzit_item_table
+    # 0x8010e700
+    0x8010e820: evt_shop_add_charm
+    # 0x8010e8bc
+    # 0x8010ea10
+    # 0x8010ea78
+    # 0x8010eb1c
+    # 0x8010eb60
+    # 0x8010ed70
+    0x8010ef8c: evt_shop_get_card_give_info
+    0x8010f08c: evt_shop_get_card_bag
+    0x8010f5b8: evt_shop_select_card
+    0x8010f790: evt_shop_count_cards
+    0x8010f94c: evt_shop_init_card_item_flags
+    0x8010f990: evt_shop_remove_card
+    0x8010fbcc: evt_shop_init_flopside_cards
+    0x80110358: evt_shop_get_buy_price
+    # 0x801103b8
+    0x80110558: evt_shop_get_map_info
+    0x8011067c: evt_shop_build_map_table
+    # 0x801108f4
+    0x80110938: evt_shop_check_all_maps_owned
+    0x801109a0: evt_shop_build_flimm_flipside_item_tables
+    # 0x80110ac4
+    0x80110bf8: evt_shop_filter_flimm_flipside_items
+    0x80110f50: evt_shop_flimm_select_item
+    # 0x80111074
+    # 0x80111334
+    0x80111378: evt_shop_build_flimm_pit_item_tables
+    0x801114b8: evt_shop_restore_itemdata_prices
+    0x8011155c: evt_shop_filter_flimm_pit_items
+    0x80111858: evt_shop_select_item
+    0x8011197c: evt_shop_remove_item
+    0x80111b44: evt_shop_handle_roten_item_flag
+    0x80111b88: evt_shop_get_otoya_bgm
     0x80111d1c: evt_shop_set_defs
-    # ...
+
+    # fairy.c
+    # 0x8011bc08
+    # 0x8011c4d8
+    # 0x8011c920
+    # 0x8011ceb4
+    # 0x8011d300
+    # 0x8011d3bc
+    # 0x8011d440
+    0x8011d58c: fairyEntry
+    0x8011d8f4: fairyReset
+    0x8011d8f8: fairyInit
+    0x8011d998: fairyReInit
+    0x8011d99c: fairyUpdate
+    0x8011de6c: fairyMain
+    0x8011df28: fairyDisp
+    0x8011e418: fairyDispMain
+    0x8011e5a8: _fairyReInit
+    0x8011e8bc: fairyIdToPtr
+    0x8011e90c: fairyItemIdToPtr
+    0x8011e970: fairyGetExtra
+    0x8011e9b4: fairySetAnim
+    # 0x8011ea48
+    0x8011ea90: fairyEnterRunMode
+    0x8011eb54: fairyIdEnterRunMode
+    0x8011ec58: fairyEnterRunModeAlt
+    0x8011ecf4: fairyIdEnterRunMode0
+    0x8011ed88: fairyIdEnterRunMode1
+    0x8011ee1c: fairyAllEnterRunMode0
+    0x8011eea8: fairyAllEnterRunMode1
+    0x8011ef38: fairyIdEnterRunMode2
+    0x8011f0a8: fairyAllEnterRunMode2
+    0x8011f258: fairySetAllPositions
+    # 0x8011f2d4
+    # 0x8011f320
+    0x8011f36c: fairyGetEntries
+    0x8011f37c: fairyGetNum
+    0x8011f38c: fairyGetNumExtra
+    # 0x8011f39c
+    # 0x8011f3b0
+    # 0x8011f45c
+    # 0x8011f534
+    0x8011f564: fairyUpdateAnimPose
+    0x8011f648: fairySetMaterialEvtAlpha
+    0x8011f6a0: fairyExtraEntry
+    0x8011f958: fairyFreeExtra
+    0x8011fa04: fairyOff
+    0x8011fa18: fairyOn
 
     # guide.c
-    # ...
     0x8011fa2c: guideGetWork
-    # ...
+    0x8011fa38: guideInit
+    0x8011fa7c: guideReInit
+    0x8011fcd4: guideMain
+    0x8011feb0: guideDispMain
+    0x8012003c: guideDisp
+    0x801202c4: runMode0Main
+    0x80120360: runMode1Main
+    0x8012040c: runMode2Main
+    0x80120d08: runMode3Main
+    0x8012107c: runMode4Main
+    0x801213f0: runMode5Main
+    # 0x801215f0
+    # 0x8012167c
+    # 0x80121900
+    # 0x80121948
+    0x80121990: guideSetAnim
+    0x80121a0c: guideEnterRunMode
+    0x80121aa4: guideEnterRunMode1
+    0x80121adc: guideEnterRunMode2
+    0x80121b28: guideEnterRunMode5
+    # 0x80121ba4
+    # 0x80121bc8
+    # 0x80121bcc
+    0x80121d34: guideCanSearch
+    # 0x80121d84
+    # 0x80121db4
 
     # mario.c
-    # ...
+    # 0x80121e18
+    0x80121e50: marioGameGetSpeedScale
+    # 0x80121e58
+    # 0x80121f40
     0x80121f48: marioGetPtr
-    # ...
-    0x8012339c: marioInit
-    0x801236b0: marioReInit
-    0x801243a8: marioMain
-    # ...
-    0x8012a680: marioTakeDamage
-    # ...
+    # 0x80121f54
+    # 0x8012217c
+    # 0x801222a4
+    0x8012230c: marioSetAnimGroup
+    # 0x8012244c
+    0x801226f0: marioUpdateCharProperties
+    0x8012292c: marioGetHitboxWidthRaw
+    0x80122950: marioGetHitboxHeightRaw
+    0x80122978: marioGetHitboxHeight_BowserSpecial
+    0x801229b0: marioGetDashSpeedRaw
+    0x801229c8: marioOnMapChange
+    0x80122af0: marioChkKey
+    0x80122b4c: marioCtrlOnChk
     0x80122b68: marioCtrlOffChk
     0x80122b7c: marioKeyOffChk
-    # ...
+    0x80122b90: marioCtrlOff
+    0x80122bbc: marioCtrlOn
+    0x80122bf4: marioKeyOff
+    0x80122c2c: marioKeyOn
+    0x80122c64: marioBgModeOn
+    0x80122cc0: marioBgModeOff
+    0x80122d1c: marioChkSts
+    0x80122d90: marioResetHitObj
+    0x80122fa8: marioReset
+    0x801231c0: marioOfsRotReset
+    0x80123268: marioSoundInit
+    0x80123288: marioPoseInit
+    0x8012339c: marioInit
+    0x801236b0: marioReInit
+    # 0x80123f0c
+    0x80124034: marioUpdateRespawnPos
+    # 0x80124374
+    0x801243a8: marioMain
+    # 0x80125854
+    # 0x80125998
+    # 0x80126034
+    # 0x801265a0
+    # 0x80126618
+    # 0x8012662c
+    # 0x80126688
+    0x801266e4: marioChgPose
+    0x801268b4: marioChgPoseTime
+    0x80126940: marioChgPaper
+    0x801269cc: marioChgPaper2
+    0x80126a50: marioSetPaperAnimeLocalTime
+    0x80126aac: marioPaperOn
+    0x80126b88: marioPaperOff
+    0x80126c08: marioPaperLightOn
+    0x80126c1c: marioPaperLightOff
+    0x80126c30: marioIsAnimFinished
+    # 0x80126c98
+    # 0x80126cfc
+    0x80126d48: marioGetScreenPos
+    0x80126dcc: marioChkInScreen
+    0x80126dfc: marioGetScale
+    # 0x80126e1c
+    # 0x80126e6c
+    0x80127148: marioMakeDispDir
+    # 0x801275dc
+    0x801277f4: marioPreDisp
+    # 0x80127f5c
+    # 0x801280f8
+    0x8012823c: marioEffectFlagOn
+    0x80128360: marioEffectFlagOff
+    # 0x80128378
+    # 0x801289bc
+    # 0x80128d1c
+    0x80128ec8: marioDisp
+    # 0x80128f2c
+    # 0x80128fd4
+    # 0x801291f8
+    0x80129438: toRearPose
+    0x80129718: toFrontPose
+    # 0x801299f8
+    # 0x80129d8c
+    # 0x80129db8
+    # 0x80129ddc
+    # 0x80129dfc
+    # 0x8012a064
+    # 0x8012a168
+    # 0x8012a354
+    0x8012a3a8: marioCalcDamageToEnemy
+    0x8012a5e0: marioPlayDamageSfx
+    0x8012a680: marioTakeDamage
+    0x8012ac28: marioUpdateCatch
+    0x8012ad1c: marioCalcCatchPos
+    0x8012af74: marioDropCatch
+    # 0x8012b018
+    0x8012b080: marioCheck3d
+    # 0x8012b090
+    # 0x8012b218
+    # 0x8012b2c4
+    # 0x8012b370
+    # 0x8012b39c
+    # 0x8012b498
+    # 0x8012b4ac
+    # 0x8012b4f8
+    0x8012b50c: marioSetGravity
+    0x8012b6cc: marioGetGravity
+    0x8012b6dc: marioGetGravUnitDown
+    0x8012b6f4: marioApplyGravity
+    0x8012b784: marioGravityDotProduct
+    # 0x8012b7f8
+    # 0x8012ba68
+    # 0x8012bb80
+    0x8012bbd4: marioSetPaneBoundaries
+    0x8012bcec: marioGetPaneForPos
+    0x8012bd5c: marioHandleSqaush
+    # 0x8012c0f8
+    # 0x8012c188
+    # 0x8012c218
+    # 0x8012c948
+    # 0x8012ca58
+    # 0x8012caec
+    # 0x8012cb00
+    # 0x8012cb6c
+    # 0x8012cbcc
+    # 0x8012cc38
+    # 0x8012cc98
+    # 0x8012cd9c
+    # 0x8012ce4c
+    # 0x8012cea8
+    # 0x8012cf20
+    # 0x8012cf44
+    0x8012d180: marioLockRespawnPos
+    0x8012d1c0: marioUnlockRespawnPos
+    0x8012d1e8: marioLockFacingDir
+    0x8012d218: marioUnlockFacing
+    # 0x8012d230
+    # 0x8012d494
+    0x8012d81c: marioAddTamara
+    0x8012d890: marioRemoveTamara
+    # 0x8012d8b4
+    0x8012d904: marioAddAngeko
+    0x8012d968: marioRemoveAngeko
+    # 0x8012d98c
+    # 0x8012d9fc
     # 0x8012dab0
-    # ...
+
+    # mario_motion.c
+    0x80143370: marioMotion
+    0x801433dc: marioChgMot
+    0x801433e4: marioChgMotSub
+    0x80143520: marioChgMot2
+    0x80143594: marioClearJumpPara
+    # 0x801435a0
+    0x801435dc: marioSetJumpPara
+    0x80143e8c: marioSetFallPara
+    # 0x801440a0
+    # 0x801440f4
+    0x80144230: marioGetJumpParaDef
+    # 0x801442b4
+    # 0x801444d0
+    # 0x8014465c
+    # 0x80144908
+    # 0x80144bbc
+    # 0x80144cf4
+    # 0x80144de4
+    # 0x80144e44
+    # 0x80144ebc
+    # 0x80144f44
+    # 0x8014503c
+    # 0x801450f8
+    # 0x80145108
+    # 0x80145174
+    0x80145398: marioJump
+    0x80145a44: marioFall
+    0x80145db4: marioLandCamShake
+    0x80145f68: marioLandon
+    # 0x80146448
+    # 0x8014651c
+    # 0x80146570
+    # 0x801466a8
+    # 0x8014680c
+    # 0x801468c8
+    # 0x80146ae8
+    # 0x80146cf0
+    # 0x80146e00
+    # 0x80146e24
+    # 0x80146f0c
+    # 0x8014701c
+    # 0x801470d8
+    # 0x801471e8
+    # 0x801472b4
+    # 0x801472ec
+    # 0x8014744c
+    0x80147570: marioChangeCharacter
+    0x80147604: _marioChangeCharacter
+    # 0x80147748
+    0x80147840: mot_character_change
+    0x80147e18: marioChangePixl
+    # 0x80147f14
+    0x80148144: mot_pixl_change
+    # 0x801484fc
+    # 0x801487b0
+    0x801487e4: marioChgMotCharAbility
+    # 0x80148870
+    # 0x80148928
+    0x801489cc: mot_dummy
+    0x801489d0: mot_22
+    0x80148ba8: mot_23
+    # 0x80148c28
+    # 0x80149680
+    # 0x801496cc
+    0x80149a14: mot_parasol_guard
+    0x80149f2c: mot_75_post
+    # 0x80149f90
+    # 0x8014a0f0
+    # 0x8014a2bc
+    0x8014a5a4: mot_fire
+    0x8014aa80: mot_fire_post
+    # 0x8014ab68
+    # 0x8014abf8
+    # 0x8014acbc
+    0x8014ad08: mot_talk
+    0x8014aeec: mot_29
+    # 0x8014b518
+    0x8014b6b4: mot_28
+    0x8014b978: mot_28_post
+    0x8014b998: mot_31
+    0x8014ba70: mot_31_post
+    0x8014ba8c: mot_32
+    0x8014bba4: mot_32_post
+    0x8014bbec: mot_33
+    # 0x8014be7c
+    0x8014bf00: mot_34
+    0x8014c008: mot_34_post
 
     # mario_pouch.c
     0x8014c088: pouchGetPtr
@@ -720,6 +2376,7 @@ global:
     0x80178fd0: seq_logoInit
     0x801790f8: seq_logoExit
     0x80179140: seq_logoMain
+    0x801796fc: seq_logoDisp
 
     # seq_mapchange.c
     0x8017a33c: seq_mapChangeInit
@@ -731,9 +2388,13 @@ global:
     0x8017b130: seq_titleInit
     0x8017b250: seq_titleMain
     0x8017b410: seq_titleExit
+    # 0x8017b49c
     0x8017b4a0: seqTitleInitLayout
+    # 0x8017b840 TODO nw4r::lyt::ArcResourceAccessor::__dt
+    # 0x8017b8ac
     0x8017bc4c: getNextDanMapname
     0x8017be84: __sinit_seq_title_c
+    # 0x8017bed0
 
     # seqdef.c
     0x804287a8: seq_data
@@ -743,6 +2404,8 @@ global:
     0x8017bf6c: seqMain
     0x8017c074: seqSetSeq
     0x8017c084: seqGetSeq
+    
+    # seq_load.c
     0x8017c0a0: initNewSaveFile
     0x8017c10c: seq_loadInit
     0x8017c138: seq_loadExit
@@ -763,24 +2426,165 @@ global:
     0x8017d1ac: loadMain
 
     # pausewin.c
-    # ...
+    0x80183fb0: pausewinGetEntry
+    0x80183fc4: pausewinGetTpl
     0x80183fd0: pausewinInit
-    # ...
+    0x801840b4: pausewinReInit
+    0x80184128: pausewinGetOpenButtonMask
+    0x80184130: pausewinCheckMoveUp
+    0x80184158: pausewinCheckMoveDown
+    0x80184180: pausewinCheckMoveLeft
+    0x801841a8: pausewinCheckMoveRight
+    0x801841d0: pausewinCheckPressOk
+    0x801841f8: pausewinCheckPressBack
     0x80184220: pausewinMain
-    # ...
+    0x801844b4: pausewinDisp
+    0x80184b84: pausewinEntryDisp
+    0x80184c18: pausewinEntry
+    0x80185088: pausewinMoveTo
+    0x801850d8: pausewinAppear
+    0x80185110: pausewinDisappear
+    0x80185148: pausewinDelete
+    0x8018519c: pausewinGoNeutral
+    0x801851e4: pausewinHide
+    0x80185220: pausewinCheckVisible
+    0x80185274: _pausewinDelete
+    0x801853cc: pausewinPauseGame
+    0x80185510: pausewinUnpauseGame
+    0x801855bc: pausewinUpdate
+    0x80185c50: pausewinNumberToString
+    0x80185e1c: pausewinCheckHavePixls
+    0x80185e48: pausewinCheckHaveCards
+    0x80185e74: pausewinCheckHaveRecipes
+    0x80185ea0: pausewinCheckHaveMaps
+    0x80185ecc: pluswinStubButtonCheck
+    0x80185ed4: pluswinOpen
+    0x801864ec: pluswinClose
+    0x80186680: pluswinCloseFromSubmenu
+    0x80186744: pluswinMain
+    0x80186f24: pluswinCursorDisp
+    0x80186f90: pluswinStatsDisp
+    0x8018792c: pluswinBgDispSub
+    0x80187bd0: pluswinBgDisp
+    0x801881a0: pausewinMsgBoxInit
+    0x801881bc: pausewinMsgBoxMain
+    0x8018824c: pausewinMsgBoxDisp
+    0x80188504: pausewinMsgBoxDelete
+    0x80188508: pausewinSetMessage
+    0x80188628: pausewinSetMessageCard
+    0x8018870c: pluswinKeyItemWinOpen
+    0x80188a64: pluswinKeyItemMain
+    0x801895e4: pluswinKeyItemDisp
+    0x80189ae0: evt_pluswin_select_return_pipe
+    0x80189af4: evt_pluswin_get_return_pipe_msg
+    0x80189bf0: pluswinCheckChapterUnlocked
+    0x80189cf0: pluswinChapterWinOpen
+    0x8018a5b4: pluswinCloseChapters
+    0x8018a848: pluswinIsChapter1Unlocked
+    0x8018a88c: pluswinIsChapter2Unlocked
+    0x8018a8d4: pluswinIsChapter3Unlocked
+    0x8018a91c: pluswinIsChapter4Unlocked
+    0x8018a964: pluswinIsChapter5Unlocked
+    0x8018a9ac: pluswinIsChapter6Unlocked
+    0x8018a9f4: pluswinIsChapter7Unlocked
+    0x8018aa3c: pluswinIsChapter8Unlocked
+    0x8018aa84: pluswinChapterCtrlMain
+    0x8018c164: pluswinChapterCtrlDisp
+    0x8018c168: pluswinChapterLevelDisp
+    0x8018c294: pluswinChapterLevelPreviewDisp
+    0x8018c34c: pluswinChapterButtonDisp
+    0x8018c534: pluswinChapterTitleDisp
+    # 0x8018c7dc
+    # 0x8018c85c
+    # 0x8018c8dc
+    # 0x8018c95c
+    0x8018c9dc: pluswinCardsWinOpen
+    # 0x8018cf18
+    # 0x8018d1ac
+    0x8018d1f8: pluswinCardBgMain
+    0x8018de3c: pluswinCardBgDisp
+    # 0x8018e9cc
+    # 0x8018ea4c
+    0x8018efb4: pluswinCardCtrlDisp
+    # 0x8018f200
+    0x8018fa80: pluswinRecipesWinOpen
+    # 0x801901b0
+    # 0x80190444
+    # 0x80190eb8
+    # 0x80191128
+    # 0x80191350
+    0x801914d0: pluswinMapsWinOpen
+    # 0x80191ac0
+    # 0x80191d54
+    # 0x80192a98
+    # 0x80192d78
+    # 0x8019345c
+    # 0x80193498
+    # 0x801936b8
+    # 0x80193860
+    # 0x80193874
+    # 0x80193888
+    # 0x80193a04
+    0x80193c24: minuswinOpen
+    0x80193d54: minuswinDisp
+    0x80194db4: minuswinMain
+    # 0x801950f8
+
+    # charpixlitemwin.c
+    0x80195104: charPixlItemWinInit
+    0x80195114: charPixlItemWinReInit
+    0x80195124: charPixlItemWinOpen
+    # 0x80195e64
+    0x80195f98: charPixlItemWinIsClosed
+    0x80195fac: charPixlItemWinGetNextWindow
+    # 0x80196004
+    0x8019605c: initCharTab
+    # 0x80196174
+    # 0x801969dc
+    0x801969e8: dispCharTab
+    0x801969f8: deleteCharTab
+    0x80196a34: initPixlTab
+    # 0x80196c8c
+    # 0x80197544
+    0x80197550: dispPixlTab
+    0x80197560: deletePixlTab
+    0x8019759c: initItemTab
+    # 0x801976e8
+    # 0x80198238
+    0x80198244: dispItemTab
+    0x80198254: deleteItemTab
+    # 0x80198290
+    # 0x80198294
+    # 0x801982b4
+    # 0x801982c4
+    # 0x801984f4
+    # 0x80198874
+    0x80198e40: dispTab
 
     # hud.c
     0x801991f4: hudInit
     0x801992e4: hudReInit
     0x80199490: hudLoadStats
     0x801994e0: hudMain
-    # ...
+    0x80199a74: hudGetPos
+    0x80199a90: hudUnhideAlt
+    0x80199ad0: hudHide
+    # 0x80199b0c
+    # 0x80199b5c
+    0x80199ba8: hudUnhide
+    # 0x80199c74
+    # 0x80199c88
+    # 0x80199c9c
+    # 0x80199cb0
     0x80199cc4: hudStartCountdown
-    # ...
-    0x8019b0b4: hudTurnOffFlipTimeBox
-    # ...
+    # 0x80199cf8
+    0x80199d98: hudUpdateStats
+    0x8019a16c: hudDisp
     # 0x8019af88
-    # ...
+    0x8019b0b4: hudTurnOffFlipTimeBox
+    # 0x8019b0dc
+    # 0x8019be84
+    # 0x8019bea8
 
     # sptexture.c
     0x8019c3b0: sptextureInit
@@ -821,7 +2625,6 @@ global:
     0x8019e088: DVDMgrDelete
     0x8019e08c: DVDMgrOpen
     0x8019e1e4: DVDMgrRead
-    0x8019e29c: _cb
     0x8019e2ac: DVDMgrReadAsync
     0x8019e2e0: DVDMgrClose
     0x8019e320: DVDMgrGetLength
@@ -848,7 +2651,39 @@ global:
 
     # fontmgr.c
     0x8019ffb8: fontmgrInit
-    # ...
+    0x801a0070: FontDrawStart
+    0x801a0150: FontDrawStart_alpha
+    0x801a0228: FontDrawEdge
+    0x801a0234: FontDrawEdgeOff
+    0x801a0240: FontDrawRainbowColor
+    0x801a02e0: FontDrawRainbowColorOff
+    0x801a02e8: FontDrawNoise
+    0x801a03f4: FontDrawNoiseOff
+    0x801a0420: FontDrawColorIDX
+    0x801a04b8: FontDrawColor
+    0x801a0554: FontDrawColor_
+    0x801a05dc: FontGetDrawColor
+    0x801a05e4: FontDrawScale
+    0x801a05fc: FontDrawCode
+    0x801a0814: FontDrawCodeMtx
+    0x801a09d4: FontDrawString
+    0x801a0a18: FontDrawStringVecPitch
+    0x801a0de0: FontDrawStringMtx
+    0x801a11e0: FontDrawStringCenterMtx
+    0x801a151c: FontDrawMessage
+    0x801a1d50: FontDrawMessageMtx
+    0x801a24d8: hankakuSearch
+    0x801a24e0: kanjiSearch
+    0x801a24e4: kanjiGetWidth
+    0x801a255c: FontGetMessageWidthLine
+    0x801a28ac: FontGetMessageWidth
+    0x801a28b4: HSV2RGB
+    0x801a2aa4: JUTFontSetup
+    # 0x801a2ebc
+    # 0x801a2ec4
+    0x801a2ef4: JUTFont_CodeToGlyph
+    0x801a3064: JUTFont_DrawStart
+    0x801a330c: _JUTFont_DrawPos
 
     # gxsub.c
     0x801a37b4: gxsubInit_Tpl
@@ -889,7 +2724,6 @@ global:
 
     # parse.c
     0x801a6e9c: parseInit
-    0x801a6ebc: getTag
     0x801a6f40: parsePush
     0x801a70f4: parsePop
     0x801a710c: parsePopNext
@@ -933,15 +2767,253 @@ global:
 
     # npcdrv.c
         # .text
-    # ...
+    0x801a9640: npcSfxOn
+    # 0x801a96a4
     0x801a96fc: npcInit
     0x801a97b8: npcReset
+    0x801a9864: npcFlag2On
     0x801a9878: npcMain
-    # ...
+    # 0x801aabe4
+    # 0x801aaca4
+    # 0x801aada8
+    0x801aaea4: npcHitMain
+    # 0x801ad058
+    # 0x801adda4
+    0x801adef0: npcDispMain
+    # 0x801aef10
+    # 0x801aefd0
+    # 0x801af4fc
+    # 0x801afefc
+    # 0x801b000c
+    # 0x801b0154
+    # 0x801b0264
+    # 0x801b0480
+    # 0x801b0d10
+    # 0x801b0ed4
+    # 0x801b19e4
+    # 0x801b20dc
+    # 0x801b2460
+    # 0x801b24c0
+    # 0x801b2574
+    # 0x801b2640
+    # 0x801b285c
+    # 0x801b2928
+    # 0x801b33a0
+    0x801b357c: npcDispSub
+    # 0x801b3860
+    0x801b38b0: mtx_setup
+    # 0x801b4514
+    # 0x801b4fcc
+    0x801b50a0: npcDisp
+    0x801b50bc: npcPartDisp
+    0x801b50dc: npcDisp_xlu
+    0x801b50f8: npcPartDisp_xlu
+    # 0x801b5118
+    # 0x801b5214
+    0x801b5674: npcDisp_general
+    0x801b5718: npcPartDisp_general
+    0x801b57bc: npcHitboxDisp
+    0x801b62f8: npcDisp_offscreen
+    0x801b6394: npcDisp_offscreen_xlu
+    0x801b6430: npcEntry
+    0x801b6ee4: npcIdToPtr
     0x801b6f2c: npcNameToPtr
-    # ...
+    0x801b6fd4: npcNameToPtr_NoAssert
+    0x801b7064: npcDelete
+    # 0x801b73cc
+    # 0x801b7a20
+    # 0x801b8064
+    # 0x801b84d4
+    # 0x801ba124
+    # 0x801bb6fc
+    # 0x801bba3c
+    # 0x801bc5d0
+    # 0x801bc7cc
+    0x801bc9ac: npcDropFromCatch
+    # 0x801bcc00
+    # 0x801bcc8c
+    # 0x801bce2c
+    # 0x801bd4ac
+    # 0x801bd584
+    # 0x801bd7dc
+    # 0x801bd86c
+    # 0x801bde20
+    # 0x801be14c
+    0x801be198: npcEntryFromTemplate
+    0x801be638: npcAreOnSpawnEvtsDone
+    # 0x801be6cc
+    # 0x801be7c8
+    # 0x801be9c4
+    # 0x801beed4
+    # 0x801bf554
+    # 0x801bf5cc
+    # 0x801bf60c
+    # 0x801bf6a4
+    0x801bf7a0: npcEntryFromSetupEnemy
+    0x801bfc08: npcGetNextTemplateNpcId
+    # 0x801bfc14
+    0x801bfc48: npcSearchAnimDefs
+    0x801bfc84: npcSetStayPose
+    0x801bfd68: npcSetTalkPose
+    0x801bfe4c: npcSetAnimSub
+    0x801bff44: _npcSetAnim
+    0x801c0178: npcSetAnim
+    # 0x801c018c
+    # 0x801c01a8
+    # 0x801c01c0
+    # 0x801c01dc
+    # 0x801c0284
+    0x801c0350: npcGetDefense
+    0x801c03c8: npcGetScript
+    # 0x801c0454
+    0x801c045c: npcReadSetupFile
+    0x801c077c: npcUpdateSetupFile0To1
+    0x801c0a90: npcUpdateSetupFile1To2
+    0x801c0d10: npcUpdateSetupFile2To3
+    0x801c11ac: npcUpdateSetupFile3To4
+    0x801c16b0: npcUpdateSetupFile4To5
+    0x801c1b5c: npcUpdateSetupFile5To6
+    0x801c2074: npcUpdateSetupFile
+    0x801c2124: npcGetEntries
+    0x801c2130: npcGetMaxEntries
+    # 0x801c213c
+    0x801c2148: npcAddPart
+    # 0x801c23b0
+    0x801c2458: npcGetPartById
+    # 0x801c2480
+    # 0x801c24cc
+    # 0x801c2558
+    # 0x801c25d8
+    # 0x801c3050
+    # 0x801c35fc
+    # 0x801c360c
+    # 0x801c3694
+    # 0x801c3720
+    # 0x801c37e4
+    # 0x801c3848
+    # 0x801c38a4
+    # 0x801c38b4
+    # 0x801c38c4
+    # 0x801c38d4
+    # 0x801c3930
+    # 0x801c3968
+    # 0x801c3a74
+    # 0x801c3a84
+    # 0x801c3b6c
+    # 0x801c3b80
+    # 0x801c3b94
+    # 0x801c3ba8
+    # 0x801c3bb8
+    # 0x801c3bc4
+    # 0x801c3cb4
+    # 0x801c3d94
+    # 0x801c45a4
+    # 0x801c498c
+    # 0x801c4afc
+    # 0x801c5140
+    # 0x801c65e8
+    # 0x801c7f68
+    # 0x801c7fe0
+    # 0x801c7ff0
+    # 0x801c8000
+    0x801c80d8: npcTimerDisp
+    0x801c82a8: npcHandleHitXp
+    0x801c8408: npcTimerMain
+    # 0x801c85e4
+    # 0x801c85ec
+    # 0x801c8760
+    # 0x801c8b44
+    # 0x801c8b7c
+    # 0x801c8b98
+    # 0x801c8d48
+    # 0x801c8d54
+    # 0x801c8d70
+    0x801c9814: npcCheckFlipFinished
+    # 0x801c9874
+    # 0x801c98f0
+    0x801c9984: npcFinishFlipInstant
+    # 0x801c99b0
+    # 0x801c9a24
+    0x801c9ac8: npcGetTribe
     0x801c9adc: npcGetWorkPtr
-    # ...
+    # 0x801c9ae4
+    # 0x801ca150
+    # 0x801ca198
+    # 0x801ca1a4
+    # 0x801ca238
+    # 0x801ca2d8
+    # 0x801ca300
+    # 0x801ca310
+    # 0x801ca3b8
+    # 0x801ca3e0
+    # 0x801ca448
+    # 0x801ca748
+    # 0x801ca768
+    # 0x801caab4
+    # 0x801cab08
+    # 0x801cab20
+    # 0x801cab2c
+    # 0x801cb268
+    # 0x801cb274
+    # 0x801cb754
+    # 0x801cbf84
+    # 0x801cbf9c
+    # 0x801cbfe8
+    # 0x801cc0a0
+    # 0x801cc0cc
+    0x801cc118: npcGetKillXp
+    # 0x801cc134
+    # 0x801cc150
+    # 0x801cc644
+    # 0x801cc8d0
+    # 0x801cc9dc
+    # 0x801ccb68
+    # 0x801ccce0
+    # 0x801cce10
+    # 0x801ccf74
+    # 0x801cd124
+    # 0x801cd210
+    # 0x801cd3bc
+    # 0x801cd404
+    # 0x801cd5e8
+    # 0x801cd6d4
+    # 0x801cd82c
+    # 0x801cd834
+    # 0x801cd95c
+    # 0x801cdb84
+    # 0x801ceb08
+    # 0x801ceeac
+    # 0x801cf0a0
+    # 0x801cf16c
+    # 0x801d0278
+    # 0x801d029c
+    # 0x801d02ac
+    # 0x801d0610
+    # 0x801d0624
+    # 0x801d0640
+    # 0x801d1058
+    # 0x801d1064
+    # 0x801d1074
+    # 0x801d1084
+    # 0x801d1094
+    # 0x801d10a4
+    # 0x801d10cc
+    # 0x801d1240
+    # 0x801d1424
+    # 0x801d1580
+    # 0x801d1b9c
+    0x801d1bf4: npcTryCatchCard
+    # 0x801d1d7c
+    # 0x801d2028
+    # 0x801d2208
+    # 0x801d2304
+    0x801d233c: npcFreezeAll
+    # 0x801d2384
+    # 0x801d23cc
+    # 0x801d23d4
+    # 0x801d2554
+    # 0x801d25b8
+    # 0x801d25f4
         # .data
     0x80449888: npcEnemyTemplates
 
@@ -967,13 +3039,85 @@ global:
     # 0x80237750
 
     # spmario_snd.c
-    # ...
     0x802382b0: spsndInit
     0x80238548: spsndMain
     0x80238598: spsndExit
-    # ...
+    0x802385ec: spsndPause
+    0x8023869c: spsndUnpause
+    # 0x8023872c
+    0x802387b4: spsndSetPosDirListener
+    0x802387f4: spsndSetSFXReverbMode
+    # 0x80238804
+    # 0x80238868
+    0x802388b4: spsndSetFlag
+    0x802388cc: spsndClearFlag
+    0x802388e4: spsndGetFlag
+    # 0x802388f4
+    # 0x80238b04
+    0x802390d0: spsndSFXMain
+    0x8023a818: __spsndSFXOn
     0x8023b0f0: spsndSFXOn
-    # ...
+    0x8023b108: spsndSFXOnVol
+    0x8023b120: spsndSFXOn_UnkEffect
+    0x8023b138: _spsndSFXOn
+    0x8023b298: spsndSFXOn_3D
+    0x8023b2a0: spsndSFXOff
+    # 0x8023b38c
+    0x8023b4d4: spsndSetSfxPlayerPos
+    0x8023b530: spsndSFX_vol
+    0x8023b578: spsndSFX_pit
+    0x8023b5d8: spsndSFX_delay
+    # 0x8023b680
+    # 0x8023b77c
+    # 0x8023b858
+    # 0x8023b974
+    0x8023ba58: spsndSFX_flagOn
+    0x8023baa8: spsndSFX_flagOff
+    0x8023baf8: spsndSFX_chkName
+    0x8023bb78: spsndSFX_chk
+    0x8023bbd8: spsndSFX_getIdPlayingName
+    0x8023bc60: spsndGetSFXEntry
+    0x8023bc80: spsndBGMMain
+    # 0x8023c484 TODO nw4r::snd::SoundHandle::__dt
+    0x8023c4d8: spsndBGMOn_f_d
+    0x8023c93c: spsndBGMOn
+    0x8023c944: spsndBGMOn_f_d_alt
+    0x8023c948: spsndBGMOff_f_d
+    0x8023caa8: spsndBGMOff
+    0x8023cab0: spsndBGMOff_f_d_alt
+    # 0x8023cab4
+    # 0x8023cc90
+    # 0x8023cc98
+    # 0x8023cc9c
+    # 0x8023ce1c
+    # 0x8023ce20
+    # 0x8023cf14
+    # 0x8023cfe8
+    # 0x8023d0dc
+    0x8023d1b0: spsndCheckBgmPlaying
+    0x8023d1d0: spsndGetBgmName
+    # 0x8023d1f8
+    # 0x8023d218
+    # 0x8023d2b8
+    0x8023d3e4: spsndENVMain
+    0x8023d728: spsndENVOn_f_d
+    0x8023db58: spsndENVOn
+    # 0x8023db5c
+    # 0x8023dc88
+    # 0x8023dc90
+    # 0x8023dc94
+    # 0x8023dda4
+    # 0x8023de90
+    # 0x8023dfa0
+    # 0x8023e08c
+    0x8023e19c: __sinit_spmario_snd_c
+    # 0x8023e2a0 TODO BgmPlayer::__ct
+    # 0x8023e2ac TODO BgmPlayer::__dt
+    # 0x8023e308 TODO __arraydtor_spsndBgmPlayers
+    # 0x8023e324 TODO SfxPlayer::__ct
+    # 0x8023e334 TODO SfxPlayer::__dt
+    0x8023e39c: __arraydtor_spsndSfxPlayers
+    # 0x8023e3b8 TODO nw4r::snd::FxReverbHi::__dt
 
     # relmgr.c
     0x8023e434: relInit
@@ -1013,15 +3157,24 @@ global:
 
     # homebuttondrv.c
     0x80241808: homebuttonInit
+    # 0x802418c8
     0x80241914: homebuttonMain
-    # ...
+    # 0x80242198
+    0x802421b4: homebuttonAllowOpen
+    0x802421c8: homebuttonForbidOpen
+    # 0x802421dc
+    # 0x802421f0
+    0x80242204: homebuttonDumpEfb
+    0x8024227c: homebuttonDisp
 
     # lz_embedded.c
-    0x80349830: homeButtonNotAllowedTpl
+    # TODO: each is its own file
     0x80358d88: ag2tg
     0x8035b250: cookingText
     0x8036a8a0: treasureMapText
     0x8036afc0: pitText
+    # TODO: these are in other files
+    0x80349830: homeButtonNotAllowedTpl
     0x8036f530: holdSidewaysTpl
     0x80373d70: creditsText
     0x80375da8: thealthAndSafetyTpl7
@@ -1039,6 +3192,19 @@ global:
 
     # MSL_C.PPCEABI.bare.H.a
     # ...
+    0x80255838: strlen
+    0x80255854: __va_arg
+    # 0x8025591c: __register_global_object TODO: linker weirdness
+    # 0x80255934: __destroy_global_chain TODO: linker weirdness
+    0x8025597c: dthandler
+    0x80255980: duhandler
+    0x80255984: terminate
+    0x80255990: unexpected
+    0x8025599c: __throw_catch_compare
+    0x80255bd8: __dt__26__partial_array_destructorFv
+    0x80255c94: __construct_array
+    0x80255d8c: __destroy_arr
+    0x80255e04: __ptmf_scall
     0x80255e2c: __cvt_fp2unsigned
     0x80255e88: __save_fpr
     0x80255eac: _savefpr_23
@@ -1086,18 +3252,81 @@ global:
     0x802564a4: __cvt_ull_flt
     0x80256544: __cvt_dbl_usll
     0x80256610: __cvt_dbl_ull
-    # ...
+    # 0x802566b8: __init_cpp_exceptions TODO: linker weirdness
+    # 0x802566f4: __fini_cpp_exceptions TODO: linker weirdness
+    0x80256728: __register_fragment
+    0x8025675c: __unregister_fragment
+    0x8025678c: ExPPC_FindExceptionFragment__FPcP12FragmentInfo
+    0x80256814: ExPPC_FindExceptionRecord__FPcP15MWExceptionInfo
+    0x802569c4: ExPPC_NextAction__FP14ActionIterator
+    0x80256b74: ExPPC_PopStackFrame__FP12ThrowContextP15MWExceptionInfo
+    0x802570ec: ExPPC_UnwindStack__FP12ThrowContextP15MWExceptionInfoPv
     0x802575f8: __unexpected
-    # ...
+    # 0x802577b0 TODO std::bad_exception::__dt
+    0x802577f0: ExPPC_LongJump__FP12ThrowContextPvPv
+    0x802578f4: ExPPC_ThrowHandler__FP12ThrowContext
+    0x80257cf4: __throw
+    0x80257e38: __end__catch
+    0x80257e64: what
+    0x80257e70: Block_subBlock
+    0x80257fc0: SubBlock_merge_next
+    0x80258068: deallocate_from_fixed_pools
+    0x80258254: free
+    0x80258384: __close_all
+    0x80258428: __flush_all
+    0x80258494: __ull2dec
+    0x80258570: __timesdec
+    0x802587f8: __str2dec
+    0x802588e4: __two_exp
+    0x80258c50: __equals_dec
+    0x80258d34: __less_dec
+    0x80258e34: __minus_dec
+    0x80259350: __num2dec_internal
+    0x802594b4: __num2dec
+    0x80259654: __dec2num
+    0x80259e04: bsearch
+    0x80259ef4: __prep_buffer
+    0x80259f1c: __flush_buffer
+    0x80259fd4: fwrite
+    0x8025a2dc: fclose
+    0x8025a398: fflush
+    0x8025a4cc: _ftell
+    0x8025a574: ftell
+    0x8025a578: _fseek
+    0x8025a73c: mbtowc
+    0x8025a7a0: __wctomb_noconv
+    0x8025a7bc: wcstombs
     0x8025a874: memmove
     0x8025a940: memchr
     0x8025a96c: memrchr
     0x8025a998: memcmp
-    # ...
+    0x8025a9e4: __copy_longs_aligned
+    0x8025aaa0: __copy_longs_rev_aligned
+    0x8025ab48: __copy_longs_unaligned
+    0x8025ac08: __copy_longs_rev_unaligned
+    0x8025acb4: __signbitd
+    0x8025accc: __fpclassifyd
+    0x8025ad4c: __stdio_atexit
+    # 0x8025ad5c: parse_format
+    0x8025b358: long2str
+    0x8025b580: longlong2str
+    0x8025b820: double2hex
+    0x8025bbe8: round_decimal
+    0x8025bd10: float2str
+    0x8025c4e0: __pformatter
+    0x8025cd3c: __FileWrite
+    0x8025cd94: __StringWrite
+    0x8025ce00: printf
+    0x8025cec8: vprintf
     0x8025cf40: vsprintf
     0x8025cfc0: snprintf
     0x8025d098: sprintf
-    # ...
+    0x8025d168: qsort
+    0x8025d2d8: srand
+    # 0x8025d2e0: parse_format
+    0x8025d994: __sformatter
+    0x8025e784: sscanf
+    0x8025e84c: raise
     0x8025e8fc: strcpy
     0x8025e9bc: strncpy
     0x8025ea00: strcat
@@ -1143,7 +3372,248 @@ global:
     0x8026440c: __ieee754_sqrt
     0x80264654: nan
     0x80264658: sqrt
-    # ...
+
+    # TRK_Hollywood_Revolution.a
+    0x8026465c: TRKNubMainLoop
+    0x80264754: TRKDestructEvent
+    0x80264778: TRKConstructEvent
+    0x80264790: TRKPostEvent
+    0x80264870: TRKGetNextEvent
+    0x80264924: TRKInitializeEventQueue
+    0x8026497c: TRKNubWelcome
+    0x802649a4: TRKTerminateNub
+    0x802649c8: TRKInitializeNub
+    0x80264b00: TRKMessageSend
+    0x80264b2c: TRKReadBuffer_ui32
+    0x80264c1c: TRKReadBuffer_ui8
+    0x80264cb4: TRKReadBuffer1_ui64
+    0x80264d9c: TRKAppendBuffer_ui32
+    0x80264e98: TRKAppendBuffer_ui8
+    0x80264f00: TRKAppendBuffer1_ui64
+    0x80264ffc: TRKReadBuffer
+    0x80265088: TRKAppendBuffer
+    0x8026512c: TRKSetBufferPosition
+    0x8026515c: TRKResetBuffer
+    0x8026519c: TRKReleaseBuffer
+    0x80265200: TRKGetBuffer
+    0x8026522c: TRKGetFreeBuffer
+    0x802652f4: TRKInitializeMessageBuffers
+    0x80265368: TRKTerminateSerialHandler
+    0x80265370: TRKInitializeSerialHandler
+    0x80265394: TRKProcessInput
+    0x802653e4: TRKGetInput
+    0x80265444: TRKTestForPacket
+    0x80265514: usr_put_initialize
+    0x80265518: usr_puts_serial
+    0x802655a0: TRKDispatchMessage
+    0x802656e0: TRKInitializeDispatcher
+    0x802656e8: TRKDoSetOption
+    0x802657b4: TRKDoStop
+    0x80265880: TRKDoStep
+    0x80265b54: TRKDoContinue
+    0x80265c38: TRKDoWriteRegisters
+    0x80265ef4: TRKDoReadRegisters
+    0x80266118: TRKDoWriteMemory
+    0x80266334: TRKDoReadMemory
+    0x8026657c: TRKDoSupportMask
+    0x80266584: TRKDoVersions
+    0x8026658c: TRKDoOverride
+    0x80266608: TRKDoReset
+    0x80266684: TRKDoDisconnect
+    0x80266720: TRKDoConnect
+    0x802667a8: SetTRKConnected
+    0x802667b4: GetTRKConnected
+    0x802667c4: HandlePositionFileSupportRequest
+    0x802668d4: HandleCloseFileSupportRequest
+    0x802669bc: HandleOpenFileSupportRequest
+    0x80266ad8: TRKRequestSend
+    0x80266c58: TRKSuppAccessFile
+    0x80266e78: TRKReleaseMutex
+    0x80266e80: TRKAcquireMutex
+    0x80266e88: TRKInitializeMutex
+    0x80266e90: TRKDoNotifyStopped
+    0x80266f28: TRK_flush_cache
+    0x80266f60: TRK_fill_mem
+    0x80267018: TRK_strlen
+    0x80267034: __TRK_get_MSR
+    0x8026703c: __TRK_set_MSR
+    0x80267044: TRK_ppc_memcpy
+    0x80267080: TRKInterruptHandler
+    0x802672b0: TRKSwapAndGo
+    0x802673c8: ReadFPSCR
+    0x802673ec: WriteFPSCR
+    0x80267410: TRKTargetSetInputPendingPtr
+    0x80267420: TRKTargetStop
+    0x80267438: TRKTargetSetStopped
+    0x80267448: TRKTargetStopped
+    0x80267458: TRKTargetSupportRequest
+    0x80267658: TRKTargetGetPC
+    0x80267668: TRKTargetStepOutOfRange
+    0x802676e4: TRKTargetSingleStep
+    0x80267750: TRKTargetAddExceptionInfo
+    0x802677d4: TRKTargetAddStopInfo
+    0x80267860: TRKTargetInterrupt
+    0x802679bc: TRKPostInterruptEvent
+    0x80267a68: TRKTargetAccessExtended2
+    0x80267ea0: TRKTargetAccessExtended1
+    0x80268010: TRKTargetAccessFP
+    0x8026851c: TRKTargetAccessDefault
+    0x80268610: TRKTargetReadInstruction
+    0x8026865c: TRKTargetAccessMemory
+    0x802687a8: TRKValidMemory32
+    0x80268a50: TRKAccessFile
+    0x80268a58: TRKOpenFile
+    0x80268a60: TRKCloseFile
+    0x80268a68: TRKPositionFile
+    0x80268a70: TRKSaveExtendedBlock
+    0x80268c28: TRKRestoreExtended1Block
+    0x80268de0: __TRK_write_console
+    0x80268e9c: __read_console
+    0x80268f58: InitMetroTRK
+    0x80268ff0: InitMetroTRK_BBA
+    0x80269084: TRKInitializeTarget
+    0x802690d0: __TRK_copy_vectors
+    0x802691fc: TRKTargetTranslate
+    0x80269254: EnableMetroTRKInterrupts
+    # 0x80269274 TODO
+    0x802692b8: TRKLoadContext
+    0x80269340: TRKUARTInterruptHandler
+    0x80269344: InitializeProgramEndTrap
+    0x8026939c: TRK_board_display
+    0x802693cc: UnreserveEXI2Port
+    0x802693fc: ReserveEXI2Port
+    0x8026942c: TRKWriteUARTN
+    0x80269468: TRKReadUARTN
+    0x802694a4: TRKPollUART
+    0x802694d4: EnableEXI2Interrupts
+    0x8026951c: TRKInitializeIntDrivenUART
+    0x8026956c: InitMetroTRKCommTable
+    0x80269740: TRKEXICallBack
+    0x80269778: TRKTargetContinue
+    0x802697ac: GetUseSerialIO
+    0x802697bc: SetUseSerialIO
+    0x802697c8: udp_cc_post_stop
+    0x802697d0: udp_cc_pre_continue
+    0x802697d8: udp_cc_peek
+    0x802697e0: udp_cc_write
+    0x802697e8: udp_cc_read
+    0x802697f0: udp_cc_close
+    0x802697f8: udp_cc_open
+    0x80269800: udp_cc_shutdown
+    0x80269808: udp_cc_initialize
+    0x80269810: gdev_cc_initinterrupts
+    0x80269834: gdev_cc_peek
+    0x802698a4: gdev_cc_post_stop
+    0x802698c8: gdev_cc_pre_continue
+    0x802698ec: gdev_cc_write
+    0x80269960: gdev_cc_read
+    0x80269a14: gdev_cc_close
+    0x80269a1c: gdev_cc_open
+    0x80269a40: gdev_cc_shutdown
+    0x80269a48: gdev_cc_initialize
+    0x80269a84: OutputData
+    0x80269ad0: CircleBufferReadBytes
+    0x80269bd8: CircleBufferWriteBytes
+    0x80269ce0: CircleBufferInitialize
+    0x80269d30: CBGetBytesAvailableForRead
+    0x80269d38: MWExitCriticalSection
+    0x80269d5c: MWEnterCriticalSection
+    0x80269d8c: MWInitializeCriticalSection
+
+    # NdevExi2A.a
+    0x80269d90: __DBMtrHandler
+    0x80269db4: __DBIntrHandler
+    0x80269dd8: DBInitComm
+    0x80269e34: DBInitInterrupts
+    0x80269e88: DBQueryData
+    0x80269f2c: DBRead
+    0x80269fac: DBWrite
+    0x8026a0bc: DBOpen
+    0x8026a0c0: DBClose
+    0x8026a0c4: __EXI2Imm
+    0x8026a3ac: __DBEXIInit
+    0x8026a468: __DBEXIReadReg
+    0x8026a58c: __DBEXIWriteReg
+    0x8026a690: __DBEXIReadRam
+    0x8026a770: __DBEXIWriteRam
+
+    # exi.a
+    0x8026a850: SetExiInterruptMask
+    0x8026a940: EXIImm
+    0x8026abbc: EXIImmEx
+    0x8026ac60: EXIDma
+    0x8026ad58: EXISync
+    0x8026afd4: EXISetExiCallback
+    0x8026b058: __EXIProbe
+    0x8026b1d8: EXIAttach
+    0x8026b2f0: EXIDetach
+    0x8026b3a8: EXISelect
+    0x8026b4d8: EXIDeselect
+    0x8026b5d8: EXIInterruptHandler
+    0x8026b690: TCInterruptHandler
+    0x8026b8a8: EXTInterruptHandler
+    0x8026b978: EXIInit
+    0x8026bb3c: EXILock
+    0x8026bc38: EXIUnlock
+    0x8026bd10: UnlockedHandler
+    0x8026bd38: EXIGetID
+    0x8026c0e4: ProbeBarnacle
+    0x8026c25c: __OSEnableBarnacle
+    0x8026c418: EXIWriteReg
+    
+    # si.a
+    0x8026c5a4: SIBusy
+    0x8026c5c0: CompleteTransfer
+    0x8026c8b4: SIInterruptHandler
+    0x8026cca0: SIEnablePollingInterrupt
+    0x8026cd18: PADSetSamplingCallback
+    0x8026ce00: SIInit
+    0x8026cec0: __SITransfer
+    0x8026d070: SISetCommand
+    0x8026d084: SISetXY
+    0x8026d0e0: SIEnablePolling
+    0x8026d168: SIDisablePolling
+    0x8026d1d4: SIGetResponse
+    0x8026d2f8: AlarmHandler
+    0x8026d384: SITransfer
+    0x8026d4f0: GetTypeCallback
+    0x8026d7a0: SIGetType
+    0x8026d954: SIGetTypeAsync
+    0x8026da64: SISetSamplingRate
+    0x8026db3c: SIRefreshSamplingRate
+
+    # base.a
+    0x8026db44: PPCMfmsr
+    0x8026db4c: PPCMtmsr
+    0x8026db54: PPCMfhid0
+    0x8026db5c: PPCMthid0
+    0x8026db64: PPCMfl2cr
+    0x8026db6c: PPCMtl2cr
+    0x8026db74: PPCMtdec
+    0x8026db7c: PPCSync
+    0x8026db84: PPCHalt
+    0x8026db98: PPCMtmmcr0
+    0x8026dba0: PPCMfmmcr1
+    0x8026dba8: PPCMtpmc1
+    0x8026dbb0: PPCMtpmc2
+    0x8026dbb8: PPCMtpmc3
+    0x8026dbc0: PPCMtpmc4
+    0x8026dbc8: PPCMffpscr
+    0x8026dbe8: PPCMtfpscr
+    0x8026dc10: PPCMfhid2
+    0x8026dc18: PPCMthid2
+    0x8026dc20: PPCMfwpar
+    0x8026dc2c: PPCMtwpar
+    0x8026dc34: PPCDisableSpeculation
+    0x8026dc5c: PPCSetFpNonIEEEMode
+    0x8026dc64: PPCMthid4
+
+    # db.a
+    0x8026dcb4: DBInit
+    0x8026dcdc: __DBExceptionDestinationAux
+    0x8026dd24: __DBExceptionDestination
+    0x8026dd34: __DBIsExceptionMarked
+    0x8026dd4c: DBPrintf
 
     # OS.a
     0x8026dd9c: __OSFPRInit
@@ -1424,6 +3894,7 @@ global:
     0x8027b744: QUATSlerp
 
     # DVD.a
+        # .text
     0x8027b8e0: __DVDFSInit
     0x8027b910: DVDConvertPathToEntrynum
     0x8027bc18: DVDFastOpen
@@ -1522,8 +3993,11 @@ global:
     0x802823a8: DVDLowMaskCoverInterrupt
     0x802823b0: DVDLowClearCoverInterrupt
     0x80282514: __DVDLowTestAlarm
+        # .sdata
+    0x805ae2d8: devDiStr
 
-    # VI.a
+    # vi.a
+    # 0x8028251c: OnShutdown
     0x802826b0: __VIRetraceHandler
     0x80282ec0: VISetPreRetraceCallback
     0x80282f04: VISetPostRetraceCallback
@@ -1565,6 +4039,141 @@ global:
     0x80286afc: VISetRGBModeImm
     0x80286b0c: __VISetRGBModeImm
     0x80286b54: __VISetRevolutionModeSimple
+
+    # DEMOPad.a
+    0x80286f80: DEMOPadInit
+
+    # ai.a
+    0x80287054: AIRegisterDMACallback
+    0x80287098: AIInitDMA
+    0x80287114: AIStartDMA
+    0x80287128: AIStopDMA
+    0x8028713c: AIGetDMABytesLeft
+    0x8028714c: AIInit
+    0x802872cc: __AIDHandler
+    0x80287374: __AICallbackStackSwitch
+    0x802873d8: __AI_SRC_INIT
+
+    # ax.a
+    0x8028759c: AXInit
+    0x802875f0: AXQuit
+    0x80287638: __AXGetStackHead
+    0x8028764c: __AXServiceCallbackStack
+    0x802876f8: __AXAllocInit
+    0x802877a8: __AXAllocQuit
+    0x80287858: __AXPushFreeStack
+    0x80287874: __AXPushCallbackStack
+    0x80287884: __AXRemoveFromStack
+    0x80287908: AXFreeVoice
+    0x80287984: AXAcquireVoice
+    0x80287b04: AXSetVoicePriority
+    0x80287ba0: __AXAuxInit
+    0x80287cb4: __AXAuxQuit
+    0x80287cc8: __AXGetAuxAInput
+    0x80287cfc: __AXGetAuxAOutput
+    0x80287d18: __AXGetAuxAInputDpl2
+    0x80287d38: __AXGetAuxAOutputDpl2R
+    0x80287d58: __AXGetAuxAOutputDpl2Ls
+    0x80287d78: __AXGetAuxAOutputDpl2Rs
+    0x80287d98: __AXGetAuxBInput
+    0x80287dcc: __AXGetAuxBOutput
+    0x80287de8: __AXGetAuxBInputDpl2
+    0x80287e08: __AXGetAuxBOutputDpl2R
+    0x80287e28: __AXGetAuxBOutputDpl2Ls
+    0x80287e48: __AXGetAuxBOutputDpl2Rs
+    0x80287e68: __AXGetAuxCInput
+    0x80287e9c: __AXGetAuxCOutput
+    0x80287eb8: __AXProcessAux
+    0x80288264: AXRegisterAuxACallback
+    0x802882c8: AXRegisterAuxBCallback
+    0x8028832c: AXRegisterAuxCCallback
+    0x80288390: AXGetAuxACallback
+    0x802883a4: AXGetAuxBCallback
+    0x802883b8: AXGetAuxCCallback
+    0x802883cc: __AXGetCommandListCycles
+    0x802883d4: __AXGetCommandListAddress
+    0x80288404: __AXNextFrame
+    0x80288dc4: __AXClInit
+    0x80288e00: __AXClQuit
+    0x80288e04: AXSetMode
+    0x80288e0c: AXGetAuxAReturnVolume
+    0x80288e14: AXGetAuxBReturnVolume
+    0x80288e1c: AXGetAuxCReturnVolume
+    0x80288e24: AXSetMasterVolume
+    0x80288e3c: AXSetAuxAReturnVolume
+    0x80288e44: AXSetAuxBReturnVolume
+    0x80288e4c: AXSetAuxCReturnVolume
+    0x80288e54: __AXOutNewFrame
+    0x802890b4: __AXOutAiCallback
+    0x80289158: __AXDSPInitCallback
+    0x80289164: __AXDSPResumeCallback
+    0x802891b8: __AXDSPDoneCallback
+    0x802891c8: __AXDSPRequestCallback
+    0x802891cc: __AXOutInitDSP
+    0x802892bc: __AXOutInit
+    0x802894b4: __AXOutQuit
+    0x80289514: AXRegisterCallback
+    0x80289558: AXRmtGetSamplesLeft
+    0x80289584: AXRmtGetSamples
+    0x80289648: AXRmtAdvancePtr
+    0x802896a0: __AXGetStudio
+    0x802896ac: __AXDepopFadeMain
+    0x80289718: __AXDepopFadeRmt
+    0x80289784: __AXPrintStudio
+    0x802898fc: __AXSPBInit
+    0x80289954: __AXSPBQuit
+    0x80289958: __AXDepopVoice
+    0x80289ac4: __AXGetNumVoices
+    0x80289acc: __AXServiceVPB
+    0x8028a01c: __AXSyncPBs
+    0x8028a32c: __AXGetPBs
+    0x8028a334: __AXSetPBDefault
+    0x8028a374: __AXVPBInit
+    0x8028a3a4: __AXVPBInitCommon
+    0x8028a62c: __AXVPBQuit
+    0x8028a644: AXSetVoiceState
+    0x8028a6b4: AXSetVoiceAddr
+    0x8028a7ac: AXGetLpfCoefs
+    0x8028a868: AXSetMaxDspCycles
+    0x8028a870: AXGetMaxVoices
+    0x8028a878: __AXGetCurrentProfile
+
+    # axfx.a
+    0x8028a8b8: AXFXReverbHiGetMemSize
+    0x8028a8c4: AXFXReverbHiInit
+    0x8028a928: AXFXReverbHiShutdown
+    0x8028a94c: AXFXReverbHiSettings
+    0x8028a9b0: AXFXReverbHiCallback
+    0x8028a9b4: AXFXReverbHiExpGetMemSize
+    0x8028aa3c: AXFXReverbHiExpInit
+    0x8028abd8: AXFXReverbHiExpSettings
+    0x8028aca8: AXFXReverbHiExpShutdown
+    0x8028acfc: AXFXReverbHiExpCallback
+    0x8028b214: __AllocDelayLine
+    0x8028b388: __BzeroDelayLines
+    0x8028b4ac: __FreeDelayLine
+    0x8028b5c0: __InitParams
+    0x8028b8e4: __AXFXAllocFunction
+    0x8028b8f0: __AXFXFreeFunction
+    0x8028b8fc: AXFXSetHooks
+    0x8028b908: AXFXGetHooks
+
+    # dsp.a
+    0x8028b91c: DSPCheckMailToDSP
+    0x8028b92c: DSPCheckMailFromDSP
+    0x8028b93c: DSPReadMailFromDSP
+    0x8028b950: DSPSendMailToDSP
+    0x8028b964: DSPInit
+    0x8028ba24: DSPCheckInit
+    0x8028ba2c: DSPAddTask
+    0x8028ba9c: DSPCancelTask
+    0x8028badc: DSPAssertTask
+    0x8028bb98: __DSP_debug_printf
+    0x8028bbe8: __DSPHandler
+    0x8028c01c: __DSP_exec_task
+    0x8028c1c0: __DSP_boot_task
+    0x8028c34c: __DSP_insert_task
+    0x8028c3e8: __DSP_remove_task
 
     # GX.a
     0x8028c47c: __GXDefaultTexRegionCallback
@@ -1789,6 +4398,73 @@ global:
     0x80296190: MEMRemoveListObject
     0x802961fc: MEMGetNextListObject
 
+    # euart.a
+    0x8029621c: EUARTInit
+    0x80296318: InitializeUART
+    0x80296360: WriteUARTN
+
+    # fs.a
+    0x8029658c: ISFS_OpenLib
+    0x802966b4: _isfsFuncCb
+    0x8029681c: ISFS_CreateDir
+    0x80296910: ISFS_CreateDirAsync
+    0x80296a04: ISFS_ReadDir
+    0x80296b58: ISFS_ReadDirAsync
+    0x80296ca0: ISFS_GetAttr
+    0x80296df8: ISFS_GetAttrAsync
+    0x80296f2c: ISFS_Delete
+    0x80297004: ISFS_DeleteAsync
+    0x802970d4: ISFS_RenameAsync
+    0x802971d8: ISFS_GetUsageAsync
+    0x802972fc: ISFS_CreateFile
+    0x802973f0: ISFS_CreateFileAsync
+    0x802974e4: ISFS_Open
+    0x802975ac: ISFS_OpenAsync
+    0x80297664: ISFS_SeekAsync
+    0x802976f0: ISFS_Read
+    0x80297710: ISFS_ReadAsync
+    0x802977b4: ISFS_Write
+    0x802977d4: ISFS_WriteAsync
+    0x80297878: ISFS_Close
+    0x8029787c: ISFS_CloseAsync
+    0x80297900: ISFS_ShutdownAsync
+
+    # ipc.a
+    0x80297990: IPCInit
+    0x802979dc: IPCReadReg
+    0x802979ec: IPCWriteReg
+    0x802979fc: IPCGetBufferHi
+    0x80297a04: IPCGetBufferLo
+    0x80297a0c: IPCSetBufferLo
+    0x80297a14: strnlen
+    0x80297a40: IpcReplyHandler
+    0x80297c98: IPCInterruptHandler
+    0x80297e50: IPCCltInit
+    0x80297f04: __ios_Ipc2
+    0x80298150: IOS_OpenAsync
+    0x80298268: IOS_Open
+    0x80298388: IOS_CloseAsync
+    0x80298448: IOS_Close
+    0x802984f0: IOS_ReadAsync
+    0x802985f0: IOS_Read
+    0x802986f8: IOS_WriteAsync
+    0x802987f8: IOS_Write
+    0x80298900: IOS_SeekAsync
+    0x802989e0: IOS_IoctlAsync
+    0x80298b18: IOS_Ioctl
+    0x80298c48: __ios_Ioctlv
+    0x80298d84: IOS_IoctlvAsync
+    0x80298e68: IOS_Ioctlv
+    0x80298f44: IOS_IoctlvReboot
+    0x8029902c: iosCreateHeap
+    0x8029915c: __iosAlloc
+    0x80299360: iosAllocAligned
+    0x80299364: iosFree
+    0x80299550: IPCiProfInit
+    0x80299608: IPCiProfQueueReq
+    0x80299688: IPCiProfAck
+    0x80299698: IPCiProfReply
+
     # NAND.a
     0x80299714: nandCreate
     0x8029983c: NANDCreateAsync
@@ -1852,7 +4528,7 @@ global:
     0x8029c5b0: NANDCheckAsync
     0x8029c65c: nandUserAreaCallback
 
-    # SC.a
+    # sc.a
     0x8029c890: SCInit
     0x8029c930: SCCheckStatus
     0x8029ca4c: SCReloadConfFileAsync
@@ -1893,6 +4569,756 @@ global:
     0x8029e604: SCSetWpadSpeakerVolume
     0x8029e60c: __SCF1
     0x8029e778: SCGetProductArea
+
+    # bte.a
+    0x8029e7fc: gki_init_free_queue
+    0x8029ea1c: gki_buffer_init
+    0x8029ecc8: GKI_init_q
+    0x8029ecdc: GKI_getbuf
+    0x8029ee7c: GKI_getpoolbuf
+    0x8029ef64: GKI_freebuf
+    0x8029f0d4: GKI_get_buf_size
+    0x8029f118: GKI_send_msg
+    0x8029f2d4: GKI_read_mbox
+    0x8029f384: GKI_enqueue
+    0x8029f4c0: GKI_enqueue_head
+    0x8029f600: GKI_dequeue
+    0x8029f6a0: GKI_remove_from_queue
+    0x8029f764: GKI_getfirst
+    0x8029f76c: GKI_getnext
+    0x8029f788: GKI_queue_is_empty
+    0x8029f798: GKI_create_pool
+    0x8029fae0: GKI_delete_pool
+    0x8029fc40: gki_timers_init
+    0x8029fcfc: GKI_get_tick_count
+    0x8029fd10: GKI_start_timer
+    0x8029fe60: GKI_stop_timer
+    0x8029fee8: GKI_init_timer_list
+    0x8029fefc: GKI_update_timer_list
+    0x8029ff88: GKI_add_to_timer_list
+    0x802a0074: GKI_remove_from_timer_list
+    0x802a0198: GKI_init
+    0x802a0228: GKI_shutdown
+    0x802a02d0: GKI_run
+    0x802a02d4: GKI_sched_lock
+    0x802a02d8: GKI_sched_unlock
+    0x802a02dc: GKI_delay
+    0x802a02e0: GKI_send_event
+    0x802a0384: GKI_get_taskid
+    0x802a038c: GKI_enable
+    0x802a03b0: GKI_disable
+    0x802a03f4: GKI_exception
+    0x802a03f8: GKI_os_malloc
+    0x802a0424: GKI_os_free
+    0x802a0428: hcisu_h2_usb_cback
+    0x802a044c: hcisu_h2_receive_msg
+    0x802a07e4: hcisu_h2_send_msg_now
+    0x802a0990: hcisu_h2_init
+    0x802a09bc: hcisu_h2_open
+    0x802a0a24: hcisu_h2_close
+    0x802a0a58: hcisu_h2_send
+    0x802a0a88: hcisu_h2_handle_event
+    0x802a0ac4: uusb_CloseDeviceCB
+    0x802a0b58: uusb_ReadIntrDataCB
+    0x802a0d74: uusb_ReadBulkDataCB
+    0x802a0f7c: uusb_issue_bulk_read
+    0x802a1090: uusb_issue_intr_read
+    0x802a11b4: uusb_WriteCtrlDataCB
+    0x802a1328: uusb_WriteBulkDataCB
+    0x802a1490: uusb_get_devId
+    0x802a159c: UUSB_Register
+    0x802a1808: UUSB_Open
+    0x802a1920: UUSB_Read
+    0x802a1928: UUSB_Write
+    0x802a1eb0: UUSB_Close
+    0x802a1f5c: UUSB_Unregister
+    0x802a1fa0: bte_hcisu_send
+    0x802a1fc0: bte_hcisu_task
+    0x802a2024: bte_hcisu_close
+    0x802a2048: bta_ci_hci_msg_handler
+    0x802a2058: BTE_InitStack
+    0x802a2084: LogMsg
+    0x802a2140: LogMsg_0
+    0x802a2158: LogMsg_1
+    0x802a2170: LogMsg_2
+    0x802a2188: LogMsg_3
+    0x802a21a0: LogMsg_4
+    0x802a21b8: LogMsg_5
+    0x802a21d0: LogMsg_6
+    0x802a21e8: BTUInterruptHandler
+    0x802a2200: BTA_Init
+    0x802a22dc: BTA_CleanUp
+    # 0x802a2310 TODO
+    0x802a2340: btu_task_init
+    0x802a2380: btu_task_msg_handler
+    0x802a270c: btu_start_timer
+    0x802a277c: btu_stop_timer
+    0x802a2790: bdcpy
+    0x802a27c4: bdcmp
+    0x802a2864: bta_sys_rm_register
+    0x802a2874: bta_sys_compress_register
+    0x802a2884: bta_sys_pm_register
+    0x802a2894: bta_sys_conn_open
+    0x802a2958: bta_sys_conn_close
+    0x802a2a1c: bta_sys_sco_close
+    0x802a2a50: bta_sys_idle
+    0x802a2a84: bta_sys_busy
+    0x802a2ab8: bta_sys_init
+    0x802a2b1c: bta_sys_event
+    0x802a2c08: bta_sys_timer_update
+    0x802a2c28: bta_sys_register
+    0x802a2c3c: bta_sys_sendmsg
+    0x802a2c58: bta_sys_start_timer
+    0x802a2c78: bta_sys_stop_timer
+    0x802a2c8c: bta_sys_disable
+    0x802a2cf4: bta_sys_set_trace_level
+    0x802a2cfc: ptim_init
+    0x802a2d48: ptim_timer_update
+    0x802a2dfc: ptim_start_timer
+    0x802a2e9c: ptim_stop_timer
+    0x802a2edc: utl_freebuf
+    0x802a2f20: bta_dm_enable
+    0x802a3030: bta_dm_disable
+    0x802a30e0: bta_dm_disable_timer_cback
+    0x802a319c: bta_dm_set_dev_name
+    0x802a31a4: bta_dm_set_visibility
+    0x802a31ec: bta_dm_bond
+    0x802a325c: bta_dm_pin_reply
+    0x802a32f8: bta_dm_auth_reply
+    0x802a33cc: bta_dm_search_start
+    0x802a342c: bta_dm_search_cancel
+    0x802a34b0: bta_dm_discover
+    0x802a35c4: bta_dm_inq_cmpl
+    0x802a37e8: bta_dm_rmt_name
+    0x802a3954: bta_dm_disc_rmt_name
+    0x802a39b8: bta_dm_sdp_result
+    0x802a3c20: bta_dm_search_cmpl
+    0x802a3c38: bta_dm_disc_result
+    0x802a3c88: bta_dm_search_result
+    0x802a3d10: bta_dm_search_timer_cback
+    0x802a3d5c: bta_dm_free_sdp_db
+    0x802a3da0: bta_dm_queue_search
+    0x802a3de8: bta_dm_queue_disc
+    0x802a3e30: bta_dm_search_clear_queue
+    0x802a3e74: bta_dm_search_cancel_cmpl
+    0x802a3eb8: bta_dm_search_cancel_transac_cmpl
+    0x802a3f2c: bta_dm_find_services
+    0x802a40cc: bta_dm_discover_next_device
+    0x802a41ac: bta_dm_sdp_callback
+    0x802a41f4: bta_dm_inq_results_cb
+    0x802a4284: bta_dm_inq_cmpl_cb
+    0x802a42d0: bta_dm_service_search_remname_cback
+    0x802a4310: bta_dm_remname_cback
+    0x802a439c: bta_dm_disc_remname_cback
+    0x802a4424: bta_dm_cancel_rmt_name
+    0x802a4428: bta_dm_authorize_cback
+    0x802a44f0: bta_dm_pinname_cback
+    0x802a45b0: bta_dm_pin_cback
+    0x802a46e0: bta_dm_link_key_request_cback
+    0x802a46e8: bta_dm_new_link_key_cback
+    0x802a4784: bta_dm_authentication_complete_cback
+    0x802a4808: bta_dm_local_addr_cback
+    0x802a4830: bta_dm_signal_strength
+    0x802a486c: bta_dm_signal_strength_timer_cback
+    0x802a4960: bta_dm_acl_change_cback
+    0x802a49d0: bta_dm_acl_change
+    0x802a4c50: bta_dm_disable_conn_down_timer_cback
+    0x802a4c6c: bta_dm_rssi_cback
+    0x802a4cd8: bta_dm_link_quality_cback
+    0x802a4d44: bta_dm_l2cap_server_compress_cback
+    0x802a4e28: bta_dm_compress_cback
+    0x802a5060: bta_dm_rm_cback
+    0x802a5168: bta_dm_keep_acl
+    0x802a51ec: bta_dm_immediate_disable
+    0x802a5208: bta_dm_reset_complete
+    0x802a520c: bta_dm_send_hci_reset
+    0x802a525c: BTA_EnableBluetooth
+    0x802a52e4: BTA_DisableBluetooth
+    0x802a531c: BTA_DmIsDeviceUp
+    0x802a5354: BTA_DmSetDeviceName
+    0x802a53b8: BTA_DmSetVisibility
+    0x802a5410: BTA_DmSearch
+    0x802a5494: BTA_DmSearchCancel
+    0x802a54cc: BTA_DmPinReply
+    0x802a5558: BTA_DmAddDevice
+    0x802a5648: BTA_DmRemoveDevice
+    0x802a5690: BTA_DmSendHciReset
+    0x802a56c8: bta_dm_sm_execute
+    0x802a5760: bta_dm_search_sm_execute
+    0x802a5828: bta_dm_init_pm
+    0x802a5890: bta_dm_disable_pm
+    0x802a58a8: bta_dm_pm_cback
+    0x802a5c28: bta_dm_pm_set_mode
+    0x802a5fa8: bta_dm_pm_btm_cback
+    0x802a6020: bta_dm_pm_timer_cback
+    0x802a6118: bta_dm_pm_btm_status
+    0x802a6238: bta_dm_pm_timer
+    0x802a6244: bta_hh_api_enable
+    0x802a63b8: bta_hh_api_disable
+    0x802a64bc: bta_hh_disc_cmpl
+    0x802a6560: bta_hh_sdp_cback
+    0x802a6694: bta_hh_start_sdp
+    0x802a6828: bta_hh_sdp_cmpl
+    0x802a6990: bta_hh_api_disc_act
+    0x802a69f8: bta_hh_open_cmpl_act
+    0x802a6b20: bta_hh_open_act
+    0x802a6bd8: bta_hh_data_act
+    0x802a6c30: bta_hh_handsk_act
+    0x802a6e98: bta_hh_ctrl_dat_act
+    0x802a7090: bta_hh_close_act
+    0x802a7290: bta_hh_get_dscp_act
+    0x802a72ac: bta_hh_maint_dev_act
+    0x802a7410: bta_hh_get_acl_q_info
+    0x802a752c: bta_hh_write_dev_act
+    0x802a76f4: bta_hh_cback
+    0x802a798c: BTA_HhEnable
+    0x802a7a14: BTA_HhDisable
+    0x802a7a4c: BTA_HhClose
+    0x802a7ab0: BTA_HhOpen
+    0x802a7b64: BTA_HhSendData
+    0x802a7bf4: BTA_HhAddDev
+    0x802a7c9c: BTA_HhRemoveDev
+    0x802a7d08: BTA_HhGetAclQueueInfo
+    0x802a7d5c: bta_hh_sm_execute
+    0x802a80b0: bta_hh_hdl_event
+    0x802a81fc: bta_hh_evt_code
+    0x802a82b0: bta_hh_find_cb
+    0x802a83ec: bta_hh_clean_up_kdev
+    0x802a846c: bta_hh_add_device_to_list
+    0x802a8528: bta_hh_tod_spt
+    0x802a857c: bta_hh_trace_dev_db
+    0x802a865c: btm_acl_init
+    0x802a8678: btm_handle_to_acl_index
+    0x802a86fc: btm_acl_created
+    0x802a8a10: btm_acl_removed
+    0x802a8ad4: btm_acl_device_down
+    0x802a8b38: BTM_SwitchRole
+    0x802a8d54: btm_acl_encrypt_change
+    0x802a8ec4: BTM_SetLinkPolicy
+    0x802a90b4: BTM_SetDefaultLinkPolicy
+    0x802a90c4: btm_read_link_policy_complete
+    0x802a91c8: btm_read_remote_version_complete
+    0x802a9254: btm_read_remote_features_complete
+    0x802a9480: BTM_SetDefaultLinkSuperTout
+    0x802a9490: BTM_IsAclConnectionUp
+    0x802a9568: BTM_GetNumAclLinks
+    0x802a95c4: btm_get_acl_disc_reason_code
+    0x802a95d4: BTM_GetHCIConnHandle
+    0x802a9670: btm_process_clk_off_comp_evt
+    0x802a970c: btm_acl_role_changed
+    0x802a9900: btm_acl_timeout
+    0x802a995c: btm_get_max_packet_size
+    0x802a9afc: BTM_AclRegisterForChanges
+    0x802a9b40: btm_qos_setup_complete
+    0x802a9c18: BTM_ReadRSSI
+    0x802a9d54: BTM_ReadLinkQuality
+    0x802a9e90: btm_read_rssi_complete
+    0x802a9fac: btm_read_link_quality_complete
+    0x802aa0c4: btm_remove_acl
+    0x802aa180: btm_chg_all_acl_pkt_types
+    0x802aa3a0: BTM_SecAddDevice
+    0x802aa528: BTM_SecDeleteDevice
+    0x802aa5d4: BTM_SecReadDevName
+    0x802aa674: btm_sec_alloc_dev
+    0x802aa794: btm_find_dev_by_handle
+    0x802aa84c: btm_find_dev
+    0x802aa8d4: btm_find_oldest_dev
+    0x802aaa6c: btm_dev_init
+    0x802aab0c: btm_db_reset
+    0x802aabbc: BTM_DeviceReset
+    0x802aac58: BTM_SendHciReset
+    0x802aad00: BTM_IsDeviceUp
+    0x802aad1c: BTM_SetAfhChannels
+    0x802aae0c: btm_dev_timeout
+    0x802ab0a4: btm_reset_complete
+    0x802ab268: btm_read_hci_buf_size_complete
+    0x802ab330: btm_read_local_version_complete
+    0x802ab3ec: btm_read_local_features_complete
+    0x802ab8e8: BTM_SetLocalDeviceName
+    0x802ab9a0: btm_read_local_name_complete
+    0x802aba2c: BTM_ReadLocalDeviceAddr
+    0x802aba6c: btm_read_local_addr_complete
+    0x802abab4: BTM_ReadLocalVersion
+    0x802abb00: BTM_SetDeviceClass
+    0x802abb80: BTM_ReadDeviceClass
+    0x802abb90: BTM_ReadLocalFeatures
+    0x802abba0: BTM_RegisterForDeviceStatusNotif
+    0x802abbb8: BTM_VendorSpecificCommand
+    0x802abcb4: btm_vsc_complete
+    0x802abd20: BTM_RegisterForVSEvents
+    0x802abd58: btm_vendor_specific_evt
+    0x802abdf0: BTM_WritePageTimeout
+    0x802abe90: BTM_ReadStoredLinkKey
+    0x802abf68: BTM_WriteStoredLinkKey
+    0x802ac038: BTM_DeleteStoredLinkKey
+    0x802ac108: btm_read_stored_link_key_complete
+    0x802ac184: btm_write_stored_link_key_complete
+    0x802ac1e0: btm_delete_stored_link_key_complete
+    0x802ac248: btm_return_link_keys_evt
+    0x802ac3d4: btm_report_device_status
+    0x802ac3f4: btm_discovery_db_init
+    0x802ac46c: btm_discovery_db_reset
+    0x802ac524: btm_discovery_timeout
+    0x802ac528: BTM_SetDiscoverability
+    0x802ac7ac: BTM_SetInquiryScanType
+    0x802ac85c: BTM_SetPageScanType
+    0x802ac90c: BTM_SetInquiryMode
+    0x802ac9a4: BTM_SetConnectability
+    0x802acb2c: BTM_IsInquiryActive
+    0x802acb3c: BTM_CancelInquiry
+    0x802acc44: BTM_StartInquiry
+    0x802acdf8: BTM_ReadRemoteDeviceName
+    0x802acee0: BTM_CancelRemoteDeviceName
+    0x802acf58: BTM_InqDbRead
+    0x802ad018: BTM_InqDbFirst
+    0x802ad0d0: BTM_InqDbNext
+    0x802ad20c: BTM_ClearInqDb
+    0x802ad2dc: btm_inq_db_reset
+    0x802ad474: btm_inq_db_init
+    0x802ad478: btm_inq_find_bdaddr
+    0x802ad554: btm_inq_db_new
+    0x802ad658: btm_set_inq_event_filter
+    0x802ad73c: btm_event_filter_complete
+    0x802ad95c: btm_process_inq_results
+    0x802adbd4: btm_process_inq_complete
+    0x802adcd8: btm_initiate_rem_name
+    0x802ade28: btm_process_remote_name
+    0x802adf80: btm_inq_rmt_name_failed
+    0x802adfc0: btm_init
+    0x802ae01c: BTM_PmRegister
+    0x802ae0d8: BTM_SetPowerMode
+    0x802ae2a8: BTM_ReadPowerMode
+    0x802ae360: btm_pm_reset
+    0x802ae3d8: btm_pm_sm_alloc
+    0x802ae428: btm_pm_compare_modes
+    0x802ae644: btm_pm_get_set_mode
+    0x802ae7a4: btm_pm_snd_md_req
+    0x802ae9d8: btm_pm_proc_cmd_status
+    0x802aea88: btm_pm_proc_mode_change
+    0x802aecb0: btm_sco_init
+    0x802aecf4: btm_esco_conn_rsp
+    0x802aeed0: btm_sco_chk_pend_unpark
+    0x802af05c: btm_sco_conn_req
+    0x802af23c: btm_sco_connected
+    0x802af3dc: BTM_RemoveSco
+    0x802af494: btm_remove_sco_links
+    0x802af518: btm_sco_removed
+    0x802af62c: btm_sco_acl_removed
+    0x802af6e0: btm_route_sco_data
+    0x802af6e4: BTM_ChangeEScoLinkParms
+    0x802af88c: btm_esco_proc_conn_chg
+    0x802af990: btm_is_sco_active
+    0x802afa00: btm_num_sco_links_active
+    0x802afa60: btm_is_sco_active_by_bdaddr
+    0x802afae8: BTM_SecRegister
+    0x802afb60: BTM_SecAddRmtNameNotifyCallback
+    0x802afbb0: BTM_SecDeleteRmtNameNotifyCallback
+    0x802afc04: BTM_SetPinType
+    0x802afcb4: BTM_SetSecurityLevel
+    0x802afedc: BTM_PINCodeReply
+    0x802affa0: BTM_DeviceAuthorized
+    0x802b017c: BTM_SecBond
+    0x802b0548: btm_sec_l2cap_access_req
+    0x802b09ac: btm_sec_mx_access_request
+    0x802b0c48: btm_sec_conn_req
+    0x802b0d74: btm_sec_init
+    0x802b0d90: btm_sec_dev_reset
+    0x802b0dd0: btm_sec_abort_access_req
+    0x802b0e84: btm_sec_rmt_name_request_complete
+    0x802b116c: btm_sec_auth_complete
+    0x802b14b0: btm_sec_mkey_comp_event
+    0x802b15ac: btm_sec_encrypt_change
+    0x802b16e8: btm_sec_is_bonding
+    0x802b1728: btm_sec_connected
+    0x802b1ba8: btm_sec_disconnect
+    0x802b1c64: btm_sec_disconnected
+    0x802b1da0: btm_sec_link_key_notification
+    0x802b1f4c: btm_sec_link_key_request
+    0x802b207c: btm_sec_pin_code_request_timeout
+    0x802b20f0: btm_sec_pin_code_request
+    0x802b244c: btm_sec_update_clock_offset
+    0x802b249c: btm_sec_execute_procedure
+    0x802b287c: btm_sec_start_authorization
+    0x802b2998: btm_sec_collision_timeout
+    0x802b2a78: btm_read_trusted_mask
+    0x802b2aac: btu_hcif_process_event
+    0x802b3064: btu_hcif_send_cmd
+    0x802b31f0: btu_hcif_connection_comp_evt
+    0x802b32cc: btu_hcif_connection_request_evt
+    0x802b3358: btu_hcif_qos_setup_comp_evt
+    0x802b3458: btu_hcif_esco_connection_comp_evt
+    0x802b3538: btu_hcif_hdl_command_complete
+    0x802b3690: btu_hcif_command_complete_evt
+    0x802b37a8: btu_hcif_hdl_command_status
+    0x802b39a8: btu_hcif_command_status_evt
+    0x802b3ad0: btu_hcif_cmd_timeout
+    0x802b3c28: btu_hcif_link_key_notification_evt
+    0x802b3d08: btu_init_core
+    0x802b3d34: BTE_Init
+    0x802b3d80: WBT_ExtCreateRecord
+    0x802b3e60: GAP_Init
+    0x802b3ec0: gap_conn_init
+    0x802b3f30: gap_connect_ind
+    0x802b40bc: gap_connect_cfm
+    0x802b4298: gap_config_ind
+    0x802b43d4: gap_config_cfm
+    0x802b45c0: gap_disconnect_ind
+    0x802b47b8: gap_data_ind
+    0x802b48c8: gap_congestion_ind
+    0x802b49fc: btm_cback
+    0x802b4bd4: gap_btm_cback0
+    0x802b4be0: gap_btm_cback1
+    0x802b4bec: gap_find_addr_name_cb
+    0x802b4e04: gap_find_addr_inq_cb
+    0x802b4fb8: gap_convert_btm_status
+    0x802b5018: btsnd_hcic_inquiry
+    0x802b50c0: btsnd_hcic_inq_cancel
+    0x802b5120: btsnd_hcic_per_inq_mode
+    0x802b51e0: btsnd_hcic_create_conn
+    0x802b52c0: btsnd_hcic_disconnect
+    0x802b5348: btsnd_hcic_add_SCO_conn
+    0x802b53d4: btsnd_hcic_accept_conn
+    0x802b5434: btsnd_hcic_reject_conn
+    0x802b5490: btsnd_hcic_link_key_req_reply
+    0x802b5630: btsnd_hcic_link_key_neg_reply
+    0x802b56d0: btsnd_hcic_pin_code_req_reply
+    0x802b58b4: btsnd_hcic_pin_code_neg_reply
+    0x802b5954: btsnd_hcic_change_conn_type
+    0x802b59e4: btsnd_hcic_auth_request
+    0x802b5a60: btsnd_hcic_set_conn_encrypt
+    0x802b5aec: btsnd_hcic_rmt_name_req
+    0x802b5bc4: btsnd_hcic_rmt_name_req_cancel
+    0x802b5c64: btsnd_hcic_rmt_features_req
+    0x802b5ce0: btsnd_hcic_rmt_ver_req
+    0x802b5d5c: btsnd_hcic_read_rmt_clk_offset
+    0x802b5dd8: btsnd_hcic_setup_esco_conn
+    0x802b5ed4: btsnd_hcic_accept_esco_conn
+    0x802b5fbc: btsnd_hcic_reject_esco_conn
+    0x802b601c: btsnd_hcic_hold_mode
+    0x802b60d0: btsnd_hcic_sniff_mode
+    0x802b619c: btsnd_hcic_exit_sniff_mode
+    0x802b6220: btsnd_hcic_park_mode
+    0x802b62d4: btsnd_hcic_exit_park_mode
+    0x802b6358: btsnd_hcic_switch_role
+    0x802b6408: btsnd_hcic_write_policy_set
+    0x802b649c: btsnd_hcic_reset
+    0x802b64f8: btsnd_hcic_set_event_filter
+    0x802b66b4: btsnd_hcic_write_pin_type
+    0x802b6728: btsnd_hcic_read_stored_key
+    0x802b6788: btsnd_hcic_write_stored_key
+    0x802b6948: btsnd_hcic_delete_stored_key
+    0x802b69f8: btsnd_hcic_change_name
+    0x802b6b38: btsnd_hcic_write_page_tout
+    0x802b6b70: btsnd_hcic_write_scan_enable
+    0x802b6ba0: btsnd_hcic_write_pagescan_cfg
+    0x802b6be4: btsnd_hcic_write_inqscan_cfg
+    0x802b6c28: btsnd_hcic_write_auth_enable
+    0x802b6c9c: btsnd_hcic_write_encr_mode
+    0x802b6d10: btsnd_hcic_write_dev_class
+    0x802b6d54: btsnd_hcic_write_auto_flush_tout
+    0x802b6d98: btsnd_hcic_set_host_buf_size
+    0x802b6e54: btsnd_hcic_write_link_super_tout
+    0x802b6ee8: btsnd_hcic_write_cur_iac_lap
+    0x802b6f58: btsnd_hcic_read_local_ver
+    0x802b6fb8: btsnd_hcic_read_local_features
+    0x802b7014: btsnd_hcic_read_buffer_size
+    0x802b703c: btsnd_hcic_read_bd_addr
+    0x802b709c: btsnd_hcic_get_link_quality
+    0x802b7118: btsnd_hcic_read_rssi
+    0x802b7190: btsnd_hcic_set_afh_channels
+    0x802b75b0: btsnd_hcic_write_inqscan_type
+    0x802b75e0: btsnd_hcic_write_inquiry_mode
+    0x802b7610: btsnd_hcic_write_pagescan_type
+    0x802b7640: btsnd_hcic_vendor_spec_cmd
+    0x802b7734: HID_DevInit
+    0x802b779c: hidd_conn_initiate
+    0x802b785c: hidd_proc_repage_timeout
+    0x802b7924: hidd_pm_set_now
+    0x802b7afc: hidd_pm_proc_mode_change
+    0x802b7c54: hidd_pm_inact_timeout
+    0x802b7ca0: HID_HostGetSDPRecord
+    0x802b7d68: hidh_search_callback
+    0x802b81b8: HID_HostInit
+    0x802b81fc: HID_HostRegister
+    0x802b8278: HID_HostDeregister
+    0x802b835c: HID_HostAddDev
+    0x802b84ec: HID_HostRemoveDev
+    0x802b85b4: HID_HostOpenDev
+    0x802b8618: HID_HostWriteDev
+    0x802b8758: HID_HostCloseDev
+    0x802b87f8: HID_HostSetSecurityLevel
+    0x802b8a20: hidh_conn_reg
+    0x802b8b78: hidh_conn_disconnect
+    0x802b8c1c: hidh_sec_check_complete_term
+    0x802b8d4c: hidh_l2cif_connect_ind
+    0x802b8fa4: hidh_proc_repage_timeout
+    0x802b90f0: hidh_sec_check_complete_orig
+    0x802b9304: hidh_l2cif_connect_cfm
+    0x802b964c: hidh_l2cif_config_ind
+    0x802b98f4: hidh_l2cif_config_cfm
+    0x802b9c00: hidh_l2cif_disconnect_ind
+    0x802b9ec4: hidh_l2cif_disconnect_cfm
+    0x802ba10c: hidh_l2cif_cong_ind
+    0x802ba304: hidh_l2cif_data_ind
+    0x802ba69c: hidh_conn_snd_data
+    0x802ba938: hidh_conn_initiate
+    0x802baa34: hidh_conn_dereg
+    0x802baa60: L2CA_Register
+    0x802babfc: L2CA_Deregister
+    0x802bac8c: L2CA_ConnectReq
+    0x802baec0: L2CA_ConnectRsp
+    0x802bb050: L2CA_ConfigReq
+    0x802bb108: L2CA_ConfigRsp
+    0x802bb1d8: L2CA_DisconnectReq
+    0x802bb27c: L2CA_DisconnectRsp
+    0x802bb320: L2CA_DataWrite
+    0x802bb444: L2CA_SetIdleTimeout
+    0x802bb50c: L2CA_SetIdleTimeoutByBdAddr
+    0x802bb60c: L2CA_SetTraceLevel
+    0x802bb628: L2CA_RegisterCompression
+    0x802bb62c: l2c_csm_execute
+    0x802bb678: l2c_csm_closed
+    0x802bb90c: l2c_csm_orig_w4_sec_comp
+    0x802bba7c: l2c_csm_term_w4_sec_comp
+    0x802bbbe4: l2c_csm_w4_l2cap_connect_rsp
+    0x802bbe28: l2c_csm_w4_l2ca_connect_rsp
+    0x802bc000: l2c_csm_config
+    0x802bc3c8: l2c_csm_open
+    0x802bc624: l2c_csm_w4_l2cap_disconnect_rsp
+    0x802bc808: l2c_csm_w4_l2ca_disconnect_rsp
+    0x802bc964: forward_peer_data
+    0x802bcb08: l2c_link_hci_conn_req
+    0x802bcc5c: l2c_link_hci_conn_comp
+    0x802bce94: l2c_link_sec_comp
+    0x802bcf48: l2c_link_hci_disc_comp
+    0x802bd004: l2c_link_hci_qos_violation
+    0x802bd074: l2c_link_timeout
+    0x802bd1e8: l2c_link_send_to_lower
+    0x802bd2f0: l2c_link_check_send_pkts
+    0x802bd5bc: l2c_link_adjust_allocation
+    0x802bd754: l2c_link_process_num_completed_pkts
+    0x802bd838: l2c_link_processs_num_bufs
+    0x802bd84c: l2cap_link_chk_pkt_start
+    0x802bda1c: l2cap_link_chk_pkt_end
+    0x802bda88: l2c_link_role_changed
+    0x802bdb08: l2c_link_role_change_failed
+    0x802bdb74: l2c_link_segments_xmitted
+    0x802bdc50: l2c_pin_code_request
+    0x802bdc94: l2c_init
+    0x802bdda8: l2c_rcv_acl_data
+    0x802be0d8: process_l2cap_cmd
+    0x802beb48: l2c_process_timeout
+    0x802beb98: l2c_process_held_packets
+    0x802becc4: l2cu_allocate_lcb
+    0x802bed98: l2cu_release_lcb
+    0x802bee98: l2cu_find_lcb_by_bd_addr
+    0x802bef20: l2cu_find_lcb_by_handle
+    0x802befb0: l2cu_get_conn_role
+    0x802befc0: l2cu_build_header
+    0x802bf084: l2cu_send_peer_cmd_reject
+    0x802bf180: l2cu_send_peer_connect_req
+    0x802bf244: l2cu_send_peer_connect_rsp
+    0x802bf31c: l2cu_reject_connection
+    0x802bf3dc: l2cu_send_peer_config_req
+    0x802bf6d4: l2cu_send_peer_config_rsp
+    0x802bf9cc: l2cu_send_peer_config_rej
+    0x802bfb80: l2cu_send_peer_disc_req
+    0x802bfc54: l2cu_send_peer_disc_rsp
+    0x802bfd14: l2cu_send_peer_echo_req
+    0x802bfe84: l2cu_send_peer_echo_rsp
+    0x802c0020: l2cu_send_peer_info_rsp
+    0x802c00c4: l2cu_allocate_ccb
+    0x802c01d0: l2cu_release_ccb
+    0x802c0374: l2cu_find_ccb_by_cid
+    0x802c03d0: l2cu_allocate_rcb
+    0x802c041c: l2cu_release_rcb
+    0x802c042c: l2cu_find_rcb_by_psm
+    0x802c04e4: l2cu_process_peer_cfg_req
+    0x802c062c: l2cu_process_peer_cfg_rsp
+    0x802c066c: l2cu_process_our_cfg_req
+    0x802c077c: l2cu_process_our_cfg_rsp
+    0x802c07bc: l2cu_device_reset
+    0x802c0828: l2cu_create_conn
+    0x802c0940: l2cu_create_conn_after_switch
+    0x802c0a10: l2cu_find_lcb_by_state
+    0x802c0aa0: l2cu_lcb_disconnecting
+    0x802c0b88: RFCOMM_Init
+    0x802c0bd8: PORT_StartCnf
+    0x802c0d38: PORT_StartInd
+    0x802c0dd4: PORT_ParNegInd
+    0x802c0f84: PORT_ParNegCnf
+    0x802c1088: PORT_DlcEstablishInd
+    0x802c11c8: PORT_DlcEstablishCnf
+    0x802c130c: PORT_PortNegInd
+    0x802c145c: PORT_PortNegCnf
+    0x802c1574: PORT_ControlInd
+    0x802c16ec: PORT_ControlCnf
+    0x802c17b0: PORT_LineStatusInd
+    0x802c1878: PORT_DlcReleaseInd
+    0x802c18e0: PORT_CloseInd
+    0x802c1980: Port_TimeOutCloseMux
+    0x802c1a18: PORT_DataInd
+    0x802c1c18: PORT_FlowInd
+    0x802c1d48: port_rfc_send_tx_data
+    0x802c1e40: port_rfc_closed
+    0x802c1fd4: port_select_mtu
+    0x802c2150: port_release_port
+    0x802c222c: port_find_mcb_dlci_port
+    0x802c2280: port_find_dlci_port
+    0x802c2308: port_flow_control_user
+    0x802c2378: port_get_signal_changes
+    0x802c23e0: port_flow_control_peer
+    0x802c25ac: rfcomm_l2cap_if_init
+    0x802c2628: RFCOMM_ConnectInd
+    0x802c26b4: RFCOMM_ConnectCnf
+    0x802c27b8: RFCOMM_ConfigInd
+    0x802c28c0: RFCOMM_ConfigCnf
+    0x802c29c8: RFCOMM_QoSViolationInd
+    0x802c29cc: RFCOMM_DisconnectInd
+    0x802c2af0: RFCOMM_BufDataInd
+    0x802c2d90: RFCOMM_CongestionStatusInd
+    0x802c2ec4: rfc_save_lcid_mcb
+    0x802c2ee0: rfc_mx_sm_execute
+    0x802c2f24: rfc_mx_sm_state_idle
+    0x802c3138: rfc_mx_sm_state_wait_conn_cnf
+    0x802c32f4: rfc_mx_sm_state_configure
+    0x802c341c: rfc_mx_sm_sabme_wait_ua
+    0x802c3590: rfc_mx_sm_state_wait_sabme
+    0x802c36b0: rfc_mx_sm_state_connected
+    0x802c37c8: rfc_mx_sm_state_disc_wait_ua
+    0x802c3940: rfc_mx_conf_cnf
+    0x802c3a34: rfc_mx_conf_ind
+    0x802c3b24: rfc_port_sm_execute
+    0x802c3bb4: rfc_port_sm_state_closed
+    0x802c3d28: rfc_port_sm_sabme_wait_ua
+    0x802c3ec4: rfc_port_sm_term_wait_sec_check
+    0x802c4080: rfc_port_sm_orig_wait_sec_check
+    0x802c41d0: rfc_port_sm_opened
+    0x802c43bc: rfc_port_sm_disc_wait_ua
+    0x802c44d8: rfc_process_pn
+    0x802c45c0: rfc_process_rpn
+    0x802c48cc: rfc_process_msc
+    0x802c4a38: rfc_process_rls
+    0x802c4ac4: rfc_process_nsc
+    0x802c4ac8: rfc_process_test_rsp
+    0x802c4ad0: rfc_process_fcon
+    0x802c4b34: rfc_process_fcoff
+    0x802c4b98: rfc_process_l2cap_congestion
+    0x802c4c20: rfc_set_port_state
+    0x802c4cc4: RFCOMM_StartRsp
+    0x802c4cf0: RFCOMM_DlcEstablishReq
+    0x802c4d58: RFCOMM_DlcEstablishRsp
+    0x802c4dc8: RFCOMM_ParNegReq
+    0x802c4ea8: RFCOMM_ParNegRsp
+    0x802c4ed0: RFCOMM_PortNegReq
+    0x802c4f8c: RFCOMM_PortNegRsp
+    0x802c4fac: RFCOMM_ControlReq
+    0x802c5050: RFCOMM_FlowReq
+    0x802c50f4: RFCOMM_LineStatusReq
+    0x802c518c: RFCOMM_DlcReleaseReq
+    0x802c51b8: RFCOMM_DataReq
+    0x802c51f0: rfc_send_sabme
+    0x802c52a0: rfc_send_ua
+    0x802c5350: rfc_send_dm
+    0x802c5414: rfc_send_disc
+    0x802c54c4: rfc_send_buf_uih
+    0x802c565c: rfc_send_pn
+    0x802c5744: rfc_send_fcon
+    0x802c57c8: rfc_send_fcoff
+    0x802c584c: rfc_send_msc
+    0x802c596c: rfc_send_rls
+    0x802c5a1c: rfc_send_rpn
+    0x802c5b38: rfc_send_test
+    0x802c5be0: rfc_send_credit
+    0x802c5ca0: rfc_parse_data
+    0x802c6214: rfc_process_mx_message
+    0x802c6838: rfc_calc_fcs
+    0x802c6870: rfc_check_fcs
+    0x802c68bc: rfc_alloc_multiplexer_channel
+    0x802c6a14: rfc_release_multiplexer_channel
+    0x802c6a9c: rfc_timer_start
+    0x802c6b10: rfc_timer_stop
+    0x802c6b68: rfc_port_timer_start
+    0x802c6be8: rfc_port_timer_stop
+    0x802c6c40: rfc_check_mcb_active
+    0x802c6d04: rfcomm_process_timeout
+    0x802c6d40: rfc_sec_check_complete
+    0x802c6d94: rfc_port_closed
+    0x802c6eec: rfc_inc_credit
+    0x802c6f78: rfc_dec_credit
+    0x802c6fb4: rfc_check_send_cmd
+    0x802c7018: SDP_InitDiscoveryDb
+    0x802c7390: SDP_ServiceSearchRequest
+    0x802c73ec: SDP_ServiceSearchAttributeRequest
+    0x802c7450: SDP_FindAttributeInRec
+    0x802c7478: SDP_FindServiceInDb
+    0x802c7544: SDP_FindServiceUUIDInDb
+    0x802c764c: SDP_SetLocalDiRecord
+    0x802c79ac: SDP_GetLocalDiRecord
+    0x802c7e5c: SDP_SetTraceLevel
+    0x802c7e80: sdp_db_service_search
+    0x802c7fbc: find_uuid_in_seq
+    0x802c8094: sdp_db_find_record
+    0x802c80f0: sdp_db_find_attr_in_rec
+    0x802c8130: SDP_CreateRecord
+    0x802c8210: SDP_DeleteRecord
+    0x802c8324: SDP_AddAttribute
+    0x802c86bc: SDP_AddUuidSequence
+    0x802c8794: SDP_AddServiceClassIdList
+    0x802c8910: SDP_DeleteAttribute
+    0x802c8b4c: sdpu_build_uuid_seq
+    0x802c8c38: sdp_snd_service_search_req
+    0x802c8d68: sdp_disc_connected
+    0x802c8d9c: sdp_disc_server_rsp
+    0x802c8edc: process_service_search_rsp
+    0x802c9024: process_service_attr_rsp
+    0x802c92cc: process_service_search_attr_rsp
+    0x802c95a0: save_attr_seq
+    0x802c978c: add_record
+    0x802c982c: add_attr
+    0x802c9dc4: sdp_init
+    0x802c9f64: sdp_connect_ind
+    0x802ca028: sdp_connect_cfm
+    0x802ca1b8: sdp_config_ind
+    0x802ca2f4: sdp_config_cfm
+    0x802ca470: sdp_disconnect_ind
+    0x802ca568: sdp_data_ind
+    0x802ca63c: sdp_conn_originate
+    0x802ca750: sdp_disconnect
+    0x802ca7ec: sdp_disconnect_cfm
+    0x802ca8a8: sdp_conn_timeout
+    0x802ca930: sdp_server_handle_client_req
+    0x802caa84: process_service_search
+    0x802cae94: process_service_attr_req
+    0x802cb224: process_service_search_attr_req
+    0x802cb640: sdpu_find_ccb_by_cid
+    0x802cb6d0: sdpu_allocate_ccb
+    0x802cb744: sdpu_release_ccb
+    0x802cb77c: sdpu_build_attrib_seq
+    0x802cb94c: sdpu_build_attrib_entry
+    0x802cbaa0: sdpu_build_n_send_error
+    0x802cbbdc: sdpu_extract_uid_seq
+    0x802cbf2c: sdpu_extract_attr_seq
+    0x802cc17c: sdpu_get_len_from_type
+    0x802cc24c: sdpu_is_base_uuid
+    0x802cc32c: sdpu_compare_uuid_arrays
+    0x802cc5a0: sdpu_compare_uuid_with_attr
+    0x802cc630: sdpu_sort_attr_list
+
+    # usb.a
+    0x802cc680: USB_Log
+    0x802cc728: USB_ERR
+    0x802cc7d4: IUSB_OpenLib
+    0x802cc8cc: IUSB_CloseLib
+    0x802cc8d4: _intBlkCtrlCb
+    0x802cca30: IUSB_OpenDeviceIds
+    0x802ccb64: IUSB_CloseDeviceAsync
+    0x802ccc78: __IntrBlkMsgInt
+    0x802ccfa4: IUSB_ReadIntrMsgAsync
+    0x802cd018: IUSB_ReadBlkMsgAsync
+    0x802cd08c: IUSB_WriteBlkMsgAsync
+    0x802cd100: __CtrlMsgInt
+    0x802cd694: IUSB_WriteCtrlMsgAsync
 
     # WPAD.a
     0x802cd720: noAlloc
@@ -1985,6 +5411,78 @@ global:
     0x802da598: WPADiDecode
     0x802da858: DEBUGPrint
 
+    # wud.a
+    0x802da8a8: App_MEMAlloc
+    0x802da8f8: App_MEMfree
+    0x802da948: SyncFlushCallback
+    0x802da9c0: DeleteFlushCallback
+    0x802daa18: ShutFlushCallback
+    0x802daa70: _resumeSmpSync
+    0x802daa84: WUDiIsSyncDisabled
+    0x802dabdc: WUDiSaveDeviceToNand
+    0x802dace8: WUDiSyncDone
+    0x802dae4c: SyncHandler
+    0x802db688: SyncHandler0
+    0x802db6a8: WUDiTerminateDevice
+    0x802db740: WUDiDeleteDevice
+    0x802db7f4: DeleteAllHandler
+    0x802db928: DeleteAllHandler0
+    0x802db948: WUDiClearUnregisteredDevice
+    0x802dba5c: EnableStackHandler
+    0x802dbc30: EnableStackHandler0
+    0x802dbc50: WUDiGetRegisteredDevice
+    0x802dbd74: InitHandler
+    0x802dbe58: InitHandler0
+    0x802dbe78: ShutdownHandler
+    0x802dbefc: ShutdownHandler0
+    0x802dbf1c: InitCore
+    0x802dc2a8: WUDInit
+    0x802dc3a0: WUDRegisterAllocator
+    0x802dc3ec: WUDShutdown
+    0x802dc578: WUDGetStatus
+    0x802dc5b4: WUDGetBufferStatus
+    0x802dc5fc: WUDSetSniffMode
+    0x802dc668: WUDSetSyncDeviceCallback
+    0x802dc6c4: StartSyncDevice
+    0x802dc7f8: WUDStartSyncSimple
+    0x802dc884: WUDStopSyncSimple
+    0x802dc91c: WUDSetDisableChannel
+    0x802dca08: WUDSetHidRecvCallback
+    0x802dca64: WUDSetHidConnCallback
+    0x802dcac0: WUDSetVisibility
+    0x802dcb18: reset_again_cb
+    0x802dcb1c: remove_patch_cb
+    0x802dcc94: write_patch_cb
+    0x802dcec4: install_patch_cb
+    0x802dcf98: WUDiInitSub
+    0x802dd0f0: WUDiRegisterDevice
+    0x802dd208: WUDiRemoveDevice
+    0x802dd34c: WUDiGetDevInfo
+    0x802dd424: WUDiGetNewDevInfo
+    0x802dd4e4: WUDiMoveTopSmpDevInfoPtr
+    0x802dd5fc: WUDiMoveBottomSmpDevInfoPtr
+    0x802dd714: WUDiMoveTopOfDisconnectedSmpDevice
+    0x802dd86c: WUDiMoveTopStdDevInfoPtr
+    0x802dd984: WUDiMoveBottomStdDevInfoPtr
+    0x802dda9c: WUDiMoveTopOfDisconnectedStdDevice
+    0x802ddbf4: CleanupCallback
+    0x802ddc28: WUDSecurityCallback
+    0x802de17c: WUDSearchCallback
+    0x802de368: WUDVendorSpecificCallback
+    0x802de6a0: WUDDeviceStatusCallback
+    0x802de6f0: WUDStoredLinkKeyCallback
+    0x802de9dc: WUDPowerManagerCallback
+    0x802dead0: _WUDGetDevAddr
+    0x802deb24: _WUDGetQueuedSize
+    0x802deb80: _WUDGetNotAckedSize
+    0x802debdc: _WUDGetLinkNumber
+    0x802dec18: WUDHidHostCallback
+    0x802df100: bta_hh_co_data
+    0x802df13c: bta_hh_co_open
+    0x802df14c: bta_hh_co_close
+    0x802df15c: bta_dm_co_get_compress_memory
+    0x802df164: WUD_DEBUGPrint
+
     # KPAD.a
     0x802df1b4: KPADSetFSStickClamp
     0x802df1c8: KPADSetBtnRepeat
@@ -2014,19 +5512,73 @@ global:
     0x802e204c: KPADiSamplingCallback
     0x802e2244: KPADiControlDpdCallback
 
-    # CX.a
-    0x802e2598: lzss10GetDecompSize
-    0x802e25d8: lzss10Decompress
-    0x802e270c: lzss10ParseHeader
+    # wenc.a
+    0x802e22c0: WENCGetEncodeData
 
-    # TPL.a
+    # cx.a
+    0x802e2598: CXGetUncompressedSize
+    0x802e25d8: CXUncompressLZ
+    0x802e270c: CXGetCompressionHeader
+
+    # arc.a
+    0x802e2774: ARCInitHandle
+    0x802e2814: ARCOpen
+    0x802e2ab8: ARCFastOpen
+    0x802e2b08: ARCConvertPathToEntrynum
+    0x802e2d6c: entryToPath
+    0x802e2f34: ARCGetStartAddrInMem
+    0x802e2f48: ARCGetLength
+    0x802e2f50: ARCClose
+    0x802e2f58: ARCChangeDir
+    0x802e2fb0: ARCOpenDir
+    0x802e302c: ARCReadDir
+    0x802e30e4: ARCCloseDir
+
+    # tpl.a
     0x802e30ec: TPLBind
     0x802e3200: TPLGet
     0x802e3220: TPLGetGXTexObjFromPalette
 
+    # pad.a
+    0x802e3300: UpdateOrigin
+    0x802e34a4: PADOriginCallback
+    0x802e3564: PADProbeCallback
+    0x802e3638: PADTypeAndStatusCallback
+    0x802e3958: PADReset
+    0x802e3a60: PADRecalibrate
+    0x802e3b6c: PADInit
+    0x802e3cc8: SPEC0_MakeStatus
+    0x802e3de0: SPEC1_MakeStatus
+    0x802e3ef8: SPEC2_MakeStatus
+    0x802e4478: OnReset
+    0x802e4540: SamplingHandler
+    0x802e45a0: __PADDisableRecalibration
+
+    # libnw4r_ut.a
+    # libnw4r_db.a
+    # libw4r_lyt.a
+    # libw4r_math.a
+    # libnw4r_snd.a
+
+    # homebuttonLib.a
+
     #######
     # Rel #
     #######
+
+    # machi.c
+    # ...
+    0x80c4abe0: evt_machi_set_elv_descs
+    # ...
+    # 0x80c4d444
+    # ...
+
+    # wa1_02.c
+        # .data
+    # ...
+    0x80dc79a0: sammerDefsCh6
+    0x80dc7e50: sammerDefsEndgame
+    # ...
 
     # dan.c
         # .text
@@ -2100,6 +5652,37 @@ src/windowdrv.c:
         # .sbss
     0x805ae790: wp
 
+src/acdrv.c:
+        # .data
+    0x80406ed8: acDefs
+        # .bss
+    0x8050a128: work
+        # .sdata
+    0x805adf50: wp
+        # .sbss
+    0x805ae7a0: lp
+
+src/casedrv.c:
+        # .bss
+    0x8050b610: work
+        # .sdata
+    0x805adf88: wp
+
+src/dispdrv.c:
+        # .text
+    0x8005b158: _sort
+        # .sbss
+    0x805ae7c8: pDispWork
+    0x805ae7cc: pSortWork
+    0x805ae7d0: entry_n
+    0x805ae7d4: currentWorkPtr
+        # .bss
+    0x8050b620: dispScissors
+
+src/extdrv.c:
+        # .text
+    0x80065814: compare
+
 src/evtmgr.c:
         # .text
     0x800d87f0: make_pri_table
@@ -2152,6 +5735,20 @@ src/system.c:
     0x805ae97c: p
     0x805ae980: token
 
+src/dvdmgr.c:
+        # .text
+    0x8019e29c: _cb
+        # .bss
+    0x80516f60: work
+        # .sdata
+    0x805ae120: wp
+
+src/debug.c:
+        # .bss
+    0x80516f68: work
+        # .sdata
+    0x805ae128: wp
+
 src/filemgr.c:
         # .text
     0x8019fb38: dvdReadDoneCallback
@@ -2159,6 +5756,15 @@ src/filemgr.c:
     0x80516f88: work
         # .sdata
     0x805ae130: afp
+
+src/fontmgr.c:
+    0x805ae988: fontColor
+    0x805ae98c: fontAlpha u8
+    0x805ae990: fontEdge
+    # 0x805ae994
+    0x805ae998: pfh
+    # 0x805ae99c
+    # 0x805ae9a0
 
 src/memory.c:
         # .data
@@ -2172,6 +5778,15 @@ src/memory.c:
         # .sbss
     0x805ae9a8: memInitFlag
     0x805ae9b0: fallbackHeap
+
+src/parse.c:
+    0x801a6ebc: getTag
+
+src/romfont.c:
+        # .bss
+    0x80525540: work
+        # .sdata
+    0x805ae170: wp
 
 src/spmario.c:
         # .text
@@ -2196,7 +5811,7 @@ src/wpadmgr.c:
     0x80236984: wpad_alloc
     0x80236990: wpad_free
         # .bss
-    0x80528f48: wpadWork
+    0x80528f48: work
         # .sdata
     0x805ae198: wp
 
@@ -2210,27 +5825,27 @@ src/relmgr.c:
 
 src/nandmgr.c:
         # .bss
-    0x80534fa8: nandWork
+    0x80534fa8: work
         # .sdata
     0x805ae1b0: wp
 
 rel/dan.c:
         # .rodata
-    0x80cf0010: danShadooBlinkColour
+    0x80cf0010: shadooBlinkColour
         # .data
-    0x80e4fef8: danMapParts
-    0x80e4ff38: danDokanDescs
-    0x80e50038: danMapDoorDescs
-    0x80e50078: danFlipsideLockItems
-    0x80e50080: danFlopsideLockItems
-    0x80e50560: danChestRoomDokanDesc
-    0x80e50580: danChestRoomMapDoorDescs
-    0x80e50730: danRotenShopItems
-    0x80e50848: danRotenShopDef 
-    0x80e50860: danRotenTribeAnimDefs
-    0x80e510e8: dan_30_map_door_desc
-    0x80e51108: dan_30_dokan_desc
-    0x80e51128: dan_70_dokan_desc
+    0x80e4fef8: mapParts
+    0x80e4ff38: dokanDescs
+    0x80e50038: mapDoorDescs
+    0x80e50078: flipsideLockItems
+    0x80e50080: flopsideLockItems
+    0x80e50560: chestRoomDokanDesc
+    0x80e50580: chestRoomMapDoorDescs
+    0x80e50730: rotenShopItems
+    0x80e50848: rotenShopDef 
+    0x80e50860: rotenTribeAnimDefs
+    0x80e510e8: wracktail_map_door_desc
+    0x80e51108: wracktail_dokan_desc
+    0x80e51128: shadoo_dokan_desc
     0x80e515a8: dashellTribeAnimDefs
     0x80e522f0: wracktailTribeAnimDefs
         # .bss

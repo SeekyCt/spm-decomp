@@ -2,11 +2,10 @@
 #include <spm/filemgr.h>
 #include <spm/memory.h>
 #include <spm/system.h>
-#include <wii/exception.h>
 #include <wii/gx.h>
 #include <wii/os.h>
 #include <wii/mem.h>
-#include <wii/string.h>
+#include <msl/string.h>
 
 // .rodata
 #include "orderstrings/80337b18_80337cbb.inc"
@@ -261,10 +260,11 @@ void smartInit()
     g_bFirstSmartAlloc = false;
 }
 
+// TODO: type weirdness
 void smartAutoFree(s32 type)
 {
     SmartAllocation * curAllocation;
-    SmartAllocation * next; // only way register usage matched for next in 2nd loop
+    SmartAllocation * next;
 
     for (curAllocation = swp->allocatedStart; curAllocation; curAllocation = next)
     {
@@ -593,7 +593,7 @@ asm void smartGarbage()
 }
 #endif
 
-void * smartTexObj(void * texObj, SmartAllocation * imageAllocation)
+GXTexObj * smartTexObj(GXTexObj * texObj, SmartAllocation * imageAllocation)
 {
     if (imageAllocation)
         GXInitTexObjData(texObj, imageAllocation->data);

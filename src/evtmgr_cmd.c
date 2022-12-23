@@ -1,10 +1,11 @@
+#include <common.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/memory.h>
 #include <spm/swdrv.h>
 #include <spm/system.h>
-#include <wii/string.h>
-#include <wii/stdio.h>
 #include <wii/os.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
 
 static f32 check_float(s32 val) // always inlined
 {

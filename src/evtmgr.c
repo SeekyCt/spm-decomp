@@ -5,7 +5,7 @@
 #include <spm/system.h>
 #include <spm/spmario.h>
 #include <wii/os.h>
-#include <wii/string.h>
+#include <msl/string.h>
 
 // .bss
 static EvtWork work;
@@ -166,7 +166,7 @@ void evtEntryRunCheck()
     }
 }
 
-EvtEntry * evtEntry(s32* script, u32 priority, u8 flags) {
+EvtEntry * evtEntry(EvtScriptCode * script, u32 priority, u8 flags) {
     EvtEntry* entry;
     s32 j;
     s32 i;
@@ -220,8 +220,8 @@ EvtEntry * evtEntry(s32* script, u32 priority, u8 flags) {
     return entry;
 }
 
-EvtEntry * evtEntryType(s32* script, u32 priority, u8 flags, u8 type) {
-    EvtEntry* entry;
+EvtEntry * evtEntryType(EvtScriptCode * script, u32 priority, u8 flags, u8 type) {
+    EvtEntry * entry;
     s32 j;
     s32 i;
     EvtWork * wp;

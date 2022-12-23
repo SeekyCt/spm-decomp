@@ -7,12 +7,12 @@
 #include <spm/nandmgr.h>
 #include <spm/npcdrv.h>
 #include <spm/system.h>
-#include <wii/lzss10.h>
+#include <wii/cx.h>
 #include <wii/nand.h>
 #include <wii/os.h>
-#include <wii/stdio.h>
-#include <wii/string.h>
 #include <wii/tpl.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
 
 // .rodata
 const u8 lz_saveImagesTpl[] = {
@@ -24,12 +24,15 @@ const u8 lz_saveImagesTpl[] = {
 extern char lbl_804e50a8[]; // TODO: wchar stringbase
 
 // .bss
-static NandWork nandWork;
+static NandWork work;
 
 // .sdata
-static NandWork * wp = &nandWork;
+static NandWork * wp = &work;
 
 #define flag(value, mask) (value & mask) // needed for assert
+
+static void genericCallback(s32 result, NANDCommandBlock * commandBlock);
+static void checkCallback(s32 result, NANDCommandBlock * commandBlock);
 
 #include "jumptable/804e5008.inc"
 asm void nandInit()
@@ -73,9 +76,11 @@ void nandMain()
 bool nandIsExec()
 {
     if (wp->flag & NAND_FLAG_Exec)
-        return 1;
+        return true;
+    else if (wp->flag & NAND_FLAG_Waiting)
+        return true;
     else
-        return (bool) (wp->flag & NAND_FLAG_Waiting);
+        return false;
 }
 
 s32 nandGetCode()
@@ -198,13 +203,13 @@ void nandUpdateSave(s32 saveId)
     _gp->savePosition.y = mp->position.y;
     _gp->savePosition.z = mp->position.z;
 
-    evtSetValue(NULL, GSWF(401), (s32) ((mp->flag4 >> 21) & 1));
-    evtSetValue(NULL, GSWF(402), (s32) ((mp->flag4 >> 19) & 1));
+    evtSetValue(NULL, GSWF(401), (s32) ((mp->miscFlags >> 21) & 1));
+    evtSetValue(NULL, GSWF(402), (s32) ((mp->miscFlags >> 19) & 1));
 
     s32 temp = (guideGetWork()->flag0 & 0x80);
     evtSetValue(NULL, GSWF(403), temp == 0);
 
-    evtSetValue(NULL, GSWF(404), (s32) ((mp->flag8 >> 23) & 1));
+    evtSetValue(NULL, GSWF(404), (s32) ((mp->dispFlags >> 23) & 1));
     evtSetValue(NULL, GSW(23), mp->character);
 
     gp->flags &= ~1;
@@ -323,7 +328,7 @@ asm void nandDeleteSaveMain()
     #include "asm/80240414.s"
 }
 
-void genericCallback(s32 result, NANDCommandBlock * commandBlock)
+static void genericCallback(s32 result, NANDCommandBlock * commandBlock)
 {
     (void) commandBlock;
 
@@ -334,7 +339,7 @@ void genericCallback(s32 result, NANDCommandBlock * commandBlock)
     wp->code = result;
 }
 
-void checkCallback(s32 result, NANDCommandBlock * commandBlock)
+static void checkCallback(s32 result, NANDCommandBlock * commandBlock)
 {
     (void) commandBlock;
 
