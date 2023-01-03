@@ -23,14 +23,14 @@ typedef struct
 /* 0x90 */ u8 unknown_0x90[0x98 - 0x90];
 /* 0x98 */ s32 entrynum;
 } DVDEntry;
-SIZE_ASSERT(DVDEntry, 0x9c);
+SIZE_ASSERT(DVDEntry, 0x9c)
 
 typedef struct
 {
 /* 0x0 */ DVDEntry * entries; // array of entryLimit
 /* 0x4 */ s32 entryLimit; // 0x200
 } DVDWork;
-SIZE_ASSERT(DVDWork, 0x8);
+SIZE_ASSERT(DVDWork, 0x8)
 
 DECOMP_STATIC(DVDWork dvdmgr_work)
 DECOMP_STATIC(DVDWork * dvdmgr_wp)

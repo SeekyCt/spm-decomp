@@ -21,13 +21,13 @@ typedef struct
 {
 /* 0x0 */ u8 unknown_0x0[0x3c - 0x0];
 } GXRenderModeObj;
-SIZE_ASSERT(GXRenderModeObj, 0x3c);
+SIZE_ASSERT(GXRenderModeObj, 0x3c)
 
 typedef struct
 {
 /* 0x0 */ u8 unknown_0x0[0x20 - 0x0];
 } GXTexObj;
-SIZE_ASSERT(GXTexObj, 0x20);
+SIZE_ASSERT(GXTexObj, 0x20)
 
 // Parameters from libogc's gx.h
 

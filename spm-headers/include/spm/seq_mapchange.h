@@ -22,7 +22,7 @@ typedef struct
 /* 0x64 */ s32 initEvtEntryId;
 /* 0x68 */ u8 unknown_0x68[0x74 - 0x68];
 } SeqMapChangeWork;
-SIZE_ASSERT(SeqMapChangeWork, 0x74);
+SIZE_ASSERT(SeqMapChangeWork, 0x74)
 
 DECOMP_STATIC(SeqMapChangeWork * seq_mapchange_wp)
 DECOMP_STATIC(SeqMapChangeWork seq_mapchange_work)

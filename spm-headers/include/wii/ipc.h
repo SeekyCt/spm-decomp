@@ -9,7 +9,7 @@ typedef struct
 /* 0x0 */ void * data;
 /* 0x4 */ u32 len;
 } Ioctlv;
-SIZE_ASSERT(Ioctlv, 0x8);
+SIZE_ASSERT(Ioctlv, 0x8)
 
 UNKNOWN_FUNCTION(IPCInit);
 UNKNOWN_FUNCTION(IPCReadReg);

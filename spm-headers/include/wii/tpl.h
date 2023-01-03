@@ -51,7 +51,7 @@ typedef struct
     u8 maxLOD;
     bool unpacked;
 } ImageHeader;
-SIZE_ASSERT(ImageHeader, 0x24);
+SIZE_ASSERT(ImageHeader, 0x24)
 
 typedef struct
 {
@@ -64,7 +64,7 @@ typedef struct
         void * data;
     };
 } PaletteHeader;
-SIZE_ASSERT(PaletteHeader, 0xc);
+SIZE_ASSERT(PaletteHeader, 0xc)
 
 typedef struct
 {
@@ -79,7 +79,7 @@ typedef struct
         PaletteHeader * palette;
     };
 } ImageTableEntry;
-SIZE_ASSERT(ImageTableEntry, 0x8);
+SIZE_ASSERT(ImageTableEntry, 0x8)
 
 typedef struct
 {
@@ -91,7 +91,7 @@ typedef struct
         ImageTableEntry * imageTable;
     };
 } TPLHeader;
-SIZE_ASSERT(TPLHeader, 0xc);
+SIZE_ASSERT(TPLHeader, 0xc)
 
 // offset will be a pointer to the table if unpacked
 #define IS_TPL_PACKED(tpl) (tpl->imageTableOffset < (u32) tpl)

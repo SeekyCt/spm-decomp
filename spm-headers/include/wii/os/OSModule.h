@@ -60,7 +60,7 @@ typedef struct _RelHeader
     u32 bssAlign;
     u32 fixSize;
 } RelHeader;
-SIZE_ASSERT(RelHeader, 0x4c);
+SIZE_ASSERT(RelHeader, 0x4c)
 
 FIXED_ADDR(RelHeader *, firstRel, 0x800030c8);
 FIXED_ADDR(RelHeader *, lastRel, 0x800030cc);

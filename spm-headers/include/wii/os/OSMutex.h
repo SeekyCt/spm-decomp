@@ -8,7 +8,7 @@ typedef struct
 {
     u8 unknown_0x0[0x18 - 0x0];
 } OSMutex;
-SIZE_ASSERT(OSMutex, 0x18);
+SIZE_ASSERT(OSMutex, 0x18)
 
 void OSInitMutex(OSMutex * mutex);
 UNKNOWN_FUNCTION(OSLockMutex);

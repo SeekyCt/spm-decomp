@@ -25,14 +25,14 @@ typedef struct
 /* 0x20 */ WinmgrFunc * mainFunc;
 /* 0x24 */ WinmgrFunc * deleteFunc;
 } WindowDesc;
-SIZE_ASSERT(WindowDesc, 0x28);
+SIZE_ASSERT(WindowDesc, 0x28)
 
 typedef struct
 {
 /* 0x0 */ u16 entryCount; // number of winmgr entries to create
 /* 0x4 */ WindowDesc * descs; // array of entryCount
 } WinmgrSelectDesc;
-SIZE_ASSERT(WinmgrSelectDesc, 0x8);
+SIZE_ASSERT(WinmgrSelectDesc, 0x8)
 
 DECOMP_STATIC(WindowDesc winmgr_select_desc[2])
 DECOMP_STATIC(WindowDesc winmgr_select_recipe_desc[3]) // 3rd is unused
@@ -46,7 +46,7 @@ typedef struct
 /* 0x4 */ s32 animPoseId;
 /* 0x8 */ u8 unknown_0x8[0xc - 0x8];
 } WinmgrItem;
-SIZE_ASSERT(WinmgrItem, 0xc);
+SIZE_ASSERT(WinmgrItem, 0xc)
 
 typedef struct
 {
@@ -66,7 +66,7 @@ typedef struct
 /* 0x40 */ s32 extraItem;
 /* 0x44 */ u8 unknown_0x44[0x6c - 0x44];
 } WinmgrSelect;
-SIZE_ASSERT(WinmgrSelect, 0x6c);
+SIZE_ASSERT(WinmgrSelect, 0x6c)
 
 typedef struct _WinmgrEntry{
     /*
@@ -84,14 +84,14 @@ typedef struct _WinmgrEntry{
 /* 0x2C */ void * param; // for select windows, pointer to WinmgrSelect
 /* 0x30 */ s32 priority;
 } WinmgrEntry;
-SIZE_ASSERT(WinmgrEntry, 0x34);
+SIZE_ASSERT(WinmgrEntry, 0x34)
 
 typedef struct
 {
 /* 0x0 */ s32 entryCount; // 0x20
 /* 0x4 */ WinmgrEntry * entries; // array of entryCount
 } WinmgrWork;
-SIZE_ASSERT(WinmgrWork, 0x8);
+SIZE_ASSERT(WinmgrWork, 0x8)
 
 DECOMP_STATIC(WinmgrWork winmgr_work)
 DECOMP_STATIC(WinmgrWork * winmgr_wp)

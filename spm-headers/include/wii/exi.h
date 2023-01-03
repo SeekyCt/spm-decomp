@@ -10,7 +10,7 @@ typedef struct
 /* 0x20 */ s32 unknown_0x20;
 /* 0x24 */ u8 unknown_0x24[0x40 - 0x24];
 } EXIEcb;
-SIZE_ASSERT(EXIEcb, 0x40);
+SIZE_ASSERT(EXIEcb, 0x40)
 
 extern EXIEcb Ecb[3];
 

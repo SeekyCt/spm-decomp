@@ -33,7 +33,7 @@ typedef struct
 /* 0x0 */ s32 itemId;
 /* 0x4 */ s32 chance;
 } MobjDropItem;
-SIZE_ASSERT(MobjDropItem, 0x8);
+SIZE_ASSERT(MobjDropItem, 0x8)
 
 typedef struct _MobjEntry
 {
@@ -85,14 +85,14 @@ typedef struct _MobjEntry
 /* 0x24C */ s32 state; // values vary by MOBJ
 /* 0x250 */ u8 unknown_0x250[0x2a8 - 0x250];
 } MobjEntry;
-SIZE_ASSERT(MobjEntry, 0x2a8);
+SIZE_ASSERT(MobjEntry, 0x2a8)
 
 typedef struct // paired with a MobjEntry at the same index, unknown purpose
 {
 /* 0x00 */ Vec3 unknown_0x0;
 /* 0x0C */ Vec3 unknown_0xc;
 } MobjOtherEntry;
-SIZE_ASSERT(MobjOtherEntry, 0x18);
+SIZE_ASSERT(MobjOtherEntry, 0x18)
 
 typedef struct
 {
@@ -103,7 +103,7 @@ typedef struct
 /* 0x14 */ bool unkFlag;
 /* 0x15 */ u8 unknown_0x15[0x18 - 0x15];
 } MobjWork;
-SIZE_ASSERT(MobjWork, 0x18);
+SIZE_ASSERT(MobjWork, 0x18)
 
 UNKNOWN_FUNCTION(func_800297c0);
 UNKNOWN_FUNCTION(func_80029c34);

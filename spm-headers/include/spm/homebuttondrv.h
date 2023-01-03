@@ -14,7 +14,7 @@ typedef struct
 /* 0x04 */ u16 flags;
 /* 0x06 */ u8 unknown_0x6[0xa0 - 0x6];
 } HomeButtonWork;
-SIZE_ASSERT(HomeButtonWork, 0xa0);
+SIZE_ASSERT(HomeButtonWork, 0xa0)
 
 DECOMP_STATIC(HomeButtonWork * homebuttondrv_wp)
 

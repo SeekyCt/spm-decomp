@@ -40,14 +40,14 @@ typedef struct _AcEntry
 /* 0x38 */ AcDispFunc * dispFunc;
 /* 0x3C */ u8 unknown_0x3c[0x40 - 0x3c];
 } AcEntry;
-SIZE_ASSERT(AcEntry, 0x40);
+SIZE_ASSERT(AcEntry, 0x40)
 
 typedef struct
 {
 /* 0x0 */ s32 num; // 4
 /* 0x4 */ AcEntry * entries; // array of num length
 } AcWork; 
-SIZE_ASSERT(AcWork, 0x8);
+SIZE_ASSERT(AcWork, 0x8)
 
 DECOMP_STATIC(AcWork acdrv_work)
 DECOMP_STATIC(AcWork * acdrv_wp)
@@ -60,7 +60,7 @@ typedef struct
 /* 0x0C */ AcDispFunc * dispFunc;
 /* 0x10 */ const char * msgName;
 } AcDef;
-SIZE_ASSERT(AcDef, 0x14);
+SIZE_ASSERT(AcDef, 0x14)
 
 DECOMP_STATIC(AcDef acdrv_acDefs[19])
 DECOMP_STATIC(SmartAllocation * acdrv_lp)

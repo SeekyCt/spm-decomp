@@ -13,7 +13,7 @@ typedef struct
 /* 0x44 */ const char ** npcNameList;
 /* 0x48 */ u8 unknown_0x48[0x58 - 0x48];
 } DoorDesc;
-SIZE_ASSERT(DoorDesc, 0x58);
+SIZE_ASSERT(DoorDesc, 0x58)
 
 typedef struct
 {
@@ -26,7 +26,7 @@ typedef struct
 /* 0x18 */ const char * unknown_0x18;
 /* 0x1C */ s32 unknown_0x1c;
 } MapDoorDesc;
-SIZE_ASSERT(MapDoorDesc, 0x20);
+SIZE_ASSERT(MapDoorDesc, 0x20)
 
 typedef struct
 {
@@ -40,7 +40,7 @@ typedef struct
 /* 0x19 */ const char * destMapName;
 /* 0x1C */ const char * unknown_0x1c;
 } DokanDesc;
-SIZE_ASSERT(DokanDesc, 0x20);
+SIZE_ASSERT(DokanDesc, 0x20)
 
 #define EVT_DOOR_FLAG_DOOR_OPEN 1
 
@@ -49,7 +49,7 @@ typedef struct
 /* 0x000 */ u16 flags;
 /* 0x002 */ u8 unknown_0x2[0x57c - 0x2];
 } EvtDoorWork;
-SIZE_ASSERT(EvtDoorWork, 0x57c);
+SIZE_ASSERT(EvtDoorWork, 0x57c)
 
 UNKNOWN_FUNCTION(evtDoorInit);
 UNKNOWN_FUNCTION(evt_door_flag_onoff);

@@ -96,7 +96,7 @@ typedef struct _PausewinEntry
 /* 0x68 */ PausewinFunc * lateDispFunc;
 /* 0x6C */ PausewinFunc * deleteFunc;
 } PausewinEntry;
-SIZE_ASSERT(PausewinEntry, 0x78);
+SIZE_ASSERT(PausewinEntry, 0x78)
 
 typedef struct 
 {
@@ -118,7 +118,7 @@ typedef struct
 /* 0x39 */ u8 unknown_0x39[0x3c - 0x39];
 /* 0x3C */ f32 gameSpeedBackup;
 } PausewinWork;
-SIZE_ASSERT(PausewinWork, 0x40);
+SIZE_ASSERT(PausewinWork, 0x40)
 
 typedef struct
 {
@@ -145,7 +145,7 @@ typedef struct
 /* 0x1AD */ u8 unknown_0x1ad[0x1b0 - 0x1ad];
 /* 0x1B0 */ s64 openingTime;
 } PluswinWork;
-SIZE_ASSERT(PluswinWork, 0x1b8);
+SIZE_ASSERT(PluswinWork, 0x1b8)
 
 DECOMP_STATIC(PluswinWork * pausewin_pluswinWp)
 DECOMP_STATIC(PausewinWork * pausewin_wp)

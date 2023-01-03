@@ -32,14 +32,14 @@ typedef struct _EffEntry
 /* 0x18 */ char instanceName[16];
 /* 0x28 */ u8 unknown_0x28[0x2c - 0x28];
 } EffEntry;
-SIZE_ASSERT(EffEntry, 0x2c);
+SIZE_ASSERT(EffEntry, 0x2c)
 
 typedef struct
 {
 /* 0x0 */ s32 curCount; // current number of active entries of this type
 /* 0x4 */ s32 maxCount; // maximum number of active entries of this type allowed
 } EffTypeStats;
-SIZE_ASSERT(EffTypeStats, 0x8);
+SIZE_ASSERT(EffTypeStats, 0x8)
 
 typedef struct
 {
@@ -51,7 +51,7 @@ typedef struct
 /* 0x11C */ EffTypeStats typeStats[2];
 /* 0x12C */ u8 unknown_0x12c[0x134 - 0x12c];
 } EffWork; 
-SIZE_ASSERT(EffWork, 0x134);
+SIZE_ASSERT(EffWork, 0x134)
 
 DECOMP_STATIC(EffWork effdrv_work)
 DECOMP_STATIC(EffWork * effdrv_wp)

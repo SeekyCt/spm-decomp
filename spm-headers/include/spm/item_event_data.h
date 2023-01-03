@@ -18,7 +18,7 @@ typedef struct
 /* 0x4 */ EvtScriptCode * useScript;
 /* 0x8 */ const char * useMsgName;
 } ItemEventData;
-SIZE_ASSERT(ItemEventData, 0xc);
+SIZE_ASSERT(ItemEventData, 0xc)
 
 extern ItemEventData itemEventDataTable[ITEM_EVENT_DATA_COUNT];
 
@@ -27,7 +27,7 @@ typedef struct
 /* 0x0 */ void * wp;
 /* 0x4 */ u8 unknown_0x4[0x20 - 0x4];
 } ItemEventWork;
-SIZE_ASSERT(ItemEventWork, 0x20);
+SIZE_ASSERT(ItemEventWork, 0x20)
 
 DECOMP_STATIC(ItemEventWork item_event_data_work)
 DECOMP_STATIC(ItemEventWork * item_event_data_wp)

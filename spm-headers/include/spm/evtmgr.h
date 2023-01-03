@@ -106,7 +106,7 @@ typedef struct _EvtEntry
 /* 0x1A0 */ void * pPrevInstruction; // Pointer to last instruction executed
 /* 0x1A4 */ u8 unknown_0x1a4[0x1a8 - 0x1a4];
 } EvtEntry;
-SIZE_ASSERT(EvtEntry, 0x1a8);
+SIZE_ASSERT(EvtEntry, 0x1a8)
 
 typedef struct
 {
@@ -117,7 +117,7 @@ typedef struct
 /* 0x04 */ // Alignment padding 0x94-97
 /* 0xA0 */ OSTime time; // Time evtmgrMain last ran
 } EvtWork;
-SIZE_ASSERT(EvtWork, 0xa0);
+SIZE_ASSERT(EvtWork, 0xa0)
 
 // Next script id to use
 DECOMP_STATIC(s32 evtmgr_evtId)

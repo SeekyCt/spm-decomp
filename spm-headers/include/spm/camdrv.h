@@ -85,7 +85,7 @@ typedef struct _CamEntry
 /* 0x258 */ CamDispFunc * dispFunc;
 /* 0x25C */ u8 unknown_0x25c[0x2f0 - 0x25c];
 } CamEntry;
-SIZE_ASSERT(CamEntry, 0x2f0);
+SIZE_ASSERT(CamEntry, 0x2f0)
 
 /*
     Cameras:

@@ -67,7 +67,7 @@ typedef struct
 /* 0x3F */ u8 alpha;
 /* 0x40 */ u8 unknown_0x40[0x4c - 0x40];
 } IconEntry;
-SIZE_ASSERT(IconEntry, 0x4c);
+SIZE_ASSERT(IconEntry, 0x4c)
 
 typedef struct
 {
@@ -76,7 +76,7 @@ typedef struct
 /* 0x08 */ FileEntry * wiconTpl; // wicon.tpl from dvd root
 /* 0x0C */ FileEntry * wiconbin; // wicon.bin from dvd root
 } IconWork;
-SIZE_ASSERT(IconWork, 0x10);
+SIZE_ASSERT(IconWork, 0x10)
 
 DECOMP_STATIC(IconWork icondrv_work)
 DECOMP_STATIC(IconWork * icondrv_wp)

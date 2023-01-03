@@ -16,7 +16,7 @@ typedef struct
 /* 0x00 */ char name[60];
 /* 0x3C */ void * data;
 } AnimationModelFileAnimTableEntry;
-SIZE_ASSERT(AnimationModelFileAnimTableEntry, 0x40);
+SIZE_ASSERT(AnimationModelFileAnimTableEntry, 0x40)
 
 typedef struct 
 {
@@ -25,7 +25,7 @@ typedef struct
 /* 0x14C */ u8 unknown_0x14c[0x1ac - 0x14c];
 /* 0x1AC */ AnimationModelFileAnimTableEntry * anims;
 } AnimationModelFileHeader;
-SIZE_ASSERT(AnimationModelFileHeader, 0x1b0);
+SIZE_ASSERT(AnimationModelFileHeader, 0x1b0)
 
 typedef struct
 {

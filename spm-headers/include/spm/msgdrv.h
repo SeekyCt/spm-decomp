@@ -45,7 +45,7 @@ typedef struct
 /* 0xF250 */ s32 talkPoseTime; // frames remaining to be in the talking animation
 /* 0xF254 */ s32 isInTalkPose; // 1 if in talking animation, 0 otherwise
 } MsgSpeaker;
-SIZE_ASSERT(MsgSpeaker, 0xf258);
+SIZE_ASSERT(MsgSpeaker, 0xf258)
 
 typedef struct
 {
@@ -54,7 +54,7 @@ typedef struct
 /* 0x8 */ s32 messageCount;
 /* 0xC */ u8 unknown_0xc[0x10 - 0xc];
 } MsgFile;
-SIZE_ASSERT(MsgFile, 0x10);
+SIZE_ASSERT(MsgFile, 0x10)
 
 typedef struct
 {
@@ -64,7 +64,7 @@ typedef struct
 /* 0x95 */ bool parseFinished;
 /* 0x96 */ u8 unknown_0x96[0x98 - 0x96];
 } MsgWork;
-SIZE_ASSERT(MsgWork, 0x98);
+SIZE_ASSERT(MsgWork, 0x98)
 
 DECOMP_STATIC(MsgWork * msgdrv_msgw)
 DECOMP_STATIC(MsgWork msgdrv_work)
@@ -74,7 +74,7 @@ typedef struct
 /* 0x0 */ const char * name;
 /* 0x4 */ s32 iconid;
 } IconNameIdDef;
-SIZE_ASSERT(IconNameIdDef, 0x8);
+SIZE_ASSERT(IconNameIdDef, 0x8)
 
 DECOMP_STATIC(IconNameIdDef msgdrv_msgIcon[24])
 
@@ -85,7 +85,7 @@ typedef struct
 /* 0x8 */ const char * name3;
 /* 0xC */ const char * name4;
 } MsgTalkSfxGroup;
-SIZE_ASSERT(MsgTalkSfxGroup, 0x10);
+SIZE_ASSERT(MsgTalkSfxGroup, 0x10)
 
 DECOMP_STATIC(MsgTalkSfxGroup * msgdrv_talkSfxGroups[14]) // index MsgSpeaker.talkSfxGroup
 DECOMP_STATIC(const char * msgdrv_skipSfx[16]) //  index MsgSpeaker.talkSfxGroup
@@ -95,7 +95,7 @@ typedef struct
 /* 0x0 */ const char * openName;
 /* 0x4 */ const char * closeName;
 } MsgOpenCloseSfxGroup;
-SIZE_ASSERT(MsgOpenCloseSfxGroup, 0x8);
+SIZE_ASSERT(MsgOpenCloseSfxGroup, 0x8)
 DECOMP_STATIC(MsgOpenCloseSfxGroup msgdrv_openCloseSfxGroups[32]) // index WindowEntry.type
 
 // "msg/XX"

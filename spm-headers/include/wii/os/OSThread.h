@@ -15,7 +15,7 @@ typedef struct _OSThread
     struct _OSThread * prev;
     u8 unknown_0x304[0x318 - 0x304];
 } OSThread;
-SIZE_ASSERT(OSThread, 0x318);
+SIZE_ASSERT(OSThread, 0x318)
 
 FIXED_ADDR(OSThread *, currentThread, 0x800000e4);
 

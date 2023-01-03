@@ -35,14 +35,14 @@ typedef struct
 /* 0x8 */ u32 attr;
 /* 0xC */ u8 unknown_0xc[0x10 - 0xc];
 } MapFileJointDrawMode;
-SIZE_ASSERT(MapFileJointDrawMode, 0x10);
+SIZE_ASSERT(MapFileJointDrawMode, 0x10)
 
 typedef struct
 {
 /* 0x0 */ Unk * material;
 /* 0x4 */ Unk * mesh;
 } MapFileJointPart;
-SIZE_ASSERT(MapFileJointPart, 0x8);
+SIZE_ASSERT(MapFileJointPart, 0x8)
 
 typedef struct _MapFileJoint
 {
@@ -63,7 +63,7 @@ typedef struct _MapFileJoint
     // Actually a VLA, length is partTableCount
 /* 0x60 */ MapFileJointPart partTable[1];
 } MapFileJoint;
-SIZE_ASSERT(MapFileJoint, 0x68);
+SIZE_ASSERT(MapFileJoint, 0x68)
 
 typedef struct
 {
@@ -73,7 +73,7 @@ typedef struct
 /* 0x0C */ f32 endZ;
 /* 0x10 */ GXColor colour;
 } MapFileFog;
-SIZE_ASSERT(MapFileFog, 0x14);
+SIZE_ASSERT(MapFileFog, 0x14)
 
 typedef struct
 {
@@ -83,14 +83,14 @@ typedef struct
 /* 0x0C */ u32 chunkTableCount;
 /* 0x10 */ u8 unknown_0x10[0x20 - 0x10];
 } MapFileHeader;
-SIZE_ASSERT(MapFileHeader, 0x20);
+SIZE_ASSERT(MapFileHeader, 0x20)
 
 typedef struct
 {
 /* 0x0 */ u32 offset; // into main data
 /* 0x4 */ u32 nameOffset; // into string table
 } MapFileChunk;
-SIZE_ASSERT(MapFileChunk, 0x8);
+SIZE_ASSERT(MapFileChunk, 0x8)
 
 typedef struct
 {
@@ -104,7 +104,7 @@ typedef struct
 /* 0x3C */ u32 flags;
 /* 0x40 */ void * rawFile;
 } MapFileContext;
-SIZE_ASSERT(MapFileContext, 0x44);
+SIZE_ASSERT(MapFileContext, 0x44)
 
 typedef struct
 {
@@ -120,14 +120,14 @@ typedef struct
 /* 0x3C */ u32 flags;
 /* 0x40 */ s32 version;
 } MapFileLightEntry;
-SIZE_ASSERT(MapFileLightEntry, 0x44);
+SIZE_ASSERT(MapFileLightEntry, 0x44)
 
 typedef struct
 {
 /* 0x0 */ s32 count;
 /* 0x4 */ MapFileLightEntry * entries[]; // array of length count
 } MapFileLightTable;
-OFFSET_ASSERT(MapFileLightTable, entries, 0x4);
+OFFSET_ASSERT(MapFileLightTable, entries, 0x4)
 
 typedef struct
 {
@@ -138,14 +138,14 @@ typedef struct
 /* 0x28 */ u8 unknown_0x28[0x58 - 0x28];
 /* 0x58 */ s32 frameCount;
 } MapFileMeshTrack;
-SIZE_ASSERT(MapFileMeshTrack, 0x5c);
+SIZE_ASSERT(MapFileMeshTrack, 0x5c)
 
 typedef struct
 {
 /* 0x0 */ s32 count;
 /* 0x4 */ MapFileMeshTrack * tracks; // array of length count
 } MapFileMeshTracks;
-SIZE_ASSERT(MapFileMeshTracks, 0x8);
+SIZE_ASSERT(MapFileMeshTracks, 0x8)
 
 typedef struct
 {
@@ -156,7 +156,7 @@ typedef struct
 /* 0x10 */ Unk * materialTrack;
 /* 0x14 */ u8 unknown_0x14[0x20 - 0x14];
 } MapFileAnimData;
-SIZE_ASSERT(MapFileAnimData, 0x20);
+SIZE_ASSERT(MapFileAnimData, 0x20)
 
 #define MAPOBJ_FLAG0_HIDE 1
 
@@ -186,7 +186,7 @@ typedef struct _MapObj
 /* 0x120 */ u32 dl_size[8]; // display list sizes
 /* 0x140 */ u8 unknown_0x140[0x144 - 0x140];
 } MapObj;
-SIZE_ASSERT(MapObj, 0x144);
+SIZE_ASSERT(MapObj, 0x144)
 
 typedef struct
 {
@@ -197,7 +197,7 @@ typedef struct
 /* 0x18 */ MapFileAnimData * fileData;
 /* 0x1C */ u8 unknown_0x1c[0x28 - 0x1c];
 } MapAnimObj;
-SIZE_ASSERT(MapAnimObj, 0x28);
+SIZE_ASSERT(MapAnimObj, 0x28)
 
 typedef void (MapEntryUnloadCb)();
 
@@ -236,14 +236,14 @@ typedef struct
 /* 0x19C */ void * dl_buf; // display list buffer
 /* 0x1A0 */ MapEntryUnloadCb * unloadCb;
 } MapEntry;
-SIZE_ASSERT(MapEntry, 0x1a4);
+SIZE_ASSERT(MapEntry, 0x1a4)
 
 typedef struct
 {
 /* 0x000 */ MapEntry entries[2]; // being an array is a TTYD leftover
 /* 0x348 */ u8 unknown_0x348[0x34c - 0x348];
 } MapWorkGroup;
-SIZE_ASSERT(MapWorkGroup, 0x34c);
+SIZE_ASSERT(MapWorkGroup, 0x34c)
 
 typedef struct
 {
@@ -254,7 +254,7 @@ typedef struct
 /* 0x6A4 */ u8 unknown_0x6a4[0x6a8 - 0x6a4];
 /* 0x6A8 */ GXColor paperAmbColor;
 } MapWork;
-SIZE_ASSERT(MapWork, 0x6ac);
+SIZE_ASSERT(MapWork, 0x6ac)
 
 DECOMP_STATIC(MapWork mapdrv_work)
 DECOMP_STATIC(MapWork * mapdrv_wp)

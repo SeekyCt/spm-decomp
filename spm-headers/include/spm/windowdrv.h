@@ -61,7 +61,7 @@ typedef struct _WindowEntry
 /* 0x40 */ WindowFunc * deleteFunc;
 /* 0x44 */ u8 unknown_0x44[0x48 - 0x44];
 } WindowEntry;
-SIZE_ASSERT(WindowEntry, 0x48);
+SIZE_ASSERT(WindowEntry, 0x48)
 
 #define WINDOW_MAX 7
 DECOMP_STATIC(WindowEntry * windowdrv_wp) // array of WINDOW_MAX

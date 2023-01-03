@@ -16,7 +16,7 @@ typedef struct _MEMAllocation
 /* 0x8 */ struct _MEMAllocation * prev;
 /* 0xC */ struct _MEMAllocation * next;
 } MEMAllocation;
-SIZE_ASSERT(MEMAllocation, 0x10);
+SIZE_ASSERT(MEMAllocation, 0x10)
 
 typedef struct _MEMEXPHeap
 {
@@ -33,7 +33,7 @@ typedef struct _MEMEXPHeap
 /* 0x48 */ MEMAllocation * lastUsed;
 /* 0x4C */ u8 unknown_0x4c[0x50 - 0x4c];
 } MEMEXPHeap;
-SIZE_ASSERT(MEMEXPHeap, 0x50);
+SIZE_ASSERT(MEMEXPHeap, 0x50)
 
 #define MEM_FLAG_FILL_0 (1 << 0) // initialise allocated memory as 0
 #define MEM_FLAG_THREAD_CONTROL (1 << 2) // use mutexes for access when handling heap

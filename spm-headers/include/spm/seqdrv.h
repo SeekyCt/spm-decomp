@@ -32,7 +32,7 @@ typedef struct _SeqWork
 /* 0x10 */ u8 unknown_0x10[0x20 - 0x10];
 /* 0x20 */ SeqFunc * afterFunc; // ran after every call to the main SeqFunc if not null
 } SeqWork;
-SIZE_ASSERT(SeqWork, 0x24);
+SIZE_ASSERT(SeqWork, 0x24)
 
 /*
     Initialises data used by seqdrv functions

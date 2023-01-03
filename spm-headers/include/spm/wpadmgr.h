@@ -37,7 +37,7 @@ typedef struct
 /* 0x0000 */ s64 unknown_0x9d60[4];
 /* 0x0000 */ u8 unknown_0x9d80[0x9dc8 - 0x9d80];
 } WpadWork;
-SIZE_ASSERT(WpadWork, 0x9dc8);
+SIZE_ASSERT(WpadWork, 0x9dc8)
 
 /*
     Returns the pointer to the WpadWork instance

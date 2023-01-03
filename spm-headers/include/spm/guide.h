@@ -48,7 +48,7 @@ typedef struct
 /* 0x40 */ Vec3 pos;
 /* 0x4C */ u8 unknown_0x4c[0xb4 - 0x4c];
 } GuideWork;
-SIZE_ASSERT(GuideWork, 0xb4);
+SIZE_ASSERT(GuideWork, 0xb4)
 
 DECOMP_STATIC(GuideWork guide_work)
 

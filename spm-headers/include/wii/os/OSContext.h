@@ -22,7 +22,7 @@ typedef struct
 /* 0x1C0 */ u8 unknown_0x1c4[0x1c8 - 0x1c4];
 /* 0x1C8 */ f64 psf[32];
 } OSContext;
-SIZE_ASSERT(OSContext, 0x2c8);
+SIZE_ASSERT(OSContext, 0x2c8)
 
 UNKNOWN_FUNCTION(__OSLoadFPUContext);
 UNKNOWN_FUNCTION(__OSSaveFPUContext);

@@ -22,7 +22,7 @@ typedef struct
 /* 0x8 */ DispCallback * callback;
 /* 0xC */ f32 * callbackParam;
 } DispEntry; 
-SIZE_ASSERT(DispEntry, 0x10);
+SIZE_ASSERT(DispEntry, 0x10)
 
 DECOMP_STATIC(DispEntry * dispdrv_pDispWork)
 DECOMP_STATIC(DispEntry ** dispdrv_pSortWork)
@@ -33,7 +33,7 @@ typedef struct
 {
 /* 0x0 */ u8 unknown_0x0[0x10 - 0x0];
 } DispScissor;
-SIZE_ASSERT(DispScissor, 0x10);
+SIZE_ASSERT(DispScissor, 0x10)
 
 DECOMP_STATIC(DispScissor dispdrv_dispScissors[0x20])
 

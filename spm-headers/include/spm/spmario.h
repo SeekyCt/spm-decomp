@@ -20,7 +20,7 @@ typedef struct
 /* 0x00 */ char mapName[32];
 /* 0x20 */ u8 _20[0x48-0x20];
 } CoinThing;
-SIZE_ASSERT(CoinThing, 0x48);
+SIZE_ASSERT(CoinThing, 0x48)
 
 typedef struct
 {
@@ -61,7 +61,7 @@ typedef struct
                                     // index controller id
 /* 0x1B04 */ u8 unknown_0x1b04[0x1b08 - 0x1b04];
 } SpmarioGlobals;
-SIZE_ASSERT(SpmarioGlobals, 0x1b08);
+SIZE_ASSERT(SpmarioGlobals, 0x1b08)
 extern SpmarioGlobals * gp;
 extern SpmarioGlobals spmario;
 

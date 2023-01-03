@@ -34,7 +34,7 @@ typedef struct
 /* 0x30 */ EvtScriptCode * pickupScript;
 /* 0x34 */ u8 unknown_0x34[0x88 - 0x34];
 } ItemEntry;
-SIZE_ASSERT(ItemEntry, 0x88);
+SIZE_ASSERT(ItemEntry, 0x88)
 
 typedef struct
 {
@@ -44,7 +44,7 @@ typedef struct
 /* 0x64 */ s32 tutorialWindowId;
 /* 0x68 */ u8 unknown_0x68[0x80 - 0x68];
 } ItemWork;
-SIZE_ASSERT(ItemWork, 0x80);
+SIZE_ASSERT(ItemWork, 0x80)
 
 DECOMP_STATIC(ItemWork itemdrv_work)
 DECOMP_STATIC(ItemWork * itemdrv_wp)

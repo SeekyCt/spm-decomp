@@ -20,14 +20,14 @@ typedef struct
 /* 0x0 */ const char * mapName;
 /* 0x4 */ s32 num;
 } AssignTblEntry;
-SIZE_ASSERT(AssignTblEntry, 0x8);
+SIZE_ASSERT(AssignTblEntry, 0x8)
 
 typedef struct
 {
 /* 0x0 */ s32 coinId;
 /* 0x4 */ s32 gameCoinId;
 } SwWork;
-SIZE_ASSERT(SwWork, 0x8);
+SIZE_ASSERT(SwWork, 0x8)
 
 DECOMP_STATIC(AssignTblEntry swdrv_assign_tbl[])
 DECOMP_STATIC(SwWork swdrv_work)

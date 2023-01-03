@@ -18,7 +18,7 @@ typedef struct
 /* 0x1 */ bool selected;
 /* 0x2 */ s16 itemType;
 } PouchCharOrPixlInfo;
-SIZE_ASSERT(PouchCharOrPixlInfo, 0x4);
+SIZE_ASSERT(PouchCharOrPixlInfo, 0x4)
 
 typedef struct
 {
@@ -26,7 +26,7 @@ typedef struct
 /* 0x04 */ s32 score;
 /* 0x08 */ u8 unknown_0x8[0x18 - 0x8];
 } PouchMinigameScore;
-SIZE_ASSERT(PouchMinigameScore, 0x18);
+SIZE_ASSERT(PouchMinigameScore, 0x18)
 
 /*
     This struct is copied in full to & from the save file
@@ -76,7 +76,7 @@ typedef struct
 /* 0x698 */ s32 enemiesDefeated; // all-time enemies defeated
 /* 0x69C */ u8 unknown_0x69c[0x6a0 - 0x69c];
 } MarioPouchWork;
-SIZE_ASSERT(MarioPouchWork, 0x6a0);
+SIZE_ASSERT(MarioPouchWork, 0x6a0)
 
 typedef struct
 {
@@ -88,7 +88,7 @@ typedef struct
 /* 0x14 */ s32 unknown_0x14;
 /* 0x18 */ OSTime unknown_0x18;
 } MarioPouchWork2;
-SIZE_ASSERT(MarioPouchWork2, 0x20);
+SIZE_ASSERT(MarioPouchWork2, 0x20)
 
 DECOMP_STATIC(MarioPouchWork mario_pouch_work)
 DECOMP_STATIC(MarioPouchWork mario_pouch_work2)

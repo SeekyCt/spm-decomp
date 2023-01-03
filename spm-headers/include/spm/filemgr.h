@@ -54,7 +54,7 @@ typedef struct _FileEntry
 /* 0xAC */ void * readDoneCb;
 /* 0xB0 */ DVDEntry * dvdEntry;
 } FileEntry;
-SIZE_ASSERT(FileEntry, 0xb4);
+SIZE_ASSERT(FileEntry, 0xb4)
 
 typedef struct
 {
@@ -64,7 +64,7 @@ typedef struct
 /* 0x0C */ FileEntry * freeStart; // first item in the free linked list
 /* 0x10 */ FileEntry * freeEnd; // last item in the allocated linked list
 } FileWork;
-SIZE_ASSERT(FileWork, 0x14);
+SIZE_ASSERT(FileWork, 0x14)
 
 DECOMP_STATIC(FileWork filemgr_work)
 DECOMP_STATIC(FileWork * filemgr_wp)

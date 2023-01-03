@@ -22,7 +22,7 @@ typedef struct
 /* 0x18 */ EvtEntry * nandCheckEvtEntry;
 /* 0x1C */ s32 nandCheckEvtEntryId;
 } SeqLogoWork;
-SIZE_ASSERT(SeqLogoWork, 0x20);
+SIZE_ASSERT(SeqLogoWork, 0x20)
 DECOMP_STATIC(SeqLogoWork seq_logo_work)
 DECOMP_STATIC(SeqLogoWork * seq_logo_wp)
 

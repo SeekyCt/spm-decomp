@@ -46,7 +46,7 @@ typedef struct _HitObj
 /* 0x10C */ struct _HitObj * nextSibling;
 /* 0x110 */ u8 unknown_0x110[0x114 - 0x110];
 } HitObj;
-SIZE_ASSERT(HitObj, 0x114);
+SIZE_ASSERT(HitObj, 0x114)
 
 /*
     Stub

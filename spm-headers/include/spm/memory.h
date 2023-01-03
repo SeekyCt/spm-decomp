@@ -53,7 +53,7 @@ typedef struct
 /* 0x0 */ s32 type; // see enum above
 /* 0x4 */ s32 size;
 } HeapSize;
-SIZE_ASSERT(HeapSize, 0x8);
+SIZE_ASSERT(HeapSize, 0x8)
 
 DECOMP_STATIC(HeapSize memory_size_table[9])
 
@@ -63,7 +63,7 @@ typedef struct
 /* 0x24 */ void * heapStart[HEAP_COUNT]; // pointer to the start of the heap
 /* 0x48 */ void * heapEnd[HEAP_COUNT]; // pointer to the end of the heap
 } MemWork;
-SIZE_ASSERT(MemWork, 0x6c);
+SIZE_ASSERT(MemWork, 0x6c)
 
 DECOMP_STATIC(MemWork memory_work)
 DECOMP_STATIC(MemWork * memory_wp)
@@ -83,7 +83,7 @@ typedef struct _SmartAllocation
 /* 0x14 */ struct _SmartAllocation * next; // next item in the allocated or free linked list
 /* 0x18 */ struct _SmartAllocation * prev; // previous item in the allocated or free linked list
 } SmartAllocation;
-SIZE_ASSERT(SmartAllocation, 0x1c);
+SIZE_ASSERT(SmartAllocation, 0x1c)
 
 typedef struct
 {
@@ -96,7 +96,7 @@ typedef struct
 /* 0xE014 */ SmartAllocation * freeEnd; // last item in free allocation linked list
 /* 0xE018 */ u32 freedThisFrame; // number of allocations freed this frame
 } SmartWork;
-SIZE_ASSERT(SmartWork, 0xe01c);
+SIZE_ASSERT(SmartWork, 0xe01c)
 
 DECOMP_STATIC(SmartWork memory_smartWork)
 DECOMP_STATIC(SmartWork memory_swp)

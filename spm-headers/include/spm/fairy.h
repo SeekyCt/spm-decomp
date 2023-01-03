@@ -56,7 +56,7 @@ typedef struct _FairyEntry
 /* 0x48 */ Vec3 position;
 /* 0x54 */ u8 unknown_0x54[0xd0 - 0x54];
 } FairyEntry;
-SIZE_ASSERT(FairyEntry, 0xd0);
+SIZE_ASSERT(FairyEntry, 0xd0)
 
 typedef struct
 {
@@ -68,7 +68,7 @@ typedef struct
 /* 0x350 */ s32 extraNo;
 /* 0x354 */ u8 unknown_0x354[0x368 - 0x354];
 } FairyWork;
-SIZE_ASSERT(FairyWork, 0x368);
+SIZE_ASSERT(FairyWork, 0x368)
 
 DECOMP_STATIC(FairyWork fairy_work)
 

@@ -22,7 +22,7 @@ typedef struct
 /* 0x4 */ void * bss;
 /* 0x8 */ bool loaded;
 } RelWork;
-SIZE_ASSERT(RelWork, 0xc);
+SIZE_ASSERT(RelWork, 0xc)
 
 DECOMP_STATIC(RelWork * relmgr_wp)
 DECOMP_STATIC(const char * relmgr_relDecompName)

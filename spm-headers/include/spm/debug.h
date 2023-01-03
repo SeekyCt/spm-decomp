@@ -8,7 +8,7 @@ typedef struct
 {
 /* 0x00 */ u8 unknown_0x0[0x1c - 0x0];
 } DebugWork;
-SIZE_ASSERT(DebugWork, 0x1c);
+SIZE_ASSERT(DebugWork, 0x1c)
 
 void debugInit();
 void debugReInit();

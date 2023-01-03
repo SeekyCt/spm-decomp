@@ -26,7 +26,7 @@ typedef struct
 /* 0x54 */ EvtScriptCode * script;
 /* 0x58 */ s32 scriptPriority;
 } CaseEntDef;
-SIZE_ASSERT(CaseEntDef, 0x5c);
+SIZE_ASSERT(CaseEntDef, 0x5c)
 
 // Script running this frame
 #define CASE_FLAG_RUN 0x10
@@ -47,7 +47,7 @@ typedef struct
 /* 0xD4 */ EvtScriptCode * script;
 /* 0xD8 */ s32 scriptPriority;
 } CaseEntry;
-SIZE_ASSERT(CaseEntry, 0xdc);
+SIZE_ASSERT(CaseEntry, 0xdc)
 
 typedef struct
 {
@@ -55,7 +55,7 @@ typedef struct
 /* 0x4 */ CaseEntry * entries; // array of n length
 /* 0x8 */ u8 unknown_0x8[0x10 - 0x8];
 } CaseWork;
-SIZE_ASSERT(CaseWork, 0x10);
+SIZE_ASSERT(CaseWork, 0x10)
 
 DECOMP_STATIC(CaseWork casedrv_work)
 DECOMP_STATIC(CaseWork * casedrv_wp)

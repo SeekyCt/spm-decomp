@@ -17,7 +17,7 @@ typedef struct
 /* 0x122 */ s16 width;
 /* 0x124 */ u8 unknown_0x124[0x140 - 0x124];
 } RomfontEntry;
-SIZE_ASSERT(RomfontEntry, 0x140);
+SIZE_ASSERT(RomfontEntry, 0x140)
 
 typedef struct
 {
@@ -25,7 +25,7 @@ typedef struct
 /* 0x4 */ s32 entryCount;
 /* 0x8 */ s32 useSJIS;
 } RomfontWork;
-SIZE_ASSERT(RomfontWork, 0xc);
+SIZE_ASSERT(RomfontWork, 0xc)
 
 DECOMP_STATIC(RomfontWork * romfont_wp)
 DECOMP_STATIC(RomfontWork romfont_work)

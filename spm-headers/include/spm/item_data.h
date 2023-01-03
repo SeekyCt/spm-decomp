@@ -85,7 +85,7 @@ typedef struct
 /* 0x28 */ s16 tribe; // For the NPCs on cards
 /* 0x2A */ s16 sortValue; // For sorting in shops, higher value -> lower on the list
 } ItemData;
-SIZE_ASSERT(ItemData, 0x2c);
+SIZE_ASSERT(ItemData, 0x2c)
 
 extern ItemData itemDataTable[ITEM_ID_MAX];
 

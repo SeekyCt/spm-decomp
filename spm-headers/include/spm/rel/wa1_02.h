@@ -13,7 +13,7 @@ typedef struct
 /* 0x10 */ s32 alreadyBeatenGsw0;
 /* 0x14 */ u8 unknown_0x14[0x28 - 0x14];
 } SammerDef;
-SIZE_ASSERT(SammerDef, 0x28);
+SIZE_ASSERT(SammerDef, 0x28)
 
 extern SammerDef sammerDefsCh6[30];
 extern SammerDef sammerDefsEndgame[30];

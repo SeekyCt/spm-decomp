@@ -22,7 +22,7 @@ typedef struct
 /* 0x50 */ u8 unknown_0x50[0x5c - 0x50];
 /* 0x5C */ f32 gravityRotation; // degrees anti-clockwise about the z-axis
 } MiscSetupDataV6;
-SIZE_ASSERT(MiscSetupDataV6, 0x60);
+SIZE_ASSERT(MiscSetupDataV6, 0x60)
 
 typedef struct
 {
@@ -30,7 +30,7 @@ typedef struct
 /* 0x0C */ s32 type; // nTemplateNo, index into npcEnemyTemplates
 /* 0x10 */ MiscSetupDataV6 misc;
 } SetupEnemyV6;
-SIZE_ASSERT(SetupEnemyV6, 0x70);
+SIZE_ASSERT(SetupEnemyV6, 0x70)
 
 typedef struct
 {
@@ -38,7 +38,7 @@ typedef struct
 /* 0x0002 */ // padding 0x2-3
 /* 0x0004 */ SetupEnemyV6 enemies[100];
 } SetupFileV6;
-SIZE_ASSERT(SetupFileV6, 0x2bc4);
+SIZE_ASSERT(SetupFileV6, 0x2bc4)
 
 typedef struct
 {
@@ -46,7 +46,7 @@ typedef struct
 /* 0x2 */ u16 type; // only 0 is supported, which is a coin
 /* 0x4 */ Vec3 pos;
 } SetupItem;
-SIZE_ASSERT(SetupItem, 0x10);
+SIZE_ASSERT(SetupItem, 0x10)
 
 typedef struct
 {
@@ -55,14 +55,14 @@ typedef struct
 /* 0x2BC8 */ s32 itemVersion; // 20051201
 /* 0x2BCC */ SetupItem items[]; // itemCount items
 } SetupFileV6WithItems;
-OFFSET_ASSERT(SetupFileV6WithItems, items, 0x2bcc);
+OFFSET_ASSERT(SetupFileV6WithItems, items, 0x2bcc)
 
 typedef struct
 {
 /* 0x0 */ u16 id; // only 0 is used
 /* 0x2 */ u16 itemTeplateId; // index into setupItemTemplates
 } SetupItemTemplate;
-SIZE_ASSERT(SetupItemTemplate, 0x4);
+SIZE_ASSERT(SetupItemTemplate, 0x4)
 
 extern SetupItemTemplate setupItemTemplates[1]; // only contains id 0 - a coin
 

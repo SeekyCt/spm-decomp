@@ -24,7 +24,7 @@ typedef struct
 {
 /* 0x00 */ u8 unknown_0x0[0x8c - 0x0];
 } NANDFileInfo;
-SIZE_ASSERT(NANDFileInfo, 0x8c);
+SIZE_ASSERT(NANDFileInfo, 0x8c)
 
 typedef struct
 {
@@ -36,7 +36,7 @@ typedef struct
 /* 0x00A0 */ u8 bannerTexture[0x6000];
 /* 0x60A0 */ u8 iconTextures[8][0x1200];
 } NANDBanner;
-SIZE_ASSERT(NANDBanner, 0xf0a0);
+SIZE_ASSERT(NANDBanner, 0xf0a0)
 
 typedef struct
 {
@@ -46,9 +46,9 @@ typedef struct
 #endif
 } NANDCommandBlock;
 #ifdef SPM_KR0
-SIZE_ASSERT(NANDCommandBlock, 0xbc);
+SIZE_ASSERT(NANDCommandBlock, 0xbc)
 #else
-SIZE_ASSERT(NANDCommandBlock, 0xb8);
+SIZE_ASSERT(NANDCommandBlock, 0xb8)
 #endif
 
 typedef void (NANDCallback)(s32 result, NANDCommandBlock * commandBlock);

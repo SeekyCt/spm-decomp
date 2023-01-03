@@ -35,7 +35,7 @@ typedef struct
 {
 /* 0x00 */ u8 unknown_0x0[0x34 - 0x0];
 } MarioJumpFallPara;
-SIZE_ASSERT(MarioJumpFallPara, 0x34);
+SIZE_ASSERT(MarioJumpFallPara, 0x34)
 
 /*
     Called every frame, fairy is deleted when true is returned
@@ -70,7 +70,7 @@ typedef struct _MarioFairy
 /* 0x14 */ struct _MarioFairy * next;
 /* 0x18 */ struct _MarioFairy * prev;
 } MarioFairy;
-SIZE_ASSERT(MarioFairy, 0x1c);
+SIZE_ASSERT(MarioFairy, 0x1c)
 
 struct _MarioStatus;
 
@@ -109,7 +109,7 @@ typedef struct _MarioStatus
 /* 0x1C */ struct _MarioStatus * prev;
 /* 0x20 */ struct _MarioStatus * next;
 } MarioStatus;
-SIZE_ASSERT(MarioStatus, 0x24);
+SIZE_ASSERT(MarioStatus, 0x24)
 
 enum MarioGravityType
 {
@@ -133,7 +133,7 @@ typedef struct
 /* 0x0 */ f32 min;
 /* 0x4 */ f32 max;
 } MarioPaneBoundary;
-SIZE_ASSERT(MarioPaneBoundary, 0x8);
+SIZE_ASSERT(MarioPaneBoundary, 0x8)
 
 /*
     Returns true if the pane change is allowed
@@ -447,7 +447,7 @@ typedef struct
 /* 0x155C */ Vec3 facingTarget;
 /* 0x1568 */ u8 unknown_0x1568[0x156c - 0x1568];
 } MarioWork;
-SIZE_ASSERT(MarioWork, 0x156c);
+SIZE_ASSERT(MarioWork, 0x156c)
 
 DECOMP_STATIC(MarioWork mario_work)
 
@@ -459,7 +459,7 @@ typedef struct
 /* 0x0C */ f32 dashSpeed;
 /* 0x10 */ u8 unknown_0x10[0x14 - 0x10];
 } CharacterProperties;
-SIZE_ASSERT(CharacterProperties, 0x14);
+SIZE_ASSERT(CharacterProperties, 0x14)
 
 extern CharacterProperties characterProperties[4]; // index character id
 
@@ -470,7 +470,7 @@ typedef struct
 /* 0x0 */ MarioMotFunc * mainFunc;
 /* 0x4 */ MarioMotFunc * deleteFunc;
 } MarioMotFuncs;
-SIZE_ASSERT(MarioMotFuncs, 0x8);
+SIZE_ASSERT(MarioMotFuncs, 0x8)
 
 extern MarioMotFuncs marioMotTbl[78]; // index motion id
 

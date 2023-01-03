@@ -23,7 +23,7 @@ typedef struct
                                   // and fallbackDoorName isn't set
 /* 0x18 */ EvtScriptCode * initScript; // In rel, linked by prolog function
 } MapData;
-SIZE_ASSERT(MapData, 0x1c);
+SIZE_ASSERT(MapData, 0x1c)
 
 extern MapData * mapData[MAP_ID_MAX];
 

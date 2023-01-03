@@ -23,7 +23,7 @@ typedef struct
 /* 0x1 */ u8 defense;
 /* 0x2 */ u16 flags;
 } NPCDefense;
-SIZE_ASSERT(NPCDefense, 0x4);
+SIZE_ASSERT(NPCDefense, 0x4)
 
 struct _NPCPart;
 typedef void (NPCPartUpdateFunc)(struct _NPCPart * part, Unk);
@@ -37,21 +37,21 @@ typedef struct
 /* 0x30 */ NPCPartUpdateFunc * updateFunc;
 /* 0x34 */ u8 unknown_0x34[0x48 - 0x34];
 } NPCPartDef;
-SIZE_ASSERT(NPCPartDef, 0x48);
+SIZE_ASSERT(NPCPartDef, 0x48)
 
 typedef struct
 {
 /* 0x0 */ s32 id;
 /* 0x4 */ const char * animName;
 } NPCTribeAnimDef;
-SIZE_ASSERT(NPCTribeAnimDef, 0x8);
+SIZE_ASSERT(NPCTribeAnimDef, 0x8)
 
 typedef struct
 {
 /* 0x0 */ s32 itemId;
 /* 0x4 */ s32 chance;
 } NPCDropItem;
-SIZE_ASSERT(NPCDropItem, 0x8);
+SIZE_ASSERT(NPCDropItem, 0x8)
 
 typedef struct
 {
@@ -76,7 +76,7 @@ typedef struct
 /* 0x64 */ u8 attackStrength; // only used for the tattle, doesn't affect damage
 /* 0x65 */ u8 unknown_0x65[0x68 - 0x65];
 } NPCTribe;
-SIZE_ASSERT(NPCTribe, 0x68);
+SIZE_ASSERT(NPCTribe, 0x68)
 
 typedef struct
 {
@@ -86,7 +86,7 @@ typedef struct
 /* 0x48 */ NPCTribeAnimDef * tribeAnims;
 /* 0x4C */ // unknown 0x4c+
 } NPCAnim; // unknown size
-OFFSET_ASSERT(NPCAnim, tribeAnims, 0x48);
+OFFSET_ASSERT(NPCAnim, tribeAnims, 0x48)
 
 typedef struct _NPCPart
 {
@@ -102,7 +102,7 @@ typedef struct _NPCPart
 /* 0x390 */ struct _NPCPart * nextPart;
 /* 0x394 */ u8 unknown_0x394[0x398 - 0x394];
 } NPCPart;
-SIZE_ASSERT(NPCPart, 0x398);
+SIZE_ASSERT(NPCPart, 0x398)
 
 typedef struct _NPCEntry
 {
@@ -182,7 +182,7 @@ typedef struct _NPCEntry
                                                // g(unknown for non-templated NPCs)
 /* 0x71C */ u8 unknown_0x71c[0x748 - 0x71c];
 } NPCEntry;
-SIZE_ASSERT(NPCEntry, 0x748);
+SIZE_ASSERT(NPCEntry, 0x748)
 
 typedef struct
 {
@@ -199,7 +199,7 @@ typedef struct
 /* 0x728 */ u8 unknown_0x728[0x400];
 /* 0xB28 */ u8 unknown_0xb28[0xb48 - 0xb28];
 } NPCWork;
-SIZE_ASSERT(NPCWork, 0xb48);
+SIZE_ASSERT(NPCWork, 0xb48)
 
 DECOMP_STATIC(NPCWork npcdrv_work)
 DECOMP_STATIC(NPCWork * npcdrv_wp)
@@ -234,7 +234,7 @@ typedef struct
 /* 0x58 */ void * unknown_0x58;
 /* 0x5C */ u8 unknown_0x5c[0x68 - 0x5c]; // all left blank to be copied from SetupEnemy
 } NPCEnemyTemplate;
-SIZE_ASSERT(NPCEnemyTemplate, 0x68);
+SIZE_ASSERT(NPCEnemyTemplate, 0x68)
 
 extern NPCTribe npcTribes[535];
 extern NPCEnemyTemplate npcEnemyTemplates[NPCTEMPLATE_MAX];

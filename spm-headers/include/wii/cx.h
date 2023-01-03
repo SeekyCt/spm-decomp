@@ -13,7 +13,7 @@ typedef struct
 /* 0x0 */ u32 flags;
 /* 0x4 */ u32 decompSize;
 } CXParsedHeader;
-SIZE_ASSERT(CXParsedHeader, 0x8);
+SIZE_ASSERT(CXParsedHeader, 0x8)
 
 /*
     Reads the header of compressed data and formats it into the struct

@@ -13,7 +13,7 @@ typedef struct
 /* 0x0C */ const char * case1Name;
 /* 0x10 */ const char * case2Name;
 } EvtShopDef;
-SIZE_ASSERT(EvtShopDef, 0x14);
+SIZE_ASSERT(EvtShopDef, 0x14)
 
 EVT_UNKNOWN_USER_FUNC(evt_shop_wait_coin_sfx)
 EVT_UNKNOWN_USER_FUNC(func_8010d2b8)
