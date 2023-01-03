@@ -45,4 +45,4 @@ def makectx(bases: List[str]):
             ret += process_header(header, bases)
     return ret
 
-print(makectx([c.INCDIR, c.PPCDIS_INCDIR]))
+print(makectx(c.INCDIRS))

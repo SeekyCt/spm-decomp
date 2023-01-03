@@ -6,12 +6,12 @@ def apply(config, args: Namespace):
         config["mapfile"] = c.REL_MAP
         config["myimg"] = c.REL_PLF
         config["baseimg"] = c.REL_EXPECTED
-        config["source_directories"] = [c.REL_SRCDIR, c.INCDIR]
+        config["source_directories"] = [c.REL_SRCDIR, *c.INCDIRS]
     else:
         config["mapfile"] = c.DOL_MAP
         config["myimg"] = c.DOL_ELF
         config["baseimg"] = c.DOL_EXPECTED
-        config["source_directories"] = [c.DOL_SRCDIR, c.INCDIR]
+        config["source_directories"] = [c.DOL_SRCDIR, *c.INCDIRS]
     config["make_command"] = ["ninja"]
     config["makeflags"] = []
     config["arch"] = "ppc"

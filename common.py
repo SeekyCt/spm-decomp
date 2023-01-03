@@ -153,9 +153,6 @@ DOL_SRCDIR = "src"
 # Directory for decompiled rel code
 REL_SRCDIR = "rel"
 
-# Include directory
-INCDIR = "include"
-
 # Build artifacts directory
 BUILDDIR = "build"
 
@@ -279,20 +276,30 @@ REL_FULL = f"{OUTDIR}/rel.s"
 
 ASFLAGS = ' '.join([
     "-m gekko",
-    f"-I {INCDIR}",
     f"-I {PPCDIS_INCDIR}",
     f"-I orig"
 ])
 
+INCDIRS = [
+    PPCDIS_INCDIR,
+    BUILD_INCDIR,
+    f"{SPM_HEADERS}/decomp",
+    f"{SPM_HEADERS}/include"
+]
+MWCC_INCLUDES = ' '.join(f"-i {d}" for d in INCDIRS)
+GCC_INCLUDES = ' '.join(f"-I {d}" for d in INCDIRS)
+
+DEFINES = [
+    "DECOMP",
+    "SPM_EU0"
+]
+MWCC_DEFINES = ' '.join(f"-d {d}" for d in DEFINES)
+GCC_DEFINES = ' '.join(f"-D {d}" for d in DEFINES)
+
 CPPFLAGS = ' '.join([
     "-nostdinc",
-    "-DDECOMP",
-    "-DSPM_EU0",
-    f"-I {INCDIR}",
-    f"-I {PPCDIS_INCDIR}",
-    f"-I {BUILD_INCDIR}",
-    f"-I {SPM_HEADERS}/decomp",
-    f"-I {SPM_HEADERS}/include"
+    GCC_DEFINES,
+    GCC_INCLUDES
 ])
 
 DOL_SDATA2_SIZE = 4
@@ -310,8 +317,7 @@ CFLAGS = [
     "-rostr",
     "-sym dwarf-2",
     "-ipa file",
-    "-d DECOMP",
-    "-d SPM_EU0",
+    MWCC_DEFINES
 ]
 BASE_DOL_CFLAGS = CFLAGS + [
     "-inline all",
@@ -330,11 +336,7 @@ LOCAL_CFLAGS = [
     "-proc gekko",
     "-maxerrors 1",
     "-I-",
-    f"-i {INCDIR}",
-    f"-i {PPCDIS_INCDIR}",
-    f"-i {BUILD_INCDIR}",
-    f"-i {SPM_HEADERS}/decomp",
-    f"-i {SPM_HEADERS}/include",
+    MWCC_INCLUDES
 ]
 DOL_CFLAGS = ' '.join(BASE_DOL_CFLAGS + LOCAL_CFLAGS)
 REL_CFLAGS = ' '.join(BASE_REL_CFLAGS + LOCAL_CFLAGS)

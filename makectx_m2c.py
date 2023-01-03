@@ -20,7 +20,7 @@ def make_includes(dirnames: List[str]) -> str:
     )
 
 # Find all headers
-includes = make_includes([c.INCDIR, c.PPCDIS_INCDIR])
+includes = make_includes(c.INCDIRS)
 
 # Run mwcc preprocessor
 with NamedTemporaryFile(suffix=".c", delete=False) as tmp:
@@ -28,7 +28,7 @@ with NamedTemporaryFile(suffix=".c", delete=False) as tmp:
         tmp.write(includes.encode())
         tmp.close()
         out = c.get_cmd_stdout(
-            f"{c.CC} -I- -i {c.INCDIR} -i {c.PPCDIS}/include -DM2C -stderr -E {tmp.name}"
+            f"{c.CC} -I- {c.MWCC_INCLUDES} {c.MWCC_DEFINES} -d M2C -stderr -E {tmp.name}"
         )
     finally:
         unlink(tmp.name)
