@@ -108,7 +108,7 @@ typedef u8 unk8;
 #endif
 
 // For GCC these have to be defined in the linker script
-#ifdef DECOMP
+#if (defined DECOMP) && !(defined M2C)
     #define FIXED_ADDR(type, name, addr) \
         type name : addr
 #else
