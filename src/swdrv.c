@@ -92,7 +92,7 @@ bool swGet(s32 id)
 {
     u32 mask = 1U << (id % 32);
     u32 dat = gp->gswf[id / 32];
-    return (bool) (mask & dat);
+    return (mask & dat) != 0;
 }
 
 void swClear(s32 id)
@@ -132,7 +132,7 @@ bool _swGet(s32 id)
 {
     u32 mask = 1U << (id % 32);
     u32 dat = gp->lswf[id / 32];
-    return (bool) (mask & dat);
+    return (mask & dat) != 0;
 }
 
 void _swClear(s32 id)
