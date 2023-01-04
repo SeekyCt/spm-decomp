@@ -152,61 +152,62 @@ s32 _swByteGet(s32 id)
     return gp->lsw[id];
 }
 
-// TODO: somehow this broke with shared headers
-#ifdef NON_MATCHING
-// Shoutouts to an anonymous decomp.me user (Grumpy Nighingale) for matching it from 95.34% to 100%
 s32 func_80038204()
 {
-    CoinThing *pCoinThings;
-    char *mapname;
-    s32 i;
-    CoinThing *pCVar3;
     s32 id;
-    pCoinThings = gp->coinThings;
+    s32 i;
+    CoinThing * coinThing;
 
+    coinThing = gp->coinThings;
+
+    // Skip if in wrong sequence
     if (seqGetSeq() != SEQ_MAPCHANGE)
-      return -1;
-      
-    mapname = gp->mapName;
-    for (i = 0; i < MAX_COIN_MAP; i++)
-        if (strcmp(mapname, pCoinThings[i].mapName) == 0)
+        return -1;
+
+    // Try find CoinThing for this map
+    for (i = 0; i < MAX_COIN_MAP; i++, coinThing++)
+    {
+        if (strcmp(gp->mapName, coinThing->mapName) == 0)
             break;
-    
+    }
+
+    // Allocate CoinThing for this map
     if (i >= MAX_COIN_MAP)
     {
-        s32 i;
-        CoinThing *pCVar2;
-        pCVar3 = gp->coinThings;
-        pCVar2 = gp->coinThings;
-        if (strncmp(mapname, pCVar2[0].mapName, 3) != 0 && strncmp(mapname, "bos", 3) != 0)
+        // Wipe if changing area
+        coinThing = gp->coinThings;
+        if (strncmp(gp->mapName, coinThing->mapName, 3) != 0 &&
+            strncmp(gp->mapName, "bos", 3) != 0)
         {
-            memset(pCVar3, 0, 0x900);
+            memset(gp->coinThings, 0, sizeof(gp->coinThings));
             wp->coinId = 0;
         }
-        pCVar2 = &gp->coinThings[0];
-        for (i = 0; i < MAX_COIN_MAP; i++)
+
+        // Find free CoinThing
+        coinThing = gp->coinThings;
+        for (i = 0; i < MAX_COIN_MAP; i++, coinThing++)
         {
-            if (strcmp(pCVar2->mapName, "") == 0) break;
-            pCVar2++;
+            if (strcmp(coinThing->mapName, "") == 0)
+                break;
         }
 
-        // Coin flag's save location not found
+        // "Can't find location for coin flag"
         assert(245, i < MAX_COIN_MAP, "コインフラグの保存場所がみつかりません");
-        strcpy(pCVar2[0].mapName, gp->mapName);
+
+        // Init CoinThing
+        strcpy(coinThing->mapName, gp->mapName);
+
         wp->coinId = 0;
     }
+
+    // Increment coin id
     id = wp->coinId++;
-    
-    // Coin flags have overflowed
+
+    // "Coin flags have overflowed"
     assert(253, wp->coinId < MAX_COIN_BIT, "コインのフラグが溢れました");
+
     return id;
 }
-#else
-asm s32 func_80038204()
-{
-    #include "asm/80038204.s"
-}
-#endif
 
 asm UNKNOWN_FUNCTION(func_800383a0)
 {
