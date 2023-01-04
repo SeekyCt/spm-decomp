@@ -103,13 +103,13 @@ s32 _swByteGet(s32 id);
 
 // New to SPM so no symbols:
 s32 func_80038204();
-UNKNOWN_FUNCTION(func_800383a0);
-UNKNOWN_FUNCTION(func_80038478);
-UNKNOWN_FUNCTION(func_80038550);
-UNKNOWN_FUNCTION(func_8003863c);
-UNKNOWN_FUNCTION(func_8003864c);
+void func_800383a0(s32 id);
+void func_80038478(s32 id);
+bool func_80038550(s32 id);
+void func_8003863c();
+void func_8003864c();
 s32 func_8003865c();
-UNKNOWN_FUNCTION(func_8003875c);
-UNKNOWN_FUNCTION(func_800387d8);
+bool func_8003875c(s32 id);
+void func_800387d8(s32 id);
 
 CPP_WRAPPER_END()

@@ -52,8 +52,6 @@ static const AssignTblEntry assign_tbl[] = {
     {"ta1_07", 10}, {"ta2_01", 34}, {"ta3_02",  3}, {"ta3_05", 48}
 };
 
-#include "orderstrings/80326278_80326360.inc"
-
 // .bss
 static SwWork work;
 
@@ -209,19 +207,82 @@ s32 func_80038204()
     return id;
 }
 
-asm UNKNOWN_FUNCTION(func_800383a0)
+void func_800383a0(s32 id)
 {
-    #include "asm/800383a0.s"
+    s32 i;
+    CoinThing * coinThing;
+
+    coinThing = gp->coinThings;
+
+    // Skip if bad id
+    if (id == -1)
+        return;
+    
+    // Try find CoinThing for this map
+    for (i = 0; i < MAX_COIN_MAP; i++, coinThing++)
+    {
+        if (strcmp(gp->mapName, coinThing->mapName) == 0)
+            break;
+    }
+
+    // "No flags entered"
+    assert(269, i < MAX_COIN_MAP, "フラグがエントリされていません");
+
+    // Turn on bitflag
+    coinThing->coinFlags[id / 32] |= 1 << (id % 32);
 }
 
-asm UNKNOWN_FUNCTION(func_80038478)
+void func_80038478(s32 id)
 {
-    #include "asm/80038478.s"
+    s32 i;
+    CoinThing * coinThing;
+
+    coinThing = gp->coinThings;
+
+    // Skip if bad id
+    if (id == -1)
+        return;
+    
+    // Try find CoinThing for this map
+    for (i = 0; i < MAX_COIN_MAP; i++, coinThing++)
+    {
+        if (strcmp(gp->mapName, coinThing->mapName) == 0)
+            break;
+    }
+
+    // "No flags entered"
+    assert(286, i < MAX_COIN_MAP, "フラグがエントリされていません");
+
+    // Turn off bitflag
+    coinThing->coinFlags[id / 32] &= ~(1 << (id % 32));
 }
 
-asm UNKNOWN_FUNCTION(func_80038550)
+bool func_80038550(s32 id)
 {
-    #include "asm/80038550.s"
+    s32 i;
+    CoinThing * coinThing;
+
+    coinThing = gp->coinThings;
+
+    // Skip if bad id
+    if (id == -1)
+        return false;
+    
+    // Try find CoinThing for this map
+    for (i = 0; i < MAX_COIN_MAP; i++, coinThing++)
+    {
+        if (strcmp(gp->mapName, coinThing->mapName) == 0)
+            break;
+    }
+
+    // "No flags entered"
+    assert(303, i < MAX_COIN_MAP, "フラグがエントリされていません");
+
+    // Check bitflag
+    if ((coinThing->coinFlags[id / 32] & 1 << (id % 32)) != 0)
+        return true;
+    else
+        return false;
 }
 
 void func_8003863c()
@@ -247,7 +308,8 @@ s32 func_8003865c(void)
     
     for (i = 0; i < MAX_COIN_MAP; i++)
     {
-        if (strcmp(mapName, assign_tbl[i].mapName) == 0) break;
+        if (strcmp(mapName, assign_tbl[i].mapName) == 0)
+            break;
         output += assign_tbl[i].num;
     }
     
@@ -256,17 +318,71 @@ s32 func_8003865c(void)
 
     output += wp->gameCoinId++;
     
-    // Coin flags have overflowed
+    // "Coin flags have overflowed"
     assert(505, (wp->gameCoinId-1) < assign_tbl[i].num, "コインのフラグが溢れました");
     return output;
 }
 
-asm UNKNOWN_FUNCTION(func_8003875c)
+bool func_8003875c(s32 id)
 {
-    #include "asm/8003875c.s"
+    s32 idx;
+    s32 bit;
+    EvtVar var;
+    s32 val;
+    
+    // Skip if bad id
+    if (id == -1)
+        return false;
+
+    // Find index and bit for id
+    idx = id / 8;
+    bit = id % 8;
+
+    // Map id to GSW
+    var = lbl_80325cb8[idx] - GSW(0);
+    if (var == 0)
+        val = gp->gsw0;
+    else
+        val = (u8) gp->gsw[var];
+
+    // Check bit set
+    return ((val & (1 << bit)) != 0);
 }
 
-asm UNKNOWN_FUNCTION(func_800387d8)
+void func_800387d8(s32 id)
 {
-    #include "asm/800387d8.s"
+    s32 idx;
+    s32 num;
+    s32 bit;
+    EvtVar var;
+    s32 temp;
+
+    // Skip if bad id
+    if (id == -1)
+        return;
+    
+    // Find index and bit for id
+    idx = id / 8;
+    bit = id % 8;
+
+    // Map id to GSW
+    var = lbl_80325cb8[idx] - GSW(0);
+    if (var == 0)
+        temp = gp->gsw0;
+    else
+        temp = (u8) gp->gsw[var];
+
+    // Turn on bitflag
+    num = temp | (1 << bit);
+
+    // Store back to GSW
+    if (var == 0)
+    {
+        gp->gsw0 = (s32) num;
+    }
+    else
+    {
+        assertf(156, num < 256, "値がおかしい sw_byte[%d] = %d", var + EVTDAT_GSW_BASE, num);
+        gp->gsw[var] = (s8) num;
+    }
 }

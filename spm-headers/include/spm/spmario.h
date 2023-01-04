@@ -17,8 +17,9 @@ USING(wii::mtx::Vec3)
 
 typedef struct
 {
-/* 0x00 */ char mapName[32];
-/* 0x20 */ u8 _20[0x48-0x20];
+/* 0x00 */ char mapName[8];
+/* 0x08 */ u32 coinFlags[1]; // TODO: longer
+/* 0x0C */ u8 _C[0x48-0xc];
 } CoinThing;
 SIZE_ASSERT(CoinThing, 0x48)
 
