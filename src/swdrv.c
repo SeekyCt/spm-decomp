@@ -7,8 +7,7 @@
 #include <spm/system.h>
 #include <msl/string.h>
 
-// .rodata
-static const s32 lbl_80325cb8[] = {
+static const s32 gameCoinGswMap[] = {
     GSW(153), GSW(154), GSW(155), GSW(156), GSW(157), GSW(158), GSW(159), GSW(160),
     GSW(161), GSW(162), GSW(163), GSW(164), GSW(165), GSW(166), GSW(167), GSW(168),
     GSW(169), GSW(170), GSW(171), GSW(172), GSW(173), GSW(174), GSW(175), GSW(176),
@@ -52,10 +51,7 @@ static const AssignTblEntry assign_tbl[] = {
     {"ta1_07", 10}, {"ta2_01", 34}, {"ta3_02",  3}, {"ta3_05", 48}
 };
 
-// .bss
 static SwWork work;
-
-// .sdata
 static SwWork * wp = &work;
 
 void swInit()
@@ -65,7 +61,7 @@ void swInit()
     memset(gp->lswf, 0, sizeof(gp->lswf));
     memset(gp->lsw, 0, sizeof(gp->lsw));
 
-    memset(gp->coinThings, 0, sizeof(gp->coinThings));
+    memset(gp->coinEntries, 0, sizeof(gp->coinEntries));
 
     wp->coinId = 0;
     wp->gameCoinId = 0;
@@ -78,7 +74,7 @@ void swReInit()
     memset(gp->lswf, 0, sizeof(gp->lswf));
     memset(gp->lsw, 0, sizeof(gp->lsw));
 
-    memset(gp->coinThings, 0, sizeof(gp->coinThings));
+    memset(gp->coinEntries, 0, sizeof(gp->coinEntries));
 
     wp->coinId = 0;
 }
@@ -150,50 +146,50 @@ s32 _swByteGet(s32 id)
     return gp->lsw[id];
 }
 
-s32 func_80038204()
+s32 swGetCoinId()
 {
     s32 id;
     s32 i;
-    CoinThing * coinThing;
+    SwCoinEntry * entry;
 
-    coinThing = gp->coinThings;
+    entry = gp->coinEntries;
 
     // Skip if in wrong sequence
     if (seqGetSeq() != SEQ_MAPCHANGE)
         return -1;
 
-    // Try find CoinThing for this map
-    for (i = 0; i < MAX_COIN_MAP; i++, coinThing++)
+    // Try find coin entry for this map
+    for (i = 0; i < MAX_COIN_MAP; i++, entry++)
     {
-        if (strcmp(gp->mapName, coinThing->mapName) == 0)
+        if (strcmp(gp->mapName, entry->mapName) == 0)
             break;
     }
 
-    // Allocate CoinThing for this map
+    // Allocate coin entry for this map if needed
     if (i >= MAX_COIN_MAP)
     {
         // Wipe if changing area
-        coinThing = gp->coinThings;
-        if (strncmp(gp->mapName, coinThing->mapName, 3) != 0 &&
+        entry = gp->coinEntries;
+        if (strncmp(gp->mapName, entry->mapName, 3) != 0 &&
             strncmp(gp->mapName, "bos", 3) != 0)
         {
-            memset(gp->coinThings, 0, sizeof(gp->coinThings));
+            memset(gp->coinEntries, 0, sizeof(gp->coinEntries));
             wp->coinId = 0;
         }
 
-        // Find free CoinThing
-        coinThing = gp->coinThings;
-        for (i = 0; i < MAX_COIN_MAP; i++, coinThing++)
+        // Find free coin entry
+        entry = gp->coinEntries;
+        for (i = 0; i < MAX_COIN_MAP; i++, entry++)
         {
-            if (strcmp(coinThing->mapName, "") == 0)
+            if (strcmp(entry->mapName, "") == 0)
                 break;
         }
 
         // "Can't find location for coin flag"
         assert(245, i < MAX_COIN_MAP, "コインフラグの保存場所がみつかりません");
 
-        // Init CoinThing
-        strcpy(coinThing->mapName, gp->mapName);
+        // Init coin entry
+        strcpy(entry->mapName, gp->mapName);
 
         wp->coinId = 0;
     }
@@ -207,21 +203,21 @@ s32 func_80038204()
     return id;
 }
 
-void func_800383a0(s32 id)
+void swCoinSet(s32 id)
 {
     s32 i;
-    CoinThing * coinThing;
+    SwCoinEntry * entry;
 
-    coinThing = gp->coinThings;
+    entry = gp->coinEntries;
 
     // Skip if bad id
     if (id == -1)
         return;
     
-    // Try find CoinThing for this map
-    for (i = 0; i < MAX_COIN_MAP; i++, coinThing++)
+    // Try find coin entry for this map
+    for (i = 0; i < MAX_COIN_MAP; i++, entry++)
     {
-        if (strcmp(gp->mapName, coinThing->mapName) == 0)
+        if (strcmp(gp->mapName, entry->mapName) == 0)
             break;
     }
 
@@ -229,24 +225,24 @@ void func_800383a0(s32 id)
     assert(269, i < MAX_COIN_MAP, "フラグがエントリされていません");
 
     // Turn on bitflag
-    coinThing->coinFlags[id / 32] |= 1 << (id % 32);
+    entry->coinFlags[id / 32] |= 1 << (id % 32);
 }
 
-void func_80038478(s32 id)
+void swCoinClear(s32 id)
 {
     s32 i;
-    CoinThing * coinThing;
+    SwCoinEntry * entry;
 
-    coinThing = gp->coinThings;
+    entry = gp->coinEntries;
 
     // Skip if bad id
     if (id == -1)
         return;
     
-    // Try find CoinThing for this map
-    for (i = 0; i < MAX_COIN_MAP; i++, coinThing++)
+    // Try find coin entry for this map
+    for (i = 0; i < MAX_COIN_MAP; i++, entry++)
     {
-        if (strcmp(gp->mapName, coinThing->mapName) == 0)
+        if (strcmp(gp->mapName, entry->mapName) == 0)
             break;
     }
 
@@ -254,24 +250,24 @@ void func_80038478(s32 id)
     assert(286, i < MAX_COIN_MAP, "フラグがエントリされていません");
 
     // Turn off bitflag
-    coinThing->coinFlags[id / 32] &= ~(1 << (id % 32));
+    entry->coinFlags[id / 32] &= ~(1 << (id % 32));
 }
 
-bool func_80038550(s32 id)
+bool swCoinGet(s32 id)
 {
     s32 i;
-    CoinThing * coinThing;
+    SwCoinEntry * entry;
 
-    coinThing = gp->coinThings;
+    entry = gp->coinEntries;
 
     // Skip if bad id
     if (id == -1)
         return false;
     
-    // Try find CoinThing for this map
-    for (i = 0; i < MAX_COIN_MAP; i++, coinThing++)
+    // Try find coin entry for this map
+    for (i = 0; i < MAX_COIN_MAP; i++, entry++)
     {
-        if (strcmp(gp->mapName, coinThing->mapName) == 0)
+        if (strcmp(gp->mapName, entry->mapName) == 0)
             break;
     }
 
@@ -279,51 +275,55 @@ bool func_80038550(s32 id)
     assert(303, i < MAX_COIN_MAP, "フラグがエントリされていません");
 
     // Check bitflag
-    if ((coinThing->coinFlags[id / 32] & 1 << (id % 32)) != 0)
+    if ((entry->coinFlags[id / 32] & 1 << (id % 32)) != 0)
         return true;
     else
         return false;
 }
 
-void func_8003863c()
+void swResetCoinId()
 {
     wp->coinId = 0;
 }
 
-void func_8003864c()
+void swResetGameCoinId()
 {
     wp->gameCoinId = 0;
 }
 
-s32 func_8003865c(void)
+s32 swGetGameCoinId()
 {
-    char *mapName;
     u32 i;
-    s32 output = 0;
+    s32 id;
 
+    id = 0;
+
+    // Skip if in wrong sequence
     if (seqGetSeq() != SEQ_MAPCHANGE)
         return -1;
 
-    mapName = gp->mapName;
-    
+    // Try find assign_tbl entry for this map
     for (i = 0; i < MAX_COIN_MAP; i++)
     {
-        if (strcmp(mapName, assign_tbl[i].mapName) == 0)
+        if (strcmp(gp->mapName, assign_tbl[i].mapName) == 0)
             break;
-        output += assign_tbl[i].num;
+        id += assign_tbl[i].num;
     }
     
+    // Skip if not found
     if (i >= MAX_COIN_MAP)
         return -1;
 
-    output += wp->gameCoinId++;
+    // Increment game coin id
+    id += wp->gameCoinId++;
     
     // "Coin flags have overflowed"
     assert(505, (wp->gameCoinId-1) < assign_tbl[i].num, "コインのフラグが溢れました");
-    return output;
+
+    return id;
 }
 
-bool func_8003875c(s32 id)
+bool swGameCoinGet(s32 id)
 {
     s32 idx;
     s32 bit;
@@ -339,7 +339,7 @@ bool func_8003875c(s32 id)
     bit = id % 8;
 
     // Map id to GSW
-    var = lbl_80325cb8[idx] - GSW(0);
+    var = gameCoinGswMap[idx] - GSW(0);
     if (var == 0)
         val = gp->gsw0;
     else
@@ -349,7 +349,7 @@ bool func_8003875c(s32 id)
     return ((val & (1 << bit)) != 0);
 }
 
-void func_800387d8(s32 id)
+void swGameCoinSet(s32 id)
 {
     s32 idx;
     s32 num;
@@ -366,7 +366,7 @@ void func_800387d8(s32 id)
     bit = id % 8;
 
     // Map id to GSW
-    var = lbl_80325cb8[idx] - GSW(0);
+    var = gameCoinGswMap[idx] - GSW(0);
     if (var == 0)
         temp = gp->gsw0;
     else

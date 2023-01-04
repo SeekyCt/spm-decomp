@@ -6,22 +6,16 @@
 #pragma once
 
 #include <common.h>
+#include <spm/swdrv.h>
 #include <wii/os.h>
 #include <wii/mtx.h>
 
 CPP_WRAPPER(spm::spmario)
 
+USING(spm::swdrv::SwCoinEntry)
 USING(wii::os::OSThread)
 USING(wii::os::OSTime)
 USING(wii::mtx::Vec3)
-
-typedef struct
-{
-/* 0x00 */ char mapName[8];
-/* 0x08 */ u32 coinFlags[1]; // TODO: longer
-/* 0x0C */ u8 _C[0x48-0xc];
-} CoinThing;
-SIZE_ASSERT(CoinThing, 0x48)
 
 typedef struct
 {
@@ -56,7 +50,7 @@ typedef struct
 /* 0x0544 */ s8 gsw[2048]; // index 0 used in favour of gsw0
 /* 0x0D44 */ u32 lswf[16]; // 512 flags
 /* 0x0D84 */ u8 lsw[1024];
-/* 0x1184 */ CoinThing coinThings[32]; // coin related?
+/* 0x1184 */ SwCoinEntry coinEntries[32];
 /* 0x1A84 */ u8 unknown_0x1a84[0x1b00 - 0x1a84];
 /* 0x1B00 */ bool disableRumble[4]; // overrides to force off wpadmgr's enableRumble,
                                     // index controller id

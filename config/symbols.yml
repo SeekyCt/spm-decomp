@@ -265,15 +265,15 @@ global:
     0x800381a4: _swClear
     0x800381e4: _swByteSet
     0x800381f4: _swByteGet
-    # 0x80038204
-    # 0x800383a0
-    # 0x80038478
-    # 0x80038550
-    # 0x8003863c
-    # 0x8003864c
-    # 0x8003865c
-    # 0x8003875c
-    # 0x800387d8
+    0x80038204: swGetCoinId
+    0x800383a0: swCoinSet
+    0x80038478: swCoinClear
+    0x80038550: swCoinGet
+    0x8003863c: swResetCoinId
+    0x8003864c: swResetGameCoinId
+    0x8003865c: swGetGameCoinId
+    0x8003875c: swGameCoinGet
+    0x800387d8: swGameCoinSet
 
     # windowdrv.c
     0x800388b4: windowInit
@@ -5642,6 +5642,7 @@ relF.rel:
 
 src/swdrv.c:
         # .rodata
+    0x80325cb8: gameCoinGswMap
     0x80326178: assign_tbl
         # .bss
     0x8050a118: work
