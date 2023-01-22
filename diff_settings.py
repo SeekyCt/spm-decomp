@@ -16,7 +16,8 @@ def apply(config, args: Namespace):
     config["makeflags"] = []
     config["arch"] = "ppc"
     config["map_format"] = "mw"
-    config["mw_build_dir"] = c.BUILDDIR
+    config["build_dir"] = c.BUILDDIR
+    config["expected_dir"] = c.EXPECTED
     config["objdump_executable"] = c.OBJDUMP
     config["show_line_numbers_default"] = True
 
