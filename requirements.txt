@@ -1,8 +1,14 @@
--r ./tools/ppcdis/requirements.txt
-
-cxxfilt
-python-Levenshtein
-requests
-watchdog
+# Project
 ninja_syntax
 prettytable
+requests
+
+# ppcdis
+-r ./tools/ppcdis/requirements.txt
+
+# asm-differ
+colorama
+ansiwrap
+watchdog
+levenshtein
+cxxfilt
