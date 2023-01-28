@@ -5595,7 +5595,7 @@ global:
     0x80c834e8: danCountdownDone
     0x80c834f8: evt_dan_start_countdown
     0x80c83528: danCheckKeyInMapBbox
-    0x80c83618: danCheckKeyEnemyInMapBbox
+    0x80c83618: danCheckEnemyInMapBbox
     0x80c83744: evt_dan_handle_key_failsafe
     0x80c8387c: evt_dan_handle_chest_room_dokans_and_doors
     0x80c83928: evt_dan_get_chest_room_item

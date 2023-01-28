@@ -696,7 +696,7 @@
 1,1,3dbec:danCountdownDone
 1,1,3dbfc:evt_dan_start_countdown
 1,1,3dc2c:danCheckKeyInMapBbox
-1,1,3dd1c:danCheckKeyEnemyInMapBbox
+1,1,3dd1c:danCheckEnemyInMapBbox
 1,1,3de48:evt_dan_handle_key_failsafe
 1,1,3df80:evt_dan_handle_chest_room_dokans_and_doors
 1,1,3e02c:evt_dan_get_chest_room_item

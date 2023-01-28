@@ -390,7 +390,7 @@
 1,1,3dd0c:danCountdownDone
 1,1,3dd1c:evt_dan_start_countdown
 1,1,3dd4c:danCheckKeyInMapBbox
-1,1,3de3c:danCheckKeyEnemyInMapBbox
+1,1,3de3c:danCheckEnemyInMapBbox
 1,1,3df68:evt_dan_handle_key_failsafe
 1,1,3e0a0:evt_dan_handle_chest_room_dokans_and_doors
 1,1,3e14c:evt_dan_get_chest_room_item

@@ -206,9 +206,9 @@ EVT_DECLARE_USER_FUNC(evt_dan_start_countdown, 0)
 bool danCheckKeyInMapBbox();
 
 /*
-    Returns whether an enemy holding the key exists within the map boundaries
+    Returns whether any enemy exists within the map boundaries
 */
-bool danCheckKeyEnemyInMapBbox();
+bool danCheckEnemyInMapBbox();
 
 /*
     user_func that runs endlessly in a parallel script to spawn the key at the door

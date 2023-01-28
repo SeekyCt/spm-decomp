@@ -662,7 +662,7 @@ bool danCheckKeyInMapBbox()
         return false;
 }
 
-bool danCheckKeyEnemyInMapBbox()
+bool danCheckEnemyInMapBbox()
 {
     // Get the enemy list
     NPCWork * npcWp = npcGetWorkPtr();
@@ -680,7 +680,7 @@ bool danCheckKeyEnemyInMapBbox()
     min.y += 5.0f;
     min.z += 5.0f;
 
-    // Check whether any NPC is an enemy with the key within valid coordinates
+    // Check whether any NPC is within valid coordinates
     s32 npcCount = npcWp->num;
     s32 i;
     for (i = 0; i < npcCount; i++, npc++)
@@ -710,7 +710,7 @@ s32 evt_dan_handle_key_failsafe(EvtEntry * entry, bool isFirstCall)
 
     // Check whether the key exists anywhere
     if (
-        !danCheckKeyEnemyInMapBbox() && !danCheckKeyInMapBbox() &&
+        !danCheckEnemyInMapBbox() && !danCheckKeyInMapBbox() &&
         !pouchCheckHaveItem(ITEM_ID_KEY_DAN_KEY) && !pouchCheckHaveItem(ITEM_ID_KEY_URA_DAN_KEY) &&
         !itemCheckForId(ITEM_ID_KEY_DAN_KEY) && !itemCheckForId(ITEM_ID_KEY_URA_DAN_KEY)
     )
