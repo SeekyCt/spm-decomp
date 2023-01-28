@@ -2,7 +2,17 @@
 
 #include <common.h>
 
-CPP_WRAPPER(wii::IPC)
+CPP_WRAPPER(wii::ipc)
+
+/*
+    IOS_Open mode param
+*/
+enum IosOpenMode
+{
+/* 0x0 */ IOS_OPEN_NONE,
+/* 0x1 */ IOS_OPEN_READ,
+/* 0x2 */ IOS_OPEN_WRITE
+};
 
 typedef struct
 {
@@ -27,12 +37,12 @@ s32 IOS_Open(const char * path, s32 mode);
 UNKNOWN_FUNCTION(IOS_CloseAsync);
 s32 IOS_Close(s32 fd);
 UNKNOWN_FUNCTION(IOS_ReadAsync);
-UNKNOWN_FUNCTION(IOS_Read);
+s32 IOS_Read(s32 fd, void * dest, u32 length);
 UNKNOWN_FUNCTION(IOS_WriteAsync);
 UNKNOWN_FUNCTION(IOS_Write);
 UNKNOWN_FUNCTION(IOS_SeekAsync);
 UNKNOWN_FUNCTION(IOS_IoctlAsync);
-UNKNOWN_FUNCTION(IOS_Ioctl);
+s32 IOS_Ioctl(s32 fd, s32 command, void * buf, u32 bufSize, void * ioBuf, u32 ioBufSize);
 UNKNOWN_FUNCTION(__ios_Ioctlv);
 UNKNOWN_FUNCTION(IOS_IoctlvAsync);
 s32 IOS_Ioctlv(s32 fd, s32 command, s32 inCount, s32 outCount, Ioctlv * vecs);

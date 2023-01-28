@@ -13,6 +13,7 @@ CPP_WRAPPER(spm::seq_logo)
 
 USING(spm::evtmgr::EvtEntry)
 USING(spm::seqdrv::SeqWork)
+USING(wii::tpl::TPLHeader)
 
 typedef struct
 {

@@ -4,6 +4,8 @@
 
 CPP_WRAPPER(wii::dvd)
 
+#define DVD_ALIGN 32
+
 typedef struct
 {
 /* 0x00 */ u8 unknown_0x0[0x3c - 0x0];

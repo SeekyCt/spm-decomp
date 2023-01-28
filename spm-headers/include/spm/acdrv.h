@@ -10,6 +10,7 @@
 
 CPP_WRAPPER(spm::acdrv)
 
+USING(spm::memory::SmartAllocation)
 USING(spm::pausewin::PausewinEntry)
 
 struct _AcEntry;

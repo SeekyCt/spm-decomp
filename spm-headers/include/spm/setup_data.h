@@ -53,7 +53,7 @@ typedef struct
 /* 0x0000 */ SetupFileV6 main;
 /* 0x2BC4 */ s32 itemCount;
 /* 0x2BC8 */ s32 itemVersion; // 20051201
-/* 0x2BCC */ SetupItem items[]; // itemCount items
+/* 0x2BCC */ SetupItem items[1]; // itemCount items
 } SetupFileV6WithItems;
 OFFSET_ASSERT(SetupFileV6WithItems, items, 0x2bcc)
 

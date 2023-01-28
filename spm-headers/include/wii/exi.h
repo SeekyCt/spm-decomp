@@ -2,7 +2,7 @@
 
 #include <common.h>
 
-CPP_WRAPPER(wii::EXI)
+CPP_WRAPPER(wii::exi)
 
 typedef struct
 {

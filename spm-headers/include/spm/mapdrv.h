@@ -125,7 +125,7 @@ SIZE_ASSERT(MapFileLightEntry, 0x44)
 typedef struct
 {
 /* 0x0 */ s32 count;
-/* 0x4 */ MapFileLightEntry * entries[]; // array of length count
+/* 0x4 */ MapFileLightEntry * entries[1]; // array of length count
 } MapFileLightTable;
 OFFSET_ASSERT(MapFileLightTable, entries, 0x4)
 

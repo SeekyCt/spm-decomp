@@ -115,3 +115,15 @@ typedef u8 unk8;
     #define FIXED_ADDR(type, name, addr) \
         extern type name
 #endif
+
+#ifndef __INTELLISENSE__
+    #define NORETURN __attribute__((noreturn))
+#else
+    #define NORETURN
+#endif
+
+#ifndef __INTELLISENSE__
+    #define ALIGNED(x) __attribute__((aligned(x)))
+#else
+    #define ALIGNED(x)
+#endif

@@ -2,7 +2,7 @@
 
 #include <common.h>
 
-CPP_WRAPPER(wii::OSInterrupt)
+CPP_WRAPPER(wii::os)
 
 u32 OSDisableInterrupts();
 UNKNOWN_FUNCTION(OSEnableInterrupts);

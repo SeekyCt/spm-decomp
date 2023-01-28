@@ -38,15 +38,16 @@ enum NandTask
 
 typedef struct
 {
-    u16 flags;
-    u8 unknown_0x2[0x8 - 0x2];
-    SpmarioGlobals spmarioGlobals;
-    MarioPouchWork pouch;
-    u8 unknown_0x21b0[0x400];
+/* 0x0000 */ u16 flags;
+/* 0x0002 */ u8 unknown_0x2[0x8 - 0x2];
+/* 0x0008 */ SpmarioGlobals spmarioGlobals;
+/* 0x1B10 */ MarioPouchWork pouch;
+/* 0x21B0 */ u8 unknown_0x21b0[0x400];
     // Checksums are calculated with checksum set to 0 and checksumNOT set to 0xffff
-    u32 checksum;
-    u32 checksumNOT;
+/* 0x25B0 */ u32 checksum;
+/* 0x25B4 */ u32 checksumNOT;
 } SaveFile;
+SIZE_ASSERT(SaveFile, 0x25b8)
 
 #define NAND_FLAG_Exec 1
 #define NAND_FLAG_Waiting 2
@@ -55,24 +56,29 @@ typedef struct
 
 typedef struct
 {
-    u32 flag;
-    void * openingBuffer; // used by NANDSafeOpenAsync
-    size_t openingBufferSize; // 0x4000
-    u8 unknown_0xc[0x10 - 0xc];
-    SaveFile * saves; // array of 4
-    void * tempSaveFile; // 0x25c0 allocation
-    char homedir[64];
-    NANDFileInfo fileInfo;
-    NANDCommandBlock commandBlock;
-    NANDBanner * banner;
-    u32 bannerSize; // omits unused iconTextures
-    void * tempBanner;
-    u32 answer;
-    u32 task; // used by task main functions to track progress
-    u32 stage;
-    s32 code;
-    s32 saveId; // slot of save file to work on
+/* 0x000 */ u32 flag;
+/* 0x004 */ void * openingBuffer; // used by NANDSafeOpenAsync
+/* 0x008 */ size_t openingBufferSize; // 0x4000
+/* 0x00C */ u8 unknown_0xc[0x10 - 0xc];
+/* 0x010 */ SaveFile * saves; // array of 4
+/* 0x014 */ void * tempSaveFile; // 0x25c0 allocation
+/* 0x018 */ char homedir[64];
+/* 0x058 */ NANDFileInfo fileInfo;
+/* 0x0E4 */ NANDCommandBlock commandBlock;
+/* 0x19C */ NANDBanner * banner;
+/* 0x1A0 */ u32 bannerSize; // omits unused iconTextures
+/* 0x1A4 */ void * tempBanner;
+/* 0x1A8 */ u32 answer;
+/* 0x1AC */ u32 task; // used by task main functions to track progress
+/* 0x1B0 */ u32 stage;
+/* 0x1B4 */ s32 code;
+/* 0x1B8 */ s32 saveId; // slot of save file to work on
 } NandWork;
+#ifdef SPM_KR0
+SIZE_ASSERT(NandWork, 0x1c0)
+#else
+SIZE_ASSERT(NandWork, 0x1bc)
+#endif
 
 DECOMP_STATIC(NandWork nandmgr_work)
 DECOMP_STATIC(NandWork * nandmgr_wp)

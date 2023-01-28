@@ -8,6 +8,8 @@
 
 CPP_WRAPPER(wii::nand)
 
+#define NAND_ALIGN 32
+
 #define NAND_CODE_OK 0
 #define NAND_CODE_BUSY -3
 #define NAND_CODE_EXISTS -6

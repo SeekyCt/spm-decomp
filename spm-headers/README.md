@@ -1,8 +1,6 @@
 # spm-headers
 WIP header library for Super Paper Mario.
 
-Currently merging all information from spm-docs, spm-decomp and spm-practice codes. Should not be used for other projects in its current form.
-
 # Setup
 
 ## General

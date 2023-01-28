@@ -7,7 +7,7 @@
 80004000:memcpy
 80004104:memset
 800293E4:mapDataPtr
-80399F98:mapDataList
+80399F98:mapData
 8002C7EC:mobjNameToPtrNoAssert
 80032610:msgSearch
 80037DB0:swInit
@@ -128,8 +128,8 @@
 801A566C:__memAlloc
 801A56F0:__memFree
 803C0DE8:size_table
-80541A68:memoryWp
-80541A6C:memorySwp
+80541A68:memory_wp
+80541A6C:memory_swp
 8023570C:wpadGetButtonsHeld
 80235734:wpadGetButtonsPressed
 80235748:wpadGetButtonsHeldRepeat
@@ -313,8 +313,8 @@
 80184494:pausewinDelete
 80187854:pausewinSetMessage
 8018903C:pluswinChapterWinOpen
-805419F0:pluswinWp
-80542230:pausewinWp
+805419F0:pausewin_pluswinWp
+80542230:pausewin_wp
 80198ECC:hudStartCountdown
 8019C304:rand
 8019D240:DVDMgrOpen
@@ -454,3 +454,18 @@
 1,5,15ef20:dan_start_shadoo_evt
 1,5,d1958:sammerDefsCh6
 1,5,d1e08:sammerDefsEndgame
+
+// new to v9
+80142930:marioChgMot
+800677F0:fadeSetMapChangeTransition
+8023B210:spsndCheckBgmPlaying
+
+// new to rld3 v1
+8025C814:strcat
+80296220:IOS_Read
+80296748:IOS_Ioctl
+8029376C:MEMAllocFromExpHeapEx
+80273AA8:__OSReboot
+8026F1F8:Run
+80542470:SaveStart
+80542474:SaveEnd
