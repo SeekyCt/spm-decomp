@@ -21,7 +21,15 @@ typedef struct
 {
 /* 0x00 */ char path[64];
 /* 0x40 */ DVDFileInfo fileInfo;
-/* 0x7C */ s32 temp[4];
+union {
+    s32 temp[4];
+    struct {
+    /* 0x7C */ void * dest;
+    /* 0x80 */ s32 lengthRemaining;
+    /* 0x84 */ s32 offset;
+    /* 0x88 */ s32 lengthRead;
+    };
+};
 /* 0x8C */ DVDMgrCallback * readCallback;
 /* 0x90 */ u16 flags;
 /* 0x92 */ u16 priority;
