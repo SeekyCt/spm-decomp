@@ -10,3 +10,4 @@ relF.bin
 *.exe
 *.dll
 build.ninja
+objdiff.json
