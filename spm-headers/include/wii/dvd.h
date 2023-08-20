@@ -17,11 +17,11 @@ typedef struct _DVDCommandBlock
 /* 0x10 */ u32 offset;
 /* 0x14 */ u8 unknown_0x14[0x28 - 0x14];
 /* 0x28 */ DVDCBCallback * callback;
-/* 0x2C */ u8 unknown_0x2c[0x30 - 0x2c];
+/* 0x2C */ void * userData;
 } DVDCommandBlock;
 SIZE_ASSERT(DVDCommandBlock, 0x30)
 
-typedef struct
+typedef struct _DVDFileInfo
 {
 /* 0x00 */ DVDCommandBlock commandBlock;
 /* 0x30 */ u32 startAddr;
@@ -30,6 +30,8 @@ typedef struct
 } DVDFileInfo;
 SIZE_ASSERT(DVDFileInfo, 0x3c)
 
+typedef void (DVDFICallback)(s32 code, struct _DVDFileInfo * fileInfo);
+
 // Just a normal string literal, but useful for riivo detection
 extern char devDiStr[]; // "/dev/di"
 
@@ -37,7 +39,8 @@ UNKNOWN_FUNCTION(__DVDFSInit);
 s32 DVDConvertPathToEntrynum(const char * path);
 s32 DVDFastOpen(s32 entrynum, DVDFileInfo * fileInfo);
 UNKNOWN_FUNCTION(DVDClose);
-UNKNOWN_FUNCTION(DVDReadAsyncPrio);
+s32 DVDReadAsyncPrio(DVDFileInfo * fileInfo, void * addr, s32 length, s32 offset,
+                     DVDFICallback * callback, s32 priority);
 UNKNOWN_FUNCTION(cbForReadAsync);
 s32 DVDReadPrio(DVDFileInfo * fileInfo, void * dest, s32 length, s32 offset, s32 priority);
 UNKNOWN_FUNCTION(cbForReadSync);

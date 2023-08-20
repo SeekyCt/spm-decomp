@@ -69,7 +69,7 @@ DVDEntry* DVDMgrOpen(const char * name, s32 priority, s16 param_3)
     return entry;
 }
 
-s32 DVDMgrRead(DVDEntry * entry, void * dest, s32 length, u32 offset)
+s32 DVDMgrRead(DVDEntry * entry, void * dest, s32 length, s32 offset)
 {
     s32 ret;
     s32 lengthToRead;
@@ -77,7 +77,7 @@ s32 DVDMgrRead(DVDEntry * entry, void * dest, s32 length, u32 offset)
     // Init temp
     entry->temp[0] = (s32) dest;
     entry->temp[1] = length;
-    entry->temp[2] = (s32) offset;
+    entry->temp[2] = offset;
     entry->temp[3] = 0;
 
     // Read until length reached
@@ -101,15 +101,32 @@ s32 DVDMgrRead(DVDEntry * entry, void * dest, s32 length, u32 offset)
         return (s32) entry->fileInfo.length;
 }
 
-static asm void _cb(s32 result, DVDFileInfo * fileInfo)
+static void _cb(s32 result, DVDFileInfo * fileInfo)
 {
-    #include "asm/8019e29c.s"
+    // Get context
+    DVDEntry * entry = (DVDEntry *)fileInfo->commandBlock.userData;
+
+    // Forward to user callback
+    entry->readCallback(result, fileInfo);
 }
 
-asm s32 DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, u32 offset,
+s32 DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, s32 offset,
                         DVDMgrCallback * callback)
 {
-    #include "asm/8019e2ac.s"
+    // Backup data
+    entry->temp[2] = offset;
+    entry->readCallback = callback;
+    entry->temp[1] = length;
+    entry->temp[1] -= length;
+    entry->temp[3] = length;
+    entry->temp[0] = (s32) dest + length;
+
+    // Setup callback context
+    entry->fileInfo.commandBlock.userData = entry;
+
+    // Start read
+    return DVDReadAsyncPrio(&entry->fileInfo, dest, length, offset, _cb, entry->priority);
+
 }
 
 asm void DVDMgrClose(DVDEntry * entry)
