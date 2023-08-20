@@ -24,7 +24,7 @@ typedef struct
 /* 0x7C */ s32 temp[4];
 /* 0x8C */ DVDMgrCallback * readCallback;
 /* 0x90 */ u16 flags;
-/* 0x92 */ s16 priority;
+/* 0x92 */ u16 priority;
 /* 0x94 */ s16 openP3;
 /* 0x96 */ u8 unknown_0x96[0x98 - 0x96]; // possibly padding?
 /* 0x98 */ s32 entrynum;
@@ -59,7 +59,7 @@ DVDEntry * DVDMgrOpen(const char * name, s32 priority, s16 param_3);
 /*
     Read from a file synchronously
 */
-s32 DVDMgrRead(DVDEntry * entry, void * dest, size_t length, u32 offset);
+s32 DVDMgrRead(DVDEntry * entry, void * dest, s32 length, u32 offset);
 
 /*
     Calls an entry's callback
@@ -69,7 +69,7 @@ DECOMP_STATIC(void dvdmgr__cb(s32 result, DVDFileInfo * fileInfo))
 /*
     Read from a file asynchronously
 */
-s32 DVDMgrReadAsync(DVDEntry * entry, void * dest, size_t length, u32 offset,
+s32 DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, u32 offset,
                     DVDMgrCallback * callback);
 
 /*
@@ -80,6 +80,6 @@ void DVDMgrClose(DVDEntry * entry);
 /*
     Get the length of the file
 */
-size_t DVDMgrGetLength(DVDEntry * entry);
+s32 DVDMgrGetLength(DVDEntry * entry);
 
 CPP_WRAPPER_END()

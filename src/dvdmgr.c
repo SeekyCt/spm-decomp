@@ -69,9 +69,36 @@ DVDEntry* DVDMgrOpen(const char * name, s32 priority, s16 param_3)
     return entry;
 }
 
-asm s32 DVDMgrRead(DVDEntry * entry, void * dest, size_t length, u32 offset)
+s32 DVDMgrRead(DVDEntry * entry, void * dest, s32 length, u32 offset)
 {
-    #include "asm/8019e1e4.s"
+    s32 ret;
+    s32 lengthToRead;
+
+    // Init temp
+    entry->temp[0] = (s32) dest;
+    entry->temp[1] = length;
+    entry->temp[2] = (s32) offset;
+    entry->temp[3] = 0;
+
+    // Read until length reached
+    // (will always just read it in one go)
+    while (lengthToRead = entry->temp[1], lengthToRead > 0)
+    {
+        ret = DVDReadPrio(&entry->fileInfo, (void *) entry->temp[0], lengthToRead,
+                          entry->temp[2] + entry->temp[3], entry->priority);
+        if (ret == -3 || ret < 0)
+            break;
+        
+        entry->temp[1] -= lengthToRead;
+        entry->temp[3] += lengthToRead;
+        entry->temp[0] += lengthToRead;
+    }
+
+    // Output error code or number of bytes read
+    if (ret < 0)
+        return ret;
+    else
+        return (s32) entry->fileInfo.length;
 }
 
 static asm void _cb(s32 result, DVDFileInfo * fileInfo)
@@ -79,7 +106,7 @@ static asm void _cb(s32 result, DVDFileInfo * fileInfo)
     #include "asm/8019e29c.s"
 }
 
-asm s32 DVDMgrReadAsync(DVDEntry * entry, void * dest, size_t length, u32 offset,
+asm s32 DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, u32 offset,
                         DVDMgrCallback * callback)
 {
     #include "asm/8019e2ac.s"
@@ -90,7 +117,7 @@ asm void DVDMgrClose(DVDEntry * entry)
     #include "asm/8019e2e0.s"
 }
 
-asm size_t DVDMgrGetLength(DVDEntry * entry)
+asm s32 DVDMgrGetLength(DVDEntry * entry)
 {
     #include "asm/8019e320.s"
 }
