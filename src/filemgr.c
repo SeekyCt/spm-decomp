@@ -172,7 +172,7 @@ void fileGarbageMoveMem(void * dest, FileEntry * src)
     if (src->state == 3)
     {
         if (src->dvdEntry != 0)
-            src->dvdEntry->unknown_0x7c = dest;
+            src->dvdEntry->temp[0] = (s32) dest;
         else
             fileGarbageDataAdrSet(src->sp->data, src->fileType);
     }

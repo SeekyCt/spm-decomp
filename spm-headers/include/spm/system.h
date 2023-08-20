@@ -13,6 +13,11 @@ USING(wii::mtx::Mtx34)
 
 #ifdef DECOMP
 
+// TODO: figure out what's going on with the assert if statement in decomp
+// assert in evtmgr.c line 161 is incompatible with (condition) == false
+// assertf dan.c line 144 is incompatible with !(condition)
+// assertf dvdmgr.c line 51 is incompatible with bool check = (condition); !check
+
 #define assert(line, condition, message) \
     do \
     { \
@@ -23,8 +28,7 @@ USING(wii::mtx::Mtx34)
 #define assertf(line, condition, message, ...) \
     do \
     { \
-        bool check = (condition); \
-        if (!check) __assert2(__FILE__, line, #condition, message, __VA_ARGS__); \
+        if ((condition) == false) __assert2(__FILE__, line, #condition, message, __VA_ARGS__); \
     } while (0)
 
 #else

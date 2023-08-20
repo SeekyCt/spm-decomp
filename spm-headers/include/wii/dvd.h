@@ -17,7 +17,7 @@ extern char devDiStr[]; // "/dev/di"
 
 UNKNOWN_FUNCTION(__DVDFSInit);
 s32 DVDConvertPathToEntrynum(const char * path);
-UNKNOWN_FUNCTION(DVDFastOpen);
+s32 DVDFastOpen(s32 entrynum, DVDFileInfo * fileInfo);
 UNKNOWN_FUNCTION(DVDClose);
 UNKNOWN_FUNCTION(DVDReadAsyncPrio);
 UNKNOWN_FUNCTION(cbForReadAsync);

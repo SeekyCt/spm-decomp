@@ -13,22 +13,28 @@ USING(wii::dvd::DVDFileInfo)
 
 typedef void (DVDMgrCallback)(s32 result, DVDFileInfo * fileInfo);
 
+#define MAX_DVD_ENTRY 0x200
+
+#define DVD_FLAG_IN_USE 0x8000
+
 typedef struct
 {
 /* 0x00 */ char path[64];
 /* 0x40 */ DVDFileInfo fileInfo;
-/* 0x7C */ void * unknown_0x7c;
-/* 0x80 */ u8 unknown_0x80[0x8c - 0x80];
+/* 0x7C */ s32 temp[4];
 /* 0x8C */ DVDMgrCallback * readCallback;
-/* 0x90 */ u8 unknown_0x90[0x98 - 0x90];
+/* 0x90 */ u16 flags;
+/* 0x92 */ s16 priority;
+/* 0x94 */ s16 openP3;
+/* 0x96 */ u8 unknown_0x96[0x98 - 0x96]; // possibly padding?
 /* 0x98 */ s32 entrynum;
 } DVDEntry;
 SIZE_ASSERT(DVDEntry, 0x9c)
 
 typedef struct
 {
-/* 0x0 */ DVDEntry * entries; // array of entryLimit
-/* 0x4 */ s32 entryLimit; // 0x200
+/* 0x0 */ DVDEntry * entries; // array of num
+/* 0x4 */ s32 num; // 0x200
 } DVDWork;
 SIZE_ASSERT(DVDWork, 0x8)
 
@@ -48,7 +54,7 @@ void DVDMgrDelete();
 /*
     Opens a file on the disc
 */
-DVDEntry * DVDMgrOpen(const char * path, s32 param_2, s32 param_3);
+DVDEntry * DVDMgrOpen(const char * name, s32 priority, s16 param_3);
 
 /*
     Read from a file synchronously

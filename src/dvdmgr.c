@@ -9,19 +9,64 @@
 static DVDWork work;
 static DVDWork * wp = &work;
 
-asm void DVDMgrInit()
+void DVDMgrInit()
 {
-    #include "asm/8019e044.s"
+    // Allocate entries
+    wp->num = MAX_DVD_ENTRY;
+    wp->entries = __memAlloc(HEAP_MAIN, wp->num * sizeof(DVDEntry));
 }
 
-asm void DVDMgrDelete()
+void DVDMgrDelete()
 {
-    #include "asm/8019e088.s"
+    return;
 }
 
-asm DVDEntry* DVDMgrOpen(const char * path, s32 param_2, s32 param_3)
+DVDEntry* DVDMgrOpen(const char * name, s32 priority, s16 param_3)
 {
-    #include "asm/8019e08c.s"
+    DVDEntry * entry;
+    s32 entrynum;
+    s32 i;
+
+    // Try get entrynum
+    entrynum = DVDConvertPathToEntrynum(name);
+    if (entrynum == -1)
+        return NULL;
+    
+    // Find a free entry
+    entry = wp->entries;
+    for (i = 0; i < wp->num; i++, entry++)
+    {
+        if ((entry->flags & DVD_FLAG_IN_USE) == 0)
+            break;
+    }
+    if (i >= wp->num)
+    {
+        assert(51, i < wp->num, "DVDMgrOpen Error");
+        return NULL;
+    }
+
+    // Init entry
+    memset(entry, 0, sizeof(*entry));
+    assertf(56, strlen(name) < 64, "名前長すぎ [ %s ]", name);
+    strcpy(entry->path, name);
+    entry->priority = (u8) priority;
+    entry->openP3 = param_3;
+    entry->temp[0] = 0;
+    entry->temp[1] = 0;
+    entry->temp[2] = 0;
+    entry->temp[3] = 0;
+    entry->entrynum = entrynum;
+    entry->flags = 0;
+    entry->flags |= DVD_FLAG_IN_USE;
+
+    // Try open file
+    if (DVDFastOpen(entrynum, &entry->fileInfo) != 1)
+    {
+        memset(entry, 0, sizeof(*entry));
+        return NULL;
+    }
+
+    return entry;
 }
 
 asm s32 DVDMgrRead(DVDEntry * entry, void * dest, size_t length, u32 offset)
