@@ -101,8 +101,10 @@ s32 DVDMgrRead(DVDEntry * entry, void * dest, s32 length, s32 offset)
 
 static void _cb(s32 result, DVDFileInfo * fileInfo)
 {
+    DVDEntry * entry;
+    
     // Get context
-    DVDEntry * entry = (DVDEntry *)fileInfo->commandBlock.userData;
+    entry = (DVDEntry *)fileInfo->commandBlock.userData;
 
     // Forward to user callback
     entry->readCallback(result, fileInfo);
@@ -112,10 +114,11 @@ s32 DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, s32 offset,
                         DVDMgrCallback * callback)
 {
     // Backup data
+    // None of these ever seem to be used..?
     entry->offset = offset;
     entry->readCallback = callback;
     entry->lengthRemaining = length;
-    entry->lengthRemaining -= length;
+    entry->lengthRemaining -= length; // what
     entry->lengthRead = length;
     entry->dest = (void *) ((s32) dest + length);
 
@@ -128,7 +131,10 @@ s32 DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, s32 offset,
 
 void DVDMgrClose(DVDEntry * entry)
 {
+    // Close file
     DVDClose(&entry->fileInfo);
+
+    // Reset entry
     memset(entry, 0, sizeof(*entry));
 }
 
