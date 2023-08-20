@@ -64,6 +64,12 @@ system.c:
     .sbss:   [0x805ae968, 0x805ae988]
     .sdata2: [0x805b3c38, 0x805b3c88]
 
+dvdmgr.c:
+    .text:   [0x8019e044, 0x8019e328]
+    .rodata: [0x803377a8, 0x803377f8]
+    .bss:    [0x80516f60, 0x80516f68]
+    .sdata:  [0x805ae120, 0x805ae128]
+
 filemgr.c:
     .text:   [0x8019e478, 0x8019ffb8]
     .rodata: [0x80337848, 0x80337a68]
