@@ -116,7 +116,7 @@ typedef u8 unk8;
         extern type name
 #endif
 
-#ifndef __INTELLISENSE__
+#if !(defined __INTELLISENSE__) && !(defined M2C)
     #define NORETURN __attribute__((noreturn))
 #else
     #define NORETURN
