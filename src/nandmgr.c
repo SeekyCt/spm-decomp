@@ -170,6 +170,20 @@ void nandCopySave(s32 sourceId, s32 destId)
     memcpy(&wp->saves[destId], &wp->saves[sourceId], sizeof(SaveFile));
 }
 
+static void nandUpdateChecksum(SaveFile * save)
+{
+    save->checksum = 0;
+    save->checksumNOT = 0xffffffff;
+    u32 checksum = 0;
+    for (int i = 0; i < sizeof(*save); i += 2)
+    {
+        checksum += ((u8 *)save)[i];
+        checksum += ((u8 *)save)[i+1]; // doesn't match with just one
+    }
+    save->checksum = checksum;
+    save->checksumNOT = ~checksum;
+}
+
 void nandClearSave(s32 saveId)
 {
     SaveFile * save = &wp->saves[saveId];
@@ -178,16 +192,7 @@ void nandClearSave(s32 saveId)
 
     save->flags |= 1;
 
-    save->checksum = 0;
-    save->checksumNOT = 0xffffffff;
-    u32 checksum = 0;
-    for (int i = 0; i < sizeof(*save); i += 2)
-    {
-        checksum += ((u8 *)save)[i];
-        checksum += ((u8 *)save)[i+1]; // scheduling doesn't match with just one
-    }
-    save->checksum = checksum;
-    save->checksumNOT = ~checksum;
+    nandUpdateChecksum(save);
 }
 
 void nandUpdateSave(s32 saveId)
@@ -226,16 +231,7 @@ void nandUpdateSave(s32 saveId)
 
     save->flags &= ~3;
 
-    save->checksum = 0;
-    save->checksumNOT = 0xffffffff;
-    u32 checksum = 0;
-    for (int i = 0; i < sizeof(*save); i += 2)
-    {
-        checksum += ((u8 *)save)[i];
-        checksum += ((u8 *)save)[i+1];
-    }
-    save->checksum = checksum;
-    save->checksumNOT = ~checksum;
+    nandUpdateChecksum(save);
 }
 
 asm void nandLoadSave(s32 saveId)
