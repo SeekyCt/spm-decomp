@@ -34,6 +34,17 @@ static NandWork * wp = &work;
 static void genericCallback(s32 result, NANDCommandBlock * commandBlock);
 static void checkCallback(s32 result, NANDCommandBlock * commandBlock);
 
+static u32 nandUpdateChecksum(SaveFile * save)
+{
+    u32 checksum = 0;
+    for (int i = 0; i < sizeof(*save); i += 2)
+    {
+        checksum += ((u8 *)save)[i];
+        checksum += ((u8 *)save)[i+1]; // doesn't match with just one
+    }
+    return checksum;
+}
+
 #include "jumptable/804e5008.inc"
 asm void nandInit()
 {
@@ -170,20 +181,6 @@ void nandCopySave(s32 sourceId, s32 destId)
     memcpy(&wp->saves[destId], &wp->saves[sourceId], sizeof(SaveFile));
 }
 
-static void nandUpdateChecksum(SaveFile * save)
-{
-    save->checksum = 0;
-    save->checksumNOT = 0xffffffff;
-    u32 checksum = 0;
-    for (int i = 0; i < sizeof(*save); i += 2)
-    {
-        checksum += ((u8 *)save)[i];
-        checksum += ((u8 *)save)[i+1]; // doesn't match with just one
-    }
-    save->checksum = checksum;
-    save->checksumNOT = ~checksum;
-}
-
 void nandClearSave(s32 saveId)
 {
     SaveFile * save = &wp->saves[saveId];
@@ -192,7 +189,10 @@ void nandClearSave(s32 saveId)
 
     save->flags |= 1;
 
-    nandUpdateChecksum(save);
+    save->checksum = 0;
+    save->checksumNOT = 0xffffffff;
+    save->checksum = nandUpdateChecksum(save);
+    save->checksumNOT = ~save->checksum;
 }
 
 void nandUpdateSave(s32 saveId)
@@ -231,7 +231,10 @@ void nandUpdateSave(s32 saveId)
 
     save->flags &= ~3;
 
-    nandUpdateChecksum(save);
+    save->checksum = 0;
+    save->checksumNOT = 0xffffffff;
+    save->checksum = nandUpdateChecksum(save);
+    save->checksumNOT = ~save->checksum;
 }
 
 asm void nandLoadSave(s32 saveId)
