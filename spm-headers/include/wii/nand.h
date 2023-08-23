@@ -22,6 +22,8 @@ CPP_WRAPPER(wii::nand)
 #define NAND_MODE_READ 1
 #define NAND_MODE_WRITE 2
 
+#define NAND_SET_ICON_SPEED(banner, icon, speed) banner->iconSpeed = (u16) ((banner->iconSpeed & ~(3 << 2 * (icon))) | ((speed) << 2 * (icon)))
+
 typedef struct
 {
 /* 0x00 */ u8 unknown_0x0[0x8c - 0x0];

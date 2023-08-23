@@ -110,7 +110,7 @@ relmgr.c:
 nandmgr.c:
     .text:   [0x8023e60c, 0x802406a0]
     .rodata: [0x80344490, 0x80349538]
-    .data:   [0x804e5008, 0x804e50a8] # TODO: more strings
+    .data:   [0x804e5008, 0x804e5280]
     .bss:    [0x80534fa8, 0x80535168]
     .sdata:  [0x805ae1b0, 0x805ae1b8]
     .sdata2: [0x805b62a8, 0x805b62b0]

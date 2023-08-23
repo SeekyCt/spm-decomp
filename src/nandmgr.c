@@ -20,9 +20,6 @@ const u8 lz_saveImagesTpl[] = {
 };
 #include "orderstrings/803494e8_80349537.inc"
 
-// .data
-extern char lbl_804e50a8[]; // TODO: wchar stringbase
-
 // .bss
 static NandWork work;
 
@@ -33,6 +30,13 @@ static NandWork * wp = &work;
 
 static void genericCallback(s32 result, NANDCommandBlock * commandBlock);
 static void checkCallback(s32 result, NANDCommandBlock * commandBlock);
+
+// For some reason nandInit won't match without this
+void dummy(s32 x);
+void dummy(s32 x)
+{
+    memcpy(&wp->saves[x], 0, 0);
+}
 
 static u32 nandCalcChecksum(SaveFile * save)
 {
@@ -46,10 +50,70 @@ static u32 nandCalcChecksum(SaveFile * save)
     return checksum;
 }
 
-#include "jumptable/804e5008.inc"
-asm void nandInit()
+void nandInit(void)
 {
-    #include "asm/8023e60c.s"
+    TPLHeader *tpl;
+    s32 i;
+
+    // Init work
+    memset(wp, 0, sizeof(*wp));
+    wp->openingBufferSize = 0x4000;
+    wp->openingBuffer = __memAlloc(HEAP_MAIN, wp->openingBufferSize);
+    wp->saves = __memAlloc(HEAP_MAIN, sizeof(SaveFile)*4);
+    wp->tempSaveFile = __memAlloc(HEAP_MAIN, sizeof(SaveFile) + 8); // alignment?
+    wp->banner = __memAlloc(HEAP_MAIN, sizeof(*wp->banner));
+
+    // Create banner
+    switch (gp->language)
+    {
+        case 0:
+            // Some broken japanese strings?
+            NANDInitBanner(wp->banner, 0x10,
+                L"\x30FB\x0058\x30FB\x005B\x30FB\x0070\x30FB\x005B\x30FB\x0079\x30FB\x005B\x30FB\x0070\x30FB\x005B\x30FB\x007D\x30FB\x30FB\x30FB\x0049",
+                L"\x30FB\x0079\x30FB\x30FB\x30FB\x0079\x30FB\x30FB\x30FB\x007D\x30FB\x30FB\x30FB\x0049\x30FB\xFF8C\x30FB\xFF74\x30FB\x30FB\x30FB\xFF73\x30FB\x30FB\x30FB\x0060\x30FB\xFF6F\x30FB\x0049");
+            break;
+
+        case 1:
+        case 2:
+        case 7:
+            NANDInitBanner(wp->banner, 0x10, L"Super Paper Mario", L"An interdimensional adventure!");
+            break;
+
+        case 3:
+            NANDInitBanner(wp->banner, 0x10, L"Super Paper Mario", L"Ein interdimensionales Abenteuer");
+            break;
+
+        case 4:
+            NANDInitBanner(wp->banner, 0x10, L"Super Paper Mario", L"Une aventure interdimensionnelle");
+            break;
+
+        case 5:
+            NANDInitBanner(wp->banner, 0x10, L"Super Paper Mario", L"\xA1Una aventura interdimensional!");
+            break;
+
+        case 6:
+            NANDInitBanner(wp->banner, 0x10, L"Super Paper Mario", L"Un'avventura interdimensionale!");
+            break;
+    }
+
+    // Setup banner icons
+    tpl = __memAlloc(0, CXGetUncompressedSize(&lz_saveImagesTpl));
+    CXUncompressLZ(&lz_saveImagesTpl, tpl);
+    TPLBind(tpl);
+    memcpy(wp->banner->bannerTexture, tpl->imageTable[0].image->data, sizeof(wp->banner->bannerTexture));
+    memcpy(wp->banner->iconTextures[0], tpl->imageTable[1].image->data, sizeof(wp->banner->iconTextures[0]));
+    memcpy(wp->banner->iconTextures[1], tpl->imageTable[1].image->data, sizeof(wp->banner->iconTextures[1]));
+    memcpy(wp->banner->iconTextures[2], tpl->imageTable[2].image->data, sizeof(wp->banner->iconTextures[2]));
+    NAND_SET_ICON_SPEED(wp->banner, 0, 3);
+    NAND_SET_ICON_SPEED(wp->banner, 1, 3);
+    NAND_SET_ICON_SPEED(wp->banner, 2, 2);
+    NAND_SET_ICON_SPEED(wp->banner, 3, 0);
+    __memFree(0, tpl);
+    wp->bannerSize = sizeof(NANDBanner) - (5 * sizeof(wp->banner->iconTextures[0]));
+
+    // Init save files
+    for (i = 0; i < 4; i++)
+        nandClearSave(i);
 }
 
 void nandMain()
