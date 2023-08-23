@@ -34,7 +34,7 @@ static NandWork * wp = &work;
 static void genericCallback(s32 result, NANDCommandBlock * commandBlock);
 static void checkCallback(s32 result, NANDCommandBlock * commandBlock);
 
-static u32 nandUpdateChecksum(SaveFile * save)
+static u32 nandCalcChecksum(SaveFile * save)
 {
     u32 checksum = 0;
     for (int i = 0; i < sizeof(*save); i += 2)
@@ -191,7 +191,7 @@ void nandClearSave(s32 saveId)
 
     save->checksum = 0;
     save->checksumNOT = 0xffffffff;
-    save->checksum = nandUpdateChecksum(save);
+    save->checksum = nandCalcChecksum(save);
     save->checksumNOT = ~save->checksum;
 }
 
@@ -233,7 +233,7 @@ void nandUpdateSave(s32 saveId)
 
     save->checksum = 0;
     save->checksumNOT = 0xffffffff;
-    save->checksum = nandUpdateChecksum(save);
+    save->checksum = nandCalcChecksum(save);
     save->checksumNOT = ~save->checksum;
 }
 
