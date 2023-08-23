@@ -231,14 +231,17 @@ void nandWriteBannerLoadAllSaves()
 
 void nandDeleteSave(s32 saveId)
 {
+    // The function actually deletes all saves
+    (void) saveId;
+
     // "Already running"
     assert(0x16d, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_DELETE_SAVE;
     wp->code = 0;
     wp->stage = 0;
-    wp->saveId = 0; // bug
-    (void) saveId;
+    wp->saveId = 0; // deleting save 0 makes all saves considered deleted
 }
 
 void nandCopySave(s32 sourceId, s32 destId)
@@ -302,9 +305,37 @@ void nandUpdateSave(s32 saveId)
     save->checksumNOT = ~save->checksum;
 }
 
-asm void nandLoadSave(s32 saveId)
+
+void nandLoadSave(s32 saveId)
 {
-    #include "asm/8023efe0.s"
+    SpmarioGlobals *_gp;
+    s32 lastSaveLoaded;
+    s32 language;
+    s32 fps;
+    SaveFile *save;
+
+    // Get save file
+    save = &wp->saves[saveId];
+
+    // Backup globals not read from save
+    language = gp->language;
+    fps = gp->fps;
+    lastSaveLoaded = gp->lastSaveLoaded;
+
+    memcpy(gp, &save->spmarioGlobals, sizeof(save->spmarioGlobals));
+    memcpy(pouchGetPtr(), &save->pouch, sizeof(save->pouch));
+    memcpy(npcGetWorkPtr()->unknown_0x728, &save->unknown_0x21b0, sizeof(save->unknown_0x21b0));
+    gp->discIsEjected = 0;
+    _gp = gp; // Sign of inlining?
+    _gp->lastSaveLoadTime = OSGetTime();
+    _gp->gameSpeed = 1.0f;
+
+    // Restore globals not read from save
+    gp->lastSaveLoaded = lastSaveLoaded;
+    gp->language = language;
+    gp->fps = fps;
+
+    gp->unknown_0xe0 = 0;
 }
 
 void nandDisableSaving()
