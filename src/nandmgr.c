@@ -36,12 +36,13 @@ static void checkCallback(s32 result, NANDCommandBlock * commandBlock);
 
 static u32 nandCalcChecksum(SaveFile * save)
 {
-    u32 checksum = 0;
-    for (int i = 0; i < sizeof(*save); i += 2)
-    {
+    u32 checksum;
+    u32 i;
+    
+    checksum = 0;
+    for (i = 0; i < sizeof(*save); i++)
         checksum += ((u8 *)save)[i];
-        checksum += ((u8 *)save)[i+1]; // doesn't match with just one
-    }
+
     return checksum;
 }
 
