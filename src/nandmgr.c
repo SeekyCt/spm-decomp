@@ -31,6 +31,14 @@ static NandWork * wp = &work;
 static void genericCallback(s32 result, NANDCommandBlock * commandBlock);
 static void checkCallback(s32 result, NANDCommandBlock * commandBlock);
 
+static void nand_check();
+static void nand_get_home_dir(char * homedir);
+static void nand_change_dir(const char * dir);
+static void nand_create(const char * path);
+static void nand_open(const char * path, NANDFileInfo * fileInfo);
+static void nand_write(NANDFileInfo * fileInfo, void * data, u32 length);
+static void nand_close(NANDFileInfo * fileInfo);
+
 // For some reason nandInit won't match without this
 void dummy(s32 x);
 void dummy(s32 x)
@@ -50,7 +58,7 @@ static u32 nandCalcChecksum(SaveFile * save)
     return checksum;
 }
 
-void nandInit(void)
+void nandInit()
 {
     TPLHeader *tpl;
     s32 i;
@@ -355,6 +363,9 @@ bool nandCheckSaving()
 
 void nandCheckMain()
 {
+    // Hack to stop this function being inlined
+    (void) 0;
+
     if (wp->flag & NAND_FLAG_Waiting)
         return;
 
@@ -369,20 +380,7 @@ void nandCheckMain()
         switch (wp->stage)
         {
             case 0:
-                wp->flag |= NAND_FLAG_Waiting;
-                s32 tries = 0;
-                wp->answer = 0;
-
-                while (NANDCheckAsync(NAND_BLOCK_COUNT, NAND_INODE_COUNT, &wp->answer,
-                                      &checkCallback, &wp->commandBlock) == NAND_CODE_BUSY)
-                {
-                    if (++tries > NAND_ATTEMPTS_MAX)
-                    {
-                        wp->code = -128;
-                        wp->flag &= ~NAND_FLAG_Waiting;
-                        break;
-                    }
-                }
+                nand_check();
                 break;
 
             case 1:
@@ -395,10 +393,52 @@ void nandCheckMain()
     }
 }
 
-#include "jumptable/804e5044.inc"
-asm void nandWriteBannerMain()
+void nandWriteBannerMain()
 {
-    #include "asm/8023f200.s"
+    if (wp->flag & NAND_FLAG_Waiting)
+        return;
+
+    if ((wp->code != NAND_CODE_OK) && (wp->code != NAND_CODE_EXISTS))
+    {
+        wp->task = 0;
+        wp->flag &= ~NAND_FLAG_Exec;
+        wp->flag |= 4;
+        return;
+    }
+
+    switch (wp->stage)
+    {
+        case 0:
+            nand_get_home_dir(wp->homedir);
+            break;
+
+        case 1:
+            nand_change_dir(wp->homedir);
+            break;
+
+        case 2:
+            nand_create("banner.bin");
+            break;
+
+        case 3:
+            nand_open("banner.bin", &wp->fileInfo);
+            break;
+
+        case 4:
+            nand_write(&wp->fileInfo, wp->banner, wp->bannerSize);
+            break;
+
+        case 5:
+            nand_close(&wp->fileInfo);
+            break;
+
+        case 6:
+            wp->task = NANDMGR_TASK_NONE;
+            wp->flag &= ~NAND_FLAG_Exec;
+            break;
+    }
+
+    wp->stage += 1;
 }
 
 #include "jumptable/804e5060.inc"
@@ -448,4 +488,128 @@ static void checkCallback(s32 result, NANDCommandBlock * commandBlock)
         wp->code = -11;
     if (wp->answer & 5)
         wp->code = -9;
+}
+
+static void nand_check()
+{
+    s32 tries;
+
+    wp->flag |= NAND_FLAG_Waiting;
+    tries = 0;
+    wp->answer = 0;
+    while (NANDCheckAsync(NAND_BLOCK_COUNT, NAND_INODE_COUNT, &wp->answer,
+                            &checkCallback, &wp->commandBlock) == NAND_CODE_BUSY)
+    {
+        if (++tries > NAND_ATTEMPTS_MAX)
+        {
+            wp->code = -128;
+            wp->flag &= ~NAND_FLAG_Waiting;
+            break;
+        }
+    }
+
+}
+
+static void nand_get_home_dir(char * homedir)
+{
+    s32 tries;
+    s32 code;
+
+    wp->flag |= NAND_FLAG_Waiting;
+    tries = 0;
+    while (code = NANDGetHomeDir(homedir), code == NAND_CODE_BUSY)
+    {
+        if (++tries > NAND_ATTEMPTS_MAX)
+        {
+            code = -128;
+            break;
+        }
+    }
+    wp->code = code;
+    wp->flag &= ~NAND_FLAG_Waiting;
+}
+
+static void nand_change_dir(const char * dir)
+{
+    s32 tries;
+
+    wp->flag |= NAND_FLAG_Waiting;
+    tries = 0;
+    while (NANDChangeDirAsync(dir, genericCallback, &wp->commandBlock) == NAND_CODE_BUSY)
+    {
+        if (++tries > NAND_ATTEMPTS_MAX)
+        {
+            wp->code = -128;
+            wp->flag &= ~NAND_FLAG_Waiting;
+            break;
+        }
+    }
+}
+
+static void nand_create(const char * path)
+{
+    s32 tries;
+
+    wp->flag |= NAND_FLAG_Waiting;
+    tries = 0;
+    while (NANDCreateAsync(path, NAND_PERMISSION_READ_WRITE, 0, genericCallback, &wp->commandBlock) == NAND_CODE_BUSY)
+    {
+        if (++tries > NAND_ATTEMPTS_MAX)
+        {
+            wp->code = -128;
+            wp->flag &= ~NAND_FLAG_Waiting;
+            break;
+        }
+    }
+}
+
+static void nand_open(const char * path, NANDFileInfo * fileInfo)
+{
+    s32 tries;
+
+    wp->flag |= NAND_FLAG_Waiting;
+    tries = 0;
+    while (NANDSafeOpenAsync(path, fileInfo, NAND_MODE_WRITE, wp->openingBuffer, wp->openingBufferSize, genericCallback, &wp->commandBlock) == NAND_CODE_BUSY)
+    {
+        if (++tries > NAND_ATTEMPTS_MAX)
+        {
+            wp->code = -128;
+            wp->flag &= ~NAND_FLAG_Waiting;
+            break;
+        }
+    }
+}
+
+static void nand_write(NANDFileInfo * fileInfo, void * data, u32 length)
+{
+    s32 tries;
+
+    wp->flag |= NAND_FLAG_Waiting;
+    tries = 0;
+    while (NANDWriteAsync(fileInfo, data, length, genericCallback, &wp->commandBlock) == NAND_CODE_BUSY)
+    {
+        if (++tries > NAND_ATTEMPTS_MAX)
+        {
+            wp->code = -128;
+            wp->flag &= ~NAND_FLAG_Waiting;
+            break;
+        }
+    }
+}
+
+static void nand_close(NANDFileInfo * fileInfo)
+{
+    s32 tries;
+
+    wp->flag |= NAND_FLAG_Waiting;
+    tries = 0;
+    while (NANDSafeCloseAsync(fileInfo, genericCallback, &wp->commandBlock) == NAND_CODE_BUSY)
+    {
+        if (++tries > NAND_ATTEMPTS_MAX)
+        {
+            wp->code = -128;
+            wp->flag &= ~NAND_FLAG_Waiting;
+            break;
+        }
+    }    
 }
