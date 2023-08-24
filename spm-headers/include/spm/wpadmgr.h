@@ -25,17 +25,21 @@ typedef struct
 /* 0x0000 */ u32 flags;
 /* 0x0004 */ u8 unknown_0x4[0x44 - 0x4];
 /* 0x0044 */ bool enableRumble[4]; // index controller id, controller vibrates when true
-/* 0x0000 */ bool rumblePrev[4]; // rumble enable flags from previous frame
-/* 0x0000 */ Vec2 pointingPos[4]; // wii remote pointer positions
+/* 0x0048 */ bool rumblePrev[4]; // rumble enable flags from previous frame
+/* 0x004C */ Vec2 pointingPos[4]; // wii remote pointer positions
     // controller input states, major index controller id, minor index age (latest is 0)
-/* 0x0000 */ KPADStatus statuses[4][WPAD_STATUS_COUNT];
-/* 0x0000 */ s32 kpadReadRet[4]; // last return from KPADRead for each controller
-/* 0x0000 */ KPADStatus pastStatuses[4][60];
-/* 0x0000 */ u32 unknown_0x9d3c[4];
-/* 0x0000 */ s32 unknown_0x9d4c[4];
-/* 0x0000 */ u8 unknown_0x9d5c[0x9d60 - 0x9d5c];
-/* 0x0000 */ s64 unknown_0x9d60[4];
-/* 0x0000 */ u8 unknown_0x9d80[0x9dc8 - 0x9d80];
+/* 0x006C */ KPADStatus statuses[4][WPAD_STATUS_COUNT];
+/* 0x216C */ s32 kpadReadRet[4]; // last return from KPADRead for each controller
+/* 0x217C */ KPADStatus pastStatuses[4][60];
+/* 0x9D3C */ u32 unknown_0x9d3c[4];
+/* 0x9D4C */ s32 unknown_0x9d4c[4];
+/* 0x9D5C */ u8 unknown_0x9d5c[0x9d60 - 0x9d5c];
+/* 0x9D60 */ s64 unknown_0x9d60[4];
+/* 0x9D80 */ f32 unknown_0x9d80[15];
+/* 0x9DBC */ f32 unkknown_0x9dbc;
+/* 0x9DC0 */ u8 unknown_0x9dc0;
+/* 0x9DC1 */ u8 unknown_0x9dc1;
+/* 0x9DC2 */ u8 unknown_0x9dc2[0x9dc8 - 0x9dc2];
 } WpadWork;
 SIZE_ASSERT(WpadWork, 0x9dc8)
 

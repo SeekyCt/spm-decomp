@@ -4,6 +4,7 @@
 #include <spm/wpadmgr.h>
 #include <wii/kpad.h>
 #include <wii/wpad.h>
+#include <msl/math.h>
 #include <msl/string.h>
 
 // .rodata
@@ -143,7 +144,76 @@ void func_80237710(s32 controller)
     wp->unknown_0x9d60[controller] = gp->time;
 }
 
-asm bool func_80237750()
+bool func_80237750()
 {
-    #include "asm/80237750.s"
+    s32 q;
+    s32 i;
+    s32 count;
+    f32 x;
+
+    if (wp->unknown_0x9dc1 != 0 && wp->unknown_0x9d80[0] <= wp->unknown_0x9d80[1])
+        wp->unknown_0x9dc1 = 0;
+
+    if (wp->unkknown_0x9dbc > 0.0f)
+    {
+        wp->unkknown_0x9dbc -= 0.2f;
+        return 1;
+    }
+
+    if (wp->unknown_0x9dc1 != 0)
+        return 0;
+
+    for (i = 0; i < 14; i++)
+    {
+        if (wp->unknown_0x9d80[i] < wp->unknown_0x9d80[i+1])
+            break;   
+    }
+    if (i == 0 || i >= 14)
+        return 0;
+    
+    q = i;
+
+    count = 0;
+    for (;i < 14; i++)
+    {
+        if (wp->unknown_0x9d80[i] >= wp->unknown_0x9d80[i+1])
+            break;
+        
+        if (fabsf(wp->unknown_0x9d80[i] - wp->unknown_0x9d80[i+1]) <= 0.01f)
+        {
+            if (++count > 1)
+                break;
+        }
+        else
+        {
+            count = 0;
+        }
+    }
+    if (i >= 14)
+        return 0;
+    
+    if (wp->unknown_0x9d80[i] > wp->unknown_0x9d80[0])
+        return 0;
+    
+    if (wp->unknown_0x9d80[i] - wp->unknown_0x9d80[q] < 0.1f)
+        return 0;
+    
+    x = wp->unknown_0x9d80[0] - wp->unknown_0x9d80[q];
+    if (x < 1.0f)
+        return 0;
+    
+    wp->unkknown_0x9dbc = x / q;
+
+    if (wp->unkknown_0x9dbc < 0.75f)
+    {
+        wp->unkknown_0x9dbc = 0.0f;
+        return 0;
+    }
+
+    if (wp->unkknown_0x9dbc > 3.0f)
+        wp->unkknown_0x9dbc *= 1.25f;
+    
+    wp->unknown_0x9dc1 = 1;
+
+    return 1;
 }
