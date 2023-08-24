@@ -13,14 +13,16 @@ USING(wii::mtx::Vec3)
 
 #define GUIDERunEnd 6
 
+// Hide and disable tippi
+#define GUIDE_FLAG0_DISABLE 0x80
+
 // Returns an override for the name
 typedef const char * (GuideAnimChangeHandler)(const char * newAnimName);
 
 typedef struct
 {
     /*
-        0x80 is hide & disable Tippi
-        Others unknown
+        See defines above
     */
 /* 0x00 */ u16 flag0;
     /*

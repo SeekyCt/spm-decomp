@@ -12,8 +12,18 @@ CPP_WRAPPER(wii::nand)
 
 #define NAND_CODE_OK 0
 #define NAND_CODE_BUSY -3
+#define NAND_CODE_5 -5
 #define NAND_CODE_EXISTS -6
+#define NAND_CODE_9 -9
+#define NAND_CODE_11 -11
 #define NAND_CODE_NOT_EXIST -12
+#define NAND_CODE_15 -15
+#define NAND_CODE_FATAL -128
+
+#define NAND_ANSWER_FLAG_1 1
+#define NAND_ANSWER_FLAG_2 2
+#define NAND_ANSWER_FLAG_4 4
+#define NAND_ANSWER_FLAG_8 8
 
 #define NAND_PERMISSION_READ 0x10
 #define NAND_PERMISSION_WRITE 0x20
@@ -26,6 +36,9 @@ CPP_WRAPPER(wii::nand)
 
 #define NAND_PATH_LENGTH 64
 #define NAND_FILENAME_LENGTH 13
+
+#define NAND_BANNER_FLAG_NO_COPY 0x1
+#define NAND_BANNER_FLAG_BOUNCE 0x10
 
 typedef struct
 {

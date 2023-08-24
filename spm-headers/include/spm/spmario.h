@@ -17,6 +17,11 @@ USING(wii::os::OSThread)
 USING(wii::os::OSTime)
 USING(wii::mtx::Vec3)
 
+#define SPMARIO_FLAG_1 1
+#define SPMARIO_FLAG_2 2
+#define SPMARIO_FLAG_4 4
+#define SPMARIO_FLAG_8 8
+
 typedef struct
 {
 /* 0x0000 */ u32 flags;

@@ -4,6 +4,17 @@
 
 CPP_WRAPPER(wii::sc)
 
+#define SC_LANGUAGE_JP 0
+#define SC_LANGUAGE_EN 1
+#define SC_LANGUAGE_GE 2
+#define SC_LANGUAGE_FR 3
+#define SC_LANGUAGE_SP 4
+#define SC_LANGUAGE_IT 5
+#define SC_LANGUAGE_DU 6
+#define SC_LANGUAGE_SC 7
+#define SC_LANGUAGE_TC 8
+#define SC_LANGUAGE_KR 9
+
 UNKNOWN_FUNCTION(SCInit);
 UNKNOWN_FUNCTION(SCCheckStatus);
 UNKNOWN_FUNCTION(SCReloadConfFileAsync);

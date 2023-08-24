@@ -222,6 +222,36 @@ enum MarioMotionId
 /* 0x4D */ MOT_77
 };
 
+// Off ground, in water
+#define MARIO_MISC_FLAG_SWIM 0x20000000
+
+// Squirps enabled
+#define MARIO_MISC_FLAG_SQUIRPS 0x200000
+
+// Luvbi enabled
+#define MARIO_MISC_FLAG_LUVBI 0x80000
+
+// Near top of water?
+#define MARIO_MISC_FLAG_0x400 0x400
+
+// Can jump out of water?
+#define MARIO_MISC_FLAG_0x200 0x200
+
+// In water
+#define MARIO_MISC_FLAG_WATER 0x100
+
+// Jumping out of water
+#define MARIO_MISC_FLAG_WATER_JUMP 0x10
+
+// Paper pose on
+#define MARIO_DISP_FLAG_PAPER 0x40000000
+
+#define MARIO_DISP_FLAG_0x800000 0x800000
+
+// Lock facing direction towards facingTarget
+#define MARIO_DISP_FLAG_LOCK_FACING 0x20
+
+
 typedef struct
 {
     /*
@@ -237,20 +267,11 @@ typedef struct
     */
 /* 0x0000 */ u32 flags;
     /*
-        More general flags
-        0x20000000 off ground in water
-        0x200000 squirps enabled
-        0x80000 luvbi enabled
-        0x400 near top of water?
-        0x200 can jump out of water?
-        0x100 in water
-        0x10 jumping out of water
+        More general flags, see defines above
     */
 /* 0x0004 */ u32 miscFlags;
     /*
-        Disp flags
-        0x40000000 paper pose on
-        0x20 lock facing direction towards facingTarget
+        Disp flags, see defines above
     */
 /* 0x0008 */ u32 dispFlags;
     /*

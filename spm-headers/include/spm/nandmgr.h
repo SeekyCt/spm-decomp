@@ -34,6 +34,7 @@ enum NandTask
 /* 0x6 */ NANDMGR_TASK_DELETE_SAVE
 };
 
+#define SAVE_FLAG_1 1
 #define SAVE_FLAG_CORRUPT 2
 
 typedef struct
@@ -49,9 +50,11 @@ typedef struct
 } SaveFile;
 SIZE_ASSERT(SaveFile, 0x25b8)
 
+#define SAVE_FILE_COUNT 4
+
 #define NAND_FLAG_Exec 1
 #define NAND_FLAG_Waiting 2
-// 4 is had an error?
+#define NAND_FLAG_Error 4
 #define NAND_FLAG_NoSave 0x1000
 
 // 32-byte alignment?
@@ -138,8 +141,8 @@ void nandWriteSave(s32 saveId);
 void nandWriteBannerLoadAllSaves();
 
 /*
-    Starts a save file being deleted from NAND asynchronously
-    Bugged to always delete the first save file
+    Starts all save files being deleted from NAND asynchronously
+    Parameter value is ignored
 */
 void nandDeleteSave(s32 saveId);
 
