@@ -35,7 +35,10 @@ static void nand_check();
 static void nand_get_home_dir(char * homedir);
 static void nand_change_dir(const char * dir);
 static void nand_create(const char * path);
-static void nand_open(const char * path, NANDFileInfo * fileInfo);
+static void nand_delete(const char * path);
+static void nand_seek(NANDFileInfo * fileInfo, u32 offset, u8 mode);
+static void nand_open(const char * path, NANDFileInfo * fileInfo, u8 mode);
+static void nand_read(NANDFileInfo * fileInfo, void * data, u32 length);
 static void nand_write(NANDFileInfo * fileInfo, void * data, u32 length);
 static void nand_close(NANDFileInfo * fileInfo);
 
@@ -421,7 +424,7 @@ void nandWriteBannerMain()
             break;
 
         case 3:
-            nand_open("banner.bin", &wp->fileInfo);
+            nand_open("banner.bin", &wp->fileInfo, NAND_MODE_WRITE);
             break;
 
         case 4:
@@ -481,7 +484,7 @@ void nandWriteAllSavesMain()
 
         case 3:
             sprintf(filename, "wiimario%02d", wp->saveId);
-            nand_open(filename, &wp->fileInfo);
+            nand_open(filename, &wp->fileInfo, NAND_MODE_WRITE);
             break;
 
         case 4:
@@ -509,20 +512,198 @@ void nandWriteAllSavesMain()
     wp->stage += 1;
 }
 
-asm void nandWriteSaveMain()
+void nandWriteSaveMain()
 {
-    #include "asm/8023fa24.s"
+    char filename[NAND_PATH_LENGTH];
+
+    if (wp->flag & NAND_FLAG_Waiting)
+        return;
+
+    if (wp->code != NAND_CODE_OK)
+    {
+        wp->task = 0;
+        wp->flag &= ~NAND_FLAG_Exec;
+        wp->flag |= 4;
+        return;
+    }
+
+    switch (wp->stage)
+    {
+        case 0:
+            nand_get_home_dir(wp->homedir);
+            break;
+
+        case 1:
+            nand_change_dir(wp->homedir);
+            break;
+
+        case 2:
+            sprintf(filename, "wiimario%02d", wp->saveId);
+            nand_open(filename, &wp->fileInfo, NAND_MODE_WRITE);
+            break;
+
+        case 3:
+            memset(wp->tempSaveFile, 0, NAND_TEMP_SAVE_SIZE);
+            memcpy(wp->tempSaveFile, wp->saves + wp->saveId, sizeof(SaveFile));
+            nand_write(&wp->fileInfo, wp->tempSaveFile, sizeof(SaveFile));
+            break;
+
+        case 4:
+            nand_close(&wp->fileInfo);
+            break;
+
+        case 5:
+            wp->task = 0;
+            wp->flag &= ~NAND_FLAG_Exec;
+            break;
+    }
+
+    wp->stage += 1;
 }
 
-#include "jumptable/804e507c.inc"
-asm void nandWriteBannerLoadAllSavesMain()
+void nandWriteBannerLoadAllSavesMain()
 {
-    #include "asm/8023fd64.s"
+    char filename[NAND_PATH_LENGTH];
+    SaveFile * save;
+    s32 i;
+
+    if (wp->flag & NAND_FLAG_Waiting)
+        return;
+
+    if (wp->code != NAND_CODE_OK)
+    {
+        if ((wp->saveId < 4 && wp->stage >= 7) &&
+            (wp->code == -5 || wp->code == -0xF))
+        {
+                wp->flag |= 4;
+        }
+        else
+        {
+            wp->task = 0;
+            wp->flag &= ~NAND_FLAG_Exec;
+            wp->flag |= 4;
+            return;
+        }
+    }
+
+    switch (wp->stage)
+    {
+        case 0:
+            nand_get_home_dir(wp->homedir);
+            break;
+
+        case 1:
+            nand_change_dir(wp->homedir);
+            break;
+
+        case 2:
+            nand_open("banner.bin", &wp->fileInfo, NAND_MODE_READ | NAND_MODE_WRITE);
+            wp->tempBanner = __memAlloc(0, wp->bannerSize);
+            break;
+
+        case 3:
+            nand_read(&wp->fileInfo, wp->tempBanner, wp->bannerSize);
+            break;
+
+        case 4:
+            if (memcmp(wp->tempBanner, wp->banner, wp->bannerSize) != 0)
+            {
+                nand_seek(&wp->fileInfo, 0, 0);
+            }
+            else
+            {
+                wp->stage = 6;
+                return;
+            }
+            break;
+
+        case 5:
+            nand_write(&wp->fileInfo, wp->banner, wp->bannerSize);
+            break;
+
+        case 6:
+            __memFree(0, wp->tempBanner);
+            nand_close(&wp->fileInfo);
+            break;
+
+        case 7:
+            sprintf(filename, "wiimario%02d", wp->saveId);
+            nand_open(filename, &wp->fileInfo, NAND_MODE_READ);
+            break;
+
+        case 8:
+            memset(wp->tempSaveFile, 0, NAND_TEMP_SAVE_SIZE);
+            nand_read(&wp->fileInfo, wp->tempSaveFile, NAND_TEMP_SAVE_SIZE);
+            break;
+
+        case 9:
+            nand_close(&wp->fileInfo);
+            break;
+
+        case 10:
+            memcpy(wp->saves + wp->saveId, wp->tempSaveFile, sizeof(SaveFile));
+            wp->saveId += 1;
+            if (wp->saveId < 4)
+            {
+                wp->stage = 7;
+                return;
+            }
+
+            save = wp->saves;
+            for (i = 0; i < 4; save++, i++)
+            {
+                if (save->checksum != nandCalcChecksum(save))
+                {
+                    save->flags &= ~1;
+                    save->flags |= SAVE_FLAG_CORRUPT;
+                }
+            }
+
+            wp->task = NANDMGR_TASK_NONE;
+            wp->flag &= ~NAND_FLAG_Exec;
+            break;
+    }
+
+    wp->stage += 1;
 }
 
-asm void nandDeleteSaveMain()
+void nandDeleteSaveMain()
 {
-    #include "asm/80240414.s"
+    char filename[NAND_PATH_LENGTH];
+
+    if (wp->flag & NAND_FLAG_Waiting)
+        return;
+
+    if (wp->code != NAND_CODE_OK)
+    {
+        wp->task = 0;
+        wp->flag &= 0xFFFFFFFE;
+        wp->flag |= 4;
+        return;
+    }
+
+    switch (wp->stage)
+    {
+        case 0:
+            nand_get_home_dir(wp->homedir);
+            break;
+
+        case 1:
+            nand_change_dir(wp->homedir);
+            break;
+
+        case 2:
+            sprintf(filename, "wiimario%02d", wp->saveId);
+            nand_delete(filename);
+            break;
+
+        case 3:
+            wp->task = NANDMGR_TASK_NONE;
+            wp->flag &= ~NAND_FLAG_Exec;
+            break;
+        }
+
+    wp->stage += 1;
 }
 
 static void genericCallback(s32 result, NANDCommandBlock * commandBlock)
@@ -625,13 +806,64 @@ static void nand_create(const char * path)
     }
 }
 
-static void nand_open(const char * path, NANDFileInfo * fileInfo)
+static void nand_delete(const char * path)
 {
     s32 tries;
 
     wp->flag |= NAND_FLAG_Waiting;
     tries = 0;
-    while (NANDSafeOpenAsync(path, fileInfo, NAND_MODE_WRITE, wp->openingBuffer, wp->openingBufferSize, genericCallback, &wp->commandBlock) == NAND_CODE_BUSY)
+    while (NANDDeleteAsync(path, genericCallback, &wp->commandBlock) == NAND_CODE_BUSY)
+    {
+        if (++tries > NAND_ATTEMPTS_MAX)
+        {
+            wp->code = -128;
+            wp->flag &= ~NAND_FLAG_Waiting;
+            break;
+        }
+    }
+}
+
+static void nand_open(const char * path, NANDFileInfo * fileInfo, u8 mode)
+{
+    s32 tries;
+
+    wp->flag |= NAND_FLAG_Waiting;
+    tries = 0;
+    while (NANDSafeOpenAsync(path, fileInfo, mode, wp->openingBuffer, wp->openingBufferSize, genericCallback, &wp->commandBlock) == NAND_CODE_BUSY)
+    {
+        if (++tries > NAND_ATTEMPTS_MAX)
+        {
+            wp->code = -128;
+            wp->flag &= ~NAND_FLAG_Waiting;
+            break;
+        }
+    }
+}
+
+static void nand_seek(NANDFileInfo * fileInfo, u32 offset, u8 mode)
+{
+    s32 tries;
+
+    wp->flag |= NAND_FLAG_Waiting;
+    tries = 0;
+    while (NANDSeekAsync(fileInfo, offset, mode, genericCallback, &wp->commandBlock) == NAND_CODE_BUSY)
+    {
+        if (++tries > 0x64)
+        {
+            wp->code = -128;
+            wp->flag &= ~NAND_FLAG_Waiting;
+            break;
+        }
+    }
+}
+
+static void nand_read(NANDFileInfo * fileInfo, void * data, u32 length)
+{
+    s32 tries;
+
+    wp->flag |= NAND_FLAG_Waiting;
+    tries = 0;
+    while (NANDReadAsync(fileInfo, data, length, genericCallback, &wp->commandBlock) == NAND_CODE_BUSY)
     {
         if (++tries > NAND_ATTEMPTS_MAX)
         {

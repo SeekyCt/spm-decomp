@@ -73,7 +73,7 @@ typedef struct
 /* 0x1A4 */ void * tempBanner;
 /* 0x1A8 */ u32 answer;
 /* 0x1AC */ u32 task; // used by task main functions to track progress
-/* 0x1B0 */ u32 stage;
+/* 0x1B0 */ s32 stage;
 /* 0x1B4 */ s32 code;
 /* 0x1B8 */ s32 saveId; // slot of save file to work on
 } NandWork;
