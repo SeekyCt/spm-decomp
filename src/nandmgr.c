@@ -68,7 +68,7 @@ void nandInit()
     wp->openingBufferSize = 0x4000;
     wp->openingBuffer = __memAlloc(HEAP_MAIN, wp->openingBufferSize);
     wp->saves = __memAlloc(HEAP_MAIN, sizeof(SaveFile)*4);
-    wp->tempSaveFile = __memAlloc(HEAP_MAIN, sizeof(SaveFile) + 8); // alignment?
+    wp->tempSaveFile = __memAlloc(HEAP_MAIN, NAND_TEMP_SAVE_SIZE);
     wp->banner = __memAlloc(HEAP_MAIN, sizeof(*wp->banner));
 
     // Create banner
@@ -441,10 +441,72 @@ void nandWriteBannerMain()
     wp->stage += 1;
 }
 
-#include "jumptable/804e5060.inc"
-asm void nandWriteAllSavesMain()
+void nandWriteAllSavesMain()
 {
-    #include "asm/8023f570.s"
+    char filename[NAND_PATH_LENGTH];
+
+    if (wp->flag & NAND_FLAG_Waiting)
+        return;
+
+    if (wp->code != NAND_CODE_OK)
+    {
+        if (wp->code == NAND_CODE_EXISTS)
+        {
+            wp->code = 0;
+            wp->stage = 6;
+        }
+        else
+        {
+            wp->task = 0;
+            wp->flag &= ~NAND_FLAG_Exec;
+            wp->flag |= 4;
+            return;
+        }
+    }
+
+    switch (wp->stage)
+    {
+        case 0:
+            nand_get_home_dir(wp->homedir);
+            break;
+
+        case 1:
+            nand_change_dir(wp->homedir);
+            break;
+
+        case 2:
+            sprintf(filename, "wiimario%02d", wp->saveId);
+            nand_create(filename);
+            break;
+
+        case 3:
+            sprintf(filename, "wiimario%02d", wp->saveId);
+            nand_open(filename, &wp->fileInfo);
+            break;
+
+        case 4:
+            nandClearSave(wp->saveId);
+            memset(wp->tempSaveFile, 0, NAND_TEMP_SAVE_SIZE);
+            memcpy(wp->tempSaveFile, wp->saves + wp->saveId, sizeof(SaveFile));
+            nand_write(&wp->fileInfo, wp->tempSaveFile, sizeof(SaveFile));
+            break;
+
+        case 5:
+            nand_close(&wp->fileInfo);
+            break;
+
+        case 6:
+            wp->saveId += 1;
+            if (wp->saveId < 4)
+            {
+                wp->stage = 2;
+                return;
+            }
+            wp->task = NANDMGR_TASK_NONE;
+            wp->flag &= ~NAND_FLAG_Exec;
+    }
+
+    wp->stage += 1;
 }
 
 asm void nandWriteSaveMain()

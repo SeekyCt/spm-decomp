@@ -54,6 +54,9 @@ SIZE_ASSERT(SaveFile, 0x25b8)
 // 4 is had an error?
 #define NAND_FLAG_NoSave 0x1000
 
+// 32-byte alignment?
+#define NAND_TEMP_SAVE_SIZE (sizeof(SaveFile) + 0x8)
+
 typedef struct
 {
 /* 0x000 */ u32 flag;
@@ -61,7 +64,7 @@ typedef struct
 /* 0x008 */ size_t openingBufferSize; // 0x4000
 /* 0x00C */ u8 unknown_0xc[0x10 - 0xc];
 /* 0x010 */ SaveFile * saves; // array of 4
-/* 0x014 */ void * tempSaveFile; // 0x25c0 allocation
+/* 0x014 */ void * tempSaveFile; // NAND_TEMP_SAVE_FILE_SIZE bytes
 /* 0x018 */ char homedir[64];
 /* 0x058 */ NANDFileInfo fileInfo;
 /* 0x0E4 */ NANDCommandBlock commandBlock;
