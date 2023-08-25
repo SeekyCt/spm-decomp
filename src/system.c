@@ -119,7 +119,7 @@ f32 distABf(f32 x1, f32 z1, f32 x2, f32 z2)
 
 f32 compAngle(f32 a, f32 b) {
     f32 diff;
-    diff = __fabsf(b - a);
+    diff = fabsf(b - a);
     if (diff >= 180.0f) {
         if (b < a) {
             b += 360.0f;
