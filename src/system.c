@@ -130,14 +130,75 @@ f32 compAngle(f32 a, f32 b) {
     return b - a;
 }
 
-asm f32 angleABf(f32 x1, f32 z1, f32 x2, f32 z2)
-{
-    #include "asm/8019c6f8.s"
+static s32 round(f32 x) {
+    if (!(x >= 0.0f))
+        return -(s32) (0.5 - x);
+    else
+        return (s32) (0.5 + x);
 }
 
-asm void sincosf(f32 x, f32 * sinx, f32 * cosx)
+f32 angleABf(f32 x1, f32 z1, f32 x2, f32 z2)
 {
-    #include "asm/8019c8ac.s"
+    f32 xDiff;
+    f32 zDiff;
+    f32 absXDiff;
+    f32 absZDiff;
+    f32 tangent;
+    f32 angle;
+
+    xDiff = x2 - x1;
+    zDiff = z2 - z1;
+    absXDiff = fabsf(xDiff);
+    absZDiff = fabsf(zDiff);
+    if (absXDiff > absZDiff)
+    {
+        tangent = (absZDiff / absXDiff) * 45.0f;
+        angle = tangent * angleABTBL[round(tangent * 2.0f)];
+        if (xDiff >= 0.0f)
+        {
+            if (zDiff >= 0.0f)
+                return angle + 90.0f;
+            else
+                return 90.0f - angle;
+        }
+        else
+        {
+            if (zDiff >= 0.0f)
+                return 270.0f - angle;
+            else
+                return angle + 270.0f;
+        }
+    }
+    else
+    {
+        if (absZDiff == 0.0f)
+        {
+            return 0.0f;
+        }
+
+        tangent = (absXDiff / absZDiff) * 45.0f;
+        angle = tangent * angleABTBL[round(tangent * 2.0f)];
+        if (zDiff >= 0.0f)
+        {
+            if (xDiff >= 0.0f)
+                return 180.0f - angle;
+            else
+                return angle + 180.0f;
+        }
+        else
+        {
+            if (xDiff >= 0.0f)
+                return angle;
+            else
+                return 360.0f - angle;
+        } 
+    }
+}
+
+void sincosf(f32 x, f32 * sinx, f32 * cosx)
+{
+    *sinx = sinf((x * 3.141592741012573f) / 180.0f);
+    *cosx = -cosf((x * 3.141592741012573f) / 180.0f);
 }
 
 void movePos(f32 distance, f32 angle, f32 * x, f32 * z)

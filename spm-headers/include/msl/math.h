@@ -12,6 +12,9 @@ double sin(double x);
 double fmod(double numer, double denom);
 double sqrt(double x);
 
+#define cosf(x) ((f32)cos(x))
+#define sinf(x) ((f32)sin(x))
+
 #define fabs(x) __fabs(x)
 #define fabsf(x) __fabsf(x)
 #define abs(x) __abs(x)
