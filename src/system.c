@@ -298,10 +298,42 @@ void sysRandInit()
     randomSeed = (s32) OSGetTime();
 }
 
+// Needs other sbss to be function-local for ordering
+#ifdef NON_MATCHING
+static u16 sysGetToken()
+{
+    static u16 token = 0;
+
+    if (++token >= 0xe000)
+        token = 0;
+    
+    return token;
+}
+
+void sysWaitDrawSync()
+{
+    u16 curToken;
+    OSTick startTick;
+    
+    curToken = sysGetToken();
+    startTick = OSGetTick();
+
+    if (__mapdrv_make_dl)
+        return;
+
+    GXSetDrawSync(curToken);
+    while (GXReadDrawSync() != curToken)
+    {
+        if (OSTicksToMilliseconds(OSGetTick() - startTick) > 100)
+            break;
+    }
+}
+#else
 asm void sysWaitDrawSync()
 {
     #include "asm/8019d4b0.s"
 }
+#endif
 
 // The use of r11/12 and placement of the return 1 pretty much guarantee inline asm
 asm s32 memcmp_as4(register const void * a, register const void * b, register u32 n)
