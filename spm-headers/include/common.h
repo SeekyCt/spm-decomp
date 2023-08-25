@@ -44,7 +44,11 @@ typedef s32 BOOL;
 
 #ifndef __cplusplus
 
-#define bool _Bool
+#ifndef M2C
+    #define bool _Bool
+#else
+    #define bool char
+#endif
 
 #define true 1
 #define false 0
