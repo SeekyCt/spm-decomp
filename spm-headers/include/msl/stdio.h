@@ -4,12 +4,13 @@
 #pragma once
 
 #include <common.h>
+#include <msl/stdarg.h>
 
 CPP_WRAPPER(msl::stdio)
 
-// TODO: va_list
-// int vsprintf(char * s, const char * format, va_list arg );
-UNKNOWN_FUNCTION(vsprintf);
+USING(msl::stdarg::va_list)
+
+int vsprintf(char * s, const char * format, va_list arg);
 
 int snprintf(char * dest, size_t n, const char * format, ...);
 int sprintf(char * dest, const char * format, ...);

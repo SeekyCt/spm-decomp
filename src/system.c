@@ -80,9 +80,18 @@ s32 __assert(const char * filename, s32 line, const char * assertion)
     return 1;
 }
 
-asm s32 __assert2(const char * filename, s32 line, const char * assertion, const char * message, ...)
+s32 __assert2(const char * filename, s32 line, const char * assertion, const char * message, ...)
 {
-    #include "asm/8019c54c.s"
+    char buf[1024];
+    va_list args;
+
+    va_start(args, message);
+    vsprintf(buf, message, args);
+    va_end(args);
+
+    OSPanic(filename, line, "assertion \"%s\" failed.\n \"%s\"\n", assertion, buf);
+
+    return 1;
 }
 
 f32 reviseAngle(f32 angle)
