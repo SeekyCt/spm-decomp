@@ -94,11 +94,18 @@ s32 __assert2(const char * filename, s32 line, const char * assertion, const cha
     return 1;
 }
 
+s32 roundi(f32 x) {
+    if (!(x >= 0.0f))
+        return -(s32) (0.5 - x);
+    else
+        return (s32) (0.5 + x);
+}
+
 f32 reviseAngle(f32 angle)
 {
-    angle = (f32) fmod(angle, 360.0);
+    angle = fmodf(angle, 360.0);
 
-    // Seems impossible, maybe true if NaN returned?
+    // NaN check
     if (angle != angle)
         angle = 0.0f;
     
@@ -107,7 +114,7 @@ f32 reviseAngle(f32 angle)
     {
         angle += 360.0f;
 
-        // Seems impossible?
+        // Account for rounding errors?
         if (angle >= 360.0f)
             angle = 0.0f;
     }
@@ -117,33 +124,18 @@ f32 reviseAngle(f32 angle)
 
 f32 distABf(f32 x1, f32 z1, f32 x2, f32 z2)
 {
-    f32 xDiff;
-    f32 zDiff;
-    
-    xDiff = x2 - x1;
-    zDiff = z2 - z1;
-    
-    return (f32) sqrt(xDiff * xDiff + zDiff * zDiff);
+    return sqrtf(SQUARE(x2 - x1) + SQUARE(z2 - z1));
 }
 
 f32 compAngle(f32 a, f32 b) {
-    f32 diff;
-    diff = fabsf(b - a);
-    if (diff >= 180.0f) {
-        if (b < a) {
+    if (fabsf(b - a) >= 180.0f)
+    {
+        if (b < a)
             b += 360.0f;
-        } else {
+        else
             b -= 360.0f;
-        }
     }
     return b - a;
-}
-
-static s32 round(f32 x) {
-    if (!(x >= 0.0f))
-        return -(s32) (0.5 - x);
-    else
-        return (s32) (0.5 + x);
 }
 
 f32 angleABf(f32 x1, f32 z1, f32 x2, f32 z2)
@@ -162,7 +154,7 @@ f32 angleABf(f32 x1, f32 z1, f32 x2, f32 z2)
     if (absXDiff > absZDiff)
     {
         tangent = (absZDiff / absXDiff) * 45.0f;
-        angle = tangent * angleABTBL[round(tangent * 2.0f)];
+        angle = tangent * angleABTBL[roundi(tangent * 2.0f)];
         if (xDiff >= 0.0f)
         {
             if (zDiff >= 0.0f)
@@ -186,7 +178,7 @@ f32 angleABf(f32 x1, f32 z1, f32 x2, f32 z2)
         }
 
         tangent = (absXDiff / absZDiff) * 45.0f;
-        angle = tangent * angleABTBL[round(tangent * 2.0f)];
+        angle = tangent * angleABTBL[roundi(tangent * 2.0f)];
         if (zDiff >= 0.0f)
         {
             if (xDiff >= 0.0f)
@@ -220,7 +212,7 @@ void movePos(f32 distance, f32 angle, f32 * x, f32 * z)
     *z -= distance * c;
 }
 
-asm void fsort(char ** table, size_t size)
+static asm void fsort(char ** table, size_t size)
 {
     #include "asm/8019c9d4.s"
 }
@@ -238,7 +230,7 @@ static s32 _rand_advance()
 
 static f32 _frand()
 {
-    return irand(0x7fff) / 32767.0f;
+    return irand(RAND_MAX) / (f32) RAND_MAX;
 }
 
 static s32 _rand(s32 max) // always inlined
@@ -262,7 +254,7 @@ static s32 _rand(s32 max) // always inlined
 
 s32 rand()
 {
-    return irand(0x7fff);
+    return irand(RAND_MAX);
 }
 
 s32 irand(s32 max)
@@ -309,7 +301,7 @@ void sysRandInit()
 
 // Needs other sbss to be function-local for ordering
 #ifdef NON_MATCHING
-static u16 sysGetToken()
+u16 sysGetToken()
 {
     static u16 token = 0;
 
@@ -670,7 +662,7 @@ f32 intplGetValue(s32 mode, f32 min, f32 max, s32 progress, s32 progressMax)
             return max - (((progressMaxf - progressf) * ((progressMaxf - progressf) * ((max - min) * cosf((4.0f * (3.141592f * (SQUARE(progressf) / progressMaxf))) / ((15.0f * progressMaxf) / 100.0f))))) / (progressMaxf * progressMaxf));
 
         case INTPL_MODE_9:
-            return max - ((progressf * (progressf * ((max - min) * (f32) cos((f64) ((4.0f * (3.141592f * ((progressf * progressf) / progressMaxf))) / ((15.0f * progressMaxf) / 100.0f)))))) / (progressMaxf * progressMaxf));
+            return max - ((progressf * (progressf * ((max - min) * cosf((4.0f * (3.141592f * (SQUARE(progressf) / progressMaxf))) / ((15.0f * progressMaxf) / 100.0f))))) / (progressMaxf * progressMaxf));
 
         case INTPL_MODE_QUADRATIC_OUT:
             progressLeft = progressMaxf - progressf;
@@ -701,6 +693,6 @@ f32 intplGetValue(s32 mode, f32 min, f32 max, s32 progress, s32 progressMax)
             return ((max - min) * (1.0f - unkInline2(progressf, progressMaxf))) + min;
 
         default:
-            return ((f32 (*)(s32, s32, f32, f32)) mode)(progress, progressMax, min, max);
+            return ((IntplUserFunc *)mode)(progress, progressMax, min, max);
     }
 }
