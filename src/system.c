@@ -386,14 +386,231 @@ top:
     blr
 }
 
-asm void mtxGetRotationElement(Mtx34 * mtx, Mtx34 * out, char axis1, char axis2)
+void mtxGetRotationElement(Mtx34 src, Mtx34 dest, char axis1, char axis2)
 {
-    #include "asm/8019d5c4.s"
+    Vec3 vecX, vecY, vecZ;
+
+    switch (axis1)
+    {
+        case 'x':
+        case 'X':
+            vecX.x = src[0][0];
+            vecX.y = src[1][0];
+            vecX.z = src[2][0];
+            PSVECNormalize(&vecX, &vecX);
+
+            switch (axis2)
+            {
+                case 'z':
+                case 'Z':
+                    vecZ.x = src[0][2];
+                    vecZ.y = src[1][2];
+                    vecZ.z = src[2][2];
+                    PSVECNormalize(&vecZ, &vecZ);
+                    PSVECCrossProduct(&vecZ, &vecX, &vecY);
+                    PSVECCrossProduct(&vecX, &vecY, &vecZ);
+                    break;
+
+                default:
+                    vecY.x = src[0][1];
+                    vecY.y = src[1][1];
+                    vecY.z = src[2][1];
+                    PSVECNormalize(&vecY, &vecY);
+                    PSVECCrossProduct(&vecX, &vecY, &vecZ);
+                    PSVECCrossProduct(&vecZ, &vecX, &vecY);
+                    break;
+            }
+            break;
+
+        case 'y':
+        case 'Y':
+            vecY.x = src[0][1];
+            vecY.y = src[1][1];
+            vecY.z = src[2][1];
+            PSVECNormalize(&vecY, &vecY);
+
+            switch (axis2)
+            {
+                case 'x':
+                case 'X':
+                    vecX.x = src[0][0];
+                    vecX.y = src[1][0];
+                    vecX.z = src[2][0];
+                    PSVECNormalize(&vecX, &vecX);
+                    PSVECCrossProduct(&vecX, &vecY, &vecZ);
+                    PSVECCrossProduct(&vecY, &vecZ, &vecX);
+                    break;
+
+                default:
+                    vecZ.x = src[0][2];
+                    vecZ.y = src[1][2];
+                    vecZ.z = src[2][2];
+                    PSVECNormalize(&vecZ, &vecZ);
+                    PSVECCrossProduct(&vecY, &vecZ, &vecX);
+                    PSVECCrossProduct(&vecX, &vecY, &vecZ);
+                    break;
+            }
+            break;
+
+        default:
+            vecZ.x = src[0][2];
+            vecZ.y = src[1][2];
+            vecZ.z = src[2][2];
+            PSVECNormalize(&vecZ, &vecZ);
+
+            switch (axis2)
+            {
+                case 'y':
+                case 'Y':
+                    vecY.x = src[0][1];
+                    vecY.y = src[1][1];
+                    vecY.z = src[2][1];
+                    PSVECNormalize(&vecY, &vecY);
+                    PSVECCrossProduct(&vecY, &vecZ, &vecX);
+                    PSVECCrossProduct(&vecZ, &vecX, &vecY);
+                    break;
+
+                default:
+                    vecX.x = src[0][0];
+                    vecX.y = src[1][0];
+                    vecX.z = src[2][0];
+                    PSVECNormalize(&vecX, &vecX);
+                    PSVECCrossProduct(&vecZ, &vecX, &vecY);
+                    PSVECCrossProduct(&vecY, &vecZ, &vecX);
+                    break;
+            }
+            break;
+    }
+
+    dest[0][0] = vecX.x;
+    dest[1][0] = vecX.y;
+    dest[2][0] = vecX.z;
+    dest[0][1] = vecY.x;
+    dest[1][1] = vecY.y;
+    dest[2][1] = vecY.z;
+    dest[0][2] = vecZ.x;
+    dest[1][2] = vecZ.y;
+    dest[2][2] = vecZ.z;
+    dest[0][3] = 0.0f;
+    dest[1][3] = 0.0f;
+    dest[2][3] = 0.0f;
 }
 
-asm void mtxGetScaleElement(Mtx34 * mtx, Mtx34 * out)
+void mtxGetScaleElement(Mtx34 mtx, Mtx34 out)
 {
-    #include "asm/8019d8fc.s"
+    Vec3 sp38;
+    Vec3 vecX;
+    Vec3 vecY;
+    Vec3 vecZ;
+    Vec3 sp8;
+
+    f32 mag;
+    f32 scale;
+
+    vecX.x = mtx[0][0];
+    vecX.y = mtx[1][0];
+    vecX.z = mtx[2][0];
+
+    mag = PSVecSquareMag(&vecX);
+    if (mag > 1.0e-10f)
+    {
+        scale = sqrtf(1.0f / mag);
+        out[0][0] = 1.0f / scale;
+        PSVECScale(&vecX, &vecX, scale);
+
+        vecY.x = mtx[0][1];
+        vecY.y = mtx[1][1];
+        vecY.z = mtx[2][1];
+        sp38.x = PSVECDotProduct(&vecX, &vecY);
+        PSVECScale(&vecX, &sp8, sp38.x);
+        PSVECSubtract(&vecY, &sp8, &vecY);
+
+        mag = PSVecSquareMag(&vecY);
+        if (mag > 1.0e-10f)
+        {
+            scale = sqrtf(1.0f / mag);
+            out[0][1] = 1.0f / scale;
+            sp38.x *= scale;
+            PSVECScale(&vecY, &vecY, scale);
+
+            vecZ.x = mtx[0][2];
+            vecZ.y = mtx[1][2];
+            vecZ.z = mtx[2][2];
+            sp38.z = PSVECDotProduct(&vecY, &vecZ);
+            PSVECScale(&vecY, &sp8, sp38.z);
+            PSVECSubtract(&vecZ, &sp8, &vecZ);
+
+            sp38.y = PSVECDotProduct(&vecX, &vecZ);
+            PSVECScale(&vecX, &sp8, sp38.y);
+            PSVECSubtract(&vecZ, &sp8, &vecZ);
+
+            mag = PSVecSquareMag(&vecZ);
+            if (mag > 1.0e-10f)
+            {
+                out[0][2] = sqrtf(mag);
+                PSVECCrossProduct(&vecY, &vecZ, &sp8);
+                if (PSVECDotProduct(&vecX, &sp8) < 0.0f)
+                {
+                    out[0][0] *= -1.0f;
+                    out[0][1] *= -1.0f;
+                    out[0][2] *= -1.0f;
+                }
+            }
+            else
+            {
+                out[0][2] = 0.0f;
+            }
+        }
+        else
+        {
+            out[0][1] = 0.0f;
+            vecZ.x = mtx[0][2];
+            vecZ.y = mtx[1][2];
+            vecZ.z = mtx[2][2];
+            sp38.y = PSVECDotProduct(&vecX, &vecZ);
+            PSVECScale(&vecX, &sp8, sp38.y);
+            PSVECSubtract(&vecZ, &sp8, &vecZ);
+
+            mag = PSVecSquareMag(&vecZ);
+            if (mag > 1.0e-10f)
+                out[0][2] = sqrtf(mag);
+            else
+                out[0][2] = 0.0f;
+        }
+    }
+    else
+    {
+        out[0][0] = 0.0f;
+        vecY.x = mtx[0][1];
+        vecY.y = mtx[1][1];
+        vecY.z = mtx[2][1];
+
+        mag = PSVecSquareMag(&vecY);
+        if (mag > 1.0e-10f)
+        {
+            scale = sqrtf(1.0f / mag);
+            out[0][1] = 1.0f / scale;
+            PSVECScale(&vecY, &vecY, scale);
+
+            vecZ.x = mtx[0][2];
+            vecZ.y = mtx[1][2];
+            vecZ.z = mtx[2][2];
+            sp38.z = PSVECDotProduct(&vecY, &vecZ);
+            PSVECScale(&vecY, &sp8, sp38.z);
+            PSVECSubtract(&vecZ, &sp8, &vecZ);
+
+            out[0][2] = PSVecMag(&vecZ);
+        }
+        else
+        {
+            out[0][1] = 0.0f;
+            vecZ.x = mtx[0][2];
+            vecZ.y = mtx[1][2];
+            vecZ.z = mtx[2][2];
+
+            out[0][2] = PSVecMag(&vecZ);
+        }
+    }
 }
 
 s32 sysMsec2Frame(s32 msec)

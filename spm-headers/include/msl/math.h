@@ -8,12 +8,15 @@ CPP_WRAPPER(msl::math)
 #define PIx2 (PI * 2.0f)
 
 double cos(double x);
-double sin(double x);
-double fmod(double numer, double denom);
-double sqrt(double x);
-
 #define cosf(x) ((f32)cos(x))
+
+double sin(double x);
 #define sinf(x) ((f32)sin(x))
+
+double fmod(double numer, double denom);
+
+double sqrt(double x);
+#define sqrtf(x) ((f32)sqrt(x))
 
 #define fabs(x) __fabs(x)
 #define fabsf(x) __fabsf(x)
