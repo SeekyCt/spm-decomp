@@ -131,3 +131,7 @@ typedef u8 unk8;
 #else
     #define ALIGNED(x)
 #endif
+
+#define SQUARE(x) ((x) * (x))
+#define CUBE(x) ((x) * (x) * (x))
+#define QUART(x) ((x) * (x) * (x) * (x))

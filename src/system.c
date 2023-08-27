@@ -627,8 +627,80 @@ s32 sysMsec2Frame(s32 msec)
     return (msec * gp->fps) / 1000;
 }
 
-#include "jumptable/8042a2cc.inc"
-asm f32 intplGetValue(f32 min, f32 max, void * mode, u32 progress, u32 progressMax)
+// Probably fake
+static f32 unkInline1(f32 progress, f32 progressMax)
 {
-    #include "asm/8019dc94.s"
+    return cosf((3.141592f * progress) / progressMax);
+}
+static f32 unkInline2(f32 progress, f32 progressMax)
+{
+    return cosf((1.570796f * progress) / progressMax);
+}
+
+f32 intplGetValue(s32 mode, f32 min, f32 max, s32 progress, s32 progressMax)
+{
+    f32 absMag;
+    f32 progressf;
+    f32 progressMaxf;
+    f32 progressLeft;
+
+    if (progressMax == 0)
+        return max;
+
+    progressf = progress;
+    progressMaxf = progressMax;
+    switch (mode)
+    {
+        case INTPL_MODE_LINEAR:
+            return min + ((progressf * (max - min)) / progressMaxf);
+
+        case INTPL_MODE_QUADRATIC_IN:
+            return min + ((SQUARE(progressf) * (max - min)) / SQUARE(progressMaxf));
+
+        case INTPL_MODE_CUBIC_IN:
+            return min + ((CUBE(progressf) * (max - min)) / CUBE(progressMaxf));
+
+        case INTPL_MODE_QUARTIC_IN:
+            return min + ((QUART(progressf) * (max - min)) / QUART(progressMaxf));
+
+        case INTPL_MODE_COS_SLOW_OVERSHOOT:
+            return max - (((progressMaxf - progressf) * ((progressMaxf - progressf) * ((max - min) * cosf(4.0f * (3.141592f * (progressf / progressMaxf)))))) / SQUARE(progressMaxf));
+
+        case INTPL_MODE_COS_FAST_OVERSHOOT:
+            return max - (((progressMaxf - progressf) * ((progressMaxf - progressf) * ((max - min) * cosf((4.0f * (3.141592f * (SQUARE(progressf) / progressMaxf))) / ((15.0f * progressMaxf) / 100.0f))))) / (progressMaxf * progressMaxf));
+
+        case INTPL_MODE_9:
+            return max - ((progressf * (progressf * ((max - min) * (f32) cos((f64) ((4.0f * (3.141592f * ((progressf * progressf) / progressMaxf))) / ((15.0f * progressMaxf) / 100.0f)))))) / (progressMaxf * progressMaxf));
+
+        case INTPL_MODE_QUADRATIC_OUT:
+            progressLeft = progressMaxf - progressf;
+            return min + (max - min) - ((SQUARE(progressLeft) * (max - min)) / SQUARE(progressMaxf));
+
+        case INTPL_MODE_CUBIC_OUT:
+            progressLeft = progressMaxf - progressf;
+            return (min + (max - min)) - ((CUBE(progressLeft) * (max - min)) / CUBE(progressMaxf));
+
+
+        case INTPL_MODE_QUARTIC_OUT:
+            progressLeft = progressMaxf - progressf;
+            return (min + (max - min)) - ((QUART(progressLeft) * (max - min)) / QUART(progressMaxf));
+
+        case INTPL_MODE_COS_BOUNCE:
+            absMag = ((progressMaxf - progressf) * ((progressMaxf - progressf) * cosf((4.0f * (3.141592f * (SQUARE(progressf) / progressMaxf)) / ((40.0f * progressMaxf) / 100.0f))))) / SQUARE(progressMaxf);
+            if (absMag < 0.0f)
+                absMag = -absMag;
+            return -((absMag * (max - min)) - max);
+
+        case INTPL_MODE_COS_IN_OUT:
+            return ((max - min) * (1.0f - unkInline1(progressf, progressMaxf)) / 2.0f) + min;
+
+        case INTPL_MODE_SIN_OUT:
+            return ((max - min) * sinf((1.570796f * progressf) / progressMaxf)) + min;
+
+        case INTPL_MODE_COS_IN:
+            return ((max - min) * (1.0f - unkInline2(progressf, progressMaxf))) + min;
+
+        default:
+            return ((f32 (*)(s32, s32, f32, f32)) mode)(progress, progressMax, min, max);
+    }
 }

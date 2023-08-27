@@ -11,6 +11,25 @@ CPP_WRAPPER(spm::system)
 
 USING(wii::mtx::Mtx34)
 
+enum IntplMode
+{
+    INTPL_MODE_LINEAR = 0,
+    INTPL_MODE_QUADRATIC_IN = 1,
+    INTPL_MODE_CUBIC_IN = 2,
+    INTPL_MODE_QUARTIC_IN = 3,
+    INTPL_MODE_QUADRATIC_OUT = 4,
+    INTPL_MODE_CUBIC_OUT = 5,
+    INTPL_MODE_QUARTIC_OUT = 6,
+    INTPL_MODE_COS_SLOW_OVERSHOOT = 7,
+    INTPL_MODE_COS_FAST_OVERSHOOT = 8,
+    INTPL_MODE_9 = 9,
+    INTPL_MODE_COS_BOUNCE = 10,
+
+    INTPL_MODE_COS_IN_OUT,
+    INTPL_MODE_SIN_OUT,
+    INTPL_MODE_COS_IN,
+};
+
 #ifdef DECOMP
 
 // TODO: figure out what's going on with the assert if statement in decomp
@@ -65,6 +84,6 @@ void memcpy_as4(void * dest, const void * source, u32 n);
 void mtxGetRotationElement(Mtx34 mtx, Mtx34 out, char axis1, char axis2);
 void mtxGetScaleElement(Mtx34 mtx, Mtx34 out);
 s32 sysMsec2Frame(s32 msec);
-f32 intplGetValue(f32 min, f32 max, void * mode, u32 progress, u32 progressMax);
+f32 intplGetValue(s32 mode, f32 min, f32 max, s32 progress, s32 progressMax);
 
 CPP_WRAPPER_END()
