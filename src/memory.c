@@ -15,48 +15,48 @@ static HeapSize size_table[HEAP_COUNT] =
 {
     // MEM1
     { // 0
-        .type = HEAPSIZE_ABSOLUTE_KB,
-        .size = 0x2400
+        HEAPSIZE_ABSOLUTE_KB,
+        0x2400
     },
     { // 1
-        .type = HEAPSIZE_ABSOLUTE_KB,
-        .size = 0x1800
+        HEAPSIZE_ABSOLUTE_KB,
+        0x1800
     },
     { // 2
-        .type = HEAPSIZE_PERCENT_REMAINING,
-        .size = 100
+        HEAPSIZE_PERCENT_REMAINING,
+        100
     },
 
     // MEM2
     { // 3
-        .type = HEAPSIZE_ABSOLUTE_KB,
-        .size = 0x100
+        HEAPSIZE_ABSOLUTE_KB,
+        0x100
     },
     { // 4
-        .type = HEAPSIZE_ABSOLUTE_KB,
-        .size = 0x100
+        HEAPSIZE_ABSOLUTE_KB,
+        0x100
     },
     { // 5
-        .type = HEAPSIZE_ABSOLUTE_KB,
-        .size = 0x80
+        HEAPSIZE_ABSOLUTE_KB,
+        0x80
     },
     { // 6
-        .type = HEAPSIZE_ABSOLUTE_KB,
-        .size = 0x4400
+        HEAPSIZE_ABSOLUTE_KB,
+        0x4400
     },
     { // 7 - smart heap
-        .type = HEAPSIZE_PERCENT_REMAINING,
-        .size = 100
+        HEAPSIZE_PERCENT_REMAINING,
+        100
     },
     { // 8
-        .type = HEAPSIZE_ABSOLUTE_KB,
-        .size = 1
+        HEAPSIZE_ABSOLUTE_KB,
+        1
     }
 };
 
 // .bss
-static SmartWork smartWork;
 static MemWork work;
+static SmartWork smartWork;
 
 // .sdata
 static MemWork * wp = &work;
@@ -64,8 +64,8 @@ static SmartWork * swp = &smartWork;
 
 // .sbss
 static bool memInitFlag = false;
-static MEMHeapHandle fallbackHeap;
 s32 g_bFirstSmartAlloc;
+static MEMHeapHandle fallbackHeap;
 
 #define IS_FIRST_SMART_ALLOC(allocation) (allocation->prev == NULL)
 #define IS_LAST_SMART_ALLOC(allocation) (allocation->next == NULL)

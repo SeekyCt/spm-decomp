@@ -16,10 +16,10 @@ static const f64 lbl_80326360 = 4503599627370496.0; // casting float
 #include "orderstrings/80326368_80326376.inc"
 
 // .sbss
-static u32 lbl_805ae79c;
-static u32 lbl_805ae798;
-static u32 lbl_805ae794;
 static WindowEntry * wp;
+static u32 lbl_805ae794;
+static u32 lbl_805ae798;
+static u32 lbl_805ae79c;
 
 // .sdata2
 const GXColor lbl_805af7e0 = {0xff, 0xff, 0xff, 0xff};
@@ -39,7 +39,7 @@ const GXColor lbl_805af86c = {0xff, 0xff, 0xff, 0x00};
 
 void windowInit()
 {
-    WindowEntry * entries = __memAlloc(0, sizeof(WindowEntry[WINDOW_MAX]));
+    WindowEntry * entries = (WindowEntry *) __memAlloc(0, sizeof(WindowEntry[WINDOW_MAX]));
     wp = entries;
     for (s32 i = 0; i < WINDOW_MAX; i++)
     {

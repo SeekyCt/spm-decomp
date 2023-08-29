@@ -15,8 +15,8 @@
 #include "orderstrings/80334908_80334bcc.inc"
 
 // .bss
-static MarioPouchWork2 work2;
 static MarioPouchWork work;
+static MarioPouchWork2 work2;
 
 // .sdata
 static MarioPouchWork2 * wp2 = &work2;

@@ -81,15 +81,15 @@ ORDER_BSS_DATA
 SpmarioGlobals * gp = &spmario;
 
 // .sbss
-static OSThread * pMainThread;
-s32 _spmarioSystemLevel;
-static s32 resetCode;
-static bool doReturnToMenu;
-static bool doHomeButtonRestart;
-static bool doShutdown;
-static bool doResetButtonRestart;
-static s32 startTick;
 static s32 unusedZero;
+static s32 startTick;
+static bool doResetButtonRestart;
+static bool doShutdown;
+static bool doHomeButtonRestart;
+static bool doReturnToMenu;
+static s32 resetCode;
+s32 _spmarioSystemLevel;
+static OSThread * pMainThread;
 
 // .sdata2
 #include "orderfloatsm/805b3d20_805b3d24.inc"

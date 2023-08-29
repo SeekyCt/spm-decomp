@@ -1517,7 +1517,7 @@ s32 evt_alloc_user_wrk(EvtEntry * entry)
     p = entry->pCurData;
     count = evtGetValue(entry, p[0]);
     destVar = p[1];
-    entry->uw = __memAlloc(1, count * sizeof(s32));
+    entry->uw = (s32 *) __memAlloc(1, count * sizeof(s32));
     evtSetValue(entry, destVar, (s32) entry->uw);
 
     return EVT_RET_CONTINUE;

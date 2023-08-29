@@ -13,8 +13,8 @@ static s32 next_seq = -1;
 static s32 prev_seq = -1;
 
 // .sbss
-static const char * next_p1; // map name
 static const char * next_p0; // door name
+static const char * next_p1; // map name
 
 void seqInit_SPMARIO()
 {

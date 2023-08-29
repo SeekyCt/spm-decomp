@@ -11,7 +11,7 @@ void DVDMgrInit()
 {
     // Allocate entries
     wp->num = MAX_DVD_ENTRY;
-    wp->entries = __memAlloc(HEAP_MAIN, wp->num * sizeof(DVDEntry));
+    wp->entries = (DVDEntry *) __memAlloc(HEAP_MAIN, wp->num * sizeof(DVDEntry));
 }
 
 void DVDMgrDelete()

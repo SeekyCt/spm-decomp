@@ -27,13 +27,13 @@ static OSMutex * sysMutexP = &sysMutex;
 static s32 randomSeed = 1;
 
 // .sbss
-static u32 token;
-static u32 p;
-static u32 tail;
-static u32 gt;
-static u32 hi;
-static u32 lo;
 static u32 comp;
+static u32 lo;
+static u32 hi;
+static u32 gt;
+static u32 tail;
+static u32 p;
+static u32 token;
 
 // .rodata
 static f32 angleABTBL[] = {

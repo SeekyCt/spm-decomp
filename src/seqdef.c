@@ -10,33 +10,33 @@
 
 SeqDef seq_data[SEQ_COUNT] = {
     {
-        .init = &seq_logoInit,
-        .main = &seq_logoMain,
-        .exit = &seq_logoExit
+        &seq_logoInit,
+        &seq_logoMain,
+        &seq_logoExit
     },
     {
-        .init = &seq_titleInit,
-        .main = &seq_titleMain,
-        .exit = &seq_titleExit
+        &seq_titleInit,
+        &seq_titleMain,
+        &seq_titleExit
     },
     {
-        .init = &seq_gameInit,
-        .main = &seq_gameMain,
-        .exit = &seq_gameExit
+        &seq_gameInit,
+        &seq_gameMain,
+        &seq_gameExit
     },
     {
-        .init = &seq_mapChangeInit,
-        .main = &seq_mapChangeMain,
-        .exit = &seq_mapChangeExit
+        &seq_mapChangeInit,
+        &seq_mapChangeMain,
+        &seq_mapChangeExit
     },
     {
-        .init = &seq_gameOverInit,
-        .main = &seq_gameOverMain,
-        .exit = &seq_gameOverExit
+        &seq_gameOverInit,
+        &seq_gameOverMain,
+        &seq_gameOverExit
     },
     {
-        .init = &seq_loadInit,
-        .main = &seq_loadMain,
-        .exit = &seq_loadExit
+        &seq_loadInit,
+        &seq_loadMain,
+        &seq_loadExit
     }
 };

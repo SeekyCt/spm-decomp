@@ -59,9 +59,9 @@ void nandInit()
     memset(wp, 0, sizeof(*wp));
     wp->openingBufferSize = 0x4000;
     wp->openingBuffer = __memAlloc(HEAP_MAIN, wp->openingBufferSize);
-    wp->saves = __memAlloc(HEAP_MAIN, sizeof(SaveFile)*4);
+    wp->saves = (SaveFile *) __memAlloc(HEAP_MAIN, sizeof(SaveFile)*4);
     wp->tempSaveFile = __memAlloc(HEAP_MAIN, NAND_TEMP_SAVE_SIZE);
-    wp->banner = __memAlloc(HEAP_MAIN, sizeof(*wp->banner));
+    wp->banner = (NANDBanner *) __memAlloc(HEAP_MAIN, sizeof(*wp->banner));
 
     // Create banner
     switch (gp->language)
@@ -102,7 +102,7 @@ void nandInit()
     }
 
     // Setup banner icons
-    tpl = __memAlloc(0, CXGetUncompressedSize(&lz_saveImagesTpl));
+    tpl = (TPLHeader *) __memAlloc(0, CXGetUncompressedSize(&lz_saveImagesTpl));
     CXUncompressLZ(&lz_saveImagesTpl, tpl);
     TPLBind(tpl);
     memcpy(wp->banner->bannerTexture, tpl->imageTable[0].image->data,

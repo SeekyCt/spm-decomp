@@ -31,7 +31,7 @@ void fileInit()
     s32 i;
 
     // Allocate file entry array
-    afp->entries = __memAlloc(0, sizeof(FileEntry[FILE_ENTRY_MAX]));
+    afp->entries = (FileEntry *) __memAlloc(0, sizeof(FileEntry[FILE_ENTRY_MAX]));
 
     // Initialise allocated linked list
     afp->allocatedStart = NULL;
@@ -82,7 +82,7 @@ void UnpackTexPalette(TPLHeader * palette)
             if (palette->imageTable[i].paletteOffset != 0)
             {
                 // Convert palette header offset to pointer
-                palette->imageTable[i].palette = (void *) ((u32) palette + palette->imageTable[i].paletteOffset);
+                palette->imageTable[i].palette = (PaletteHeader *) ((u32) palette + palette->imageTable[i].paletteOffset);
 
                 if (!palette->imageTable[i].palette->unpacked)
                 {

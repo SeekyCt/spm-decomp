@@ -53,12 +53,12 @@ void relMain()
 
     if (!isCompressed)
     {
-        wp->relFile = __memAlloc(0, file->sp->size);
+        wp->relFile = (RelHeader *) __memAlloc(0, file->sp->size);
         memcpy(wp->relFile, file->sp->data, file->sp->size);
     }
     else
     {
-        wp->relFile = __memAlloc(0, CXGetCompressionHeader(file->sp->data).decompSize);
+        wp->relFile = (RelHeader *) __memAlloc(0, CXGetCompressionHeader(file->sp->data).decompSize);
         CXUncompressLZ(file->sp->data, wp->relFile);
     }
 

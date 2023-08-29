@@ -27,7 +27,7 @@ enum IntplMode
 
     INTPL_MODE_COS_IN_OUT,
     INTPL_MODE_SIN_OUT,
-    INTPL_MODE_COS_IN,
+    INTPL_MODE_COS_IN
 };
 
 typedef f32 (IntplUserFunc)(s32, s32, f32, f32);

@@ -47,7 +47,7 @@ enum IconId
 /* 0x2D */ ICON_DPAD_RIGHT_PROMPT_FLASH,
 /* 0x2E */ ICON_BTN_1_PRESSING,
 /* 0x2F */ ICON_BTN_2_PRESSING,
-/* 0x30 */ ICON_BTN_A_PRESSING,
+/* 0x30 */ ICON_BTN_A_PRESSING
     /// ...
 };
 
