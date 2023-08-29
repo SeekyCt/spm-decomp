@@ -12,6 +12,17 @@ CPP_WRAPPER(wii::kpad)
 USING(wii::mtx::Vec2)
 USING(wii::mtx::Vec3)
 
+#define KPAD_EXTENSION_FS 1
+
+typedef struct
+{
+    Vec2 stickPos;
+    Vec3 acceleration;
+    f32 accelerationMagnitude;
+    f32 accelerationDif;
+} KPADFsExt;
+SIZE_ASSERT(KPADFsExt, 0x1c)
+
 typedef struct
 {
     u32 buttonsHeld; // all buttons down
@@ -30,12 +41,17 @@ typedef struct
     f32 distanceDif;
     f32 distanceDifSpeed;
     Vec2 verticalPos;
-    u8 type;
+    u8 extensionType;
     s8 error;
     s8 dpdStatus;
     u8 dataFormat;
-    u8 extension[0x24];
+    union
+    {
+        KPADFsExt fs;
+        u8 unk[0x24];
+    } extension;
 } KPADStatus;
+SIZE_ASSERT(KPADStatus, 0x84)
 
 void KPADSetFSStickClamp(s8 min, s8 max);
 void KPADSetBtnRepeat(s32 controller, f32 delay, f32 pulse);

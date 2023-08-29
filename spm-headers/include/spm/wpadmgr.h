@@ -13,6 +13,7 @@ CPP_WRAPPER(spm::wpadmgr)
 
 USING(wii::mtx::Vec2)
 USING(wii::kpad::KPADStatus)
+USING(wii::os::OSTime)
 
 // Controller stuff used to be in system.c in TTYD & no asserts in this code so name is unnoficial
 
@@ -23,7 +24,10 @@ USING(wii::kpad::KPADStatus)
 typedef struct
 {
 /* 0x0000 */ u32 flags;
-/* 0x0004 */ u8 unknown_0x4[0x44 - 0x4];
+/* 0x0004 */ u32 unknown_0x4[4];
+/* 0x0014 */ u32 unknown_0x14[4];
+/* 0x0024 */ u32 unknown_0x24[4];
+/* 0x0034 */ u32 unknown_0x34[4];
 /* 0x0044 */ bool enableRumble[4]; // index controller id, controller vibrates when true
 /* 0x0048 */ bool rumblePrev[4]; // rumble enable flags from previous frame
 /* 0x004C */ Vec2 pointingPos[4]; // wii remote pointer positions
@@ -34,7 +38,7 @@ typedef struct
 /* 0x9D3C */ u32 unknown_0x9d3c[4];
 /* 0x9D4C */ s32 unknown_0x9d4c[4];
 /* 0x9D5C */ u8 unknown_0x9d5c[0x9d60 - 0x9d5c];
-/* 0x9D60 */ s64 unknown_0x9d60[4];
+/* 0x9D60 */ OSTime unknown_0x9d60[4];
 /* 0x9D80 */ f32 unknown_0x9d80[15];
 /* 0x9DBC */ f32 unkknown_0x9dbc;
 /* 0x9DC0 */ u8 unknown_0x9dc0;

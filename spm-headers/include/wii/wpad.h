@@ -65,7 +65,7 @@ UNKNOWN_FUNCTION(__infoCallback);
 UNKNOWN_FUNCTION(WPADGetInfoAsync);
 void WPADControlMotor(s32 controller, u32 onOff);
 UNKNOWN_FUNCTION(WPADEnableMotor);
-UNKNOWN_FUNCTION(WPADIsMotorEnabled);
+bool WPADIsMotorEnabled();
 UNKNOWN_FUNCTION(WPADControlLed);
 UNKNOWN_FUNCTION(WPADSaveConfig);
 UNKNOWN_FUNCTION(WPADRead);
