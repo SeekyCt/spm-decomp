@@ -1,11 +1,11 @@
 #pragma once
 
 #ifdef DECOMP
-    // Decomp should include ppcdis.h in all files
-    #include <ppcdis.h>
+// Decomp should include ppcdis.h in all files
+#include <ppcdis.h>
 #else
-    // Unknown function is useful outside of decomp too
-    #define UNKNOWN_FUNCTION(name) void name(void)
+// Unknown function is useful outside of decomp too
+#define UNKNOWN_FUNCTION(name) void name(void)
 #endif
 
 #ifdef __INTELLISENSE__ 
