@@ -14,12 +14,6 @@
 static FileWork work;
 static char lbl_80516fa0[1024];
 
-ORDER_BSS_DATA
-{
-    ORDER_BSS(work)
-    ORDER_BSS(lbl_80516fa0)
-}
-
 // .sdata
 static FileWork * afp = &work;
 

@@ -14,14 +14,6 @@ static OSMutex sysMutex;
 static char * tmp0[0xc00];
 static char tmp1[0x100];
 
-// Should be removable once a referencing function is decompiled
-ORDER_BSS_DATA
-{
-    ORDER_BSS(sysMutex)
-    ORDER_BSS(tmp0)
-    ORDER_BSS(tmp1)
-}
-
 // .sdata
 static OSMutex * sysMutexP = &sysMutex;
 static s32 randomSeed = 1;

@@ -68,15 +68,6 @@ static u8 dvdCheckStack[0x1000];
 static u32 lbl_80528370[4];
 static u32 lbl_80528380[4][2];
 
-// CW seemingly will only order it this way if a bss pool generates
-// Should be removable once a referencing function is decompiled
-ORDER_BSS_DATA
-{
-    ORDER_BSS(spmario)
-    ORDER_BSS(DVDCheckThread)
-    ORDER_BSS(dvdCheckStack)
-}
-
 // .sdata
 SpmarioGlobals * gp = &spmario;
 
