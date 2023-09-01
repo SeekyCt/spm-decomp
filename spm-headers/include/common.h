@@ -49,6 +49,10 @@ typedef s32 BOOL;
     #define false 0
 #endif
 
+#ifndef __cplusplus
+    #define wchar_t s16
+#endif
+
 #ifdef DECOMP
     typedef wchar_t wchar16_t;
 #else
@@ -117,7 +121,7 @@ typedef u8 unk8;
 #endif
 
 // For GCC these have to be defined in the linker script
-#ifdef __MWERKS__
+#if (defined __MWERKS__) && !(defined M2C)
     #define FIXED_ADDR(type, name, addr) \
         type name : addr
 #else

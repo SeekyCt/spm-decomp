@@ -27,6 +27,7 @@ with NamedTemporaryFile(suffix=".c", delete=False) as tmp:
     try:
         tmp.write(includes.encode())
         tmp.close()
+        # NOTE: not preprocessed in C++ mode
         out = c.get_cmd_stdout(
             f"{c.CC} -I- {c.MWCC_INCLUDES} {c.MWCC_DEFINES} -d M2C -stderr -E {tmp.name}"
         )
