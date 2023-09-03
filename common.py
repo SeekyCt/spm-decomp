@@ -293,12 +293,10 @@ DEFINES = [
     "DECOMP",
     "SPM_EU0"
 ]
-MWCC_DEFINES = ' '.join(f"-d {d}" for d in DEFINES)
-GCC_DEFINES = ' '.join(f"-D {d}" for d in DEFINES)
 
 CPPFLAGS = ' '.join([
     "-nostdinc",
-    GCC_DEFINES,
+    ' '.join(f"-D {d}" for d in DEFINES),
     GCC_INCLUDES
 ])
 
@@ -317,7 +315,7 @@ CFLAGS = [
     "-rostr",
     "-sym dwarf-2",
     "-ipa file",
-    MWCC_DEFINES
+    ' '.join(f"-d {d}" for d in DEFINES),
 ]
 BASE_DOL_CFLAGS = CFLAGS + [
     "-inline all",
@@ -378,6 +376,17 @@ DOL_CTX = SourceContext(DOL_SRCDIR, DOL_CFLAGS, DOL_YML, DOL_LABELS, DOL_RELOCS,
                         DOL_SDATA2_SIZE)
 REL_CTX = SourceContext(REL_SRCDIR, REL_CFLAGS, REL_YML, REL_LABELS, REL_RELOCS, REL_SLICES,
                         REL_SDATA2_SIZE)
+
+REGIONS = [
+    "SPM_EU0",
+    "SPM_EU1",
+    "SPM_JP0",
+    "SPM_JP1",
+    "SPM_US0",
+    "SPM_US1",
+    "SPM_US2",
+    "SPM_KR0",
+]
 
 ####################
 # diff.py Expected #
