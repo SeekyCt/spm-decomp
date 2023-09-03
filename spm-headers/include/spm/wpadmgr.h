@@ -47,6 +47,9 @@ typedef struct
 } WpadWork;
 SIZE_ASSERT(WpadWork, 0x9dc8)
 
+DECOMP_STATIC(WpadWork wpadmgr_work)
+DECOMP_STATIC(WpadWork * wpadmgr_wp)
+
 /*
     Returns the pointer to the WpadWork instance
 */
