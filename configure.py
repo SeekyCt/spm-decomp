@@ -658,14 +658,6 @@ def make_objdiff_json(sources: List[Source]):
         'target_dir' : f"{c.EXPECTED}/build",
         'base_dir' : f"{c.BUILDDIR}",
         'build_target' : False,
-        "watch_patterns": [
-            "*.c",
-            "*.cp",
-            "*.cpp",
-            "*.h",
-            "*.hpp",
-            "*.py"
-        ],
         'objects' : [
             {
                 'path' : src.o_path.removeprefix("$builddir/"),
