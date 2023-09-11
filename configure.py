@@ -654,6 +654,7 @@ def make_asm_list(path: str, asm_includes: List[AsmInclude]):
 
 def make_objdiff_json(sources: List[Source]):
     data = {
+        'min_version' : "0.4.3",
         'custom_make' : "ninja",
         'target_dir' : f"{c.EXPECTED}/build",
         'base_dir' : f"{c.BUILDDIR}",
