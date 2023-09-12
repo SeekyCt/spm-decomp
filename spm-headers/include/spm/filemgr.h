@@ -67,7 +67,7 @@ typedef struct
 SIZE_ASSERT(FileWork, 0x14)
 
 DECOMP_STATIC(FileWork filemgr_work)
-DECOMP_STATIC(FileWork * filemgr_wp)
+DECOMP_STATIC(FileWork * filemgr_afp)
 
 /*
     Initialise entries

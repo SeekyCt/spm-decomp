@@ -119,7 +119,7 @@ void iconDispGxAlpha(f32 scale, Vec3 * position, Unk param_3, s32 iconId, u8 alp
          4: flip x
         Others unknown
 */
-void iconDispGx(f32 scale, Vec3 * position, Unk param_3, s32 iconId);
+void iconDispGx(f32 scale, const Vec3 * position, u32 flags, s32 iconId);
 
 void iconDispGx2(Mtx34 * param_1, Unk param_2, s32 iconId);
 void iconDispGxCol(Mtx34 * param_1, Unk param_2, s32 iconId, void * param_4);
@@ -134,7 +134,7 @@ void iconFlagOn(const char * name, u32 flag);
 void iconSetScale(const char * name, f32 scale);
 void iconSetAlpha(const char * name, u8 alpha);
 void iconNumberDispGx(Mtx34 * param_1, s32 number, s32 keta, Unk param_4, void * param_5,
-                      Unk param_6); 
+                      Unk param_6);
 
 UNKNOWN_FUNCTION(func_80074f80);
 UNKNOWN_FUNCTION(func_80074fe8);

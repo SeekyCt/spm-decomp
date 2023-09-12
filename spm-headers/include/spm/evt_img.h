@@ -5,15 +5,17 @@
 
 CPP_WRAPPER(spm::evt_img)
 
-EVT_UNKNOWN_USER_FUNC(func_800ec2c8)
-UNKNOWN_FUNCTION(func_800ec30c);
-EVT_UNKNOWN_USER_FUNC(func_800ec3ac)
-EVT_UNKNOWN_USER_FUNC(func_800ec458)
-EVT_UNKNOWN_USER_FUNC(func_800ec4ec)
-EVT_UNKNOWN_USER_FUNC(func_800ec7e0)
-UNKNOWN_FUNCTION(func_800ec87c);
-EVT_UNKNOWN_USER_FUNC(func_800ec8c4)
-EVT_UNKNOWN_USER_FUNC(func_800ec920)
+EVT_DECLARE_USER_FUNC(evt_img_entry, 1)
+
+UNKNOWN_FUNCTION(evt_img_set_position);
+EVT_DECLARE_USER_FUNC(evt_img_set_paper, 2)
+EVT_DECLARE_USER_FUNC(evt_img_set_paper_anim, 2)
+EVT_DECLARE_USER_FUNC(evt_img_alloc_capture, 8)
+EVT_DECLARE_USER_FUNC(evt_img_free_capture, 2)
+UNKNOWN_FUNCTION(evt_img_clear_virtual_space);
+EVT_DECLARE_USER_FUNC(evt_img_release, 1)
+EVT_DECLARE_USER_FUNC(evt_img_wait_animend, 1)
+
 UNKNOWN_FUNCTION(func_800ec998);
 UNKNOWN_FUNCTION(func_800eca64);
 UNKNOWN_FUNCTION(func_800ecae0);

@@ -23,7 +23,7 @@ For use in decomp, the `include` and `decomp` folders should be added to the inc
 
 ## Mods
 
-For use in mods, the `include` and `mod` folder should be added to the include path and an lst from `linker` should be used..
+For use in mods, the `include` and `mod` folder should be added to the include path and an lst from `linker` should be used. If including your compiler's C++ standard library, the preprocessor define `USE_STL` should be used.
 
 # Licensing
 

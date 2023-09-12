@@ -21,7 +21,7 @@ typedef struct
 /* 0x4 */ f32 order;
 /* 0x8 */ DispCallback * callback;
 /* 0xC */ f32 * callbackParam;
-} DispEntry; 
+} DispEntry;
 SIZE_ASSERT(DispEntry, 0x10)
 
 DECOMP_STATIC(DispEntry * dispdrv_pDispWork)

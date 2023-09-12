@@ -8,7 +8,7 @@ DECOMP_STATIC(char __OSUnhandledException_msg1[])
 DECOMP_STATIC(char __OSUnhandledException_msg2[])
 DECOMP_STATIC(char __OSUnhandledException_msg3[])
 
-void OSReport(const char * message, ...);
+ATTRIBUTE_FORMAT(printf, 1, 2) void OSReport(const char * message, ...);
 UNKNOWN_FUNCTION(OSVReport);
 
 // Weak symbol, games overrides with its own

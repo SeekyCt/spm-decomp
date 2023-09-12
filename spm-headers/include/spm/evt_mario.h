@@ -14,6 +14,8 @@ EVT_DECLARE_USER_FUNC(evt_mario_flag8_onoff, 2)
 UNKNOWN_FUNCTION(func_800ef53c);
 UNKNOWN_FUNCTION(evt_mario_cont_onoff);
 
+
+
 // evt_mario_key_on()
 EVT_DECLARE_USER_FUNC(evt_mario_key_on, 0)
 
@@ -27,7 +29,7 @@ UNKNOWN_FUNCTION(func_800ef8c8);
 // evt_mario_get_character(s32& ret)
 EVT_DECLARE_USER_FUNC(evt_mario_get_character, 1)
 
-UNKNOWN_FUNCTION(evt_mario_set_character);
+EVT_DECLARE_USER_FUNC(evt_mario_set_character, 1)
 
 // evt_mario_get_pos(f32 x, f32 y, f32 z)
 EVT_DECLARE_USER_FUNC(evt_mario_set_pos, 3)
@@ -40,15 +42,21 @@ UNKNOWN_FUNCTION(func_800efb50);
 UNKNOWN_FUNCTION(func_800efbdc);
 UNKNOWN_FUNCTION(func_800efc54);
 EVT_UNKNOWN_USER_FUNC(func_800efce0)
-UNKNOWN_FUNCTION(func_800efd28);
+
+EVT_DECLARE_USER_FUNC(evt_mario_direction_reset, 0)
+
 UNKNOWN_FUNCTION(func_800efd58);
-EVT_UNKNOWN_USER_FUNC(func_800efd88)
+
+EVT_DECLARE_USER_FUNC(evt_mario_direction_face, 2)
+
 UNKNOWN_FUNCTION(func_800eff6c);
 
 // evt_mario_face_npc(const char * name)
 EVT_DECLARE_USER_FUNC(evt_mario_face_npc, 1)
 
-EVT_UNKNOWN_USER_FUNC(func_800f0074)
+// evt_mario_face_coords(float positionX, float PositionZ)
+EVT_DECLARE_USER_FUNC(evt_mario_face_coords, 2)
+
 UNKNOWN_FUNCTION(func_800f013c);
 UNKNOWN_FUNCTION(func_800f0160);
 UNKNOWN_FUNCTION(func_800f01ac);
@@ -56,7 +64,9 @@ UNKNOWN_FUNCTION(func_800f0210);
 UNKNOWN_FUNCTION(evt_mario_face);
 UNKNOWN_FUNCTION(evt_mario_face_free);
 UNKNOWN_FUNCTION(func_800f0304);
-UNKNOWN_FUNCTION(func_800f046c);
+
+EVT_DECLARE_USER_FUNC(evt_mario_pos_change, 3)
+
 UNKNOWN_FUNCTION(func_800f05b0);
 UNKNOWN_FUNCTION(func_800f074c);
 EVT_UNKNOWN_USER_FUNC(func_800f09c4)
@@ -93,7 +103,9 @@ UNKNOWN_FUNCTION(func_800f2144);
 UNKNOWN_FUNCTION(func_800f2310);
 EVT_UNKNOWN_USER_FUNC(func_800f23e4)
 EVT_UNKNOWN_USER_FUNC(func_800f240c)
-EVT_UNKNOWN_USER_FUNC(func_800f2450)
+
+EVT_DECLARE_USER_FUNC(evt_mario_fairy_reset, 0)
+
 UNKNOWN_FUNCTION(evt_mario_swim_onoff);
 UNKNOWN_FUNCTION(func_800f24d8);
 UNKNOWN_FUNCTION(func_800f2544);

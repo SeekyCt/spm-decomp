@@ -23,7 +23,7 @@ UNKNOWN_FUNCTION(func_802388f4);
 UNKNOWN_FUNCTION(func_80238b04);
 UNKNOWN_FUNCTION(spsndSFXMain);
 UNKNOWN_FUNCTION(__spsndSFXOn);
-void spsndSFXOn(const char * name);
+s32 spsndSFXOn(const char * name);
 UNKNOWN_FUNCTION(spsndSFXOnVol);
 UNKNOWN_FUNCTION(spsndSFXOn_UnkEffect);
 UNKNOWN_FUNCTION(_spsndSFXOn);

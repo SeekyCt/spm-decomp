@@ -156,7 +156,7 @@ CamEntry * camGetCurPtr();
 /*
     Returns the current cam_no
 */
-CamEntry * camGetCurNo();
+int camGetCurNo();
 
 UNKNOWN_FUNCTION(func_80055b58);
 UNKNOWN_FUNCTION(func_80055bb4);

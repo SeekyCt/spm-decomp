@@ -1,8 +1,11 @@
 #pragma once
 
 #include <common.h>
+#include <wii/os.h>
 
 CPP_WRAPPER(wii::dvd)
+
+USING(wii::os::OSThreadQueue)
 
 #define DVD_ALIGN 32
 
@@ -32,8 +35,52 @@ SIZE_ASSERT(DVDFileInfo, 0x3c)
 
 typedef void (DVDFICallback)(s32 code, struct _DVDFileInfo * fileInfo);
 
+typedef struct
+{
+    u8 isDir : 8;
+    u32 stringOffset : 24;
+    union
+    {
+        struct
+        {
+            u32 unknown_0x4;
+            u32 next;
+        } dir;
+        struct
+        {
+            u32 startAddr;
+            u32 length;
+        } file;
+    };
+} FstEntry;
+SIZE_ASSERT(FstEntry, 0xc)
+
+typedef struct
+{
+    u32 entrynum;
+    u32 location;
+    u32 next;
+} DVDDir;
+SIZE_ASSERT(DVDDir, 0xc)
+
+typedef struct
+{
+    u32 entrynum;
+    BOOL isDir;
+    const char * name;
+} DVDDirEntry;
+SIZE_ASSERT(DVDDirEntry, 0xc)
+
 // Just a normal string literal, but useful for riivo detection
 extern char devDiStr[]; // "/dev/di"
+
+DECOMP_STATIC(OSThreadQueue __DVDThreadQueue)
+DECOMP_STATIC(u32 MaxEntryNum)
+DECOMP_STATIC(char * FstStringStart)
+DECOMP_STATIC(FstEntry * FstStart)
+DECOMP_STATIC(u32 PauseFlag)
+DECOMP_STATIC(u32 executing)
+
 
 UNKNOWN_FUNCTION(__DVDFSInit);
 s32 DVDConvertPathToEntrynum(const char * path);
@@ -96,7 +143,7 @@ UNKNOWN_FUNCTION(__DVDTestAlarm);
 UNKNOWN_FUNCTION(__DVDStopMotorAsync);
 UNKNOWN_FUNCTION(__DVDRestartMotor);
 UNKNOWN_FUNCTION(__DVDClearWaitingQueue);
-UNKNOWN_FUNCTION(__DVDPushWaitingQueue);
+s32 __DVDPushWaitingQueue(s32 priority, DVDCommandBlock * commandBlock);
 UNKNOWN_FUNCTION(__DVDPopWaitingQueue);
 UNKNOWN_FUNCTION(__DVDCheckWaitingQueue);
 UNKNOWN_FUNCTION(__DVDGetNextWaitingQueue);

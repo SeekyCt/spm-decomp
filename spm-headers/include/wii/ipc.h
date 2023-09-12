@@ -9,9 +9,20 @@ CPP_WRAPPER(wii::ipc)
 */
 enum IosOpenMode
 {
-/* 0x0 */ IOS_OPEN_NONE,
-/* 0x1 */ IOS_OPEN_READ,
-/* 0x2 */ IOS_OPEN_WRITE
+/* 0x0 */ IOS_OPEN_NONE = 0,
+/* 0x1 */ IOS_OPEN_READ = 1,
+/* 0x2 */ IOS_OPEN_WRITE = 2,
+/* 0x3 */ IOS_OPEN_READ_WRITE = IOS_OPEN_READ | IOS_OPEN_WRITE,
+};
+
+/*
+    IOS_Seek mode param
+*/
+enum IosSeekMode
+{
+/* 0x0 */ IOS_SEEK_START,
+/* 0x1 */ IOS_SEEK_CURRENT,
+/* 0x2 */ IOS_SEEK_END,
 };
 
 typedef struct
@@ -20,6 +31,8 @@ typedef struct
 /* 0x4 */ u32 len;
 } Ioctlv;
 SIZE_ASSERT(Ioctlv, 0x8)
+
+DECOMP_STATIC(s32 ipc_lbl_805ae3b4)
 
 UNKNOWN_FUNCTION(IPCInit);
 UNKNOWN_FUNCTION(IPCReadReg);
@@ -31,7 +44,7 @@ UNKNOWN_FUNCTION(strnlen);
 UNKNOWN_FUNCTION(IpcReplyHandler);
 UNKNOWN_FUNCTION(IPCInterruptHandler);
 UNKNOWN_FUNCTION(IPCCltInit);
-UNKNOWN_FUNCTION(__ios_Ipc2);
+s32 __ios_Ipc2(void * param_1, s32 param_2);
 UNKNOWN_FUNCTION(IOS_OpenAsync);
 s32 IOS_Open(const char * path, s32 mode);
 UNKNOWN_FUNCTION(IOS_CloseAsync);
@@ -49,7 +62,7 @@ s32 IOS_Ioctlv(s32 fd, s32 command, s32 inCount, s32 outCount, Ioctlv * vecs);
 UNKNOWN_FUNCTION(IOS_IoctlvReboot);
 UNKNOWN_FUNCTION(iosCreateHeap);
 UNKNOWN_FUNCTION(__iosAlloc);
-UNKNOWN_FUNCTION(iosAllocAligned);
+void * iosAllocAligned(s32 heapId, u32 size, u32 alignment);
 UNKNOWN_FUNCTION(iosFree);
 UNKNOWN_FUNCTION(IPCiProfInit);
 UNKNOWN_FUNCTION(IPCiProfQueueReq);

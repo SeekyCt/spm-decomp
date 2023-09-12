@@ -81,6 +81,7 @@ UNKNOWN_FUNCTION(roomBottomlesssCb);
 // evt_door_set_door_descs(DoorDesc * descs, s32 count)
 EVT_DECLARE_USER_FUNC(evt_door_set_door_descs, 1)
 
+
 UNKNOWN_FUNCTION(evt_door_enable_disable_door_desc);
 UNKNOWN_FUNCTION(func_800e2b78);
 UNKNOWN_FUNCTION(func_800e3050);
@@ -109,8 +110,11 @@ EVT_DECLARE_USER_FUNC(evt_door_set_map_door_descs, 1)
 EVT_DECLARE_USER_FUNC(evt_door_enable_disable_map_door_desc, 2)
 
 UNKNOWN_FUNCTION(evt_door_add_map_door_desc_to_unk_mask);
-UNKNOWN_FUNCTION(func_800e45c8);
-UNKNOWN_FUNCTION(func_800e468c);
+
+// evt_door_set_event(char *door, int unknown, EvtScriptCode * script)
+EVT_DECLARE_USER_FUNC(evt_door_set_event, 3)
+
+EVT_DECLARE_USER_FUNC(evt_door_openable_onoff, 1)
 UNKNOWN_FUNCTION(evt_door_get_map_door_desc);
 UNKNOWN_FUNCTION(func_800e47a8);
 UNKNOWN_FUNCTION(func_800e56b4);

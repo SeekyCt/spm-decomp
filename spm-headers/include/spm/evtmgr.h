@@ -34,7 +34,7 @@ USING(wii::os::OSTime)
 // Entry's script is temporarily stopped until its child script finishes
 #define EVT_FLAG_WAIT_CHILD 0x10
 
-// Entry should still execute this frame if created while evtmgrMain is running 
+// Entry should still execute this frame if created while evtmgrMain is running
 #define EVT_FLAG_START_IMMEDIATE 0x20
 
 // Same effect as EVT_FLAG_PAUSED?
@@ -135,7 +135,7 @@ DECOMP_STATIC(s32 evtmgr_priTblNum)
 DECOMP_STATIC(s32 evtmgr_runMainF)
 
 /*
-    Returns pointer to the EvtWork struct 
+    Returns pointer to the EvtWork struct
 */
 EvtWork * evtGetWork();
 

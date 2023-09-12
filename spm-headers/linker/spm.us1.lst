@@ -135,7 +135,7 @@
 802357B4:wpadGetButtonsHeldRepeat
 8023AA2C:spsndBGMOn
 8023C52C:relInit
-8023C53C:loadRel
+8023C53C:relMain
 8023C6F8:isRelLoaded
 8056CA20:relmgr_wp
 8056CA24:relDecompName

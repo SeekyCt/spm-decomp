@@ -50,7 +50,7 @@ typedef struct
 /* 0x010 */ u8 unknown_0x10[0x11c - 0x10];
 /* 0x11C */ EffTypeStats typeStats[2];
 /* 0x12C */ u8 unknown_0x12c[0x134 - 0x12c];
-} EffWork; 
+} EffWork;
 SIZE_ASSERT(EffWork, 0x134)
 
 DECOMP_STATIC(EffWork effdrv_work)

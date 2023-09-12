@@ -8,6 +8,7 @@
 
 #include <common.h>
 #include <wii/kpad.h>
+#include <wii/os.h>
 
 CPP_WRAPPER(spm::wpadmgr)
 

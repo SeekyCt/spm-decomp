@@ -17,6 +17,12 @@ typedef struct _OSThread
 } OSThread;
 SIZE_ASSERT(OSThread, 0x318)
 
+typedef struct
+{
+/* 0x0 */ u8 unknown_0x0[0x8 - 0x0];
+} OSThreadQueue;
+SIZE_ASSERT(OSThreadQueue, 0x8)
+
 FIXED_ADDR(OSThread *, currentThread, 0x800000e4);
 
 typedef void (*ThreadFunc)();
@@ -41,7 +47,7 @@ void OSCancelThread(OSThread * thread);
 UNKNOWN_FUNCTION(OSJoinThread);
 s32 OSResumeThread(OSThread * thread);
 s32 OSSuspendThread(OSThread * thread);
-UNKNOWN_FUNCTION(OSSleepThread);
-UNKNOWN_FUNCTION(OSWakeupThread);
+void OSSleepThread(OSThreadQueue * thread);
+void OSWakeupThread(OSThreadQueue * thread);
 
 CPP_WRAPPER_END()

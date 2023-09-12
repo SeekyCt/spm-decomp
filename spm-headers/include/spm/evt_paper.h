@@ -5,7 +5,8 @@
 
 CPP_WRAPPER(spm::evt_paper)
 
-EVT_UNKNOWN_USER_FUNC(func_8010c600)
-EVT_UNKNOWN_USER_FUNC(func_8010c660)
+EVT_DECLARE_USER_FUNC(evt_paper_entry, 1)
+
+EVT_DECLARE_USER_FUNC(evt_paper_delete, 1)
 
 CPP_WRAPPER_END()

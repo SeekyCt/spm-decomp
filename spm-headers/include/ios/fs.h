@@ -10,6 +10,7 @@ CPP_WRAPPER(ios::fs)
 
 enum FsErr
 {
+    ERR_FS_EINVAL = -101,
     ERR_FS_ENOENT = -106
 };
 

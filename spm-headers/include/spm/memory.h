@@ -99,7 +99,7 @@ typedef struct
 SIZE_ASSERT(SmartWork, 0xe01c)
 
 DECOMP_STATIC(SmartWork memory_smartWork)
-DECOMP_STATIC(SmartWork memory_swp)
+DECOMP_STATIC(SmartWork * memory_swp)
 
 extern s32 g_bFirstSmartAlloc;
 

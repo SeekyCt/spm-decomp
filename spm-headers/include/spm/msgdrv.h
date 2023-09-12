@@ -121,7 +121,7 @@ void msgdrvMain();
     Language folder path is generated automatically, not included in textFileName
     .txt is appended automatically, not included in textFileName
 */
-void msgLoad(const char * textFileName, s32 slot);
+bool msgLoad(const char * textFileName, s32 slot);
 
 /*
     Unloads the text file in the specified slot
@@ -156,7 +156,7 @@ void msgDisp();
 void msgDispKeyWait();
 
 /*
-    Configures GX settings for 
+    Configures GX settings for
 */
 UNKNOWN_FUNCTION(msgDispKeyWait_render);
 
