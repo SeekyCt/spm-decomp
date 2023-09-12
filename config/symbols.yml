@@ -1182,8 +1182,8 @@ global:
     0x800dff20: evt_cam3d_evt_zoom_in
     # 0x800e01f8
     # 0x800e02bc
-    # 0x800e0430
-    # 0x800e04fc
+    0x800e0430: evt_cam_zoom_to_coords
+    0x800e04fc: evt_cam_look_at_door
     # 0x800e0720
     # 0x800e07bc
     # 0x800e0890
@@ -1258,7 +1258,7 @@ global:
     0x8041a2b0: door_init_evt
 
     # evt_eff.c
-    # 0x800e57bc
+    0x800e57bc: evt_eff
     0x800e6148: evt_eff_softdelete
     # 0x800e617c
     # 0x800e61b0
@@ -1374,15 +1374,15 @@ global:
     # 0x800ebd74
 
     # evt_img.c
-    # 0x800ec2c8
-    # 0x800ec30c
-    # 0x800ec3ac
-    # 0x800ec458
-    # 0x800ec4ec
-    # 0x800ec7e0
-    # 0x800ec87c
-    # 0x800ec8c4
-    # 0x800ec920
+    0x800ec2c8: evt_img_entry
+    0x800ec30c: evt_img_set_position
+    0x800ec3ac: evt_img_set_paper
+    0x800ec458: evt_img_set_paper_anim
+    0x800ec4ec: evt_img_alloc_capture
+    0x800ec7e0: evt_img_free_capture
+    0x800ec87c: evt_img_clear_virtual_space
+    0x800ec8c4: evt_img_release
+    0x800ec920: evt_img_wait_animend
     # 0x800ec998
     # 0x800eca64
     # 0x800ecae0
@@ -1457,12 +1457,12 @@ global:
     # 0x800efbdc
     # 0x800efc54
     # 0x800efce0
-    # 0x800efd28
+    0x800efd28: evt_mario_direction_reset
     # 0x800efd58
-    # 0x800efd88
+    0x800efd88: evt_mario_direction_face
     # 0x800eff6c
     0x800effb8: evt_mario_face_npc
-    # 0x800f0074
+    0x800f0074: evt_mario_face_coords
     # 0x800f013c
     # 0x800f0160
     # 0x800f01ac
@@ -1504,7 +1504,7 @@ global:
     # 0x800f2310
     # 0x800f23e4
     # 0x800f240c
-    # 0x800f2450
+    0x800f2450: evt_mario_fairy_reset
     0x800f2478: evt_mario_swim_onoff
     # 0x800f24d8
     # 0x800f2544
@@ -1890,8 +1890,8 @@ global:
     # 0x8010c504
 
     # evt_paper.c
-    # 0x8010c600
-    # 0x8010c660
+    0x8010c600: evt_paper_entry
+    0x8010c660: evt_paper_delete
 
     # evt_pouch.c
     0x8010c698: evt_pouch_set_hp
