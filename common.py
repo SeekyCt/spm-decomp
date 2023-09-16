@@ -9,7 +9,7 @@ import json
 import os
 from subprocess import PIPE, run
 from sys import executable as PYTHON, platform
-from typing import List, Tuple, Union
+from typing import List, Optional, Tuple, Union
 
 import yaml
 try:
@@ -143,6 +143,15 @@ def load_from_yaml(path: str, default=None):
             ret = default
         return ret
 
+def check_wine(command: str, wine_override: Optional[str] = None) -> str:
+    if wine_override is None:
+        wine_override = "wine"
+    
+    if platform != "win32":
+        return f"{wine_override} {command}"
+    else:
+        return command
+
 ################
 # Project dirs #
 ################
@@ -202,9 +211,6 @@ TOOLS = "tools"
 CODEWARRIOR = os.path.join(TOOLS, "4199_60831")
 CC = os.path.join(CODEWARRIOR, "mwcceppc.exe")
 LD = os.path.join(CODEWARRIOR, "mwldeppc.exe")
-if platform != "win32":
-    CC = f"wine {CC}"
-    LD = f"wine {LD}"
 
 # DevkitPPC
 DEVKITPPC = os.environ.get("DEVKITPPC")

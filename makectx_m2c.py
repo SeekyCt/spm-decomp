@@ -22,7 +22,7 @@ def make_includes(dirnames: List[str]) -> str:
     )
 
 
-def preprocess(includes: str, defines: List[str]) -> str:
+def preprocess(cc: str, includes: str, defines: List[str]) -> str:
     """Gets the preprocessed text of a C file"""
 
     # Fallback to default defines
@@ -35,7 +35,7 @@ def preprocess(includes: str, defines: List[str]) -> str:
             tmp.close()
             # NOTE: not preprocessed in C++ mode
             return c.get_cmd_stdout(
-                f"{c.CC} -I- {c.MWCC_INCLUDES} {defines_str} -d M2C -stderr -E {tmp.name}"
+                f"{cc} -I- {c.MWCC_INCLUDES} {defines_str} -d M2C -stderr -E {tmp.name}"
             )
         finally:
             unlink(tmp.name)
@@ -45,13 +45,17 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("-d", "--defines", type=str, nargs='+', default=c.DEFINES,
                         help="Preprocessor defines")
+    parser.add_argument("-w", "--wine", type=str, help="Wine override (ignored on Windows)")
     args = parser.parse_args()
+
+    # Get cc command
+    cc = c.check_wine(c.CC, args.wine)
 
     # Find all headers
     includes = make_includes(c.INCDIRS)
 
     # Preprocess headers
-    out = preprocess(includes, args.defines)
+    out = preprocess(cc, includes, args.defines)
 
     # Output
     print(out)

@@ -3,6 +3,7 @@ Creates a build script for ninja
 """
 
 from abc import ABC, abstractmethod
+from argparse import ArgumentParser
 from collections import defaultdict
 from dataclasses import dataclass
 from io import StringIO
@@ -15,6 +16,14 @@ from typing import List, Tuple
 from ninja_syntax import Writer
 
 import common as c
+
+##################
+# Argument Setup #
+##################
+
+parser = ArgumentParser()
+parser.add_argument("-w", "--wine", type=str, help="Wine override (ignored on Windows)")
+args = parser.parse_args()
 
 ####################
 # Setup Validation #
@@ -97,8 +106,8 @@ n.variable("forceactivegen", c.FORCEACTIVEGEN)
 n.variable("elf2dol", c.ELF2DOL)
 n.variable("elf2rel", c.ELF2REL)
 n.variable("codewarrior", c.CODEWARRIOR)
-n.variable("cc", c.CC)
-n.variable("ld", c.LD)
+n.variable("cc", c.check_wine(c.CC, args.wine))
+n.variable("ld", c.check_wine(c.LD, args.wine))
 n.variable("devkitppc", c.DEVKITPPC)
 n.variable("as", c.AS)
 n.variable("cpp", c.CPP)

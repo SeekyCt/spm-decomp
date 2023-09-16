@@ -16,6 +16,7 @@ parser.add_argument("-d", "--dol", action="store_true", help="Prioritise dol-loc
 parser.add_argument("-r", "--rel", action="store_true", help="Prioritise rel-local symbols")
 parser.add_argument("-n", "--source-name", type=str, help="Prioritise source-local symbols")
 parser.add_argument("--host", default="https://decomp.me")
+parser.add_argument("-w", "--wine", type=str, help="Wine override (ignored on Windows)")
 args = parser.parse_args()
 
 # Find address and diff_label
@@ -40,7 +41,11 @@ else:
 asm = get_function(binary, source, addr, True)
 
 # Get context
-ctx = c.get_cmd_stdout(f"{c.PYTHON} makectx_m2c.py")
+if args.wine:
+    wine = f"--wine {args.wine}"
+else:
+    wine = ""
+ctx = c.get_cmd_stdout(f"{c.PYTHON} makectx_m2c.py {wine}")
 
 # Send request
 req = {
