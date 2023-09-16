@@ -1,0 +1,58 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ghcr.io/seekyct/spm-docker:v1
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [eu0]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Git config
+      run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+    - name: Prepare
+      run: |
+        cp /spmfiles/${{matrix.version}}/main.dol orig
+        cp /spmfiles/${{matrix.version}}/relF.rel orig
+        cp -R /spmfiles/4199_60831 tools
+    - name: Build
+      run: |
+        python3 configure.py --wine wibo
+        ninja
+    - name: Upload maps
+      uses: actions/upload-artifact@v3
+      with:
+        name: maps-${{matrix.version}}.zip
+        path: |
+          out/main.map
+          out/relF.map
+    - name: Upload analysis
+      uses: actions/upload-artifact@v3
+      with:
+        name: analysis-${{matrix.version}}.zip
+        path: |
+          build/labels.pickle
+          build/relocs.pickle
+          build/rel_labels.pickle
+          build/rel_relocs.pickle
+    - name: Upload asm lists
+      uses: actions/upload-artifact@v3
+      with:
+        name: asm-list-${{matrix.version}}.zip
+        path: |
+          build/main.dol.asml
+          build/relF.rel.asml
+    - name: Calculate progress
+      run: python3 progress.py --full > build/progress.txt
+    - name: Upload progrses
+      uses: actions/upload-artifact@v3
+      with:
+        name: progress-${{matrix.version}}.txt
+        path: build/progress.txt
