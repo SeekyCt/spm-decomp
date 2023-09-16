@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef DECOMP
+#if (defined DECOMP) && !(defined SKIP_PPCDIS)
 // Decomp should include ppcdis.h in all files
 #include <ppcdis.h>
 #else

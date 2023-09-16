@@ -33,7 +33,8 @@ DECOMP_STATIC(RomfontWork romfont_work)
 const char * romFontGetMessage(s32 id);
 void romFontInit();
 DECOMP_STATIC(void romfont_romFontMake())
-void romFontPrintGX(f32 x, f32 y, f32 scale, const GXColor * colour, const char * msg, ...);
+void ATTRIBUTE_FORMAT(printf, 5, 6) romFontPrintGX(f32 x, f32 y, f32 scale, const GXColor * colour,
+                                                   const char * msg, ...);
 s32 romFontGetWidth(const char * message);
 
 #endif

@@ -12,7 +12,8 @@ ATTRIBUTE_FORMAT(printf, 1, 2) void OSReport(const char * message, ...);
 UNKNOWN_FUNCTION(OSVReport);
 
 // Weak symbol, games overrides with its own
-void OSPanic(const char * filename, s32 line, const char * msg, ...);
+ATTRIBUTE_FORMAT(printf, 3, 4) void OSPanic(const char * filename, s32 line,
+                                            const char * msg, ...);
 
 UNKNOWN_FUNCTION(OSSetErrorHandler);
 void __OSUnhandledException(s32 p1, s32 p2, s32 p3, s32 p4);

@@ -5,7 +5,6 @@
 #pragma once
 
 #include <common.h>
-#include <spm/hitdrv.h>
 #include <spm/itemdrv.h>
 #include <spm/mapdrv.h>
 #include <wii/mtx.h>

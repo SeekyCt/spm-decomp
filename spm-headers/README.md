@@ -21,6 +21,10 @@ It is recommended to use this with [git subrepo](https://github.com/ingydotnet/g
 
 For use in decomp, the `include` and `decomp` folders should be added to the include path, and the preprocessor define `DECOMP` should be used.
 
+### Testing
+
+The `SKIP_PPCDIS` preprocessor define will stop `ppcdis.h` being included.
+
 ## Mods
 
 For use in mods, the `include` and `mod` folder should be added to the include path and an lst from `linker` should be used. If including your compiler's C++ standard library, the preprocessor define `USE_STL` should be used.

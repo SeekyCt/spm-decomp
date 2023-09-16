@@ -84,7 +84,8 @@ const char * getMapdataDvdRoot();
     Assertion failure handlers
 */
 s32 NORETURN __assert(const char * filename, s32 line, const char * assertion);
-s32 NORETURN __assert2(const char * filename, s32 line, const char * assertion, const char * message, ...);
+s32 NORETURN ATTRIBUTE_FORMAT(printf, 4, 5) __assert2(
+    const char * filename, s32 line, const char * assertion, const char * message, ...);
 
 /*
     Rounds a float to an int

@@ -855,21 +855,26 @@
 //   80cf5180 5 .data
 //   80f64340 6 .bss
 
+// machi.c
+1,1,52e4:evt_machi_set_elv_descs
+// more
+
+//sp4_13.c
+// text
+1,1,16854:spReturnAngryAnimPos
+1,1,16a08:func_80c5c304
+1,1,16a70:func_80c5c36c
+// data
+1,5,a95f8:spMrLStartTribeAnimDefs
+1,5,a9600:spMrLTribeAnimDefs
+1,5,a96e8:spMrLTauntTribeAnimDefs
+1,5,a9788:spTheGreenThunderTribeAnimDefs
+1,5,a9b24:mr_l_appear_evt
+1,5,aa4a0:brobot_appear_evt
+// more
+
 // an2_08.c
-1,6,1320:an2_08_wp
-1,5,fa148:lbl_80def2c8
-1,5,fa26c:rpg_snd_hit_evt
-1,5,fa2b8:rpg_snd_miss_evt
-1,5,fa380:rpg_attacking_evt
-1,5,fa858:rpg_use_pixls_evt
-1,5,fb380:rpg_use_items_evt
-1,5,fc7d8:rpg_run_away_evt
-1,5,fc9f0:underchomp_attack_1_evt
-1,5,fcd30:underchomp_attack_2_evt
-1,5,fd070:underchomp_attack_3_evt
-1,5,fd3b0:rpg_check_win_or_continue_evt
-1,5,fe150:final_rpg_child_evt
-1,5,fe1cc:begin_rpg_parent_evt
+// text
 1,1,2700c:func_80c6c908
 1,1,27050:rpgHandleMenu
 1,1,27590:rpg_screen_draw
@@ -894,27 +899,27 @@
 1,1,2d344:evt_rpg_point_handling
 1,1,2d37c:evt_rpg_get_item_msg
 1,1,2d3fc:evt_an2_08_draw_face
+// data
+1,5,fa148:lbl_80def2c8
+1,5,fa26c:rpg_snd_hit_evt
+1,5,fa2b8:rpg_snd_miss_evt
+1,5,fa380:rpg_attacking_evt
+1,5,fa858:rpg_use_pixls_evt
+1,5,fb380:rpg_use_items_evt
+1,5,fc7d8:rpg_run_away_evt
+1,5,fc9f0:underchomp_attack_1_evt
+1,5,fcd30:underchomp_attack_2_evt
+1,5,fd070:underchomp_attack_3_evt
+1,5,fd3b0:rpg_check_win_or_continue_evt
+1,5,fe150:final_rpg_child_evt
+1,5,fe1cc:begin_rpg_parent_evt
+// bss
+1,6,1320:an2_08_wp
 
 //an.c
 1,1,319ac:evt_an_init_tpl
 1,1,31bc8:evt_an_darkness_onoff
 1,1,31cb4:evt_an_remove_npcs
-// more
-
-//sp4_13.c
-1,1,16854:spReturnAngryAnimPos
-1,1,16a08:func_80c5c304
-1,1,16a70:func_80c5c36c
-1,5,a95f8:spMrLStartTribeAnimDefs
-1,5,a9600:spMrLTribeAnimDefs
-1,5,a96e8:spMrLTauntTribeAnimDefs
-1,5,a9788:spTheGreenThunderTribeAnimDefs
-1,5,a9b24:mr_l_appear_evt
-1,5,aa4a0:brobot_appear_evt
-// more
-
-// machi.c
-1,1,000052e4:evt_machi_set_elv_descs
 // more
 
 // dan.c

@@ -1,0 +1,28 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: ghcr.io/seekyct/spm-docker:v1
+    strategy:
+      fail-fast: false
+      matrix:
+        region: [eu0, eu1, us0, us1, us2, jp0, jp1, kr0]
+        test: [mod_ctx, old_mod_ctx, decomp_ctx, mod_ctx_shuffle, test_mod_individual]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Git config
+      run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+    - name: Build
+      run: |
+        python3 configure.py ${{matrix.test}} \
+            --regions ${{matrix.region}} \
+            --shuffle 500 \
+            --wine wibo \
+            --codewarrior /spmfiles/4199_60831/mwcceppc.exe
+        ninja
