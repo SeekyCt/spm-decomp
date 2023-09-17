@@ -31,14 +31,14 @@ jobs:
     - name: Upload maps
       uses: actions/upload-artifact@v3
       with:
-        name: maps-${{matrix.version}}.zip
+        name: maps-${{matrix.version}}
         path: |
           out/main.map
           out/relF.map
     - name: Upload analysis
       uses: actions/upload-artifact@v3
       with:
-        name: analysis-${{matrix.version}}.zip
+        name: analysis-${{matrix.version}}
         path: |
           build/labels.pickle
           build/relocs.pickle
@@ -47,7 +47,7 @@ jobs:
     - name: Upload asm lists
       uses: actions/upload-artifact@v3
       with:
-        name: asm-list-${{matrix.version}}.zip
+        name: asm-list-${{matrix.version}}
         path: |
           build/main.dol.asml
           build/relF.rel.asml
@@ -56,5 +56,5 @@ jobs:
     - name: Upload progrses
       uses: actions/upload-artifact@v3
       with:
-        name: progress-${{matrix.version}}.txt
+        name: progress-${{matrix.version}}
         path: build/progress.txt
