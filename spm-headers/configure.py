@@ -153,7 +153,7 @@ n.rule(
 n.rule(
     "decomp_cc",
     command = ALLOW_CHAIN + "$cpp -M $in -MF $out.d $cppflags && " \
-                            "$decomp_cc $decomp_cflags $flags -c $in -o $out",
+                            "$decomp_cc $decomp_cxxflags $flags -c $in -o $out",
     description = "Decomp CC $in",
     deps = "gcc",
     depfile = "$out.d"

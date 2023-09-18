@@ -12,7 +12,7 @@ enum IosOpenMode
 /* 0x0 */ IOS_OPEN_NONE = 0,
 /* 0x1 */ IOS_OPEN_READ = 1,
 /* 0x2 */ IOS_OPEN_WRITE = 2,
-/* 0x3 */ IOS_OPEN_READ_WRITE = IOS_OPEN_READ | IOS_OPEN_WRITE,
+/* 0x3 */ IOS_OPEN_READ_WRITE = IOS_OPEN_READ | IOS_OPEN_WRITE
 };
 
 /*
@@ -22,7 +22,7 @@ enum IosSeekMode
 {
 /* 0x0 */ IOS_SEEK_START,
 /* 0x1 */ IOS_SEEK_CURRENT,
-/* 0x2 */ IOS_SEEK_END,
+/* 0x2 */ IOS_SEEK_END
 };
 
 typedef struct
