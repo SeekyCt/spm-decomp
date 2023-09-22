@@ -22,8 +22,9 @@ CPP_WRAPPER(spm::item_data)
 
 enum ItemType
 {
+/* 0x000 */ ITEM_ID_NULL,
+
     // In-world items
-/* 0x000 */ ITEM_ID_WORLD_NULL,
 /* 0x001 */ ITEM_ID_WORLD_COIN,
 /* 0x002 */ ITEM_ID_WORLD_COIN_x3,
 /* 0x003 */ ITEM_ID_WORLD_SPEED_FLOWER,

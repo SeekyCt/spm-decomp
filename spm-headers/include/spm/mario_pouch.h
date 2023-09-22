@@ -16,7 +16,7 @@ typedef struct
 {
 /* 0x0 */ bool selectable;
 /* 0x1 */ bool selected;
-/* 0x2 */ s16 itemType;
+/* 0x2 */ u16 itemType;
 } PouchCharOrPixlInfo;
 SIZE_ASSERT(PouchCharOrPixlInfo, 0x4)
 
@@ -41,14 +41,14 @@ typedef struct
 /* 0x014 */ s32 flipTimer;
 /* 0x018 */ s32 xp;
 /* 0x01C */ s32 coins;
-/* 0x020 */ s16 keyItem[32]; // key items
-/* 0x060 */ s16 useItem[10]; // usable items
-/* 0x074 */ s16 shopItem[32]; // items stored by the player at a shop
+/* 0x020 */ u16 keyItem[32]; // key items
+/* 0x060 */ u16 useItem[10]; // usable items
+/* 0x074 */ u16 shopItem[32]; // items stored by the player at a shop
 /* 0x0B4 */ PouchCharOrPixlInfo characters[4];
 /* 0x0C4 */ PouchCharOrPixlInfo pixls[16];
 /* 0x104 */ s32 shopPoints;
 /* 0x108 */ u32 shopPointRewardsCollected; // bit mask, index 1 << i
-/* 0x10C */ s8 catchCards[256]; // value is the amount currently owned, index is item id
+/* 0x10C */ u8 catchCards[256]; // value is the amount currently owned, index is item id
                                 // minus the first card item id (282)
 /* 0x20C */ u8 unknown_0x20c[0x30c - 0x20c];
 
@@ -230,7 +230,7 @@ bool pouchCheckPixlSelected(s16 itemId);
 /*
     Returns the id of the currently selected pixl
 */
-s16 pouchGetCurPixl();
+u16 pouchGetCurPixl();
 
 /*
     Makes a pixl selected by id, if it exists in a slot
