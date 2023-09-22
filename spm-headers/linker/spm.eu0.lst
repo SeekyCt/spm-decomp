@@ -49,6 +49,19 @@
 8003ab80:windowDispGX2_Waku_col
 // more
 
+// acdrv.c
+8003eb4c:acInit
+8003eba0:acReInit
+8003ee44:acMain
+8003f388:acEntry
+8003f5d8:acReturnResults
+8003f5e0:acDelete
+8003f63c:acPauseAll
+8003f67c:acUnpauseAll
+8003f730:acIsRunning
+8003f780:acNameToPtr
+8003f818:acMsgDisp
+
 // animdrv.c
 8004249c:animPoseEntry
 80043410:animPoseSetAnim
@@ -190,6 +203,11 @@
 // bss
 8050ce30:evt_debug_put_reg_str
 // more
+
+// evt_ac.c
+800df9a8:evt_ac_entry
+800dfa00:evt_ac_return_results
+800dfaac:evt_ac_delete
 
 // evt_door.c
 // text
@@ -743,7 +761,7 @@
     // sbss
 805aec24:PauseFlag
 805aeca0:executing
-// more    
+// more
 // dvd_broadway.c
 805ae2d8:devDiStr
 // more

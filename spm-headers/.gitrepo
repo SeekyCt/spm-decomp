@@ -6,7 +6,7 @@
 [subrepo]
 	remote = https://github.com/SeekyCt/spm-headers.git
 	branch = master
-	commit = 688d955223471a9c420c40fe5cfc09bcda1fdef9
+	commit = f2ca57706aad20cc276eab96516f94d4aa9b9722
 	parent = 214eac5f8ecaeb4d1a01a5c40f841c4e4a72b47a
 	method = merge
 	cmdver = 0.4.5

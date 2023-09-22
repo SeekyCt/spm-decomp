@@ -460,7 +460,7 @@
 80067770:fadeSetMapChangeTransition
 8023B5CC:spsndCheckBgmPlaying
 
-// new to SPM-RPG-battles
+// new to SPM-RPG-Battles
 1,1,27204:rpg_screen_draw
 1,1,26cc4:rpgHandleMenu
 801B6390:npcDelete
@@ -614,6 +614,15 @@
 8019C56C:qqsort
 8014E8FC:pouchGetCharInfo
 1,5,f8fb0:lbl_80def2c8
+
+// new to SPM-RPG-Battles V2
+800DFAFC:evt_ac_entry
+800DFB54:evt_ac_return_results
+800DFC00:evt_ac_delete
+8003ECCC:acMain
+8003F210:acEntry
+8003F460:acReturnResults
+8003F468:acDelete
 
 // new to rld3 v1
 8025C950:strcat

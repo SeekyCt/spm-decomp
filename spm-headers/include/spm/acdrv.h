@@ -47,7 +47,7 @@ typedef struct
 {
 /* 0x0 */ s32 num; // 4
 /* 0x4 */ AcEntry * entries; // array of num length
-} AcWork; 
+} AcWork;
 SIZE_ASSERT(AcWork, 0x8)
 
 DECOMP_STATIC(AcWork acdrv_work)
@@ -109,7 +109,10 @@ void acMain();
 */
 AcEntry * acEntry(s32 type);
 
-UNKNOWN_FUNCTION(func_8003f5d8);
+/*
+  Returns a value between 12 and 7 depending on how well the player did in the minigame
+*/
+s32 acReturnResults(const char * name);
 
 /*
     Deletes an entry, calling its deleteFunc and deleting its pausewin entry
