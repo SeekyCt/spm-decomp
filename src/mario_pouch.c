@@ -32,9 +32,137 @@ MarioPouchWork2 * pouch2GetPtr()
     return wp2;
 }
 
-asm void pouchInit()
+void pouchInit()
 {
-    #include "asm/8014c094.s"
+    MarioPouchWork * pp;
+    s32 i;
+    s32 j;
+    OSTime temp;
+
+    pp = pouchGetPtr();
+
+    memset(pp, 0, sizeof(work));
+
+    // Init stats
+    pouchSetLevel(1);
+    pouchSetAttack(1);
+    pouchSetMaxHp(10);
+    pouchSetHp(10);
+    pouchSetXp(0);
+    pouchSetCoin(0);
+    pouchSetArcadeTokens(0);
+    pp->flipTimer = 10;
+    pp->totalCoinsCollected = 0;
+    pp->maxJumpCombo = 0;
+    pp->maxStylishCombo = 0;
+    pp->enemiesDefeated = 0;
+
+    // Clear items
+    for (i = 0; i < POUCH_KEY_ITEM_MAX; i++)
+        pp->keyItem[i] = 0;
+    for (i = 0; i < POUCH_USE_ITEM_MAX; i++)
+        pp->useItem[i] = 0;
+    for (i = 0; i < POUCH_SHOP_ITEM_MAX; i++)
+        pp->shopItem[i] = 0;
+    for (i = 0; i < POUCH_CHAR_ITEM_MAX; i++)
+    {
+        pp->characters[i].selectable = false;
+        pp->characters[i].itemType = ITEM_ID_NULL;
+        pp->characters[i].selected = false;
+    }
+    for (i = 0; i < POUCH_FAIRY_ITEM_MAX; i++)
+    {
+        pp->pixls[i].selectable = false;
+        pp->pixls[i].itemType = ITEM_ID_NULL;
+        pp->pixls[i].selected = false;
+    }
+
+    // Add all non-cooking usable items (runs out of space)
+    for (i = ITEM_ID_USE_START; i < ITEM_ID_COOK_START; i++)
+        pouchAddItem(i);
+
+    // Add all characters
+    pouchAddItem(ITEM_ID_CHAR_MARIO);
+    pouchAddItem(ITEM_ID_CHAR_PEACH);
+    pouchAddItem(ITEM_ID_CHAR_KOOPA);
+    pouchAddItem(ITEM_ID_CHAR_LUIGI);
+
+    // Add all pixls
+    pouchAddItem(ITEM_ID_FAIRY_THROW);
+    pouchAddItem(ITEM_ID_FAIRY_BAKUDAN);
+    pouchAddItem(ITEM_ID_FAIRY_SLIT);
+    pouchAddItem(ITEM_ID_FAIRY_HIPATTACK);
+    pouchAddItem(ITEM_ID_FAIRY_MOVE);
+    pouchAddItem(ITEM_ID_FAIRY_KUUKAN);
+    pouchAddItem(ITEM_ID_FAIRY_PIKKYORO_A);
+    pouchAddItem(ITEM_ID_FAIRY_HAMMER);
+    pouchAddItem(ITEM_ID_FAIRY_MINI_MINI);
+    pouchAddItem(ITEM_ID_FAIRY_COUNTER);
+    pouchAddItem(ITEM_ID_FAIRY_SPIN_DASH);
+
+    // Add return pipe and all cooking discs
+    pouchAddItem(ITEM_ID_KEY_POCKET_DOKAN);
+    pouchAddItem(ITEM_ID_KEY_DISK_R);
+    pouchAddItem(ITEM_ID_KEY_DISK_W);
+    pouchAddItem(ITEM_ID_KEY_DISK_Y);
+    pouchAddItem(ITEM_ID_KEY_DISK_B);
+    pouchAddItem(ITEM_ID_KEY_DISK_G);
+    pouchAddItem(ITEM_ID_KEY_DISK_PU);
+
+    // Select pixl
+    pouchSetPixlSelected(ITEM_ID_FAIRY_THROW);
+
+    pouch2Init();
+
+    // Setup merlee charms
+    pp->charmsRemaining = 0;
+    pp->killsBeforeNextCharm = 0;
+
+    pp->unknown_0x350 = pp->unknown_0x35c = (Vec3) {0, 0, 0};
+
+    // Setup minigame scores
+    for (i = 0; i < 4; i++)
+    {
+        for (j = 0; j < 5; j++)
+        {
+            pp->minigameScores[i][j].characterId = 0;
+            pp->minigameScores[i][j].score = 0;
+            pp->minigameScores[i][j].unknown_0xc = 0;
+            pp->minigameScores[i][j].unknown_0x8 = 0;
+            pp->minigameScores[i][j].unknown_0x10 = 0;
+        }
+    }
+
+    for (i = 0; i < 2; i++)
+    {
+        for (j = 0; j < 5; j++)
+        {
+            pp->unknown_0x548[i][j].unknown_0x0 = 0;
+            pp->unknown_0x548[i][j].unknown_0x4 = 50 - (j * 10);
+            temp = 4500 - (j * 900);
+            pp->unknown_0x548[i][j].unknown_0x8 = OSSecondsToTicks(temp);
+            pp->unknown_0x548[i][j].unknown_0x14 = 0;
+            pp->unknown_0x548[i][j].unknown_0x10 = 0;
+            pp->unknown_0x548[i][j].unknown_0x18 = 0;
+        }
+    }
+}
+
+void pouch2Init()
+{
+    MarioPouchWork2 * pp2;
+
+    memset(wp2, 0, sizeof(*wp2));
+
+    pp2 = pouch2GetPtr();
+    pp2->unknown_0xc = 0;
+    pp2->unknown_0x8 = 0;
+    pp2->unknown_0x4 = 0;
+    pp2->unknown_0x0 = 0;
+    pp2->unknown_0x14 = 0;
+    // Probably fake match
+    wp2->unknown_0x10 = 0;
+    wp2->unknown_0x18 = OSGetTime();
 }
 
 asm void pouchReInit()
@@ -133,8 +261,9 @@ void pouchSetHp(s32 hp)
 
     pp->hp = hp;
 
-    if (pp->hp > pp->maxHp)
-        pp->hp = pp->maxHp;
+    // Probably fake match
+    if (work.hp > work.maxHp)
+        work.hp = work.maxHp;
 
     if (pp->hp < 0)
         pp->hp = 0;
@@ -192,6 +321,21 @@ s32 pouchGetMaxHp()
     pp = pouchGetPtr();
 
     return pp->maxHp;
+}
+
+void pouchSetXp(s32 xp)
+{
+    MarioPouchWork * pp;
+    
+    pp = pouchGetPtr();
+
+    pp->xp = xp;
+
+    if (pp->xp > 99999999)
+        pp->xp = 99999999;
+
+    if (pp->xp < 0)
+        pp->xp = 0;
 }
 
 s32 pouchGetXp()
@@ -272,7 +416,7 @@ void pouchAddCoin(s32 increase)
         pouchAddTotalCoin(increase);
 }
 
-asm bool pouchAddItem(s16 itemId)
+asm bool pouchAddItem(s32 itemId)
 {
     #include "asm/8014d5f8.s"
 }
@@ -605,7 +749,7 @@ void pouchSetArcadeTokens(s32 tokens)
     pp = pouchGetPtr();
 
     pp->arcadeTokens = tokens;
-    if (tokens < 0)
+    if (pp->arcadeTokens < 0)
         pp->arcadeTokens = 0;
 
     if (pp->arcadeTokens > 9999)
