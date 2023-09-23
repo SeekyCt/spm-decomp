@@ -10,6 +10,7 @@
 #include <spm/spmario_snd.h>
 #include <spm/system.h>
 #include <wii/os.h>
+#include <msl/math.h>
 #include <msl/string.h>
 
 // .rodata
@@ -155,9 +156,7 @@ void pouch2Init()
     memset(wp2, 0, sizeof(*wp2));
 
     pp2 = pouch2GetPtr();
-    pp2->unknown_0xc = 0;
     pp2->unknown_0x8 = 0;
-    pp2->unknown_0x4 = 0;
     pp2->unknown_0x0 = 0;
     pp2->unknown_0x14 = 0;
     // Probably fake match
@@ -248,9 +247,93 @@ void pouchReInit()
     }
 }
 
-asm void pouchMain()
+void pouchMain()
 {
-    #include "asm/8014cd90.s"
+    MarioWork * mp;
+    s32 msec;
+
+    if (pouchCheckHaveItem(ITEM_ID_CARD_MARIO))
+        work.flipTimer = 10;
+
+    if (
+        !marioKeyOffChk() && !marioCtrlOffChk() && ((marioGetPtr()->flags & 0x10000000) == 0) &&
+        (pouchCheckHaveItem(ITEM_ID_CARD_MARIO) == 0)
+    )
+    {
+        camGetPtr(CAM_ID_3D);
+        mp = marioGetPtr();
+        if (camCheck3d(CAM_ID_3D) != 0)
+        {
+            if (
+                (mp->motionId != MOT_FAIRY_CHANGE) &&(mp->motionId != MOT_CHAR_CHANGE) &&
+                (mp->motionId != MOT_31) && (mp->motionId != MOT_32) &&
+                (mp->motionId != MOT_33) && (mp->motionId != MOT_34))
+            {
+                wp2->unknown_0x8 += OSGetTime() - wp2->unknown_0x18;
+                wp2->unknown_0x0 = 0;
+                wp2->unknown_0x10 = 0;
+
+                msec = OSTicksToMilliseconds(wp2->unknown_0x8);
+                if (abs(wp2->unknown_0x14 - msec) > (s32) (1500.0f / gp->gameSpeed))
+                {
+                    wp2->unknown_0x14 = msec;
+                    if (fadeIsFinish() && seqGetSeq() == SEQ_GAME)
+                    {
+                        if (work.flipTimer >= 2)
+                            spsndSFXOn("SFX_SYS_3D_GAGE_ALARM0");
+                        if (work.flipTimer == 6)
+                            spsndSFXOn("SFX_SYS_3D_GAGE_ALARM1_0");
+                        if (work.flipTimer == 5)
+                            spsndSFXOn("SFX_SYS_3D_GAGE_ALARM1_1");
+                        if (work.flipTimer == 4)
+                            spsndSFXOn("SFX_SYS_3D_GAGE_ALARM1");
+                        if (work.flipTimer == 3)
+                            spsndSFXOn("SFX_SYS_3D_GAGE_ALARM2");
+                        if (work.flipTimer == 2)
+                            spsndSFXOn("SFX_SYS_3D_GAGE_ALARM3");
+                    }
+                    work.flipTimer -= 1;
+                    hudTurnOffFlipTimeBox(work.flipTimer);
+                    if (work.flipTimer == 0) {
+                        marioTakeDamage(NULL, 0x20000, 1);
+                        work.flipTimer = 10;
+                        func_8019af88();
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (
+                (mp->motionId != MOT_FAIRY_CHANGE) && (mp->motionId != MOT_CHAR_CHANGE) &&
+                (mp->motionId != MOT_31) && (mp->motionId != MOT_32) &&
+                (mp->motionId != MOT_33) && (mp->motionId != MOT_34)
+            )
+            {
+                wp2->unknown_0x0 += OSGetTime() - wp2->unknown_0x18;
+                wp2->unknown_0x8 = 0;
+                wp2->unknown_0x14 = 0;
+
+                msec = OSTicksToMilliseconds(wp2->unknown_0x0);
+                if (abs(wp2->unknown_0x10 - msec) > (s32) (1500.0f / gp->gameSpeed))
+                {
+                    wp2->unknown_0x10 = msec;
+                    if (work.flipTimer < 10)
+                    {
+                        work.flipTimer += 1;
+                        if (
+                            (work.flipTimer == 10) && (fadeIsFinish() != 0) &&
+                            (seqGetSeq() == SEQ_GAME) && (func_8012dab0() == 0)
+                        )
+                        {
+                            spsndSFXOn("SFX_SYS_3D_GAGE_RECOVER1");
+                        }
+                    }
+                }
+            }
+        }
+    }
+    wp2->unknown_0x18 = OSGetTime();
 }
 
 void pouchResetFlip()
@@ -262,9 +345,7 @@ void pouchResetFlip()
     pp2 = pouch2GetPtr();
 
     pp->flipTimer = 10;
-    pp2->unknown_0xc = 0;
     pp2->unknown_0x8 = 0;
-    pp2->unknown_0x4 = 0;
     pp2->unknown_0x0 = 0;
     pp2->unknown_0x14 = 0;
     pouch2GetPtr()->unknown_0x10 = 0;

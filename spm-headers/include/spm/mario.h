@@ -140,87 +140,84 @@ SIZE_ASSERT(MarioPaneBoundary, 0x8)
 */
 typedef bool (MarioPaneChangeFunc)(s32 newPane);
 
-enum MarioMotionId
-{
-/* 0x00 */ MOT_STAY, // Standing still
-/* 0x01 */ MOT_WALK, // Walking slowly
-/* 0x02 */ MOT_DASH, // Walking at full speed
-/* 0x03 */ MOT_JUMP, // Jumping normally
-/* 0x04 */ MOT_CROUCH, // Crouching
-/* 0x05 */ MOT_5,
-/* 0x06 */ MOT_SPRING, // Jumping off spring object
-/* 0x07 */ MOT_7,
-/* 0x08 */ MOT_8,
-/* 0x09 */ MOT_BOUNCE, // Jumping off of an NPC
-/* 0x0A */ MOT_FALL, // Falling in the air
-/* 0x0B */ MOT_11,
-/* 0x0C */ MOT_12,
-/* 0x0D */ MOT_13,
-/* 0x0E */ MOT_THUDLEY_AIR, // In the air while using thudley
-/* 0x0F */ MOT_THUDLEY_LAND, // Landing whlie using thudley
-/* 0x10 */ MOT_HAMMER, // Using cudge
-/* 0x11 */ MOT_JABARA, // Luigi spring jump(?)
-/* 0x12 */ MOT_SLIT, // Thin with slim
-/* 0x13 */ MOT_TALK, // Talking to an NPC
-/* 0x14 */ MOT_20,
-/* 0x15 */ MOT_21,
-/* 0x16 */ MOT_22,
-/* 0x17 */ MOT_FORCE_RESET, // ? TTYD name
-/* 0x18 */ MOT_24,
-/* 0x19 */ MOT_BOTTOMLESS, // Respawning from falling
-/* 0x1A */ MOT_FLIP_AIR, // Flip into midair
-/* 0x1B */ MOT_DAMAGE, // Taking damage
-/* 0x1C */ MOT_28,
-/* 0x1D */ MOT_29,
-/* 0x1E */ MOT_30,
-/* 0x1F */ MOT_31,
-/* 0x20 */ MOT_32,
-/* 0x21 */ MOT_33,
-/* 0x22 */ MOT_34,
-/* 0x23 */ MOT_35,
-/* 0x24 */ MOT_GRAB, // Throwing thoreau
-/* 0x25 */ MOT_BOMB, // Placing boomer
-/* 0x26 */ MOT_FLEEP, // Using fleep
-/* 0x27 */ MOT_SHRINK, // Shrinking with dottie
-/* 0x28 */ MOT_GROW, // Growing with dottie
-/* 0x29 */ MOT_PICCOLO, // Using piccolo
-/* 0x2A */ MOT_BARRY, // Using barry
-/* 0x2B */ MOT_43,
-/* 0x2C */ MOT_CARRIE_MOUNT, // Mounting carrie
-/* 0x2D */ MOT_CARRIE_DISMOUNT, // Dismounting carrie
-/* 0x2E */ MOT_46,
-/* 0x2F */ MOT_47,
-/* 0x30 */ MOT_48,
-/* 0x31 */ MOT_49,
-/* 0x32 */ MOT_50,
-/* 0x33 */ MOT_51,
-/* 0x34 */ MOT_52,
-/* 0x35 */ MOT_53,
-/* 0x36 */ MOT_54,
-/* 0x37 */ MOT_55,
-/* 0x38 */ MOT_56,
-/* 0x39 */ MOT_57,
-/* 0x3A */ MOT_58,
-/* 0x3B */ MOT_59,
-/* 0x3C */ MOT_60,
-/* 0x3D */ MOT_61,
-/* 0x3E */ MOT_62,
-/* 0x3F */ MOT_63,
-/* 0x40 */ MOT_64,
-/* 0x41 */ MOT_65,
-/* 0x42 */ MOT_66,
-/* 0x43 */ MOT_67,
-/* 0x44 */ MOT_68,
-/* 0x45 */ MOT_SWIM, // Off-ground underwater
-/* 0x46 */ MOT_70,
-/* 0x47 */ MOT_CHAR_CHANGE, // Changing character
-/* 0x48 */ MOT_FAIRY_CHANGE, // Changing pixl
-/* 0x49 */ MOT_FLIP, // Flipping to 2d/3d
-/* 0x4A */ MOT_GLIDE, // Peach parasol glide
-/* 0x4B */ MOT_GUARD, // Peach parasol guard
-/* 0x4C */ MOT_FIRE, // Bowser fire
-/* 0x4D */ MOT_77
-};
+#define MOT_STAY 0x00 // Standing still
+#define MOT_WALK 0x01 // Walking slowly
+#define MOT_DASH 0x02 // Walking at full speed
+#define MOT_JUMP 0x03 // Jumping normally
+#define MOT_CROUCH 0x04 // Crouching
+#define MOT_5 0x05
+#define MOT_SPRING 0x06 // Jumping off spring object
+#define MOT_7 0x07
+#define MOT_8 0x08
+#define MOT_BOUNCE 0x09 // Jumping off of an NPC
+#define MOT_FALL 0x0A // Falling in the air
+#define MOT_11 0x0B
+#define MOT_12 0x0C
+#define MOT_13 0x0D
+#define MOT_THUDLEY_AIR 0x0E // In the air while using thudley
+#define MOT_THUDLEY_LAND 0x0F // Landing whlie using thudley
+#define MOT_HAMMER 0x10 // Using cudge
+#define MOT_JABARA 0x11 // Luigi spring jump(?)
+#define MOT_SLIT 0x12 // Thin with slim
+#define MOT_TALK 0x13 // Talking to an NPC
+#define MOT_20 0x14
+#define MOT_21 0x15
+#define MOT_22 0x16
+#define MOT_FORCE_RESET 0x17 // ? TTYD name
+#define MOT_24 0x18
+#define MOT_BOTTOMLESS 0x19 // Respawning from falling
+#define MOT_FLIP_AIR 0x1A // Flip into midair
+#define MOT_DAMAGE 0x1B // Taking damage
+#define MOT_28 0x1C
+#define MOT_29 0x1D
+#define MOT_30 0x1E
+#define MOT_31 0x1F
+#define MOT_32 0x20
+#define MOT_33 0x21
+#define MOT_34 0x22
+#define MOT_35 0x23
+#define MOT_GRAB 0x24 // Throwing thoreau
+#define MOT_BOMB 0x25 // Placing boomer
+#define MOT_FLEEP 0x26 // Using fleep
+#define MOT_SHRINK 0x27 // Shrinking with dottie
+#define MOT_GROW 0x28 // Growing with dottie
+#define MOT_PICCOLO 0x29 // Using piccolo
+#define MOT_BARRY 0x2A // Using barry
+#define MOT_43 0x2B
+#define MOT_CARRIE_MOUNT 0x2C // Mounting carrie
+#define MOT_CARRIE_DISMOUNT 0x2D // Dismounting carrie
+#define MOT_46 0x2E
+#define MOT_47 0x2F
+#define MOT_48 0x30
+#define MOT_49 0x31
+#define MOT_50 0x32
+#define MOT_51 0x33
+#define MOT_52 0x34
+#define MOT_53 0x35
+#define MOT_54 0x36
+#define MOT_55 0x37
+#define MOT_56 0x38
+#define MOT_57 0x39
+#define MOT_58 0x3A
+#define MOT_59 0x3B
+#define MOT_60 0x3C
+#define MOT_61 0x3D
+#define MOT_62 0x3E
+#define MOT_63 0x3F
+#define MOT_64 0x40
+#define MOT_65 0x41
+#define MOT_66 0x42
+#define MOT_67 0x43
+#define MOT_68 0x44
+#define MOT_SWIM 0x45 // Off-ground underwater
+#define MOT_70 0x46
+#define MOT_CHAR_CHANGE 0x47 // Changing character
+#define MOT_FAIRY_CHANGE 0x48 // Changing pixl
+#define MOT_FLIP 0x49 // Flipping to 2d/3d
+#define MOT_GLIDE 0x4A // Peach parasol glide
+#define MOT_GUARD 0x4B // Peach parasol guard
+#define MOT_FIRE 0x4C // Bowser fire
+#define MOT_77 0x4D
 
 // Off ground, in water
 #define MARIO_MISC_FLAG_SWIM 0x20000000
