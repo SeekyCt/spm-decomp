@@ -165,9 +165,87 @@ void pouch2Init()
     wp2->unknown_0x18 = OSGetTime();
 }
 
-asm void pouchReInit()
+
+void pouchReInit()
 {
-    #include "asm/8014c728.s"
+    MarioPouchWork * pp;
+    s32 i;
+    s32 j;
+
+    pp = pouchGetPtr();
+
+    memset(pp, 0, sizeof(work));
+
+    // Init stats
+    pouchSetLevel(1);
+    pouchSetAttack(1);
+    pouchSetMaxHp(10);
+    pouchSetHp(10);
+    pouchSetXp(0);
+    pouchSetCoin(0);
+    pouchSetArcadeTokens(0);
+    pp->flipTimer = 10;
+    pp->totalCoinsCollected = 0;
+    pp->maxJumpCombo = 0;
+    pp->maxStylishCombo = 0;
+    pp->enemiesDefeated = 0;
+
+    // Reset items
+    for (i = 0; i < POUCH_KEY_ITEM_MAX; i++)
+        pp->keyItem[i] = 0;
+    for (i = 0; i < POUCH_USE_ITEM_MAX; i++)
+        pp->useItem[i] = 0;
+    for (i = 0; i < POUCH_SHOP_ITEM_MAX; i++)
+        pp->shopItem[i] = 0;
+    for (i = 0; i < POUCH_CHAR_ITEM_MAX; i++)
+    {
+        pp->characters[i].selectable = false;
+        pp->characters[i].itemType = ITEM_ID_NULL;
+        pp->characters[i].selected = false;
+    }
+    for (i = 0; i < POUCH_FAIRY_ITEM_MAX; i++)
+    {
+        pp->pixls[i].selectable = false;
+        pp->pixls[i].itemType = ITEM_ID_NULL;
+        pp->pixls[i].selected = false;
+    }
+    pouchAddItem(ITEM_ID_CHAR_MARIO);
+
+    pouch2Init();
+
+    gp->timePlayed = 0;
+
+    // Setup merlee charms
+    pp->charmsRemaining = 0;
+    pp->killsBeforeNextCharm = 0;
+
+    pp->unknown_0x350 = pp->unknown_0x35c = (Vec3) {0, 0, 0};
+    
+    // Setup minigame scores
+    for (i = 0; i < 4; i++)
+    {
+        for (j = 0; j < 5; j++)
+        {
+            pp->minigameScores[i][j].characterId = 0;
+            pp->minigameScores[i][j].score = 0;
+            pp->minigameScores[i][j].unknown_0xc = 0;
+            pp->minigameScores[i][j].unknown_0x8 = 0;
+            pp->minigameScores[i][j].unknown_0x10 = 0;
+        }
+    }
+
+    for (i = 0; i < 2; i++)
+    {
+        for (j = 0; j < 5; j++)
+        {
+            pp->unknown_0x548[i][j].unknown_0x0 = 0;
+            pp->unknown_0x548[i][j].unknown_0x4 = 0;
+            pp->unknown_0x548[i][j].unknown_0x8 = 0;
+            pp->unknown_0x548[i][j].unknown_0x14 = 0;
+            pp->unknown_0x548[i][j].unknown_0x10 = 0;
+            pp->unknown_0x548[i][j].unknown_0x18 = 0;
+        }
+    }
 }
 
 asm void pouchMain()
