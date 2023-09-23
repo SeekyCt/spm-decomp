@@ -11,3 +11,5 @@ relF.bin
 *.dll
 build.ninja
 objdiff.json
+*.m2c
+*.bat
