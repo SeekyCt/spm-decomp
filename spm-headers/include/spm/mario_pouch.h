@@ -17,6 +17,7 @@ CPP_WRAPPER(spm::mario_pouch)
 #define POUCH_FAIRY_ITEM_MAX 16
 
 USING(wii::os::OSTime)
+USING(wii::mtx::Vec3)
 
 typedef struct
 {

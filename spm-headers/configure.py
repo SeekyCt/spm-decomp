@@ -104,6 +104,7 @@ n.variable(
     ' '.join([
         "-lang c++",
         "-W all",
+        "-W err",
         "-fp fmadd",
         "-Cpp_exceptions off",
         "-O4",

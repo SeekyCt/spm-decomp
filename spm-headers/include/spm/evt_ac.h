@@ -6,7 +6,7 @@
 CPP_WRAPPER(spm::evt_ac)
 
 // evt_ac_entry(const char * name, s32 type)
-EVT_DECLARE_USER_FUNC(evt_ac_entry, 2);
+EVT_DECLARE_USER_FUNC(evt_ac_entry, 2)
 
 //evt_ac_return_results(const char * name, s32& ret)
 EVT_DECLARE_USER_FUNC(evt_ac_return_results, 2)
