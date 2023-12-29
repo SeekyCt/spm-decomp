@@ -7,6 +7,7 @@
 #include <wii/os.h>
 #include <msl/math.h>
 #include <msl/stdio.h>
+#include <msl/stdarg.h>
 #include <msl/string.h>
 
 // .bss
