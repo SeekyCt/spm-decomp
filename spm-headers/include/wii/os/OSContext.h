@@ -24,20 +24,26 @@ typedef struct
 } OSContext;
 SIZE_ASSERT(OSContext, 0x2c8)
 
-UNKNOWN_FUNCTION(__OSLoadFPUContext);
-UNKNOWN_FUNCTION(__OSSaveFPUContext);
-UNKNOWN_FUNCTION(OSSaveFPUContext);
-UNKNOWN_FUNCTION(OSSetCurrentContext);
-UNKNOWN_FUNCTION(OSGetCurrentContext);
-UNKNOWN_FUNCTION(OSSaveContext);
-UNKNOWN_FUNCTION(OSLoadContext);
+void __OSLoadFPUContext(u32, OSContext *);
+void __OSSaveFPUContext(u32, u32, OSContext *);
+void OSSaveFPUContext(OSContext * context);
+
+void OSSetCurrentContext(OSContext * context);
+OSContext * OSGetCurrentContext();
+
+u32 OSSaveContext(OSContext * context);
+u32 OSLoadContext(OSContext * context);
+
 u32 OSGetStackPointer();
-UNKNOWN_FUNCTION(OSSwitchFiber);
-UNKNOWN_FUNCTION(OSSwitchFiberEx);
-UNKNOWN_FUNCTION(OSClearContext);
-UNKNOWN_FUNCTION(OSInitContext);
+
+s32 OSSwitchFiber(u32 pc, u32 r1);
+s32 OSSwitchFiberEx(u32, u32, u32, u32, u32 pc, u32 r1);
+
+void OSClearContext(OSContext * context);
+void OSInitContext(OSContext * context, u32 pc, u32 r1);
 void OSDumpContext(OSContext * context);
+
 UNKNOWN_FUNCTION(OSSwitchFPUContext);
-UNKNOWN_FUNCTION(__OSContextInit);
+void __OSContextInit();
 
 CPP_WRAPPER_END()

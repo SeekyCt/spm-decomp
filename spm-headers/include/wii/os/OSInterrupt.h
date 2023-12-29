@@ -1,8 +1,15 @@
 #pragma once
 
 #include <common.h>
+#include <wii/os/OSTime.h>
 
 CPP_WRAPPER(wii::os)
+
+USING(wii::OS::OSTime)
+
+extern volatile OSTime __OSLastInterruptTime;
+extern volatile s16 __OSLastInterrupt;
+extern volatile u32 __OSLastInterruptSrr0;
 
 u32 OSDisableInterrupts();
 UNKNOWN_FUNCTION(OSEnableInterrupts);
