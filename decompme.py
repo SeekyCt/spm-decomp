@@ -31,10 +31,10 @@ binary, source = c.get_containing_slice(addr)
 
 # Get flags for binary
 if binary == c.Binary.DOL:
-    preset = "Super Paper Mario (DOL)"
+    preset = 74 # "Super Paper Mario (DOL)"
     flags = c.EXTERNAL_DOL_CFLAGS
 else:
-    preset = "Super Paper Mario (REL)"
+    preset = 75 # "Super Paper Mario (REL)"
     flags = c.EXTERNAL_REL_CFLAGS
 
 # Disassemble function
@@ -58,5 +58,5 @@ req = {
     "diff_label" : diff_label
 }
 r = requests.post(args.host + "/api/scratch", json=req)
-assert r.status_code == 201, f"Bad status code {r.status_code}"
-print(args.host + r.json()["html_url"])
+assert r.status_code == 201, f"Bad status code {r.status_code} {r.text}"
+print(f"{args.host}/scratch/{r.json()['slug']}")
