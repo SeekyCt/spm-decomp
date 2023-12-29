@@ -28,7 +28,7 @@ void* __va_arg(va_list, int);
 #define va_arg(VA_LIST, ARG_TYPE)                                              \
     (*(ARG_TYPE*)__va_arg(VA_LIST, _var_arg_typeof(ARG_TYPE)))
 #else
-#include <stdarg.h>
+#include <stdarg.h> // makectx-ignore
 #endif
 
 CPP_WRAPPER_END()

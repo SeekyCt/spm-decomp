@@ -31,7 +31,7 @@ def process_header(path: str, bases: List[str]):
     ret = ""
     with open(full) as f:
         for line in f:
-            if line.startswith("#include"):
+            if line.startswith("#include") and not "makectx-ignore" in line:
                 ret += process_header(line[line.find('<')+1:line.find('>')], bases)
             elif not line.startswith("#pragma once"):
                 ret += line
