@@ -70,6 +70,12 @@ dvdmgr.c:
     .bss:    [0x80516f60, 0x80516f68]
     .sdata:  [0x805ae120, 0x805ae128]
 
+debug.c:
+    .text:   [0x8019e328, 0x8019e478]
+    .rodata: [0x803377f8, 0x80337848]
+    .bss:    [0x80516f68, 0x80516f88]
+    .sdata:  [0x805ae128, 0x805ae130]
+
 filemgr.c:
     .text:   [0x8019e478, 0x8019ffb8]
     .rodata: [0x80337848, 0x80337a68]

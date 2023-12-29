@@ -15,6 +15,6 @@ void debugReInit();
 // OSPanic
 
 DECOMP_STATIC(DebugWork debug_work)
-DECOMP_STATIC(DebugWork debug_wp)
+DECOMP_STATIC(DebugWork * debug_wp)
 
 CPP_WRAPPER_END()
