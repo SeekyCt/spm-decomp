@@ -10,14 +10,14 @@ DebugWork * wp = &work;
 
 #include "orderstrings/803377f8_80337848.inc"
 
-asm UNKNOWN_FUNCTION(debugInit)
+void debugInit()
 {
-    #include "asm/8019e328.s"
+    memset(wp, 0, sizeof(work));
 }
 
-asm UNKNOWN_FUNCTION(debugReInit)
+void debugReInit()
 {
-    #include "asm/8019e338.s"
+
 }
 
 asm void OSPanic(const char * filename, s32 line, const char * msg, ...)
