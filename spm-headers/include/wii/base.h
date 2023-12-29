@@ -4,29 +4,44 @@
 
 CPP_WRAPPER(wii::base)
 
-UNKNOWN_FUNCTION(PPCMfmsr);
-UNKNOWN_FUNCTION(PPCMtmsr);
-UNKNOWN_FUNCTION(PPCMfhid0);
-UNKNOWN_FUNCTION(PPCMthid0);
-UNKNOWN_FUNCTION(PPCMfl2cr);
-UNKNOWN_FUNCTION(PPCMtl2cr);
-UNKNOWN_FUNCTION(PPCMtdec);
-UNKNOWN_FUNCTION(PPCSync);
-UNKNOWN_FUNCTION(PPCHalt);
-UNKNOWN_FUNCTION(PPCMtmmcr0);
-UNKNOWN_FUNCTION(PPCMfmmcr1);
-UNKNOWN_FUNCTION(PPCMtpmc1);
-UNKNOWN_FUNCTION(PPCMtpmc2);
-UNKNOWN_FUNCTION(PPCMtpmc3);
-UNKNOWN_FUNCTION(PPCMtpmc4);
-UNKNOWN_FUNCTION(PPCMffpscr);
-UNKNOWN_FUNCTION(PPCMtfpscr);
-UNKNOWN_FUNCTION(PPCMfhid2);
-UNKNOWN_FUNCTION(PPCMthid2);
-UNKNOWN_FUNCTION(PPCMfwpar);
-UNKNOWN_FUNCTION(PPCMtwpar);
-UNKNOWN_FUNCTION(PPCDisableSpeculation);
-UNKNOWN_FUNCTION(PPCSetFpNonIEEEMode);
-UNKNOWN_FUNCTION(PPCMthid4);
+u32 PPCMfmsr();
+void PPCMtmsr(u32);
+
+u32 PPCMfhid0();
+void PPCMthid0(u32);
+
+u32 PPCMfl2cr();
+void PPCMtl2cr(u32);
+
+void PPCMtdec(u32);
+
+void PPCSync();
+void PPCHalt();
+
+void PPCMtmmcr0(u32);
+
+u32 PPCMfmmcr1();
+
+void PPCMtpmc1(u32);
+
+void PPCMtpmc2(u32);
+
+void PPCMtpmc3(u32);
+
+void PPCMtpmc4(u32);
+
+u32 PPCMffpscr();
+void PPCMtfpscr(u32);
+
+u32 PPCMfhid2();
+void PPCMthid2(u32);
+
+u32 PPCMfwpar();
+void PPCMtwpar(u32);
+
+void PPCDisableSpeculation();
+void PPCSetFpNonIEEEMode();
+
+void PPCMthid4(u32);
 
 CPP_WRAPPER_END()
