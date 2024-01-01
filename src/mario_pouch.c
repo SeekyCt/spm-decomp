@@ -273,7 +273,7 @@ void pouchMain()
                 wp2->unknown_0x0 = 0;
                 wp2->unknown_0x10 = 0;
 
-                msec = OSTicksToMilliseconds(wp2->unknown_0x8);
+                msec = (s32) OSTicksToMilliseconds(wp2->unknown_0x8);
                 if (abs(wp2->unknown_0x14 - msec) > (s32) (1500.0f / gp->gameSpeed))
                 {
                     wp2->unknown_0x14 = msec;
@@ -314,7 +314,7 @@ void pouchMain()
                 wp2->unknown_0x8 = 0;
                 wp2->unknown_0x14 = 0;
 
-                msec = OSTicksToMilliseconds(wp2->unknown_0x0);
+                msec = (s32) OSTicksToMilliseconds(wp2->unknown_0x0);
                 if (abs(wp2->unknown_0x10 - msec) > (s32) (1500.0f / gp->gameSpeed))
                 {
                     wp2->unknown_0x10 = msec;

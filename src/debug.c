@@ -48,5 +48,5 @@ void OSPanic(const char * filename, s32 line, const char * msg, ...)
     // Halt execution
     OSDisableInterrupts();
     PPCHalt();
-    while (1);
+    while (1) { }
 }
