@@ -5,7 +5,7 @@
 
 CPP_WRAPPER(wii::os)
 
-USING(wii::OS::OSTime)
+USING(wii::os::OSTime)
 
 extern volatile OSTime __OSLastInterruptTime;
 extern volatile s16 __OSLastInterrupt;
