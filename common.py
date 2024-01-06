@@ -312,7 +312,7 @@ REL_SDATA2_SIZE = 0
 CFLAGS = [
     "-enc SJIS",
     "-lang c++",
-    "-W all",
+    "-W all,error",
     "-fp fmadd",
     "-Cpp_exceptions off",
     "-O4",
