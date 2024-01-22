@@ -59,4 +59,5 @@ req = {
 }
 r = requests.post(args.host + "/api/scratch", json=req)
 assert r.status_code == 201, f"Bad status code {r.status_code} {r.text}"
-print(f"{args.host}/scratch/{r.json()['slug']}")
+dat = r.json()
+print(f"{args.host}/scratch/{dat['slug']}/claim?token={dat['claim_token']}")
