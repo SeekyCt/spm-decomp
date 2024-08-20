@@ -5760,7 +5760,7 @@ src/filemgr.c:
 
 src/fontmgr.c:
     0x805ae988: fontColor
-    0x805ae98c: fontAlpha u8
+    0x805ae98c: fontAlpha
     0x805ae990: fontEdge
     # 0x805ae994
     0x805ae998: pfh
