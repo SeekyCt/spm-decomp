@@ -3,6 +3,7 @@
 800030c8:firstRel
 800030cc:lastRel
 
+
 // Automatically generated from spm.eu0.lst
 80004000:memcpy
 80004104:memset
@@ -633,3 +634,25 @@
 8026EB78:Run
 80542e90:SaveStart
 80542e94:SaveEnd
+
+// new to SPM-Hard-Mode
+8014C8A0:pouchSetAttack
+8014C8D4:pouchGetAttack
+8014C8E4:pouchAddAttack
+8014C920:pouchSetHp
+8014C9C0:pouchSetMaxHp
+8014C9F4:pouchGetMaxHp
+8014CA54:pouchSetCoin
+8014CA88:pouchGetCoin
+8014CA98:pouchAddCoin
+8014ECD4:pouchGetCardCount
+80101B94:evt_npc_glide_to
+801033DC:evt_npc_get_unitwork
+801034C8:evt_npc_set_unitwork
+800D8ADC:make_jump_table
+8010241C:evt_npc_set_hp
+8010229C:evt_npc_get_hp
+8010235C:evt_npc_get_max_hp
+800D9B14:evtDelete
+803F0E88:superDimentioHeadDefenses
+803F0EA0:superDimentioBodyDefenses

@@ -58,9 +58,9 @@ UNKNOWN_FUNCTION(func_80101f48);
 UNKNOWN_FUNCTION(func_80102424);
 EVT_UNKNOWN_USER_FUNC(evt_npc_glide_to)
 EVT_UNKNOWN_USER_FUNC(func_80102bf8)
-UNKNOWN_FUNCTION(evt_npc_get_hp);
+EVT_UNKNOWN_USER_FUNC(evt_npc_get_hp)
 UNKNOWN_FUNCTION(evt_npc_get_max_hp);
-UNKNOWN_FUNCTION(evt_npc_set_hp);
+EVT_UNKNOWN_USER_FUNC(evt_npc_set_hp)
 
 // evt_npc_delete(const char * name)
 EVT_DECLARE_USER_FUNC(evt_npc_delete, 1)

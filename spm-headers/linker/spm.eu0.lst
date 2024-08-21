@@ -7,7 +7,6 @@
 
 /* Dol */
 
-
 // Runtime.PPCEABI.H.a
 // __mem.c
 80004000:memcpy
@@ -171,6 +170,13 @@
 800d36f4:func_800d36f4
 // more
 
+// evt_item.c
+800ecc84:evt_item_entry
+800ecda0:evt_item_get_position
+800ece50:evt_item_set_position
+800eced8:evt_item_flag_onoff
+800ed12c:evt_item_wait_collected
+
 // evt_sub.c
 800d37d8:evt_sub_intpl_msec_init
 800d3878:evt_sub_intpl_msec_get_value
@@ -184,10 +190,12 @@
 
 // evtmgr.c
 800d87e4:evtGetWork
+800d890c:make_jump_table
 800d8b88:evtEntry
 800d8df4:evtEntryType
 800d9060:evtChildEntry
 800d9370:evtBrotherEntry
+800d9944:evtDelete
 800d9b88:evtCheckID
 // more
 
@@ -299,6 +307,8 @@
 
 // evt_mobj.c
 // text
+800f39e4:evt_mobj_get_position
+800f3e34:evt_mobj_wait_animation_end
 800f3608:evt_mobj_delete
 800f380c:evt_mobj_flag_onoff
 800f5ad8:evt_mobj_zyo
@@ -320,12 +330,16 @@
 800fd0c4:evt_msg_fmt_str
 // more
 // evt_npc.c
+80102c7c:evt_npc_get_hp
+80102d3c:evt_npc_get_max_hp
+80102dfc:evt_npc_set_hp
 800fe124:evt_npc_get_position
 800fe21c:evt_npc_set_position
 800fe668:evt_npc_rotate
 800fe92c:func_800fe92c
 800ffbd8:evt_npc_walk_to
 801004c0:evt_npc_jump_to
+80102574:evt_npc_glide_to
 80102EB8:evt_npc_stats_set_up
 80102f5c:evt_npc_entry
 80103054:func_80103054
@@ -333,6 +347,7 @@
 80103410:func_80103410
 8010368c:evt_npc_flag8_onoff
 801039b8:evt_npc_animflag_onoff
+80103dbc:evt_npc_get_unitwork
 80103ea8:evt_npc_set_unitwork
 80104694:func_80104694
 80104c94:evt_npc_set_property
@@ -369,6 +384,7 @@
 8010cd88:evt_pouch_get_level
 8010ce04:evt_pouch_get_next_level_xp
 8010cffc:evt_pouch_increment_enemies_defeated
+8014f7c8:pouchGetCardCount
 
 // evt_seq.c
 8010d028:evt_seq_set_seq
@@ -400,10 +416,19 @@
 8014f080:pouchGetPixlInfo
 // text
 8014c088:pouchGetPtr
+8014d394:pouchSetAttack
+8014d3c8:pouchGetAttack
+8014d3d8:pouchAddAttack
+8014d414:pouchSetHp
 8014d458:pouchGetHp
 8014d468:pouchAddHp
+8014d4b4:pouchSetMaxHp
+8014d4e8:pouchGetMaxHp
 8014d4f8:pouchGetXp
 8014d508:pouchAddXp
+8014d548:pouchSetCoin
+8014d57c:pouchGetCoin
+8014d58c:pouchAddCoin
 8014d5f8:pouchAddItem
 8014dbf4:pouchCheckHaveItem
 8014df4c:pouchRemoveItem
@@ -606,6 +631,12 @@
 8043bf30:npcTribes
 80449888:npcEnemyTemplates
 // more
+
+// npc_dimeen_l.c
+// data
+8045B9E0:superDimentioHeadDefenses
+8045B9F8:superDimentioBodyDefenses
+//more
 
 // wpadmgr.c
 80237688:wpadGetButtonsHeld

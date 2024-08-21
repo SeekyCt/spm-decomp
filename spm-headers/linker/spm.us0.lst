@@ -633,3 +633,25 @@
 8026ebc8:Run
 8056db90:SaveStart
 8056db94:SaveEnd
+
+// new to SPM-Hard-Mode
+8014C8A0:pouchSetAttack
+8014C8D4:pouchGetAttack
+8014C8E4:pouchAddAttack
+8014C920:pouchSetHp
+8014C9C0:pouchSetMaxHp
+8014C9F4:pouchGetMaxHp
+8014CA54:pouchSetCoin
+8014CA88:pouchGetCoin
+8014CA98:pouchAddCoin
+8014ECD4:pouchGetCardCount
+80101B94:evt_npc_glide_to
+801033DC:evt_npc_get_unitwork
+801034C8:evt_npc_set_unitwork
+800D8ADC:make_jump_table
+8010241C:evt_npc_set_hp
+8010229C:evt_npc_get_hp
+8010235C:evt_npc_get_max_hp
+800d9b14:evtDelete
+8041BC28:superDimentioHeadDefenses
+8041BC40:superDimentioBodyDefenses
