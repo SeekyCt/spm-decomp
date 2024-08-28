@@ -1,3 +1,8 @@
+/*
+    WARNING: Not fully decompiled
+    This file is currently not linked into the final dol
+*/
+
 #include <common.h>
 #include <spm/filemgr.h>
 #include <spm/memory.h>
@@ -7,8 +12,7 @@
 #include <wii/mem.h>
 #include <msl/string.h>
 
-// .rodata
-#include "orderstrings/80337b18_80337cbb.inc"
+extern "C" {
 
 // .data
 static HeapSize size_table[HEAP_COUNT] =
@@ -71,8 +75,7 @@ static MEMHeapHandle fallbackHeap;
 #define IS_LAST_SMART_ALLOC(allocation) (allocation->next == NULL)
 #define GET_SMART_HEAP_SIZE() (MEMGetSizeForMBlockExpHeap(swp->heapStart))
 
-// https://decomp.me/scratch/fZFB1
-#ifdef NON_MATCHING
+// Not matching - https://decomp.me/scratch/fZFB1
 void memInit()
 {
     // Register usage not matching
@@ -195,12 +198,6 @@ void memInit()
 
     memInitFlag = true;
 }
-#else
-asm void memInit()
-{
-    #include "asm/801a5dcc.s"
-}
-#endif
 
 void memClear(s32 heapId)
 {
@@ -357,7 +354,7 @@ void smartFree(SmartAllocation * lp)
     }
 }
 
-#ifdef NON_MATCHING
+// Not matching
 SmartAllocation * smartAlloc(size_t size, u8 type)
 {
     // Special behaviour if this is the first time running
@@ -511,14 +508,8 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
         return NULL;
     }
 }
-#else
-asm SmartAllocation * smartAlloc(size_t size, u8 type)
-{
-    #include "asm/801a6794.s"
-}
-#endif
 
-#ifdef NON_MATCHING
+// Not matching
 void smartGarbage()
 {
     sysWaitDrawSync();
@@ -586,12 +577,6 @@ LB_801a6c64:
     // Flush heap from cache
     DCFlushRange(swp->heapStart, GET_SMART_HEAP_SIZE());
 }
-#else
-asm void smartGarbage()
-{
-    #include "asm/801a6b60.s"
-}
-#endif
 
 GXTexObj * smartTexObj(GXTexObj * texObj, SmartAllocation * imageAllocation)
 {
@@ -604,18 +589,26 @@ GXTexObj * smartTexObj(GXTexObj * texObj, SmartAllocation * imageAllocation)
     return texObj;
 }
 
-asm void * __nw__FUl(size_t size)
-{
-    #include "asm/801a6d4c.s"
 }
 
-asm void __dl__FPv(void * ptr)
+void * operator new(size_t size) throw()
 {
-    #include "asm/801a6e34.s"
+    // Not decompiled
+    (void) size;
+    return NULL;
 }
+
+void operator delete(void * ptr) throw()
+{
+    // Not decompiled
+    (void) ptr;
+}
+
+extern "C" {
 
 void __sys_free(void * ptr)
 {
     MEMFreeToExpHeap(wp->heapHandle[0], ptr);
 }
 
+}

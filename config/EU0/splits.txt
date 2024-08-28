@@ -1,0 +1,186 @@
+Sections:
+	.init       type:code align:4
+	extab       type:rodata align:32
+	extabindex  type:rodata align:8
+	.text       type:code align:16
+	.ctors      type:rodata align:16
+	.dtors      type:rodata align:32
+	.rodata     type:rodata align:32
+	.data       type:data align:4
+	.bss        type:bss align:64
+	.sdata      type:data align:32
+	.sbss       type:bss align:16
+	.sdata2     type:rodata align:8
+	.sbss2      type:bss align:8
+
+main.c:
+	extab       start:0x800064E0 end:0x800064E8
+	extabindex  start:0x8000FAC0 end:0x8000FACC
+	.text       start:0x8001DA60 end:0x8001DA88
+
+swdrv.c:
+	extab       start:0x80006B08 end:0x80006B50
+	extabindex  start:0x800103FC end:0x80010468
+	.text       start:0x80037EAC end:0x800388B4
+	.rodata     start:0x80325CB8 end:0x80326360
+	.bss        start:0x8050A118 end:0x8050A120
+	.sdata      start:0x805ADF40 end:0x805ADF48
+
+windowdrv.c:
+	extab       start:0x80006B50 end:0x80006BD0
+	extabindex  start:0x80010468 end:0x80010528
+	.text       start:0x800388B4 end:0x8003B26C
+	.rodata     start:0x80326360 end:0x80326378
+	.data       start:0x80406C98 end:0x80406D28
+	.sbss       start:0x805AE790 end:0x805AE7A0
+	.sdata2     start:0x805AF7E0 end:0x805AF870
+
+evtmgr.c:
+	extab       start:0x80008D68 end:0x80008E08
+	extabindex  start:0x8001378C end:0x8001387C
+	.text       start:0x800D87E4 end:0x800DA0B0
+	.rodata     start:0x8032EB60 end:0x8032EC9B
+	.bss        start:0x8050C990 end:0x8050CE30
+	.sdata      start:0x805AE018 end:0x805AE020
+	.sbss       start:0x805AE8D8 end:0x805AE8E8
+	.sdata2     start:0x805B1D48 end:0x805B1D50
+
+evtmgr_cmd.c:
+	extab       start:0x80008E08 end:0x800091E8
+	extabindex  start:0x8001387C end:0x80013E4C
+	.text       start:0x800DA0B0 end:0x800DF9A8
+	.rodata     start:0x8032ECA0 end:0x8032EFE8
+	.data       start:0x80410608 end:0x804107E8
+	.bss        start:0x8050CE30 end:0x8050CF30
+	.sdata2     start:0x805B1D50 end:0x805B1D68
+
+mario.c:
+	extab       start:0x8000AE18 end:0x8000B108
+	extabindex  start:0x80016894 end:0x80016CFC
+	.text       start:0x80121E18 end:0x8012DAC4
+	.rodata     start:0x80333648 end:0x80333C20
+	.data       start:0x804265E8 end:0x80426840
+	.bss        start:0x80510450 end:0x80511A28
+	.sbss       start:0x805AE8E8 end:0x805AE8F8
+	.sdata2     start:0x805B23C8 end:0x805B2578
+
+seqdef.c:
+	.data       start:0x804287A8 end:0x804287F0
+
+mario_pouch.c:
+	extab       start:0x8000B820 end:0x8000B898
+	extabindex  start:0x800177A0 end:0x80017854
+	.text       start:0x8014C088 end:0x801501C4
+	.rodata     start:0x80334908 end:0x80334BD0
+	.bss        start:0x80511A28 end:0x805120E8
+	.sdata      start:0x805AE060 end:0x805AE068
+	.sdata2     start:0x805B28A0 end:0x805B28A8
+
+seqdrv.c:
+	extab       start:0x8000C3B8 end:0x8000C3C8
+	extabindex  start:0x80018898 end:0x800188B0
+	.text       start:0x8017BF2C end:0x8017C0A0
+	.bss        start:0x80512360 end:0x80512388
+	.sdata      start:0x805AE0B8 end:0x805AE0C8
+	.sbss       start:0x805AE918 end:0x805AE920
+
+system.c:
+	extab       start:0x8000C848 end:0x8000C8C0
+	extabindex  start:0x80018F70 end:0x80019024
+	.text       start:0x8019C500 end:0x8019E044
+	.rodata     start:0x803376D0 end:0x803377A8
+	.data       start:0x8042A160 end:0x8042A308
+	.bss        start:0x80513E48 end:0x80516F60
+	.sdata      start:0x805AE118 end:0x805AE120
+	.sbss       start:0x805AE968 end:0x805AE988
+	.sdata2     start:0x805B3C38 end:0x805B3C88
+
+dvdmgr.c:
+	extab       start:0x8000C8C0 end:0x8000C8E0
+	extabindex  start:0x80019024 end:0x80019054
+	.text       start:0x8019E044 end:0x8019E328
+	.rodata     start:0x803377A8 end:0x803377F8
+	.bss        start:0x80516F60 end:0x80516F68
+	.sdata      start:0x805AE120 end:0x805AE128
+
+debug.c:
+	extab       start:0x8000C8E0 end:0x8000C8E8
+	extabindex  start:0x80019054 end:0x80019060
+	.text       start:0x8019E328 end:0x8019E478
+	.rodata     start:0x803377F8 end:0x80337848
+	.bss        start:0x80516F68 end:0x80516F88
+	.sdata      start:0x805AE128 end:0x805AE130
+
+filemgr.c:
+	extab       start:0x8000C8E8 end:0x8000C948
+	extabindex  start:0x80019060 end:0x800190F0
+	.text       start:0x8019E478 end:0x8019FFB8
+	.rodata     start:0x80337848 end:0x80337A68
+	.data       start:0x8042A308 end:0x8042A368
+	.bss        start:0x80516F88 end:0x805173A0
+	.sdata      start:0x805AE130 end:0x805AE138
+
+memory.c:
+	extab       start:0x8000CA98 end:0x8000CB30
+	extabindex  start:0x800192E8 end:0x8001936C
+	.text       start:0x801A5DCC end:0x801A6E9C
+	.rodata     start:0x80337B18 end:0x80337CC0
+	.data       start:0x8042A408 end:0x8042A450
+	.bss        start:0x805173E0 end:0x80525468
+	.sdata      start:0x805AE168 end:0x805AE170
+	.sbss       start:0x805AE9A8 end:0x805AE9B8
+
+spmario.c:
+	extab       start:0x8000CB60 end:0x8000CB90
+	extabindex  start:0x800193B4 end:0x800193FC
+	.text       start:0x801A7DDC end:0x801A9098
+	.rodata     start:0x803387F0 end:0x80338838
+	.data       start:0x8042A550 end:0x8042A908
+	.bss        start:0x80525550 end:0x805283A0
+	.sdata      start:0x805AE178 end:0x805AE180
+	.sbss       start:0x805AE9B8 end:0x805AE9D0
+	.sdata2     start:0x805B3D20 end:0x805B3D50
+
+npcdrv.c:
+	extab       start:0x8000CBB0 end:0x8000D0C0
+	extabindex  start:0x8001942C end:0x80019BC4
+	.text       start:0x801A9640 end:0x801D25F4
+	.rodata     start:0x80338868 end:0x8033A2D8
+	.data       start:0x8042A908 end:0x80454940
+	.bss        start:0x805283E0 end:0x80528F28
+	.sdata      start:0x805AE188 end:0x805AE190
+	.sdata2     start:0x805B3D58 end:0x805B3F18
+
+wpadmgr.c:
+	extab       start:0x8000EEC8 end:0x8000EEE8
+	extabindex  start:0x8001C8D0 end:0x8001C900
+	.text       start:0x8023697C end:0x80237A10
+	.rodata     start:0x80343E98 end:0x80343EA0
+	.bss        start:0x80528F48 end:0x80532D10
+	.sdata      start:0x805AE198 end:0x805AE1A0
+	.sdata2     start:0x805B61F8 end:0x805B6230
+
+relmgr.c:
+	extab       start:0x8000F088 end:0x8000F090
+	extabindex  start:0x8001CB58 end:0x8001CB64
+	.text       start:0x8023E434 end:0x8023E60C
+	.rodata     start:0x80344468 end:0x8034448A
+	.bss        start:0x80534F98 end:0x80534FA8
+	.sdata      start:0x805AE1A0 end:0x805AE1B0
+
+nandmgr.c:
+	extab       start:0x8000F090 end:0x8000F110
+	extabindex  start:0x8001CB64 end:0x8001CC24
+	.text       start:0x8023E60C end:0x802406A0
+	.rodata     start:0x80344490 end:0x80349538
+	.data       start:0x804E5008 end:0x804E5280
+	.bss        start:0x80534FA8 end:0x80535168
+	.sdata      start:0x805AE1B0 end:0x805AE1B8
+	.sdata2     start:0x805B62A8 end:0x805B62B0
+
+Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
+	.text       start:0x802566B8 end:0x80256728
+	.ctors      start:0x8031BF00 end:0x8031BF04 rename:.ctors$10
+	.dtors      start:0x8031BF60 end:0x8031BF64 rename:.dtors$10
+	.dtors      start:0x8031BF64 end:0x8031BF68 rename:.dtors$15
+	.sdata      start:0x805AE1D8 end:0x805AE1E0

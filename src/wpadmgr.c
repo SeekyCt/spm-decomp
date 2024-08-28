@@ -1,3 +1,8 @@
+/*
+    WARNING: Not fully decompiled
+    This file is currently not linked into the final dol
+*/
+
 #include <common.h>
 #include <spm/memory.h>
 #include <spm/spmario.h>
@@ -7,17 +12,13 @@
 #include <msl/math.h>
 #include <msl/string.h>
 
-// .rodata
-#include "orderdoubles/80343e98_80343ea0.inc"
+extern "C" {
 
 // .bss
 static WpadWork work;
 
 // .sdata
 static WpadWork * wp = &work;
-
-// .sdata2
-#include "orderfloats/805b61f8_805b622c.inc"
 
 WpadWork * wpadGetWork()
 {
@@ -74,9 +75,9 @@ void wpadAllRumbleOff()
         WPADControlMotor(i, 0);
 }
 
-asm void wpadMain() 
+void wpadMain() 
 {
-    #include "asm/80236af8.s"
+    // Not decompiled
 }
 
 void wpadCursorOn()
@@ -216,4 +217,6 @@ bool func_80237750()
     wp->unknown_0x9dc1 = 1;
 
     return 1;
+}
+
 }

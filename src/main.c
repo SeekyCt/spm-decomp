@@ -3,6 +3,8 @@
 #include <wii/DEMOInit.h>
 #include <spm/spmario.h>
 
+extern "C" {
+
 int main(int argc, char ** argv)
 {
     (void) argc;
@@ -20,4 +22,6 @@ int main(int argc, char ** argv)
 
         DEMODoneRender();
     }
+}
+
 }

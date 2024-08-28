@@ -7,6 +7,8 @@
 #include <wii/os.h>
 #include <msl/string.h>
 
+extern "C" {
+
 // .bss
 static EvtWork work;
 static s32 priTbl[EVT_ENTRY_MAX];
@@ -755,4 +757,6 @@ EvtEntry * evtGetPtrID(s32 id)
     }
 
     return 0;
+}
+
 }

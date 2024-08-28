@@ -1,0 +1,16 @@
+object: orig/EU0/sys/main.dol
+hash: 3fd3d9815528d1c04bc433d67d273b1e3301e976
+symbols: config/EU0/symbols.txt
+splits: config/EU0/splits.txt
+mw_comment_version: 15
+
+modules:
+- object: orig/EU0/files/rel/relF.bin:nlzss
+  hash: 9b9b92c370b1aab68cf6ff5a3eb824fdab6a55ff
+  symbols: config/EU0/relF/symbols.txt
+  splits: config/EU0/relF/splits.txt
+
+extract:
+- symbol: lz_saveImagesTpl
+  binary: saveImages.tpl.lz
+  header: assets/saveImages.tpl.lz.inc

@@ -4,6 +4,8 @@
 #include <spm/system.h>
 #include <msl/string.h>
 
+extern "C" {
+
 // .bss
 static SeqWork seqWork;
 
@@ -66,4 +68,6 @@ void seqSetSeq(s32 seq, const char * p0, const char * p1)
 s32 seqGetSeq()
 {
     return now_seq == -1 ? 0 : now_seq;
+}
+
 }

@@ -6,10 +6,10 @@
 #include <msl/stdio.h>
 #include <msl/string.h>
 
-DebugWork work;
-DebugWork * wp = &work;
+extern "C" {
 
-#include "orderstrings/803377f8_80337848.inc"
+static DebugWork work;
+static DebugWork * wp = &work;
 
 void debugInit()
 {
@@ -49,4 +49,6 @@ void OSPanic(const char * filename, s32 line, const char * msg, ...)
     OSDisableInterrupts();
     PPCHalt();
     while (1) { }
+}
+
 }

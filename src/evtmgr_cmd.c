@@ -7,6 +7,8 @@
 #include <msl/stdio.h>
 #include <msl/string.h>
 
+extern "C" {
+
 static f32 check_float(s32 val) // always inlined
 {
     f32 ret;
@@ -3325,4 +3327,6 @@ EvtScriptCode * evtSearchJustBeforeWhile(EvtEntry * entry)
 
         pInstr += *pInstr++ >> 16;
     }
+}
+
 }

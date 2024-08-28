@@ -1,3 +1,8 @@
+/*
+    WARNING: Not fully decompiled
+    This file is currently not linked into the final dol
+*/
+
 #include <spm/dvdmgr.h>
 #include <spm/filemgr.h>
 #include <spm/memory.h>
@@ -7,8 +12,7 @@
 #include <msl/stdio.h>
 #include <msl/string.h>
 
-// .rodata
-#include "orderstrings/80337848_80337a63.inc"
+extern "C" {
 
 // .bss
 static FileWork work;
@@ -133,16 +137,17 @@ void PackTexPalette(TPLHeader * palette)
     }
 }
 
-#include "jumptable/8042a308.inc"
-asm void fileGarbageDataAdrClear(FileEntry * entry)
+void fileGarbageDataAdrClear(FileEntry * entry)
 {
-    #include "asm/8019e7e0.s"
+    // Not decompiled
+    (void) entry;
 }
 
-#include "jumptable/8042a338.inc"
-asm void fileGarbageDataAdrSet(void * data, s32 fileType)
+void fileGarbageDataAdrSet(void * data, s32 fileType)
 {
-    #include "asm/8019ee2c.s"
+    // Not decompiled
+    (void) data;
+    (void) fileType;
 }
 
 void fileGarbageMoveMem(void * dest, FileEntry * src)
@@ -176,42 +181,63 @@ void fileGarbageMoveMem(void * dest, FileEntry * src)
     }
 }
 
-asm void _fileGarbage(s32)
+void _fileGarbage(s32)
 {
-    #include "asm/8019f560.s"
+    // Not decompiled
 }
 
-asm FileEntry * fileAllocf(s32 fileType, const char * format, ...)
+FileEntry * fileAllocf(s32 fileType, const char * format, ...)
 {
-    #include "asm/8019f724.s"
+    // Not decompiled
+    (void) fileType;
+    (void) format;
+    return NULL;
 }
 
-asm FileEntry * fileAlloc(const char * path, s32 fileType)
+FileEntry * fileAlloc(const char * path, s32 fileType)
 {
-    #include "asm/8019f7dc.s"
+    // Not decompiled
+    (void) path;
+    (void) fileType;
+    return NULL;
 }
 
-asm FileEntry * _fileAlloc(const char * path, s32 fileType, s32 p3)
+FileEntry * _fileAlloc(const char * path, s32 fileType, s32 p3)
 {
-    #include "asm/8019f7e4.s"
+    // Not decompiled
+    (void) path;
+    (void) fileType;
+    (void) p3;
+    return NULL;
 }
 
-asm void fileFree(FileEntry * entry)
+void fileFree(FileEntry * entry)
 {
-    #include "asm/8019fa8c.s"
+    // Not decompiled
+    (void) entry;
 }
 
-static asm UNKNOWN_FUNCTION(dvdReadDoneCallback)
+static UNKNOWN_FUNCTION(dvdReadDoneCallback)
 {
-    #include "asm/8019fb38.s"
+    // Not decompiled
 }
 
-asm FileEntry * fileAsyncf(s32 fileType, s32 p2, const char * format, ...)
+FileEntry * fileAsyncf(s32 fileType, s32 p2, const char * format, ...)
 {
-    #include "asm/8019fc5c.s"
+    // Not decompiled
+    (void) fileType;
+    (void) p2;
+    (void) format;
+    return NULL;
 }
 
-asm FileEntry * fileAsync(const char * path, s32 fileType, s32 p3)
+FileEntry * fileAsync(const char * path, s32 fileType, s32 p3)
 {
-    #include "asm/8019fd24.s"
+    // Not decompiled
+    (void) path;
+    (void) fileType;
+    (void) p3;
+    return NULL;
+}
+
 }

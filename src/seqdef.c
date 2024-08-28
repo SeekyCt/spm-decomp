@@ -8,6 +8,8 @@
 #include <spm/seqdef.h>
 #include <spm/seqdrv.h>
 
+extern "C" {
+
 SeqDef seq_data[SEQ_COUNT] = {
     {
         &seq_logoInit,
@@ -40,3 +42,5 @@ SeqDef seq_data[SEQ_COUNT] = {
         &seq_loadExit
     }
 };
+
+}

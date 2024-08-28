@@ -4,6 +4,8 @@
 #include <spm/system.h>
 #include <msl/string.h>
 
+extern "C" {
+
 static DVDWork work;
 static DVDWork * wp = &work;
 
@@ -141,4 +143,6 @@ void DVDMgrClose(DVDEntry * entry)
 s32 DVDMgrGetLength(DVDEntry * entry)
 {
     return (s32) entry->fileInfo.length;
+}
+
 }

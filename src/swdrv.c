@@ -7,6 +7,8 @@
 #include <spm/system.h>
 #include <msl/string.h>
 
+extern "C" {
+
 static const s32 gameCoinGswMap[] = {
     GSW(153), GSW(154), GSW(155), GSW(156), GSW(157), GSW(158), GSW(159), GSW(160),
     GSW(161), GSW(162), GSW(163), GSW(164), GSW(165), GSW(166), GSW(167), GSW(168),
@@ -385,4 +387,6 @@ void swGameCoinSet(s32 id)
         assertf(156, num < 256, "値がおかしい sw_byte[%d] = %d", var + EVTDAT_GSW_BASE, num);
         gp->gsw[var] = (s8) num;
     }
+}
+
 }

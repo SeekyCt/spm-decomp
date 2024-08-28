@@ -9,7 +9,7 @@
 #include <msl/stdio.h>
 #include <msl/string.h>
 
-#pragma pool_strings off
+extern "C" {
 
 // .bss
 static RelWork work;
@@ -74,4 +74,6 @@ void relMain()
 bool isRelLoaded()
 {
     return wp->loaded;
+}
+
 }

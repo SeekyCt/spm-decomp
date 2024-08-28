@@ -1,3 +1,8 @@
+/*
+    WARNING: Not fully decompiled
+    This file is currently not linked into the final dol
+*/
+
 #include <common.h>
 #include <spm/acdrv.h>
 #include <spm/animdrv.h>
@@ -55,11 +60,7 @@
 #include <nw4r/snd.h>
 #include <msl/string.h>
 
-// This file has other data mixed in with the floats, so currently can't use literals in asm
-
-// .rodata
-static const f64 lbl_803387f0 = 4.503601774854144E15; // casting float
-#include "orderstrings/803387f8_80338834.inc"
+extern "C" {
 
 // .bss
 SpmarioGlobals spmario;
@@ -82,42 +83,18 @@ static s32 resetCode;
 s32 _spmarioSystemLevel;
 static OSThread * pMainThread;
 
-// .sdata2
-#include "orderfloatsm/805b3d20_805b3d24.inc"
-const GXColor lbl_805b3d24 = {0xff, 0xff, 0xff, 0xff};
-#include "orderfloatsm/805b3d28_805b3d50.inc"
-
-// .data
-// TODO: static GXRenderModeObjs
-extern GXRenderModeObj lbl_8042a550;
-extern GXRenderModeObj lbl_8042a58c;
-extern GXRenderModeObj lbl_8042a5c8;
-extern GXRenderModeObj lbl_8042a604;
-extern GXRenderModeObj lbl_8042a640;
-extern GXRenderModeObj lbl_8042a67c;
-extern GXRenderModeObj lbl_8042a6b8;
-extern GXRenderModeObj lbl_8042a6f4;
-extern GXRenderModeObj lbl_8042a730;
-extern GXRenderModeObj lbl_8042a76c;
-extern GXRenderModeObj lbl_8042a7a8;
-extern GXRenderModeObj lbl_8042a7e4;
-extern GXRenderModeObj lbl_8042a820;
-extern GXRenderModeObj lbl_8042a85c;
-
 static void viPostCallback(u32 retraceCount);
 static void wiiDvdCheckThread(void * param);
 static void wiiRumbleCheck();
 
-#include "jumptable/8042a898.inc"
-#include "jumptable/8042a8b4.inc"
-asm void spmarioInit()
+void spmarioInit()
 {
-    #include "asm/801a7ddc.s"
+    // Not decompiled
 }
 
-asm void spmarioMain()
+void spmarioMain()
 {
-    #include "asm/801a84d8.s"
+    // Not decompiled
 }
 
 void spmarioDisp()
@@ -155,20 +132,21 @@ s32 spmarioGetSystemLevel()
     return _spmarioSystemLevel;
 }
 
-asm void viPostCallback(u32 retraceCount)
+void viPostCallback(u32 retraceCount)
 {
-    #include "asm/801a87f4.s"
+    // Not decompiled
+    (void) retraceCount;
 }
 
-#include "jumptable/8042a8d4.inc"
-asm void wiiDvdCheckThread(void * param)
+void wiiDvdCheckThread(void * param)
 {
-    #include "asm/801a898c.s"
+    // Not decompiled
+    (void) param;
 }
 
-asm void wiiRumbleCheck()
+void wiiRumbleCheck()
 {
-    #include "asm/801a8db4.s"
+    // Not decompiled
 }
 
 void resetButtonRestart()
@@ -189,4 +167,6 @@ void homeButtonRestart()
 void returnToWiiMenu()
 {
     doReturnToMenu = true;
+}
+
 }

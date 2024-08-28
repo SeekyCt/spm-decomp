@@ -15,11 +15,14 @@
 #include <msl/stdio.h>
 #include <msl/string.h>
 
+extern "C" {
+
 #define flag(value, mask) (value & mask) // needed for assert
 
-const u8 lz_saveImagesTpl[] = {
-    #include "assets/saveImages.tpl.lz.inc"
-};
+// TODO: the built-in align define causes code not to match
+#define ATTRIBUTE_ALIGN(n)
+#include "assets/saveImages.tpl.lz.inc"
+#undef ATTRIBUTE_ALIGN
 
 static NandWork work;
 static NandWork * wp = &work;
@@ -929,4 +932,6 @@ static void nand_close(NANDFileInfo * fileInfo)
             break;
         }
     }    
+}
+
 }

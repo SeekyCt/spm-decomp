@@ -100,9 +100,6 @@ EVT_DECLARE(dan_start_shadoo_evt)
 extern const GXColor shadooBlinkColour;
 extern const f64 lbl_80cf0018;
 
-#include "orderstrings/80cf0228_80cf05cb.inc"
-#include "orderfloatsm/80cf05cc_80cf0600.inc"
-
 s32 evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
 {
     (void) entry;
@@ -805,9 +802,12 @@ void func_80c839cc(const char * param_1, bool param_2)
     }
 }
 
-asm void wracktailDispCb(void * param, s32 animGroupIdx, s32 param_3) 
+void wracktailDispCb(void * param, s32 animGroupIdx, s32 param_3) 
 {
-    #include "asm/80c83a3c.s"
+    // Not decompiled
+    (void) param;
+    (void) animGroupIdx;
+    (void) param_3;
 }
 
 s32 evt_dan_set_wracktail_disp_cb(EvtEntry * entry, bool isFirstCall)
@@ -822,14 +822,18 @@ s32 evt_dan_set_wracktail_disp_cb(EvtEntry * entry, bool isFirstCall)
     return EVT_RET_CONTINUE;
 }
 
-asm s32 func_80c83c48(EvtEntry * entry, bool isFirstCall)
+s32 func_80c83c48(EvtEntry * entry, bool isFirstCall)
 {
-    #include "asm/80c83c48.s"
+    // Not decompiled
+    (void) entry;
+    (void) isFirstCall;
+    return 0;
 }
 
-asm void screenBlinkDisp(s32 cameraId, void * param)
+void screenBlinkDisp(s32 cameraId, void * param)
 {
-    #include "asm/80c83c98.s"
+    (void) cameraId;
+    (void) param;
 }
 
 s32 evt_dan_screen_blink(EvtEntry * entry, bool isFirstCall)

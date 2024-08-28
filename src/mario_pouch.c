@@ -1,3 +1,8 @@
+/*
+    WARNING: Not fully decompiled
+    This file is currently not linked into the final dol
+*/
+
 #include <common.h>
 #include <spm/camdrv.h>
 #include <spm/fadedrv.h>
@@ -13,8 +18,7 @@
 #include <msl/math.h>
 #include <msl/string.h>
 
-// .rodata
-#include "orderstrings/80334908_80334bcc.inc"
+extern "C" {
 
 // .bss
 static MarioPouchWork work;
@@ -375,9 +379,10 @@ s32 pouchGetLevel()
     return pp->level;
 }
 
-asm s32 pouchGetNextLevelXp()
+s32 pouchGetNextLevelXp()
 {
-    #include "asm/8014d200.s"
+    // Not decompiled
+    return 0;
 }
 
 void pouchSetAttack(s32 attack)
@@ -575,39 +580,51 @@ void pouchAddCoin(s32 increase)
         pouchAddTotalCoin(increase);
 }
 
-asm bool pouchAddItem(s32 itemId)
+bool pouchAddItem(s32 itemId)
 {
-    #include "asm/8014d5f8.s"
+    // Not decompiled
+    (void) itemId;
+    return false;
 }
 
-asm bool pouchCheckHaveItem(s16 itemId)
+bool pouchCheckHaveItem(s16 itemId)
 {
-    #include "asm/8014dbf4.s"
+    // Not decompiled
+    (void) itemId;
+    return false;
 }
 
-asm void pouchRemoveItem(s16 itemId)
+void pouchRemoveItem(s16 itemId)
 {
-    #include "asm/8014df4c.s"
+    // Not decompiled
+    (void) itemId;
 }
 
-asm void pouchRemoveItemIdx(s16 itemId, s32 idx)
+void pouchRemoveItemIdx(s16 itemId, s32 idx)
 {
-    #include "asm/8014e6d0.s"
+    // Not decompiled
+    (void) itemId;
+    (void) idx;
 }
 
-asm bool pouchAddShopItem(s16 itemId)
+bool pouchAddShopItem(s16 itemId)
 {
-    #include "asm/8014ea38.s"
+    // Not decompiled
+    (void) itemId;
+    return false;
 }
 
-asm void pouchRemoveShopItem(s16 itemId)
+void pouchRemoveShopItem(s16 itemId)
 {
-    #include "asm/8014eb68.s"
+    // Not decompiled
+    (void) itemId;
 }
 
-asm void pouchRemoveShopItemIdx(s16 itemId, s32 idx)
+void pouchRemoveShopItemIdx(s16 itemId, s32 idx)
 {
-    #include "asm/8014edb8.s"
+    // Not decompiled
+    (void) itemId;
+    (void) idx;
 }
 
 PouchCharOrPixlInfo * pouchGetCharInfo(s32 slot)
@@ -1083,4 +1100,6 @@ s32 pouchCountCardsKnown()
             count++;
     
     return count;
+}
+
 }

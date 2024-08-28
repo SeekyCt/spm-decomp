@@ -1,3 +1,8 @@
+/*
+    WARNING: Not fully decompiled
+    This file is currently not linked into the final dol
+*/
+
 #include <common.h>
 #include <spm/mapdrv.h>
 #include <spm/spmario.h>
@@ -9,6 +14,8 @@
 #include <msl/stdio.h>
 #include <msl/stdarg.h>
 #include <msl/string.h>
+
+extern "C" {
 
 // .bss
 static OSMutex sysMutex;
@@ -43,12 +50,6 @@ static f32 angleABTBL[] = {
     1.040838, 1.036721, 1.032610, 1.028504, 1.024406, 1.020316, 1.016234, 1.012160,
     1.008097, 1.004043, 1.000000
 };
-
-#include "orderdoubles/803376d0_803376e8.inc"
-#include "orderstrings/803376e8_803377a5.inc"
-
-// .sdata2
-#include "orderfloats/805b3c38_805b3c88.inc"
 
 void sysInitMutex()
 {
@@ -205,14 +206,20 @@ void movePos(f32 distance, f32 angle, f32 * x, f32 * z)
     *z -= distance * c;
 }
 
-static asm void fsort(char ** table, size_t size)
+static void fsort(char ** table, size_t size)
 {
-    #include "asm/8019c9d4.s"
+    // Not decompiled
+    (void) table;
+    (void) size;
 }
 
-asm void qqsort(char * list, size_t nel, size_t size, void * compare)
+void qqsort(char * list, size_t nel, size_t size, void * compare)
 {
-    #include "asm/8019cf84.s"
+    // Not decompiled
+    (void) list;
+    (void) nel;
+    (void) size;
+    (void) compare;
 }
 
 static s32 _rand_advance()
@@ -292,8 +299,6 @@ void sysRandInit()
     randomSeed = (s32) OSGetTime();
 }
 
-// Needs other sbss to be function-local for ordering
-#ifdef NON_MATCHING
 u16 sysGetToken()
 {
     static u16 token = 0;
@@ -322,12 +327,6 @@ void sysWaitDrawSync()
             break;
     }
 }
-#else
-asm void sysWaitDrawSync()
-{
-    #include "asm/8019d4b0.s"
-}
-#endif
 
 // The use of r11/12 and placement of the return 1 pretty much guarantee inline asm
 asm s32 memcmp_as4(register const void * a, register const void * b, register u32 n)
@@ -688,4 +687,6 @@ f32 intplGetValue(s32 mode, f32 min, f32 max, s32 progress, s32 progressMax)
         default:
             return ((IntplUserFunc *)mode)(progress, progressMax, min, max);
     }
+}
+
 }
