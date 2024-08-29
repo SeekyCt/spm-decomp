@@ -4,6 +4,7 @@
 #include <spm/fadedrv.h>
 #include <spm/hud.h>
 #include <spm/mario.h>
+#include <spm/memory.h>
 #include <spm/seqdrv.h>
 #include <spm/seq_title.h>
 #include <spm/spmario.h>
@@ -96,7 +97,17 @@ void seq_titleMain(SeqWork * seqWork)
     dispEntry(CAM_ID_2D, 4, 1000.0, func_8017b49c, seqWork);
 }
 
-// seq_titleExit
+void seq_titleExit(SeqWork * seqWork)
+{
+    (void) seqWork;
+
+    delete wp->layout;
+    delete wp->arcResAccessor;
+
+    __memFree(HEAP_MAP, wp->arc);
+    __memFree(HEAP_MAP, wp->heap);
+    memClear(HEAP_MAP);
+}
 
 // func_8017b49c
 

@@ -3,6 +3,8 @@
 #include <common.h>
 #include <spm/seqdrv.h>
 #include <wii/mem.h>
+#include <nw4r/lyt/lyt_arcResourceAccessor.h>
+#include <nw4r/lyt/lyt_Layout.h>
 
 CPP_WRAPPER(spm::seq_title)
 
@@ -18,8 +20,8 @@ typedef struct
 /* 0x10 */ u32 heapSize;
 /* 0x14 */ void * heapHandle;
 /* 0x18 */ MEMAllocator allocator;
-/* 0x28 */ void * arcResAccessor; // nw4r::lyt::ArcResourceAccessor 
-/* 0x2C */ void * layout; // nw4r::lyt::Layout
+/* 0x28 */ nw4r::lyt::ArcResourceAccessor * arcResAccessor;
+/* 0x2C */ nw4r::lyt::Layout  * layout;
 /* 0x30 */ void * pushu2Pane; // nw4r::lyt::Pane
 /* 0x30 */ void * pushuBotanPane; // nw4r::lyt::Pane
 /* 0x38 */ void * startAnimTransform;
