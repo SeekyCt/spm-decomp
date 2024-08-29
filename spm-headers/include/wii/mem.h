@@ -35,6 +35,22 @@ typedef struct _MEMEXPHeap
 } MEMEXPHeap;
 SIZE_ASSERT(MEMEXPHeap, 0x50)
 
+typedef struct
+{
+/* 0x0 */ void * alloc;
+/* 0x4 */ void * free;
+} MEMAllocatorFunc;
+SIZE_ASSERT(MEMAllocatorFunc, 8)
+
+typedef struct
+{
+/* 0x0 */ MEMAllocatorFunc * func;
+/* 0x4 */ void * heap;
+/* 0x8 */ u32 heapP0;
+/* 0x8 */ u32 heapP1;
+} MEMAllocator;
+SIZE_ASSERT(MEMAllocator, 0x10)
+
 #define MEM_FLAG_FILL_0 (1 << 0) // initialise allocated memory as 0
 #define MEM_FLAG_THREAD_CONTROL (1 << 2) // use mutexes for access when handling heap
 

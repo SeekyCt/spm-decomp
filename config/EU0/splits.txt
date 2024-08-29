@@ -76,6 +76,16 @@ mario_pouch.c:
 	.sdata      start:0x805AE060 end:0x805AE068
 	.sdata2     start:0x805B28A0 end:0x805B28A8
 
+seq_title.c:
+	extab       start:0x8000C330 end:0x8000C3B8
+	extabindex  start:0x80018838 end:0x80018898
+	.text       start:0x8017B130 end:0x8017BF2C
+	.ctors      start:0x8031BF04 end:0x8031BF08
+	.rodata     start:0x80336338 end:0x803364C0
+	.bss        start:0x805122C4 end:0x80512360
+	.sdata      start:0x805AE0B0 end:0x805AE0B8
+	.sdata2     start:0x805B3070 end:0x805B30C0
+
 seqdrv.c:
 	extab       start:0x8000C3B8 end:0x8000C3C8
 	extabindex  start:0x80018898 end:0x800188B0

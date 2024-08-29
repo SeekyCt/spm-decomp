@@ -1,11 +1,14 @@
 #pragma once
 
 #include <common.h>
+#include <wii/gx.h>
 
 CPP_WRAPPER(spm::fadedrv)
 
+USING(wii::GX::GXColor)
+
 void fadeInit();
-UNKNOWN_FUNCTION(fadeEntry);
+void fadeEntry(u32 transitionType, s32 param_2, GXColor colour);
 UNKNOWN_FUNCTION(func_80066558);
 void fadeMain();
 UNKNOWN_FUNCTION(func_80066e4c);

@@ -28,7 +28,7 @@ UNKNOWN_FUNCTION(hudDisp);
 void func_8019af88();
 void hudTurnOffFlipTimeBox(s32 idx);
 UNKNOWN_FUNCTION(func_8019b0dc);
-UNKNOWN_FUNCTION(func_8019be84);
+void func_8019be84();
 UNKNOWN_FUNCTION(func_8019bea8);
 
 CPP_WRAPPER_END()
