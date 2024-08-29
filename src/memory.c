@@ -593,15 +593,27 @@ GXTexObj * smartTexObj(GXTexObj * texObj, SmartAllocation * imageAllocation)
 
 void * operator new(size_t size) throw()
 {
-    // Not decompiled
-    (void) size;
-    return NULL;
+    if (!memInitFlag)
+    {
+        if (fallbackHeap == 0) {
+            void * memory = OSGetMEM1ArenaLo();
+            fallbackHeap = MEMCreateExpHeapEx(memory, 0x2000, 5);
+            OSSetMEM1ArenaLo((void *)((u32)memory + 0x2000));
+        }
+        return MEMAllocFromExpHeapEx(fallbackHeap, size, 4);
+    }
+    else
+    {
+        void * p = MEMAllocFromExpHeapEx(wp->heapHandle[0], size, 0x20);
+        assertf(221, p, "メモリ確保エラー [id = %d][size = %d]", 0, size);
+        return p;
+    }
 }
 
 void operator delete(void * ptr) throw()
 {
-    // Not decompiled
-    (void) ptr;
+    MEMHeapHandle heap = MEMFindContainHeap(ptr);
+    MEMFreeToExpHeap(heap, ptr);
 }
 
 extern "C" {
