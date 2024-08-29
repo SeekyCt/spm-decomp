@@ -38,7 +38,7 @@
             ],
             "cStandard": "c99",
             "cppStandard": "c++98",
-            "intelliSenseMode": "windows-clang-x64",
+            "intelliSenseMode": "windows-clang-x86",
             "compilerPath": "",
             "configurationProvider": "ms-vscode.makefile-tools",
             "browse": {
