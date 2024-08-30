@@ -2,6 +2,7 @@
 #include <spm/camdrv.h>
 #include <spm/dispdrv.h>
 #include <spm/fadedrv.h>
+#include <spm/filemgr.h>
 #include <spm/hud.h>
 #include <spm/mario.h>
 #include <spm/memory.h>
@@ -9,7 +10,11 @@
 #include <spm/seq_title.h>
 #include <spm/spmario.h>
 #include <spm/spmario_snd.h>
+#include <spm/system.h>
 #include <spm/wpadmgr.h>
+#include <wii/cx.h>
+#include <msl/new.h>
+#include <nw4r/db/panic.h>
 
 extern "C" {
 
@@ -94,7 +99,7 @@ void seq_titleMain(SeqWork * seqWork)
             break;
     }
 
-    dispEntry(CAM_ID_2D, 4, 1000.0, func_8017b49c, seqWork);
+    dispEntry(CAM_ID_2D, 4, 1000.0, seqTitleDispCb, seqWork);
 }
 
 void seq_titleExit(SeqWork * seqWork)
@@ -109,9 +114,74 @@ void seq_titleExit(SeqWork * seqWork)
     memClear(HEAP_MAP);
 }
 
-// func_8017b49c
+void seqTitleDispCb(s32 cameraId, void * param)
+{
+    (void) cameraId;
+    (void) param;
 
-// seqTitleInitLayout
+    seqTitleDisp();
+}
+
+static const char * languageNames[] = {
+    "jp",
+    "us",
+    "uk",
+    "ge",
+    "fr",
+    "sp",
+    "it",
+    "uk"
+};
+
+void * operator new(size_t size, MEMAllocator * allocator);
+void * operator new(size_t size, MEMAllocator * allocator)
+{
+    return MEMAllocFromAllocator(allocator, size);
+}
+
+// Not matching: has try-catch missing
+void seqTitleInitLayout()
+{
+    // Load archive
+    const char * dvdRoot = getSpmarioDVDRoot();
+    FileEntry * file = fileAllocf(0, "%s/lyt/title.bin.%s", dvdRoot, languageNames[gp->language]);
+    u32 size = CXGetUncompressedSize(file->sp->data);
+    wp->arc = __memAlloc(HEAP_MAP, size);
+    CXUncompressLZ(file->sp->data, wp->arc);
+    fileFree(file);
+
+    // Init heap
+    wp->heapSize = 0x100000;
+    wp->heap = __memAlloc(HEAP_MAP, wp->heapSize);
+    wp->heapHandle = MEMCreateExpHeapEx(wp->heap, wp->heapSize, 0);
+    MEMInitAllocatorForExpHeap(&wp->allocator, wp->heapHandle, 0x20);
+
+    nw4r::lyt::Layout::SetAllocator(&wp->allocator);
+    wp->layout = new (&wp->allocator) nw4r::lyt::Layout();
+    wp->arcResAccessor = new (&wp->allocator) nw4r::lyt::ArcResourceAccessor();
+    wp->arcResAccessor->Attach(wp->arc, "arc");
+
+    void * lytRes = wp->arcResAccessor->GetResource(0, "title.brlyt", 0);
+    NW4R_ASSERT_PTR(3076, lytRes);
+    wp->layout->Build(lytRes, wp->arcResAccessor);
+
+    void * lpaRes = wp->arcResAccessor->GetResource(0, "title_start.brlan", 0);
+    NW4R_ASSERT_PTR(3081, lpaRes);
+    wp->animations[0] = wp->layout->CreateAnimTransform(lpaRes, wp->arcResAccessor);
+
+    lpaRes = wp->arcResAccessor->GetResource(0, "title_Loop.brlan", 0);
+    NW4R_ASSERT_PTR(3085, lpaRes);
+    wp->animations[1] = wp->layout->CreateAnimTransform(lpaRes, wp->arcResAccessor);
+
+    wp->startAnimNum = 0;
+    wp->unknown_0x98 = 0.0f;
+    wp->layout->BindAnimation(wp->animations[wp->startAnimNum]);
+
+    wp->pushu2Pane = wp->layout->GetRootPane()->FindPaneByName("pushu_2", 1);
+    wp->pushuBotanPane = wp->layout->GetRootPane()->FindPaneByName("pushu_botan", 1);
+
+    spsndSFXOn("SFX_SYS_TITLE_APPEAR1");
+}
 
 // func_8017b840
 

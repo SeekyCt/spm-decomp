@@ -1,0 +1,36 @@
+/*
+    Based on the decompilation in xenoblade by CelestialAmber
+*/
+
+#pragma once
+
+// TODO: does this actually need to be hidden for modding?
+#ifdef DECOMP
+
+#include <msl/exception.h>
+
+namespace std {
+
+class bad_alloc : public exception
+{
+public:
+    virtual ~bad_alloc(){}
+
+    virtual const char* what() const
+    {
+        return "bad_alloc";
+    }
+};
+
+}
+
+void * operator new (size_t size, void * mem) throw();
+inline void * operator new (size_t size, void * mem) throw()
+{
+    (void) size;
+
+    return mem;
+}
+
+
+#endif
