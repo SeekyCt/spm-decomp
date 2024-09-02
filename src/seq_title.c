@@ -17,6 +17,7 @@
 #include <msl/math.h>
 #include <msl/new.h>
 #include <nw4r/db/panic.h>
+#include <nw4r/math/types.h>
 
 extern "C" {
 
@@ -221,33 +222,41 @@ void seqTitleInitLayout()
 
 void seqTitleDisp()
 {
-    // TODO: nw4r inlines
+    // Setup draw info
     nw4r::math::MTX34 viewMtx;
     PSMTXCopy(camGetCurPtr()->viewMtx, viewMtx);
     nw4r::math::VEC3 scale(0.95f, 1.0f, 1.0f);
     PSMTXScaleApply(viewMtx, viewMtx, scale.x, scale.y, scale.z);
-    wp->drawInfo.mViewMtx = viewMtx;
+    wp->drawInfo.SetViewMtx(viewMtx);
     wp->drawInfo.mViewRect = wp->layout->GetLayoutRect();
+
+    // Update layout
     wp->layout->Animate(0);
     wp->layout->CalculateMtx(wp->drawInfo);
-    f32 temp = (wp->animFrame / wp->animations[wp->animNum]->GetFrameSize());
-    f32 unk = cosf(temp * PIx2 * 8.0f);
-    s32 unk2 = (s32) (255.0f - ((unk * 256.0f) + 128.0f));
-    if (unk2 > 0xff)
-        unk2 = 0xff;
-    if (unk2 < 0)
-        unk2 = 0;
+
+    // Update alpha
+    f32 animProgress = (wp->animFrame / wp->animations[wp->animNum]->GetFrameSize());
+    f32 cosProgress = cosf(animProgress * PIx2 * 8.0f);
+    s32 alpha = (s32) (255.0f - ((cosProgress * 256.0f) + 128.0f));
+    if (alpha > 0xff)
+        alpha = 0xff;
+    if (alpha < 0)
+        alpha = 0;
     if (wp->animNum == 0)
-        unk2 = 0;
-    wp->pushu2Pane->mAlpha = (u8) unk2;
-    GXColorS10 col = {0, 0, 0, (s16) unk2};
+        alpha = 0;
+    wp->pushu2Pane->mAlpha = (u8) alpha;
+    GXColorS10 col = {0, 0, 0, (s16) alpha};
     nw4r::lyt::Material * material = wp->pushuBotanPane->GetMaterial();
     material->mTevCols[1] = col;
-    wp->layout->Draw(wp->drawInfo);
-    wp->animFrame += 60.0f / gp->fps;
 
+    // Render
+    wp->layout->Draw(wp->drawInfo);
+
+    // Update animation progress
+    wp->animFrame += 60.0f / gp->fps;
     while (wp->animFrame >= wp->animations[wp->animNum]->GetFrameSize())
     {
+        // If 0, move on to next animation
         if (wp->animNum == 0)
         {
             wp->layout->UnbindAnimation(wp->animations[wp->animNum]);
@@ -259,8 +268,9 @@ void seqTitleDisp()
 
         wp->animFrame -= (float) wp->animations[wp->animNum]->GetFrameSize();
     }
-
     wp->animations[wp->animNum]->mFrame = wp->animFrame;
+
+    // Set projection matrix (restoring for other disp functions?)
     CamEntry * cam = camGetCurPtr();
     GXSetProjection(cam->projMtx, cam->projectionType);
 }
@@ -269,6 +279,9 @@ const char * getNextDanMapname(s32 dungeonNo)
 {
     if (dungeonNo < 100)
     {
+        // Fipside
+
+        // Enemy rooms
         switch (dungeonNo)
         {
             case 9:
@@ -288,6 +301,7 @@ const char * getNextDanMapname(s32 dungeonNo)
                 return "dan_30";
         }
 
+        // Chest rooms / boss
         if (dungeonNo < 25)
             return "dan_01";
         if (dungeonNo < 49)
@@ -298,6 +312,9 @@ const char * getNextDanMapname(s32 dungeonNo)
     }
     else
     {
+        // Flopside
+
+        // Chest rooms / boss
         switch (dungeonNo - 100)
         {
             case 9:
@@ -317,6 +334,7 @@ const char * getNextDanMapname(s32 dungeonNo)
                 return "dan_70";
         }
 
+        // Enemy rooms
         if (dungeonNo - 100 < 25)
             return "dan_41";
         if (dungeonNo - 100 < 49)

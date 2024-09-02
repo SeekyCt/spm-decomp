@@ -87,6 +87,5 @@ struct MTX34 : public _MTX34
 };
 SIZE_ASSERT(MTX34, 0x30)
 
-
 } // namespace math
 } // namespace nw4r

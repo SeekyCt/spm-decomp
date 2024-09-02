@@ -13,6 +13,11 @@ public:
     virtual ~DrawInfo();
     DrawInfo();
 
+    void SetViewMtx(const struct math::MTX34 & mtx)
+    {
+        mViewMtx = mtx;
+    }
+
     math::MTX34 mViewMtx;
     ut::Rect mViewRect;
     math::VEC2 mLocationAdjustScale;
