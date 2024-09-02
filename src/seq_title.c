@@ -42,61 +42,83 @@ void seq_titleInit(SeqWork * seqWork)
     gp->flags &= ~SPMARIO_FLAG_1;
     gp->flags &= ~SPMARIO_FLAG_2;
 
-    seqWork->stage = -1;
+    seqWork->stage = SEQ_TITLE_WAIT_INPUT;
 
+    // Start transition
     fadeEntry(1, 300, (GXColor) {0x00, 0x00, 0x00, 0xff});
 
     marioReset();
-    wp->unknown_0x0 = 0;
+
+    // Setup display
+    wp->openingReplayTimer = 0;
     wp->unknown_0x4 = 0;
     seqTitleInitLayout();
+
+    // Play music
     spsndBGMOn(0, "BGM_EVT_TITLE1");
 }
 
 void seq_titleMain(SeqWork * seqWork)
 {
-    if (seqWork->stage != -1)
-        wp->unknown_0x0 = 0;
+    if (seqWork->stage != SEQ_TITLE_WAIT_INPUT)
+        wp->openingReplayTimer = 0;
 
     switch (seqWork->stage)
     {
-        case -1:
-            if (fadeIsFinish())
+        case SEQ_TITLE_WAIT_INPUT:
+            // Wait for transition to finish
+            if (!fadeIsFinish())
+                break;
+
+            // Check for input or timeout
+            // TODO: flag macro
+            if (((wpadGetButtonsPressed(0) >> 8) & 1) != 0)
             {
-                // TODO: flag macro
-                if (((wpadGetButtonsPressed(0) >> 8) & 1) != 0)
-                {
-                    seqWork->stage = 0;
-                }
-                else
-                {
-                    if (++wp->unknown_0x0 > 1800)
-                        seqWork->stage = 2;
-                }
-            } 
+                seqWork->stage = SEQ_TITLE_FILE_SELECT_PRESS;
+            }
+            else
+            {
+                if (++wp->openingReplayTimer > 1800)
+                    seqWork->stage = SEQ_TITLE_REPLAY_TIMEOUT;
+            }
+
             break;
 
-        case 0:
+        case SEQ_TITLE_FILE_SELECT_PRESS:
+            // Start transition
             fadeEntry(2, 300, (GXColor) {0x00, 0x00, 0x00, 0xff});
+
+            // Play sound effect
             spsndSFXOn("SFX_SYS_PRESS_START1");
             func_8023ce20(0, 70, 1000);
-            seqWork->stage = 1;
+
+            seqWork->stage = SEQ_TITLE_FILE_SELECT_FADE;
+
             break;
 
-        case 1:
+        case SEQ_TITLE_FILE_SELECT_FADE:
+            // Open file select after transition
             if (fadeIsFinish())
                 seqSetSeq(SEQ_LOAD, NULL, NULL);
+
             break;
 
-        case 2:
+        case SEQ_TITLE_REPLAY_TIMEOUT:
+            // Stop music
             spsndBGMOff_f_d_alt(0, 2000);
+
+            // Start transition
             fadeEntry(2, 300, (GXColor) {0x00, 0x00, 0x00, 0xff});
+
             seqWork->stage = 3;
+
             break;
 
-        case 3:
+        case SEQ_TITLE_REPLAY_FADE:
+            // Replay intro after transition
             if (fadeIsFinish())
                 seqSetSeq(SEQ_MAPCHANGE,"aa4_01",NULL);
+
             break;
     }
 
