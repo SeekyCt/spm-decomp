@@ -64,9 +64,6 @@ mario.c:
 	.sbss       start:0x805AE8E8 end:0x805AE8F8
 	.sdata2     start:0x805B23C8 end:0x805B2578
 
-seqdef.c:
-	.data       start:0x804287A8 end:0x804287F0
-
 mario_pouch.c:
 	extab       start:0x8000B820 end:0x8000B898
 	extabindex  start:0x800177A0 end:0x80017854
@@ -82,9 +79,13 @@ seq_title.c:
 	.text       start:0x8017B130 end:0x8017BF2C
 	.ctors      start:0x8031BF04 end:0x8031BF08
 	.rodata     start:0x80336338 end:0x803364C0
-	.bss        start:0x805122C4 end:0x80512360
+	.data       start:0x80428788 end:0x804287A8
+	.bss        start:0x805122B8 end:0x80512360
 	.sdata      start:0x805AE0B0 end:0x805AE0B8
 	.sdata2     start:0x805B3070 end:0x805B30C0
+
+seqdef.c:
+	.data       start:0x804287A8 end:0x804287F0
 
 seqdrv.c:
 	extab       start:0x8000C3B8 end:0x8000C3C8

@@ -39,9 +39,8 @@ void seq_titleInit(SeqWork * seqWork)
     // Configure hud
     func_8019be84();
 
-    // TODO: flag defines
-    gp->flags &= ~1;
-    gp->flags &= ~2;
+    gp->flags &= ~SPMARIO_FLAG_1;
+    gp->flags &= ~SPMARIO_FLAG_2;
 
     seqWork->stage = -1;
 
@@ -71,7 +70,7 @@ void seq_titleMain(SeqWork * seqWork)
                 }
                 else
                 {
-                    if (wp->unknown_0x0++ > 1800)
+                    if (++wp->unknown_0x0 > 1800)
                         seqWork->stage = 2;
                 }
             } 
@@ -135,13 +134,7 @@ static const char * languageNames[] = {
     "uk"
 };
 
-void * operator new(size_t size, MEMAllocator * allocator);
-void * operator new(size_t size, MEMAllocator * allocator)
-{
-    return MEMAllocFromAllocator(allocator, size);
-}
-
-// Not matching: has try-catch missing
+// Not matching: try-catches are wrong
 void seqTitleInitLayout()
 {
     // Load archive
@@ -159,15 +152,34 @@ void seqTitleInitLayout()
     MEMInitAllocatorForExpHeap(&wp->allocator, wp->heapHandle, 0x20);
 
     nw4r::lyt::Layout::SetAllocator(&wp->allocator);
-    wp->layout = new (&wp->allocator) nw4r::lyt::Layout();
-    wp->arcResAccessor = new (&wp->allocator) nw4r::lyt::ArcResourceAccessor();
+
+    void * layoutMem = MEMAllocFromAllocator(&wp->allocator, sizeof(*wp->layout));
+    nw4r::lyt::Layout * layout;
+    try {
+        layout = new (layoutMem) nw4r::lyt::Layout();
+    }
+    catch (...) {
+        throw;
+    }
+    wp->layout = layout;
+
+    void * accessorMem = MEMAllocFromAllocator(&wp->allocator, sizeof(*wp->arcResAccessor));
+    nw4r::lyt::ArcResourceAccessor * arcResAccessor;
+    try {
+        arcResAccessor = new (accessorMem) nw4r::lyt::ArcResourceAccessor();
+    }
+    catch (...) {
+        throw;
+    }
+    wp->arcResAccessor = arcResAccessor;
+
     wp->arcResAccessor->Attach(wp->arc, "arc");
 
     void * lytRes = wp->arcResAccessor->GetResource(0, "title.brlyt", 0);
     NW4R_ASSERT_PTR(3076, lytRes);
     wp->layout->Build(lytRes, wp->arcResAccessor);
 
-    void * lpaRes = wp->arcResAccessor->GetResource(0, "title_start.brlan", 0);
+    void * lpaRes = wp->arcResAccessor->GetResource(0, "title_Start.brlan", 0);
     NW4R_ASSERT_PTR(3081, lpaRes);
     wp->animations[0] = wp->layout->CreateAnimTransform(lpaRes, wp->arcResAccessor);
 
@@ -185,8 +197,6 @@ void seqTitleInitLayout()
     spsndSFXOn("SFX_SYS_TITLE_APPEAR1");
 }
 
-// func_8017b840 - nw4r::lyt::ArcResourceAccessor::__dt
-
 void seqTitleDisp()
 {
     // TODO: nw4r inlines
@@ -199,7 +209,7 @@ void seqTitleDisp()
     wp->layout->Animate(0);
     wp->layout->CalculateMtx(wp->drawInfo);
     f32 temp = (wp->animFrame / wp->animations[wp->animNum]->GetFrameSize());
-    f32 unk = cosf(temp * 6.283185f * 8.0f);
+    f32 unk = cosf(temp * PIx2 * 8.0f);
     s32 unk2 = (s32) (255.0f - ((unk * 256.0f) + 128.0f));
     if (unk2 > 0xff)
         unk2 = 0xff;
@@ -233,10 +243,66 @@ void seqTitleDisp()
     GXSetProjection(cam->projMtx, cam->projectionType);
 }
 
-// getNextDanMapName
+const char * getNextDanMapname(s32 dungeonNo)
+{
+    if (dungeonNo < 100)
+    {
+        switch (dungeonNo)
+        {
+            case 9:
+            case 19:
+                return "dan_21";
+            case 29:
+            case 39:
+                return "dan_22";
+            case 49:
+            case 59:
+                return "dan_23";
+            case 69:
+            case 79:
+            case 89:
+                return "dan_24";
+            case 99:
+                return "dan_30";
+        }
 
-// [ sinit ]
+        if (dungeonNo < 25)
+            return "dan_01";
+        if (dungeonNo < 49)
+            return "dan_02";
+        if (dungeonNo < 75)
+            return "dan_03";
+        return "dan_04";
+    }
+    else
+    {
+        switch (dungeonNo - 100)
+        {
+            case 9:
+            case 19:
+                return "dan_61";
+            case 29:
+            case 39:
+                return "dan_62";
+            case 49:
+            case 59:
+                return "dan_63";
+            case 69:
+            case 79:
+            case 89:
+                return "dan_64";
+            case 99:
+                return "dan_70";
+        }
 
-// func_8017bed0
+        if (dungeonNo - 100 < 25)
+            return "dan_41";
+        if (dungeonNo - 100 < 49)
+            return "dan_42";
+        if (dungeonNo - 100 < 75)
+            return "dan_43";
+        return "dan_44";
+    }
+}
 
 }
