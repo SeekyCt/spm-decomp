@@ -13,7 +13,15 @@ struct AnimTransform
 {
     virtual ~AnimTransform();
 
-    u8 unknown_0x4[0x14 - 0x4];
+    void SetFrame(f32 frame)
+    {
+        mFrame = frame;
+    }
+
+    u16 GetFrameSize() const;
+
+    u8 unknown_0x4[0x10 - 0x4];
+    f32 mFrame;
 };
 SIZE_ASSERT(AnimTransform, 0x14)
 

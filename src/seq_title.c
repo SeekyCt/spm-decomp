@@ -13,6 +13,8 @@
 #include <spm/system.h>
 #include <spm/wpadmgr.h>
 #include <wii/cx.h>
+#include <wii/mtx.h>
+#include <msl/math.h>
 #include <msl/new.h>
 #include <nw4r/db/panic.h>
 
@@ -173,9 +175,9 @@ void seqTitleInitLayout()
     NW4R_ASSERT_PTR(3085, lpaRes);
     wp->animations[1] = wp->layout->CreateAnimTransform(lpaRes, wp->arcResAccessor);
 
-    wp->startAnimNum = 0;
-    wp->unknown_0x98 = 0.0f;
-    wp->layout->BindAnimation(wp->animations[wp->startAnimNum]);
+    wp->animNum = 0;
+    wp->animFrame = 0.0f;
+    wp->layout->BindAnimation(wp->animations[wp->animNum]);
 
     wp->pushu2Pane = wp->layout->GetRootPane()->FindPaneByName("pushu_2", 1);
     wp->pushuBotanPane = wp->layout->GetRootPane()->FindPaneByName("pushu_botan", 1);
@@ -183,9 +185,53 @@ void seqTitleInitLayout()
     spsndSFXOn("SFX_SYS_TITLE_APPEAR1");
 }
 
-// func_8017b840
+// func_8017b840 - nw4r::lyt::ArcResourceAccessor::__dt
 
-// func_8017b8ac
+void seqTitleDisp()
+{
+    // TODO: nw4r inlines
+    nw4r::math::MTX34 viewMtx;
+    PSMTXCopy(camGetCurPtr()->viewMtx, viewMtx);
+    nw4r::math::VEC3 scale(0.95f, 1.0f, 1.0f);
+    PSMTXScaleApply(viewMtx, viewMtx, scale.x, scale.y, scale.z);
+    wp->drawInfo.mViewMtx = viewMtx;
+    wp->drawInfo.mViewRect = wp->layout->GetLayoutRect();
+    wp->layout->Animate(0);
+    wp->layout->CalculateMtx(wp->drawInfo);
+    f32 temp = (wp->animFrame / wp->animations[wp->animNum]->GetFrameSize());
+    f32 unk = cosf(temp * 6.283185f * 8.0f);
+    s32 unk2 = (s32) (255.0f - ((unk * 256.0f) + 128.0f));
+    if (unk2 > 0xff)
+        unk2 = 0xff;
+    if (unk2 < 0)
+        unk2 = 0;
+    if (wp->animNum == 0)
+        unk2 = 0;
+    wp->pushu2Pane->mAlpha = (u8) unk2;
+    GXColorS10 col = {0, 0, 0, (s16) unk2};
+    nw4r::lyt::Material * material = wp->pushuBotanPane->GetMaterial();
+    material->mTevCols[1] = col;
+    wp->layout->Draw(wp->drawInfo);
+    wp->animFrame += 60.0f / gp->fps;
+
+    while (wp->animFrame >= wp->animations[wp->animNum]->GetFrameSize())
+    {
+        if (wp->animNum == 0)
+        {
+            wp->layout->UnbindAnimation(wp->animations[wp->animNum]);
+            wp->animNum += 1;
+            wp->layout->BindAnimation(wp->animations[wp->animNum]);
+            wp->animFrame = 0.0f;
+            break;
+        }
+
+        wp->animFrame -= (float) wp->animations[wp->animNum]->GetFrameSize();
+    }
+
+    wp->animations[wp->animNum]->mFrame = wp->animFrame;
+    CamEntry * cam = camGetCurPtr();
+    GXSetProjection(cam->projMtx, cam->projectionType);
+}
 
 // getNextDanMapName
 

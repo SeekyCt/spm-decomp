@@ -33,8 +33,8 @@ typedef struct
 typedef f32 Mtx34[3][4];
 typedef f32 Mtx44[4][4];
 
-void PSMTXIdentity(Mtx34 * dest);
-UNKNOWN_FUNCTION(PSMTXCopy);
+void PSMTXIdentity(Mtx34 dest);
+void PSMTXCopy(Mtx34 src, Mtx34 dest);
 UNKNOWN_FUNCTION(PSMTXConcat);
 UNKNOWN_FUNCTION(PSMTXInverse);
 UNKNOWN_FUNCTION(PSMTXInvXpose);
@@ -42,10 +42,10 @@ UNKNOWN_FUNCTION(PSMTXRotRad);
 UNKNOWN_FUNCTION(PSMTXRotTrig);
 UNKNOWN_FUNCTION(__PSMTXRotAxisRadInternal);
 UNKNOWN_FUNCTION(PSMTXRotAxisRad);
-void PSMTXTrans(Mtx34 * dest, f32 x, f32 y, f32 z);
-void PSMTXTransApply(Mtx34 * src, Mtx34 * dest, f32 x, f32 y, f32 z);
-void PSMTXScale(Mtx34 * dest, f32 x, f32 y, f32 z);
-void PSMTXScaleApply(Mtx34 * src, Mtx34 * dest, f32 x, f32 y, f32 z);
+void PSMTXTrans(Mtx34 dest, f32 x, f32 y, f32 z);
+void PSMTXTransApply(Mtx34 src, Mtx34 dest, f32 x, f32 y, f32 z);
+void PSMTXScale(Mtx34 dest, f32 x, f32 y, f32 z);
+void PSMTXScaleApply(Mtx34 src, Mtx34 dest, f32 x, f32 y, f32 z);
 UNKNOWN_FUNCTION(PSMTXQuat);
 UNKNOWN_FUNCTION(C_MTXLookAt);
 UNKNOWN_FUNCTION(C_MTXLightFrustum);

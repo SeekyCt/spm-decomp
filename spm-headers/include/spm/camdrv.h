@@ -63,7 +63,7 @@ typedef struct _CamEntry
 /* 0x0F8 */ f32 left;
 /* 0x0FC */ f32 right;
 /* 0x100 */ u8 unknown_0x100[0x158 - 0x100];
-/* 0x158 */ s32 isOrtho;
+/* 0x158 */ GXProjectionType projectionType;
 /* 0x15C */ Vec3 pos;
 /* 0x168 */ Vec3 target;
 /* 0x174 */ Vec3 up;

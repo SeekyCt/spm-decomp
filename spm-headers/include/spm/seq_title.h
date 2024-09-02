@@ -5,6 +5,7 @@
 #include <wii/mem.h>
 #include <nw4r/lyt/arcResourceAccessor.h>
 #include <nw4r/lyt/animation.h>
+#include <nw4r/lyt/drawInfo.h>
 #include <nw4r/lyt/layout.h>
 
 CPP_WRAPPER(spm::seq_title)
@@ -26,9 +27,9 @@ typedef struct
 /* 0x30 */ nw4r::lyt::Pane * pushu2Pane; // nw4r::lyt::Pane
 /* 0x30 */ nw4r::lyt::Pane * pushuBotanPane; // nw4r::lyt::Pane
 /* 0x38 */ nw4r::lyt::AnimTransform * animations[2]; // 0 start, 1 loop
-/* 0x40 */ u8 unknown_0x40[0x94 - 0x40];
-/* 0x94 */ s32 startAnimNum;
-/* 0x98 */ f32 unknown_0x98;
+/* 0x40 */ nw4r::lyt::DrawInfo drawInfo;
+/* 0x94 */ s32 animNum;
+/* 0x98 */ f32 animFrame;
 } SeqTitleWork;
 SIZE_ASSERT(SeqTitleWork, 0x9c)
 

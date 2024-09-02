@@ -3,6 +3,7 @@
 #include <common.h>
 #include <msl/new.h>
 #include <nw4r/lyt/animation.h>
+#include <nw4r/lyt/material.h>
 #include <nw4r/lyt/resourceAccessor.h>
 
 namespace nw4r {
@@ -32,10 +33,15 @@ public:
     virtual UNKNOWN_FUNCTION(UnbindAnimationSelf);
     virtual UNKNOWN_FUNCTION(FindAnimationLinkSelf);
     virtual UNKNOWN_FUNCTION(SetAnimationEnable);
-    virtual UNKNOWN_FUNCTION(GetMaterial);
+    virtual Material * GetMaterial();
     virtual UNKNOWN_FUNCTION(LoadMtx);
 
-    u8 unknown_0x4[0xd4 - 0x4];
+    u8 unknown_0x4[0xb4 - 0x4];
+    u8 mAlpha;
+    u8 mGlbAlpha;
+    u8 mBasePosition;
+    u8 mFlag;
+    u8 unknown_0xb8[0xd4 - 0xb8];
 };
 SIZE_ASSERT(Pane, 0xd4)
 

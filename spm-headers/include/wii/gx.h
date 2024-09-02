@@ -16,6 +16,13 @@ typedef struct
 {
     u8 r, g, b, a;
 } GXColor;
+SIZE_ASSERT(GXColor, 0x4)
+
+typedef struct
+{
+    s16 r, g, b, a;
+} GXColorS10;
+SIZE_ASSERT(GXColorS10, 0x8)
 
 typedef struct
 {
@@ -28,6 +35,13 @@ typedef struct
 /* 0x0 */ u8 unknown_0x0[0x20 - 0x0];
 } GXTexObj;
 SIZE_ASSERT(GXTexObj, 0x20)
+
+
+typedef enum
+{
+/* 0x0 */ GX_PERSPECTIVE,
+/* 0x1 */ GX_ORTHOGRAPHIC
+} GXProjectionType;
 
 // Parameters from libogc's gx.h
 
@@ -200,7 +214,7 @@ UNKNOWN_FUNCTION(GXEndDisplayList);
 UNKNOWN_FUNCTION(GXCallDisplayList);
 UNKNOWN_FUNCTION(GXProject);
 UNKNOWN_FUNCTION(__GXSetProjection);
-void GXSetProjection(Mtx44 * mtx, u32 type);
+void GXSetProjection(Mtx44 mtx, GXProjectionType type);
 UNKNOWN_FUNCTION(GXSetProjectionv);
 UNKNOWN_FUNCTION(GXGetProjectionv);
 void GXLoadPosMtxImm(Mtx34 * mtx, u32 pnidx);
