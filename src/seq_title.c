@@ -281,7 +281,7 @@ void seqTitleDisp()
     GXSetProjection(cam->projMtx, cam->projectionType);
 }
 
-const char * getNextDanMapname(s32 dungeonNo)
+const char * getDanMapName(s32 dungeonNo)
 {
     if (dungeonNo < 100)
     {

@@ -342,7 +342,7 @@ s32 evt_dan_handle_doors(EvtEntry * entry, bool isFirstCall)
     sprintf(wp->exitDoorName_r, "doa%d_r", wp->doorInfo.exit);
     sprintf(wp->exitDoorHitName2d, "A2_doa_%02d", wp->doorInfo.exit);
     sprintf(wp->exitDoorHitName3d, "A3_doa_%02d", wp->doorInfo.exit);
-    sprintf(wp->nextMapName, getNextDanMapname(no + 1));
+    sprintf(wp->nextMapName, getDanMapName(no + 1));
     sprintf(wp->exitDoor_desc0x18, "");
 
     // Fill in enter DoorDesc
@@ -738,7 +738,7 @@ s32 evt_dan_handle_chest_room_dokans_and_doors(EvtEntry * entry, bool isFirstCal
     s32 no = evtGetValue(entry, entry->pCurData[0]);
     
     // Update destination of exit door
-    chestRoomMapDoorDescs[1].destMapName = getNextDanMapname(no + 1);
+    chestRoomMapDoorDescs[1].destMapName = getDanMapName(no + 1);
 
     // Set the entering door name
     strcpy(gp->doorName, "doa1_l");
