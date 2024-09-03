@@ -110,6 +110,13 @@ typedef u8 unk8;
     #define DECOMP_STATIC(expr) extern expr;
 #endif
 
+// Macro for something that is deadstripped outside of decomp
+#ifdef DECOMP
+    #define STRIPPED(expr) expr;
+#else
+    #define STRIPPED(expr)
+#endif
+
 // Use extern "C" in C++, use namespacing in mods
 #ifdef __cplusplus
     #ifndef DECOMP

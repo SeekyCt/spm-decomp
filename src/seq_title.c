@@ -130,11 +130,7 @@ void seq_titleExit(SeqWork * seqWork)
 {
     (void) seqWork;
 
-    delete wp->layout;
-    delete wp->arcResAccessor;
-
-    __memFree(HEAP_MAP, wp->arc);
-    __memFree(HEAP_MAP, wp->heap);
+    seqTitleDeleteLayout();
     memClear(HEAP_MAP);
 }
 
@@ -218,6 +214,16 @@ void seqTitleInitLayout()
     wp->pushuBotanPane = wp->layout->GetRootPane()->FindPaneByName("pushu_botan", 1);
 
     spsndSFXOn("SFX_SYS_TITLE_APPEAR1");
+}
+
+// ALways inlined
+void seqTitleDeleteLayout()
+{
+    delete wp->layout;
+    delete wp->arcResAccessor;
+
+    __memFree(HEAP_MAP, wp->arc);
+    __memFree(HEAP_MAP, wp->heap);
 }
 
 void seqTitleDisp()

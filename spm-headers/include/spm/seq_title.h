@@ -57,6 +57,7 @@ void seq_titleMain(SeqWork * work);
 void seq_titleExit(SeqWork * work);
 void seqTitleDispCb(s32 cameraId, void * param);
 void seqTitleInitLayout();
+STRIPPED(void seqTitleDeleteLayout())
 void seqTitleDisp();
 
 // No idea why this is in this file of all places, but it is
