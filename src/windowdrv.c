@@ -91,93 +91,27 @@ void windowMain()
     }
 }
 
-UNKNOWN_FUNCTION(func_80038b08)
-{
-    // Not decompiled
-}
+// NOT_DECOMPILED func_80038b08
 
-UNKNOWN_FUNCTION(func_80038cc0)
-{
-    // Not decompiled
-}
+// NOT_DECOMPILED func_80038cc0
 
-UNKNOWN_FUNCTION(func_80038fb8)
-{
-    // Not decompiled
-}
+// NOT_DECOMPILED func_80038fb8
 
-void windowDispGX_Kanban(s32 type, GXColor * colour, f32 x, f32 y, f32 width, f32 height)
-{
-    // Not decompiled
-    (void) type;
-    (void) colour;
-    (void) x;
-    (void) y;
-    (void) width;
-    (void) height;
-}
+// NOT_DECOMPILED windowDispGX_Kanban
 
-UNKNOWN_FUNCTION(func_800393c8)
-{
-    // Not decompiled
-}
+// NOT_DECOMPILED func_800393c8
 
-void windowDispGX_System(s32 type, u8 alpha, f32 x, f32 y, f32 width, f32 height)
-{
-    // Not decompiled
-    (void) type;
-    (void) alpha;
-    (void) x;
-    (void) y;
-    (void) width;
-    (void) height;
-}
+// NOT_DECOMPILED windowDispGX_System
 
-UNKNOWN_FUNCTION(func_80039b80)
-{
-    // Not decompiled
-}
+// NOT_DECOMPILED func_80039b80
 
-UNKNOWN_FUNCTION(func_80039d40) 
-{
-    // Not decompiled
-}
+// NOT_DECOMPILED func_80039d40
 
-void windowDispGX_Message(s32 type, Unk param_2, u8 alpha, f32 x, f32 y, f32 width, f32 height, f32, f32)
-{
-    // Not decompiled
-    (void) type;
-    (void) param_2;
-    (void) alpha;
-    (void) x;
-    (void) y;
-    (void) width;
-    (void) height;
-}
+// NOT_DECOMPILED windowDispGX_Message
 
-void windowDispGX_ItemBox(Unk param_1, GXColor * colour, f32 x, f32 y, f32 width, f32 height)
-{
-    // Not decompiled
-    (void) param_1;
-    (void) colour;
-    (void) x;
-    (void) y;
-    (void) width;
-    (void) height;
-}
+// NOT_DECOMPILED windowDispGX_ItemBox
 
-void windowDispGX2_Waku_col(Mtx34 * mtx, u32 gxTexMapId, const GXColor * colour, f32 x, f32 y, f32 width, f32 height, f32 curve)
-{
-    // Not decompiled
-    (void) mtx;
-    (void) gxTexMapId;
-    (void) colour;
-    (void) x;
-    (void) y;
-    (void) width;
-    (void) height;
-    (void) curve;
-}
+// NOT_DECOMPILED windowDispGX2_Waku_col
 
 s32 windowCheckID(s32 id)
 {

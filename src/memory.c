@@ -75,7 +75,7 @@ static MEMHeapHandle fallbackHeap;
 #define IS_LAST_SMART_ALLOC(allocation) (allocation->next == NULL)
 #define GET_SMART_HEAP_SIZE() (MEMGetSizeForMBlockExpHeap(swp->heapStart))
 
-// Not matching - https://decomp.me/scratch/fZFB1
+// NON_MATCHING - https://decomp.me/scratch/fZFB1
 void memInit()
 {
     // Register usage not matching
@@ -354,7 +354,7 @@ void smartFree(SmartAllocation * lp)
     }
 }
 
-// Not matching
+// NON_MATCHING
 SmartAllocation * smartAlloc(size_t size, u8 type)
 {
     // Special behaviour if this is the first time running
@@ -509,7 +509,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
     }
 }
 
-// Not matching
+// NON_MATCHING
 void smartGarbage()
 {
     sysWaitDrawSync();

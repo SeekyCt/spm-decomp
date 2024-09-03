@@ -153,7 +153,7 @@ static const char * languageNames[] = {
     "uk"
 };
 
-// Not matching: try-catches are wrong
+// NON_MATCHING: try-catches are wrong
 void seqTitleInitLayout()
 {
     // Load archive

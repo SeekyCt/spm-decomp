@@ -137,18 +137,9 @@ void PackTexPalette(TPLHeader * palette)
     }
 }
 
-void fileGarbageDataAdrClear(FileEntry * entry)
-{
-    // Not decompiled
-    (void) entry;
-}
+// NOT_DECOMPILED fileGarbageDataAdrClear
 
-void fileGarbageDataAdrSet(void * data, s32 fileType)
-{
-    // Not decompiled
-    (void) data;
-    (void) fileType;
-}
+// NOT_DECOMPILED fileGarbageDataAdrSet
 
 void fileGarbageMoveMem(void * dest, FileEntry * src)
 {
@@ -181,63 +172,20 @@ void fileGarbageMoveMem(void * dest, FileEntry * src)
     }
 }
 
-void _fileGarbage(s32)
-{
-    // Not decompiled
-}
+// NOT_DECOMPILED _fileGarbage
 
-FileEntry * fileAllocf(s32 fileType, const char * format, ...)
-{
-    // Not decompiled
-    (void) fileType;
-    (void) format;
-    return NULL;
-}
+// NOT_DECOMPILED fileAllocf
 
-FileEntry * fileAlloc(const char * path, s32 fileType)
-{
-    // Not decompiled
-    (void) path;
-    (void) fileType;
-    return NULL;
-}
+// NOT_DECOMPILED fileAlloc
 
-FileEntry * _fileAlloc(const char * path, s32 fileType, s32 p3)
-{
-    // Not decompiled
-    (void) path;
-    (void) fileType;
-    (void) p3;
-    return NULL;
-}
+// NOT_DECOMPILED _fileAlloc
 
-void fileFree(FileEntry * entry)
-{
-    // Not decompiled
-    (void) entry;
-}
+// NOT_DECOMPILED fileFree
 
-static UNKNOWN_FUNCTION(dvdReadDoneCallback)
-{
-    // Not decompiled
-}
+// NOT_DECOMPILED dvdReadDoneCallback
 
-FileEntry * fileAsyncf(s32 fileType, s32 p2, const char * format, ...)
-{
-    // Not decompiled
-    (void) fileType;
-    (void) p2;
-    (void) format;
-    return NULL;
-}
+// NOT_DECOMPILED fileAsyncf
 
-FileEntry * fileAsync(const char * path, s32 fileType, s32 p3)
-{
-    // Not decompiled
-    (void) path;
-    (void) fileType;
-    (void) p3;
-    return NULL;
-}
+// NOT_DECOMPILED fileAsync
 
 }

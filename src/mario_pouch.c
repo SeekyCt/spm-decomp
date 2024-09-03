@@ -379,11 +379,7 @@ s32 pouchGetLevel()
     return pp->level;
 }
 
-s32 pouchGetNextLevelXp()
-{
-    // Not decompiled
-    return 0;
-}
+// NOT_DECOMPILED pouchGetNextLevelXp
 
 void pouchSetAttack(s32 attack)
 {
@@ -580,52 +576,19 @@ void pouchAddCoin(s32 increase)
         pouchAddTotalCoin(increase);
 }
 
-bool pouchAddItem(s32 itemId)
-{
-    // Not decompiled
-    (void) itemId;
-    return false;
-}
+// NOT_DECOMPILED pouchAddItem
 
-bool pouchCheckHaveItem(s16 itemId)
-{
-    // Not decompiled
-    (void) itemId;
-    return false;
-}
+// NOT_DECOMPILED pouchCheckHaveItem
 
-void pouchRemoveItem(s16 itemId)
-{
-    // Not decompiled
-    (void) itemId;
-}
+// NOT_DECOMPILED pouchRemoveItem
 
-void pouchRemoveItemIdx(s16 itemId, s32 idx)
-{
-    // Not decompiled
-    (void) itemId;
-    (void) idx;
-}
+// NOT_DECOMPILED pouchRemoveItemIdx
 
-bool pouchAddShopItem(s16 itemId)
-{
-    // Not decompiled
-    (void) itemId;
-    return false;
-}
+// NOT_DECOMPILED pouchAddShopItem
 
-void pouchRemoveShopItem(s16 itemId)
-{
-    // Not decompiled
-    (void) itemId;
-}
+// NOT_DECOMPILED pouchRemoveShopItem
 
-void pouchRemoveShopItemIdx(s16 itemId, s32 idx)
-{
-    // Not decompiled
-    (void) itemId;
-    (void) idx;
-}
+// NOT_DECOMPILED pouchRemoveShopItemIdx
 
 PouchCharOrPixlInfo * pouchGetCharInfo(s32 slot)
 {

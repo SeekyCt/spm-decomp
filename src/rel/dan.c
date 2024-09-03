@@ -802,13 +802,7 @@ void func_80c839cc(const char * param_1, bool param_2)
     }
 }
 
-void wracktailDispCb(void * param, s32 animGroupIdx, s32 param_3) 
-{
-    // Not decompiled
-    (void) param;
-    (void) animGroupIdx;
-    (void) param_3;
-}
+// NOT_DECOMPILED wracktailDispCb
 
 s32 evt_dan_set_wracktail_disp_cb(EvtEntry * entry, bool isFirstCall)
 {
@@ -822,13 +816,7 @@ s32 evt_dan_set_wracktail_disp_cb(EvtEntry * entry, bool isFirstCall)
     return EVT_RET_CONTINUE;
 }
 
-s32 func_80c83c48(EvtEntry * entry, bool isFirstCall)
-{
-    // Not decompiled
-    (void) entry;
-    (void) isFirstCall;
-    return 0;
-}
+// NOT_DECOMPILED func_80c83c48
 
 void screenBlinkDisp(s32 cameraId, void * param)
 {

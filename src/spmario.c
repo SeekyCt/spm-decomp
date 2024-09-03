@@ -87,15 +87,9 @@ static void viPostCallback(u32 retraceCount);
 static void wiiDvdCheckThread(void * param);
 static void wiiRumbleCheck();
 
-void spmarioInit()
-{
-    // Not decompiled
-}
+// NOT_DECOMPILED spmarioInit
 
-void spmarioMain()
-{
-    // Not decompiled
-}
+// NOT_DECOMPILED spmarioMain
 
 void spmarioDisp()
 {
@@ -132,22 +126,11 @@ s32 spmarioGetSystemLevel()
     return _spmarioSystemLevel;
 }
 
-void viPostCallback(u32 retraceCount)
-{
-    // Not decompiled
-    (void) retraceCount;
-}
+// NOT_DECOMPILED viPostCallback
 
-void wiiDvdCheckThread(void * param)
-{
-    // Not decompiled
-    (void) param;
-}
+// NOT_DECOMPILED wiiDvdCheckThread
 
-void wiiRumbleCheck()
-{
-    // Not decompiled
-}
+// NOT_DECOMPILED wiiRumbleCheck
 
 void resetButtonRestart()
 {

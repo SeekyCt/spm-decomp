@@ -75,10 +75,7 @@ void wpadAllRumbleOff()
         WPADControlMotor(i, 0);
 }
 
-void wpadMain() 
-{
-    // Not decompiled
-}
+// NOT_DECOMPILED wpadMain
 
 void wpadCursorOn()
 {

@@ -206,21 +206,9 @@ void movePos(f32 distance, f32 angle, f32 * x, f32 * z)
     *z -= distance * c;
 }
 
-static void fsort(char ** table, size_t size)
-{
-    // Not decompiled
-    (void) table;
-    (void) size;
-}
+// NOT_DECOMPILED fsort
 
-void qqsort(char * list, size_t nel, size_t size, void * compare)
-{
-    // Not decompiled
-    (void) list;
-    (void) nel;
-    (void) size;
-    (void) compare;
-}
+// NOT_DECOMPILED qqsort
 
 static s32 _rand_advance()
 {
