@@ -1,12 +1,7 @@
 #pragma once
 
-#if (defined DECOMP) && !(defined SKIP_PPCDIS)
-// Decomp should include ppcdis.h in all files
-#include <ppcdis.h>
-#else
-// Unknown function is useful outside of decomp too
+// Unknown function declaration
 #define UNKNOWN_FUNCTION(name) void name(void)
-#endif
 
 // Intellisense doesn't like asm compiler extensions
 #ifdef __INTELLISENSE__ 

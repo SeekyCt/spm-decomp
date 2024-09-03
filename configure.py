@@ -189,7 +189,6 @@ cflags_base = [
 
     # spm-headers
     "-DDECOMP",
-    "-DSKIP_PPCDIS",
     f"-DSPM_{config.version.upper()}",
     f"-i {SPM_HEADERS}/include",
     f"-i {SPM_HEADERS}/decomp",

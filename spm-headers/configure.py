@@ -245,7 +245,7 @@ def test_old_mod_ctx(regions: List[str]):
 def test_decomp_ctx(regions: List[str]):
     assert args.codewarrior, "Error: decomp_ctx test requires --codewarrior"
     compile_regions(os.path.join("$builddir", "{region}", "decomp.o"), "$decomp_source", regions,
-                    DECOMP_INCLUDES, ["DECOMP", "SKIP_PPCDIS"], True)
+                    DECOMP_INCLUDES, ["DECOMP"], True)
 
 # Test shuffled include orders
 def test_mod_ctx_shuffle(regions: List[str]):

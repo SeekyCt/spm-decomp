@@ -9,7 +9,6 @@
             ],
             "defines": [
                 "DECOMP",
-                "SKIP_PPCDIS",
                 "SPM_EU0"
             ],
             "cStandard": "c99",
@@ -33,7 +32,6 @@
             ],
             "defines": [
                 "DECOMP",
-                "SKIP_PPCDIS",
                 "SPM_EU0"
             ],
             "cStandard": "c99",
