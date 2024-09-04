@@ -1263,10 +1263,11 @@ def generate_objdiff_config(
             cflags = list(filter(keep_flag, cflags))
 
             # Add appropriate lang flag
-            if obj.src_path.suffix in (".cp", ".cpp"):
-                cflags.insert(0, "-lang=c++")
-            else:
-                cflags.insert(0, "-lang=c")
+            if not any(flag.startswith("-lang") for flag in cflags):
+                if obj.src_path.suffix in (".cp", ".cpp"):
+                    cflags.insert(0, "-lang=c++")
+                else:
+                    cflags.insert(0, "-lang=c")
 
         unit_config["base_path"] = obj.src_obj_path
         compiler_version = COMPILER_MAP.get(obj.options["mw_version"])
