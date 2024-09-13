@@ -10,6 +10,9 @@
 namespace nw4r {
 namespace math {
 
+USING(wii::mtx::Vec3)
+USING(wii::mtx::Mtx34)
+
 struct _VEC2
 {
     f32 x, y;
@@ -18,10 +21,10 @@ struct _VEC2
 struct VEC2 : _VEC2
 {
     VEC2() {}
-    VEC2(f32 x, f32 y)
+    VEC2(f32 x_, f32 y_)
     {
-        this->x = x;
-        this->y = y;
+        this->x = x_;
+        this->y = y_;
     }
 
     operator f32*() { return reinterpret_cast<f32*>(this); }
@@ -37,11 +40,11 @@ struct _VEC3
 struct VEC3 : _VEC3
 {
     VEC3() {}
-    VEC3(f32 x, f32 y, f32 z)
+    VEC3(f32 x_, f32 y_, f32 z_)
     {
-        this->x = x;
-        this->y = y;
-        this->z = z;
+        this->x = x_;
+        this->y = y_;
+        this->z = z_;
     }
 
     operator Vec3*() { return reinterpret_cast<Vec3*>(this); }
@@ -53,12 +56,14 @@ struct _MTX34
 {
     union
     {
+#ifdef DECOMP
         struct
         {
             f32 _00, _01, _02, _03,
                 _10, _11, _12, _13,
                 _20, _21, _22, _23;
         };
+#endif
         f32 m[3][4];
         f32 a[3 * 4];
         Mtx34 mtx;
@@ -72,6 +77,7 @@ struct MTX34 : public _MTX34
 
     MTX34() {}
 
+#ifdef DECOMP
     // clang-format off
     MTX34(f32 f00, f32 f01, f32 f02, f32 f03,
           f32 f10, f32 f11, f32 f12, f32 f13,
@@ -81,6 +87,7 @@ struct MTX34 : public _MTX34
         _20 = f20; _21 = f21; _22 = f22; _23 = f23;
     }
     // clang-format on
+#endif
 
     operator MtxRef() { return mtx; }
     operator MtxRefConst() const { return mtx; }

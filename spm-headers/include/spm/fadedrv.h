@@ -5,7 +5,7 @@
 
 CPP_WRAPPER(spm::fadedrv)
 
-USING(wii::GX::GXColor)
+USING(wii::gx::GXColor)
 
 void fadeInit();
 void fadeEntry(u32 transitionType, s32 param_2, GXColor colour);

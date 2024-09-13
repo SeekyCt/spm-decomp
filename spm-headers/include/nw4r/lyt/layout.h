@@ -1,6 +1,7 @@
 #pragma once
 
 #include <common.h>
+#include <wii/mem.h>
 #include <msl/new.h>
 #include <nw4r/lyt/animation.h>
 #include <nw4r/lyt/pane.h>

@@ -11,6 +11,7 @@
 
 CPP_WRAPPER(spm::camdrv)
 
+USING(wii::gx::GXProjectionType)
 USING(wii::mtx::Vec3)
 USING(wii::mtx::Mtx34)
 USING(wii::mtx::Mtx44)

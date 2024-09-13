@@ -1,10 +1,13 @@
 #pragma once
 
 #include <common.h>
+#include <wii/gx.h>
 #include <nw4r/ut/linkList.h>
 
 namespace nw4r {
 namespace lyt {
+
+USING(wii::gx::GXColorS10)
 
 class Material
 {

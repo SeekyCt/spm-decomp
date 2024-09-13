@@ -10,6 +10,8 @@
 namespace nw4r {
 namespace ut {
 
+USING(wii::gx::GXColor)
+
 class Color : public GXColor {
 public:
     Color() { *this = 0xFFFFFFFF; }
