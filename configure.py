@@ -266,6 +266,7 @@ def Rel(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
 
 
 Matching = True                   # Object matches and should be linked
+NonStarted = False                # Object has no source file created
 NonMatching = False               # Object does not match and should not be linked
 Equivalent = config.non_matching  # Object should be linked when configured with --non-matching
 
@@ -281,7 +282,7 @@ config.libs = [
             Object(Matching, "evtmgr.c"),
             Object(Matching, "evtmgr_cmd.c"),
             Object(NonMatching, "mario_pouch.c"),
-            Object(NonMatching, "mario.c"),
+            Object(NonStarted, "mario.c"),
             Object(NonMatching, "seq_title.c"),
             Object(Matching, "seqdef.c"),
             Object(Matching, "seqdrv.c"),
@@ -291,7 +292,7 @@ config.libs = [
             Object(NonMatching, "filemgr.c"),
             Object(NonMatching, "memory.c"),
             Object(NonMatching, "spmario.c"),
-            Object(NonMatching, "npcdrv.c"),
+            Object(NonStarted, "npcdrv.c"),
             Object(NonMatching, "wpadmgr.c"),
             Object(Matching, "relmgr.c"),
             Object(Matching, "nandmgr.c"),
