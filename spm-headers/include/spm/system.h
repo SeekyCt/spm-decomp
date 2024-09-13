@@ -89,9 +89,8 @@ s32 NORETURN ATTRIBUTE_FORMAT(printf, 4, 5) __assert2(
 
 /*
     Rounds a float to an int
-    Deadstripped, always inlined
 */
-s32 roundi(f32 x);
+STRIPPED(s32 roundi(f32 x))
 
 /*
     Adjusts an angle to be 0 <= x < 360
@@ -144,9 +143,8 @@ void sysRandInit();
 
 /*
     Gets the current screen draw token
-    Deadstripped, always inlined
 */
-u16 sysGetToken();
+STRIPPED(u16 sysGetToken())
 
 /*
     Waits until the next screen draw, or max 100ms

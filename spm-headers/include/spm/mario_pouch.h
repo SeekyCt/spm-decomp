@@ -118,14 +118,14 @@ DECOMP_STATIC(MarioPouchWork mario_pouch_work2)
     Returns a pointer to the MarioPouchWork / MarioPouchWork2 instance
 */
 MarioPouchWork * pouchGetPtr();
-MarioPouchWork2 * pouch2GetPtr(); // inlined
+STRIPPED(MarioPouchWork2 * pouch2GetPtr())
 
 /*
     Initialise data used by pouch functions
     Overwritten later once a save is loaded
 */
 void pouchInit();
-void pouch2Init(); // inlined
+STRIPPED(void pouch2Init())
 void pouchReInit();
 
 /*
@@ -169,7 +169,7 @@ s32 pouchGetMaxHp();
 /*
     Get/add to the player's xp
 */
-void pouchSetXp(s32 xp); // inlined
+STRIPPED(void pouchSetXp(s32 xp))
 s32 pouchGetXp();
 void pouchAddXp(s32 increase);
 
@@ -178,7 +178,7 @@ void pouchAddXp(s32 increase);
 */
 void pouchSetCoin(s32 coins);
 s32 pouchGetCoin();
-void pouchAddTotalCoin(s32 increase); // inlined
+STRIPPED(void pouchAddTotalCoin(s32 increase))
 void pouchAddCoin(s32 increase); // increases totalCoinsCollected
 
 /*

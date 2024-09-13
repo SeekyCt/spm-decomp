@@ -351,7 +351,7 @@ f32 evtSetFloat(EvtEntry * entry, EvtVar variable, f32 value);
     Returns a pointer to the instruction after the specified label
     in an entry's script
 */
-EvtScriptCode * evtSearchLabel(EvtEntry * entry, s32 id); // inlined
+STRIPPED(EvtScriptCode * evtSearchLabel(EvtEntry * entry, s32 id))
 
 /*
     Returns a pointer to the instruction after the next else on the
