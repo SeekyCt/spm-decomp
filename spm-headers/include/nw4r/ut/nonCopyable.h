@@ -5,11 +5,9 @@
 #pragma once
 
 #include <common.h>
-#include <nw4r/ut/nonCopyable.h>
 
 namespace nw4r {
 namespace ut {
-namespace {
 
 class NonCopyable {
 protected:
@@ -19,6 +17,5 @@ protected:
 };
 SIZE_ASSERT(NonCopyable, 0x1)
 
-} // namespace
 } // namespace ut
 } // namespace nw4r
