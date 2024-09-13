@@ -124,7 +124,6 @@ config.dtk_path = args.dtk
 config.objdiff_path = args.objdiff
 config.binutils_path = args.binutils
 config.compilers_path = args.compilers
-config.debug = args.debug
 config.generate_map = args.map or True
 config.non_matching = args.non_matching
 config.sjiswrap_path = args.sjiswrap
@@ -137,7 +136,7 @@ if not config.non_matching:
 # Tool versions
 config.binutils_tag = "2.42-1"
 config.compilers_tag = "20240706"
-config.dtk_tag = "v0.9.4"
+config.dtk_tag = "v0.9.5"
 config.objdiff_tag = "v2.0.0-beta.5"
 config.sjiswrap_tag = "v1.1.1"
 config.wibo_tag = "0.6.11"
@@ -155,9 +154,12 @@ config.asflags = [
 config.ldflags = [
     "-fp hardware",
     "-nodefaults",
-    # "-warn off",
-    # "-listclosure", # Uncomment for Wii linkers
 ]
+if args.debug:
+    config.ldflags.append("-g")
+if args.map:
+    config.ldflags.append("-mapunused")
+
 # Use for any additional files that should cause a re-configure when modified
 config.reconfig_deps = []
 
@@ -195,7 +197,7 @@ cflags_base = [
 ]
 
 # Debug flags
-if config.debug:
+if args.debug:
     cflags_base.extend(["-sym on", "-DDEBUG=1"])
 else:
     cflags_base.append("-DNDEBUG=1")
