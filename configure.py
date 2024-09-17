@@ -193,6 +193,7 @@ cflags_base = [
     "-DDECOMP",
     f"-DSPM_{config.version.upper()}",
     f"-i {SPM_HEADERS}/include",
+    f"-i {SPM_HEADERS}/include_cpp",
     f"-i {SPM_HEADERS}/decomp",
 ]
 

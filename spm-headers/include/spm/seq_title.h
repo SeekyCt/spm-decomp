@@ -3,10 +3,13 @@
 #include <common.h>
 #include <spm/seqdrv.h>
 #include <wii/mem.h>
+
+#ifdef __cplusplus
 #include <nw4r/lyt/arcResourceAccessor.h>
 #include <nw4r/lyt/animation.h>
 #include <nw4r/lyt/drawInfo.h>
 #include <nw4r/lyt/layout.h>
+#endif
 
 CPP_WRAPPER(spm::seq_title)
 
@@ -41,12 +44,16 @@ typedef struct
 /* 0x10 */ u32 heapSize;
 /* 0x14 */ void * heapHandle;
 /* 0x18 */ MEMAllocator allocator;
+#ifdef __cplusplus
 /* 0x28 */ nw4r::lyt::ArcResourceAccessor * arcResAccessor;
 /* 0x2C */ nw4r::lyt::Layout  * layout;
 /* 0x30 */ nw4r::lyt::Pane * pushu2Pane;
 /* 0x30 */ nw4r::lyt::Pane * pushuBotanPane;
 /* 0x38 */ nw4r::lyt::AnimTransform * animations[2]; // 0 start, 1 loop
 /* 0x40 */ nw4r::lyt::DrawInfo drawInfo;
+#else
+/* 0x28 */ u8 cpp_pad[0x94 - 0x28];
+#endif
 /* 0x94 */ s32 animNum;
 /* 0x98 */ f32 animFrame;
 } SeqTitleWork;

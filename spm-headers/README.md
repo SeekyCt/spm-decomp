@@ -19,15 +19,19 @@ It is recommended to use this with [git subrepo](https://github.com/ingydotnet/g
 
 ## Decomp
 
-For use in decomp, the `include` and `decomp` folders should be added to the include path, and the preprocessor define `DECOMP` should be used.
+For use in decomp, the `include`, `include_cpp` and `decomp` folders should be added to the include path, and the preprocessor define `DECOMP` should be used.
 
 ## Mods
 
-For use in mods, the `include` and `mod` folder should be added to the include path and an lst from `linker` should be used. If including your compiler's C++ standard library, the preprocessor define `USE_STL` should be used.
+For use in mods, the `include`, `include_cpp` and `mod` folder should be added to the include path and an lst from `linker` should be used. If including your compiler's C++ standard library, the preprocessor define `USE_STL` should be used.
+
+## C
+
+For the cases where C is required (such as m2c or maybe some niche modding cases), omitting the `include_cpp` folder should be all that's neccessary.
 
 # Licensing
 
-All code originally written for this project (everything under the `include`, `decomp` and `linker` directories) is available under the MIT license.
+All code originally written for this project (everything under the `include`, `include_cpp`, `decomp` and `linker` directories) is available under the MIT license.
 
 Everything under the `mod` folder is available under the GPLv3 license as it's derived from other GPL code.
 

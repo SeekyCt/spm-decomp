@@ -4,6 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/spm-headers/include",
+                "${workspaceFolder}/spm-headers/include_cpp",
                 "${workspaceFolder}/spm-headers/decomp",
                 "${workspaceFolder}/build/EU0/include"
             ],
@@ -27,6 +28,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/spm-headers/include",
+                "${workspaceFolder}/spm-headers/include_cpp",
                 "${workspaceFolder}/spm-headers/decomp",
                 "${workspaceFolder}/build/EU0/include"
             ],
