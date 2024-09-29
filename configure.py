@@ -19,6 +19,7 @@ from typing import Any, Dict, List
 
 from tools.project import (
     Object,
+    ProgressCategory,
     ProjectConfig,
     calculate_progress,
     generate_build,
