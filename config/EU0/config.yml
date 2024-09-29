@@ -3,6 +3,7 @@ hash: 3fd3d9815528d1c04bc433d67d273b1e3301e976
 symbols: config/EU0/symbols.txt
 splits: config/EU0/splits.txt
 mw_comment_version: 15
+quick_analysis: true
 
 modules:
 - object: orig/EU0/files/rel/relF.bin:nlzss
@@ -14,3 +15,8 @@ extract:
 - symbol: lz_saveImagesTpl
   binary: saveImages.tpl.lz
   header: assets/saveImages.tpl.lz.inc
+
+block_relocations:
+# extab contains these values, but they're not dtors
+- target: 0x80080000
+- target: 0x800A0000
