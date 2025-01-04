@@ -10,9 +10,11 @@ from tempfile import NamedTemporaryFile
 from typing import List, Optional
 
 
+SPM_HEADERS = "spm-headers"
+
 INCLUDES = [
-    os.path.join("spm-headers", "include"),
-    os.path.join("spm-headers", "decomp"),
+    os.path.join(SPM_HEADERS, "include"),
+    os.path.join(SPM_HEADERS, "decomp"),
     # include_cpp omitted for m2c compatability
 ]
 CC = os.path.join("build", "compilers", "GC", "3.0a5.2", "mwcceppc")
@@ -51,8 +53,18 @@ def find_headers(dirname: str, base=None) -> List[str]:
         path = dirname + '/' + name
         if os.path.isdir(path):
             ret.extend(find_headers(path, base))
-        elif name.endswith('.h'):
-            ret.append(path[len(base)+1:])
+        else:
+            _, ext = os.path.splitext(path)
+            if ext == ".h":
+                ret.append(path[len(base)+1:])
+            elif ext in (".hpp", ""):
+                # C++ not supported
+                pass
+            elif ext in (".md",):
+                # Ignore docs
+                pass
+            else:
+                print("Warning: skipping unknown file type", name, file=sys.stderr)
 
     return ret
 

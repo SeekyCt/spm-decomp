@@ -17,6 +17,10 @@
 
 extern "C" {
 
+#define SQUARE(x) ((x) * (x))
+#define CUBE(x) ((x) * (x) * (x))
+#define QUART(x) ((x) * (x) * (x) * (x))
+
 // .bss
 static OSMutex sysMutex;
 static char * tmp0[0xc00];
