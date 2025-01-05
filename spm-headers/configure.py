@@ -9,7 +9,7 @@ from ninja_syntax import Writer
 
 parser = ArgumentParser()
 parser.add_argument("tests", type=str, nargs="*", help="Tests to run" \
-                    "(mod_ctx, old_mod_ctx, decomp_ctx, mod_ctx_shuffle, test_mod_individual)")
+                    "(mod_ctx, decomp_ctx, mod_ctx_shuffle, test_mod_individual)")
 parser.add_argument("--regions", type=str, nargs="+", help="Regions to test")
 parser.add_argument("--seed", type=int, default=1, help="Shuffling seed")
 parser.add_argument("--shuffle", type=int, default=50, help="Number of randomised orders to test")
@@ -231,14 +231,9 @@ def find_headers(dirname: str, base=None) -> List[str]:
 
     return ret
 
-# Test the headers in the spm-utils modding setup
+# Test the headers in the modding setup
 def test_mod_ctx(regions: List[str]):
     compile_regions(os.path.join("$builddir", "{region}", "mod.o"), "$mod_source", regions,
-                    MOD_INCLUDES, ["USE_STL"])
-
-# Test the headers in the old modding setup
-def test_old_mod_ctx(regions: List[str]):
-    compile_regions(os.path.join("$builddir", "{region}", "old_mod.o"), "$mod_source", regions,
                     MOD_INCLUDES, [])
 
 # Test the headers in the decomp setup
@@ -254,7 +249,7 @@ def test_mod_ctx_shuffle(regions: List[str]):
         source = os.path.join("$builddir", f"shuffle_{args.seed}", f"{i}.cpp")
         incgen(source, MOD_INCLUDES, i)
         compile_regions(os.path.join("$builddir", "{region}", f"shuffle_mod_{args.seed}_{i}.o"),
-                        source, regions, MOD_INCLUDES, ["USE_STL"])
+                        source, regions, MOD_INCLUDES, [])
 
 # Test individual headers
 def test_mod_individual(regions: List[str]):
@@ -263,18 +258,17 @@ def test_mod_individual(regions: List[str]):
         source = os.path.join("$builddir", "individual", f"{name}.c")
         incgen_single(source, header)
         compile_regions(os.path.join("$builddir", "{region}", "individual", f"{name}.o"), source,
-                        regions, MOD_INCLUDES, ["USE_STL", "SPM_EU0"])
+                        regions, MOD_INCLUDES, ["SPM_EU0"])
 
 test_fns = {
     "mod_ctx" : test_mod_ctx,
-    "old_mod_ctx" : test_old_mod_ctx,
     "decomp_ctx" : test_decomp_ctx,
     "mod_ctx_shuffle" : test_mod_ctx_shuffle,
     "test_mod_individual" : test_mod_individual,
 }
 
 incgen("$mod_source", MOD_INCLUDES)
-default_tests = ["mod_ctx", "old_mod_ctx"]
+default_tests = ["mod_ctx"]
 
 if args.codewarrior:
     incgen("$decomp_source", DECOMP_INCLUDES)

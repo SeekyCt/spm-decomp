@@ -2,11 +2,12 @@
 
 #include <common.h>
 #include <wii/mem.h>
-#include <msl/new.h>
-#include <nw4r/lyt/animation.h>
-#include <nw4r/lyt/pane.h>
-#include <nw4r/lyt/resourceAccessor.h>
-#include <nw4r/ut/rect.h>
+#include <msl/new>
+#include <nw4r/lyt/animation.hpp>
+#include <nw4r/lyt/drawInfo.hpp>
+#include <nw4r/lyt/pane.hpp>
+#include <nw4r/lyt/resourceAccessor.hpp>
+#include <nw4r/ut/rect.hpp>
 
 namespace nw4r {
 namespace lyt {

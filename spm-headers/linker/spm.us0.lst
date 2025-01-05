@@ -1,5 +1,5 @@
 // OS Globals
-800000e4:currentThread
+800000e4:OS_CURRENT_THREAD
 800030c8:firstRel
 800030cc:lastRel
 
@@ -127,7 +127,7 @@
 803E8DC8:seq_data
 801A5634:__memAlloc
 801A56B8:__memFree
-803EAA08:size_table
+803EAA08:memory_size_table
 8056D188:memory_wp
 8056D18C:memory_swp
 802350B8:wpadGetButtonsHeld
@@ -576,7 +576,7 @@
 80056948:cam3dMain
 804C8580:camPtrTbl
 801797CC:seq_mapChangeMain
-800250EC:getItemUseEvt
+80025074:getItemUseEvt
 8002F240:msgUnLoad
 8002F014:msgLoad
 1,1,27204:rpg_screen_draw
@@ -634,7 +634,7 @@
 8056db90:SaveStart
 8056db94:SaveEnd
 
-// new to SPM-Hard-Mode
+// new to SPM-Hard-Mode: Rubies and Magic
 8014C8A0:pouchSetAttack
 8014C8D4:pouchGetAttack
 8014C8E4:pouchAddAttack
@@ -655,3 +655,31 @@
 800d9b14:evtDelete
 8041BC28:superDimentioHeadDefenses
 8041BC40:superDimentioBodyDefenses
+800d8cfc:evtmgrReInit
+803E71D8:marioMotTbl
+803E26F0:saffronCookingScript
+804CEA28:marioStatusApplyStatuses
+
+// 2023-09-02
+80295834:IOS_OpenAsync
+80295A6C:IOS_CloseAsync
+80295BD4:IOS_ReadAsync
+80295DDC:IOS_WriteAsync
+80295EDC:IOS_Write
+80295FE4:IOS_SeekAsync
+80296710:iosCreateHeap
+802960C4:IOS_IoctlAsync
+80296468:IOS_IoctlvAsync
+8029654C:IOS_Ioctlv
+80296840:iosAlloc
+8056DA70:errno
+80274EA0:OSCreateThread
+80274E64:OSYieldThread
+802753C8:OSResumeThread
+80258148:memcmp
+
+// new to v10
+8017c500:loadMain
+8056d0f0:seq_load_sub_wp
+8056d1d0:nandmgr_wp
+80238af4:spsndSFXOn

@@ -38,13 +38,18 @@ SIZE_ASSERT(NPCTribeAnimDef, 0x8)
 typedef struct
 {
 /* 0x00 */ u16 id;
-/* 0x02 */ u8 unknown_0x2[0x28 - 0x2];
+/* 0x02 */ s16 mode;
+/* 0x04 */ s32 minimum_damage;
+/* 0x08 */ Vec3 position;
+/* 0x14 */ u32 flag14; // assigned to flag2c in NPCPart
+/* 0x18 */ u32 flag18; // assigned to flag30 in NPCPart
+/* 0x1c */ u8 unknown_0x1c[0x28 - 0x1c];
 /* 0x28 */ NPCDefense * defenses;
 /* 0x2C */ Unk * unknown_0x2c;
 /* 0x30 */ NPCPartUpdateFunc * updateFunc;
-/* 0x34 */ Unk * unknown_0x34;
+/* 0x34 */ const char * animPoseName;
 /* 0x38 */ NPCTribeAnimDef * animDefs;
-/* 0x3C */ u8 unknown_0x3c[0x48 - 0x3c];
+/* 0x3C */ Vec3 positionDelta;
 } NPCPartDef;
 SIZE_ASSERT(NPCPartDef, 0x48)
 
@@ -94,7 +99,11 @@ OFFSET_ASSERT(NPCAnim, tribeAnims, 0x48)
 typedef struct _NPCPart
 {
 /* 0x000 */ u16 id;
-/* 0x002 */ u8 unknown_0x2[0x2c - 0x2];
+/* 0x002 */ s16 mode;
+/* 0x004 */ s32 minimum_damage;
+/* 0x008 */ Vec3 position;
+/* 0x014 */ Vec3 ownerPosLastAnimChange;
+/* 0x020 */ Vec3 positionDelta;
 /* 0x02C */ u32 flag2c;
 /* 0x030 */ u32 flag30;
 /* 0x034 */ u8 unknown_0x34[0x378 - 0x34];

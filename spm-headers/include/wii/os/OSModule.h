@@ -6,6 +6,16 @@ CPP_WRAPPER(wii::os)
 
 typedef void (RelExportFunc)();
 
+typedef struct
+{
+    union
+    {
+        u32 offset;
+        void * address;
+    };
+    u32 size;
+} RelSection;
+
 // Unions are offsets in file then pointers after OSLink
 typedef struct _RelHeader
 {
@@ -16,7 +26,7 @@ typedef struct _RelHeader
     union
     {
         u32 sectionInfoOffset;
-        void * sectionInfo;
+        RelSection * sectionInfo;
     };
     union
     {

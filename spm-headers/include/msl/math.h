@@ -4,6 +4,9 @@
 
 CPP_WRAPPER(msl::math)
 
+typedef float float_t;
+typedef double double_t;
+
 #define PI 3.141592653589793f
 #define PIx2 (PI * 2.0f)
 
@@ -22,5 +25,8 @@ double sqrt(double x);
 #define fabs(x) __fabs(x)
 #define fabsf(x) __fabsf(x)
 #define abs(x) __abs(x)
+
+double ceil(double x);
+#define ceilf(x) ((f32)ceil(x))
 
 CPP_WRAPPER_END()

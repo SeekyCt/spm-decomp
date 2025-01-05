@@ -1,10 +1,10 @@
 #pragma once
 
 #include <common.h>
-#include <msl/new.h>
-#include <nw4r/lyt/animation.h>
-#include <nw4r/lyt/material.h>
-#include <nw4r/lyt/resourceAccessor.h>
+#include <msl/new>
+#include <nw4r/lyt/animation.hpp>
+#include <nw4r/lyt/material.hpp>
+#include <nw4r/lyt/resourceAccessor.hpp>
 
 namespace nw4r {
 namespace lyt {

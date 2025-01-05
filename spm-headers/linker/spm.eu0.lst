@@ -1,6 +1,7 @@
 /* OS Globals */
 
-800000e4:currentThread
+800000dc:OS_THREAD_QUEUE
+800000e4:OS_CURRENT_THREAD
 800030c8:firstRel
 800030cc:lastRel
 // more
@@ -139,6 +140,7 @@
 // somewhere
 800b426c:func_800b426c
 800cd554:func_800cd554
+805aea50:errno
 
 // eff_nice.c
 800CC01C:effNiceEntry
@@ -191,6 +193,7 @@
 // evtmgr.c
 800d87e4:evtGetWork
 800d890c:make_jump_table
+800D8B2C:evtmgrReInit
 800d8b88:evtEntry
 800d8df4:evtEntryType
 800d9060:evtChildEntry
@@ -393,6 +396,7 @@
 
 // evt_shop.c
 80111d1c:evt_shop_set_defs
+804220D0:saffronCookingScript
 // more
 
 // mario.c
@@ -409,6 +413,7 @@
 // mario_motion.c
 801433dc:marioChgMot
 80146f0c:func_80146f0c
+80426bb8:marioMotTbl
 // more
 
 // mario_pouch.c
@@ -443,6 +448,10 @@
 // bss
 80511a28:mario_pouch_work
 
+// mario_status.c
+80154f3c:marioStatusApplyStatuses
+// more
+
 // seq_logo.c
 80179140:seq_logoMain
 // more
@@ -453,6 +462,7 @@
 // more
 
 // seq_title.c
+8017b250:seq_titleMain
 8017bc4c:getNextDanMapname
 // more
 
@@ -468,6 +478,13 @@
 8017c084:seqGetSeq
 // data
 80512360:seqWork
+
+//seq_load_sub.c
+// text
+8017d1ac:loadMain
+// data
+805ae0d0:seq_load_sub_wp
+
 
 // pausewin.c
 // text
@@ -569,7 +586,7 @@
 801a62f0:__memFree
 801a6e34:__dl__FPv
 // data
-8042a408:size_table
+8042a408:memory_size_table
 // sdata
 805ae168:memory_wp
 805ae16c:memory_swp
@@ -667,6 +684,8 @@
 8023edcc:nandUpdateSave
 8023efe0:nandLoadSave
 // more
+// data
+805ae1b0:nandmgr_wp
 
 // homebuttondrv.c
 // text
@@ -683,7 +702,6 @@
 // runtime.c
 802560a4:__div2i
 // more
-
 // MSL_C.PPCEABI.bare.H.a
 // printf.c
 8025cf40:vsprintf
@@ -694,9 +712,9 @@
 // string.c
 8025ec04:strstr
 // more
-
 // string.c
 8025a874:memmove
+8025a998:memcmp
 8025e8fc:strcpy
 8025e9bc:strncpy
 8025ea00:strcat
@@ -705,10 +723,8 @@
 8025ebd4:strchr
 80267018:strlen
 // more
-
 // s_cos.c
 80263ea0:cos
-
 // s_sin.c
 802642ac:sin
 
@@ -757,13 +773,23 @@
 80276198:OSRestart
 // more
 // OSThread.c
+80277154:OSGetCurrentThread
+802776c0:OSYieldThread
+802776fc:OSCreateThread
+80277968:OSExitThread
+80277a4c:OSCancelThread
+80277d64:OSResumeThread
 80277ffc:OSSuspendThread
 80278190:OSSleepThread
 8027827c:OSWakeupThread
 // more
-// OSTime
+// OSTime.c
 80278370:OSGetTime
 // more
+// OSMutex.c
+80275a50:OSInitMutex
+80275a88:OSLockMutex
+80275b64:OSUnlockMutex
 
 // mtx.a
 // mtx.c
@@ -848,11 +874,21 @@
 // ipc.a
     // text
 80297f04:__ios_Ipc2
+80298150:IOS_OpenAsync
 80298268:IOS_Open
+80298388:IOS_CloseAsync
 80298448:IOS_Close
+802984f0:IOS_ReadAsync
 802985f0:IOS_Read
+802986f8:IOS_WriteAsync
+802987f8:IOS_Write
+80298900:IOS_SeekAsync
+8029902c:iosCreateHeap
+802989e0:IOS_IoctlAsync
 80298b18:IOS_Ioctl
+80298d84:IOS_IoctlvAsync
 80298e68:IOS_Ioctlv
+8029915c:iosAlloc
 80299360:iosAllocAligned
     // sdata
 805ae3b4:ipc_lbl_805ae3b4

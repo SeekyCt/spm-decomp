@@ -1,8 +1,8 @@
 #pragma once
 
 #include <common.h>
-#include <nw4r/lyt/resourceAccessor.h>
-#include <nw4r/ut/linkList.h>
+#include <nw4r/lyt/resourceAccessor.hpp>
+#include <nw4r/ut/linkList.hpp>
 
 namespace nw4r {
 namespace lyt {

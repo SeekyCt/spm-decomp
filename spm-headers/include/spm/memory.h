@@ -24,8 +24,16 @@ USING(wii::gx::GXTexObj)
 USING(wii::mem::MEMHeapHandle)
 
 #define MEM1_HEAP_COUNT 3
+
+// Korean adds a 10th heap
+#ifdef SPM_KR0
+#define MEM2_HEAP_COUNT 7
+#define HEAP_COUNT 10
+#else
 #define MEM2_HEAP_COUNT 6
 #define HEAP_COUNT 9
+#endif
+
 #define SMART_HEAP_ID 7
 #define SMART_ALLOCATION_MAX 2048
 
@@ -39,7 +47,10 @@ enum Heap
 /* 0x5 */ HEAP_WPAD,
 /* 0x6 */ HEAP_SOUND,
 /* 0x7 */ HEAP_SMART,
-/* 0x8 */ HEAP_MEM2_UNUSED
+#ifdef SPM_KR0
+/* 0x8 */ HEAP_FONT,
+#endif
+/* 0x8 / 0x9 */ HEAP_MEM2_UNUSED
 };
 
 enum HeapSizeType
@@ -55,7 +66,7 @@ typedef struct
 } HeapSize;
 SIZE_ASSERT(HeapSize, 0x8)
 
-DECOMP_STATIC(HeapSize memory_size_table[9])
+DECOMP_STATIC(HeapSize memory_size_table[HEAP_COUNT])
 
 typedef struct
 {
@@ -63,7 +74,11 @@ typedef struct
 /* 0x24 */ void * heapStart[HEAP_COUNT]; // pointer to the start of the heap
 /* 0x48 */ void * heapEnd[HEAP_COUNT]; // pointer to the end of the heap
 } MemWork;
+#ifdef SPM_KR0
+SIZE_ASSERT(MemWork, 0x78)
+#else
 SIZE_ASSERT(MemWork, 0x6c)
+#endif
 
 DECOMP_STATIC(MemWork memory_work)
 DECOMP_STATIC(MemWork * memory_wp)

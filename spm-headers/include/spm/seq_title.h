@@ -5,10 +5,10 @@
 #include <wii/mem.h>
 
 #ifdef __cplusplus
-#include <nw4r/lyt/arcResourceAccessor.h>
-#include <nw4r/lyt/animation.h>
-#include <nw4r/lyt/drawInfo.h>
-#include <nw4r/lyt/layout.h>
+#include <nw4r/lyt/arcResourceAccessor.hpp>
+#include <nw4r/lyt/animation.hpp>
+#include <nw4r/lyt/drawInfo.hpp>
+#include <nw4r/lyt/layout.hpp>
 #endif
 
 CPP_WRAPPER(spm::seq_title)

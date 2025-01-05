@@ -1,5 +1,5 @@
 // OS Globals
-800000e4:currentThread
+800000e4:OS_CURRENT_THREAD
 800030c8:firstRel
 800030cc:lastRel
 
@@ -127,7 +127,7 @@
 803EA308:seq_data
 801A59A8:__memAlloc
 801A5A2C:__memFree
-803EBF48:size_table
+803EBF48:memory_size_table
 8056CB68:memory_wp
 8056CB6C:memory_swp
 80235A90:wpadGetButtonsHeld
@@ -634,7 +634,7 @@
 8056d570:SaveStart
 8056d574:SaveEnd
 
-// new to SPM-Hard-Mode
+// new to SPM-Hard-Mode: Rubies and Magic
 8014CCF8:pouchSetAttack
 8014CD2C:pouchGetAttack
 8014CD3C:pouchAddAttack
@@ -655,3 +655,31 @@
 800D9A98:evtDelete
 8041D258:superDimentioHeadDefenses
 8041D270:superDimentioBodyDefenses
+800D8C80:evtmgrReInit
+803E8718:marioMotTbl
+803E3C30:saffronCookingScript
+
+// 2023-09-02
+802960A0:IOS_OpenAsync
+802962D8:IOS_CloseAsync
+80296440:IOS_ReadAsync
+80296648:IOS_WriteAsync
+80296748:IOS_Write
+80296850:IOS_SeekAsync
+80296F7C:iosCreateHeap
+80296930:IOS_IoctlAsync
+80296CD4:IOS_IoctlvAsync
+80296DB8:IOS_Ioctlv
+802970AC:iosAlloc
+1,5,18fa8:mac_02_init_evt
+8056D450:errno
+8027564C:OSCreateThread
+80275610:OSYieldThread
+80275CB4:OSResumeThread
+802588e8:memcmp
+
+// new to v10
+8056CAD0:seq_load_sub_wp
+8056CBB0:nandmgr_wp
+8023950C:spsndSFXOn
+8017C96C:loadMain

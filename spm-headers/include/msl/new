@@ -7,7 +7,7 @@
 // TODO: does this actually need to be hidden for modding?
 #ifdef DECOMP
 
-#include <msl/exception.h>
+#include <msl/exception>
 
 namespace std {
 

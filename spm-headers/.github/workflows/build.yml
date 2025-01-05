@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         region: [eu0, eu1, us0, us1, us2, jp0, jp1, kr0]
-        test: [mod_ctx, old_mod_ctx, decomp_ctx, mod_ctx_shuffle, test_mod_individual]
+        test: [mod_ctx, decomp_ctx, mod_ctx_shuffle, test_mod_individual]
     steps:
     - name: Checkout
       uses: actions/checkout@v3

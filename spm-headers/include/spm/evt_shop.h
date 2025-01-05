@@ -69,6 +69,8 @@ EVT_UNKNOWN_USER_FUNC(evt_shop_remove_item)
 EVT_UNKNOWN_USER_FUNC(evt_shop_handle_roten_item_flag)
 EVT_UNKNOWN_USER_FUNC(evt_shop_get_otoya_bgm)
 
+EVT_DECLARE(saffronCookingScript)
+
 // evt_shop_set_defs(EvtShopDef * defs, s32 count)
 EVT_DECLARE_USER_FUNC(evt_shop_set_defs, 2)
 

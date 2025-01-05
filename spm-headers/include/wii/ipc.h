@@ -52,7 +52,7 @@ s32 IOS_Close(s32 fd);
 UNKNOWN_FUNCTION(IOS_ReadAsync);
 s32 IOS_Read(s32 fd, void * dest, u32 length);
 UNKNOWN_FUNCTION(IOS_WriteAsync);
-UNKNOWN_FUNCTION(IOS_Write);
+s32 IOS_Write(s32 fd, const void * data, u32 length);
 UNKNOWN_FUNCTION(IOS_SeekAsync);
 UNKNOWN_FUNCTION(IOS_IoctlAsync);
 s32 IOS_Ioctl(s32 fd, s32 command, void * buf, u32 bufSize, void * ioBuf, u32 ioBufSize);

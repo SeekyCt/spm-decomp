@@ -2,7 +2,6 @@
 
 #include <common.h>
 #include <evt_cmd.h>
-
 CPP_WRAPPER(spm::machi)
 
 typedef struct

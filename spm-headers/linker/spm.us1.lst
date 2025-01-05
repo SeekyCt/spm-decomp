@@ -1,5 +1,5 @@
 // OS Globals
-800000e4:currentThread
+800000e4:OS_CURRENT_THREAD
 800030c8:firstRel
 800030cc:lastRel
 
@@ -127,7 +127,7 @@
 803EA128:seq_data
 801A5690:__memAlloc
 801A5714:__memFree
-803EBD68:size_table
+803EBD68:memory_size_table
 8056C9E8:memory_wp
 8056C9EC:memory_swp
 80235778:wpadGetButtonsHeld
@@ -469,3 +469,9 @@
 8026F298:Run
 8056d3f0:SaveStart
 8056d3f4:SaveEnd
+
+// new to v10
+8056C950:seq_load_sub_wp
+8056CA30:nandmgr_wp
+802391E0:spsndSFXOn
+8017C55C:loadMain

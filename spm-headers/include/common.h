@@ -20,71 +20,11 @@
     #define HAS_ATTRIBUTE(x) 0
 #endif
 
-// Basic types
-
-// Decomp needs long for matching, int is slightly more convenient for casting in mods
-#ifdef DECOMP
-    #define INT_TYPE long
-#else
-    #define INT_TYPE int
-#endif
-
-typedef unsigned long long u64;
-typedef unsigned INT_TYPE u32;
-typedef unsigned short u16;
-typedef unsigned char u8;
-
-typedef signed long long s64;
-typedef signed INT_TYPE s32;
-typedef signed short s16;
-typedef signed char s8;
-
-#undef INT_TYPE
-
-typedef float f32;
-typedef double f64;
-
-#ifdef USE_STL
-    #include <cstddef>
-    static_assert(sizeof(size_t) == 4, "Expected 32-bit size_t");
-#else
-    typedef u32 size_t;
-    #define NULL 0
-    #if HAS_BUILTIN(__builtin_offsetof)
-        #define offsetof __builtin_offsetof
-    #else
-        #define offsetof(type, member) ((u32)&((type *)0)->member)
-    #endif
-#endif
-
-typedef s32 BOOL;
-
-#ifndef __cplusplus
-    #define bool char
-
-    #define true 1
-    #define false 0
-#endif
-
-#ifndef __cplusplus
-    #define wchar_t s16
-#endif
-
-#ifdef DECOMP
-    typedef wchar_t wchar16_t;
-#else
-    typedef s16 wchar16_t;
-#endif
-
-// Unknown type
-typedef u32 Unk;
-typedef u32 Unk32;
-typedef u16 Unk16;
-typedef u8 unk8;
-
-// Use CW special static assert
+// Use required static_assert keyword
 #ifdef __MWERKS__
-    #define static_assert(cond, msg) __static_assert(cond, msg) 
+    #define static_assert __static_assert 
+#elif !(defined __cplusplus)
+    #define static_assert _Static_assert
 #endif
 
 // Macro for quick size static assert
@@ -152,7 +92,7 @@ typedef u8 unk8;
     #define ATTRIBUTE(x)
 #endif
 
-#if HAS_ATTRIBUTE(noreturn)
+#if HAS_ATTRIBUTE(noreturn) && (defined __cplusplus) // TODO: the usage sites are probabably what should be fixed here
     #define NORETURN ATTRIBUTE(noreturn)
 #else
     #define NORETURN
@@ -166,6 +106,49 @@ typedef u8 unk8;
     #define ATTRIBUTE_FORMAT(...)
 #endif
 
-#define SQUARE(x) ((x) * (x))
-#define CUBE(x) ((x) * (x) * (x))
-#define QUART(x) ((x) * (x) * (x) * (x))
+// Basic types
+
+// Decomp needs long for matching, int is slightly more convenient for casting in mods
+#ifdef DECOMP
+    #define INT_TYPE long
+#else
+    #define INT_TYPE int
+#endif
+
+typedef unsigned long long u64;
+typedef unsigned INT_TYPE u32;
+typedef unsigned short u16;
+typedef unsigned char u8;
+
+typedef signed long long s64;
+typedef signed INT_TYPE s32;
+typedef signed short s16;
+typedef signed char s8;
+
+#undef INT_TYPE
+
+typedef float f32;
+typedef double f64;
+
+typedef int BOOL;
+
+#ifdef M2C
+    #define wchar_t u16
+    #define bool char
+#endif
+
+#include <stddef.h>
+#include <stdbool.h>
+
+// wchar_t is 32-bit in GCC but 16-bit in CW
+#ifdef DECOMP
+    typedef wchar_t wchar16_t;
+#else
+    typedef u16 wchar16_t;
+#endif
+
+// Unknown type
+typedef u32 Unk;
+typedef u32 Unk32;
+typedef u16 Unk16;
+typedef u8 unk8;

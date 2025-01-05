@@ -18,9 +18,6 @@
 #define GX_FIFO_HIWATERMARK	(16*1024)			/*!< Default hi watermark for FIFO buffer control. */
 #define GX_FIFO_OBJSIZE		128
 
-#define GX_PERSPECTIVE		0
-#define GX_ORTHOGRAPHIC		1
-
 #define GX_MT_NULL			0
 #define GX_MT_XF_FLUSH		1
 #define GX_MT_DL_SAVE_CTX	2

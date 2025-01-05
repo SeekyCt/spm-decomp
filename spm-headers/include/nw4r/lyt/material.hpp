@@ -2,7 +2,7 @@
 
 #include <common.h>
 #include <wii/gx.h>
-#include <nw4r/ut/linkList.h>
+#include <nw4r/ut/linkList.hpp>
 
 namespace nw4r {
 namespace lyt {

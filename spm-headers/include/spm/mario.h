@@ -85,8 +85,8 @@ typedef bool (MarioStatusMainFunc)(struct _MarioStatus * status, Vec3 * iconPos,
 /*
     Returns true if it should be deleted, false otherwise
     Return is ignored except in marioStatusDeleteAll
-*/ 
-typedef bool (MarioStatusDeleteFunc)(struct _MarioStatus * status, s32 level); 
+*/
+typedef bool (MarioStatusDeleteFunc)(struct _MarioStatus * status, s32 level);
 
 /*
     Called on map change
@@ -490,8 +490,6 @@ typedef struct
 } MarioMotFuncs;
 SIZE_ASSERT(MarioMotFuncs, 0x8)
 
-extern MarioMotFuncs marioMotTbl[78]; // index motion id
-
 DECOMP_STATIC(s64 mario_mainLastRunTime) // used to adjust marioGameSpeedScale for lag
 
 /*
@@ -623,7 +621,7 @@ bool marioChkSts(u32 mask);
 /*
     Removes references to a HitObj from hitObjs1 & hitObjs2
 */
-void marioResetHitObj(const char * name);  
+void marioResetHitObj(const char * name);
 
 /*
     Resets marioWork for a new save file
@@ -854,7 +852,7 @@ UNKNOWN_FUNCTION(func_8012bb80);
 /*
     Changes the active pane boundaries and updates which pane the player is in
 */
-void marioSetPaneBoundaries(MarioPaneBoundary * boundaries); 
+void marioSetPaneBoundaries(MarioPaneBoundary * boundaries);
 
 /*
     Calculates the pane of a vector position
@@ -926,4 +924,3 @@ UNKNOWN_FUNCTION(func_8012d9fc);
 bool func_8012dab0();
 
 CPP_WRAPPER_END()
-

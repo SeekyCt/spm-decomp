@@ -23,15 +23,13 @@ For use in decomp, the `include`, `include_cpp` and `decomp` folders should be a
 
 ## Mods
 
-For use in mods, the `include`, `include_cpp` and `mod` folder should be added to the include path and an lst from `linker` should be used. If including your compiler's C++ standard library, the preprocessor define `USE_STL` should be used.
+For use in mods, the `include` and `mod` folders should be added to the include path and an lst from `linker` should be used. Mods should include their compiler's standard library headers (do not use `-nostdinc`), though linking it is not required (so `-nostdlib` is fine).
 
-## C
-
-For the cases where C is required (such as m2c or maybe some niche modding cases), omitting the `include_cpp` folder should be all that's neccessary.
+**Warning**: NW4R headers are probably unsafe to use with GCC currently
 
 # Licensing
 
-All code originally written for this project (everything under the `include`, `include_cpp`, `decomp` and `linker` directories) is available under the MIT license.
+All code originally written for this project (everything under the `include`, `decomp` and `linker` directories) is available under the MIT license.
 
 Everything under the `mod` folder is available under the GPLv3 license as it's derived from other GPL code.
 

@@ -5,7 +5,7 @@
 #pragma once
 
 #include <common.h>
-#include <nw4r/ut/nonCopyable.h>
+#include <nw4r/ut/nonCopyable.hpp>
 
 namespace nw4r {
 namespace ut {

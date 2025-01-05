@@ -1,8 +1,11 @@
 #pragma once
 
 #include <common.h>
+#include <spm/mario.h>
 
 CPP_WRAPPER(spm::mario_motion)
+
+USING(spm::mario::MarioMotFuncs)
 
 UNKNOWN_FUNCTION(marioMotion);
 void marioChgMot(s32 nextMotionId);
@@ -91,5 +94,7 @@ UNKNOWN_FUNCTION(mot_33);
 UNKNOWN_FUNCTION(func_8014be7c);
 UNKNOWN_FUNCTION(mot_34);
 UNKNOWN_FUNCTION(mot_34_post);
+
+extern MarioMotFuncs marioMotTbl[78]; // index motion id
 
 CPP_WRAPPER_END()

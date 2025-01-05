@@ -1,3 +1,14 @@
+## C++ notes
+- Most headers are designed to be compileable in C and C++
+- The CPP_WRAPPER macro allows for the file's namespace to be dropped when compiling in C and for `extern "C"` to
+be inserted when compiling in C++
+- The headers in the spm folder where the game used C++ features should still have C support
+    - These are rare, so it's less effort than supporting C++ in nw4r would be, and more useful
+    - Use `#ifdef __cplusplus` and padding where neccessary to achieve this
+- The headers in the nw4r folder don't have C support since they were written in C++ originally
+    - They therefore don't use the CPP_WRAPPER macro
+    - They're named .hpp instead of .h to indicate this
+
 ## Naming
 
 - Use official names when possible (from TTYD symbol map, asserts, etc.), and try to follow the style otherwise
@@ -30,7 +41,7 @@
 - Wrap files in CPP_WRAPPER from where includes finish to the end of the file
     - The name passed in should be `folder::filename` (for example, `spm::evtmgr`)
     - `common.h` and the variants of `evt_cmd.h` are exceptions to this
-    - This won't apply to nw4r headers' code they're done properly
+    - This doesn't apply to nw4r headers' as they're done with real C++
 - Wrap file-local and function-local symbols in DECOMP_STATIC in headers (for example, `DECOMP_STATIC(evtmgr_work)`)
 - Add offset comments on the left of every struct member
 - Add value comments on the left of every enum member
