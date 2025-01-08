@@ -64,12 +64,12 @@ def process_file(in_file: str, lines: List[str]) -> str:
                 if guard_match[1] in defines:
                     break
                 defines.add(guard_match[1])
-            else:
-                once_match = once_pattern.match(line.strip())
-                if once_match:
-                    if in_file in defines:
-                        break
-                    defines.add(in_file)
+                print("Processing file", in_file)
+        once_match = once_pattern.match(line.strip())
+        if once_match:
+            if in_file in defines:
+                break
+            defines.add(in_file)
             print("Processing file", in_file)
         include_match = include_pattern.match(line.strip())
         if include_match and not include_match[1].endswith(".s"):
