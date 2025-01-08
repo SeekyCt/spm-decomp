@@ -256,7 +256,6 @@ def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
         "lib": lib_name,
         "mw_version": "GC/1.2.5n",
         "cflags": cflags_base,
-        "host": False,
         "objects": objects,
     }
 
@@ -266,7 +265,6 @@ def Dol(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
         "lib": lib_name,
         "mw_version": config.linker_version,
         "cflags": cflags_dol,
-        "host": False,
         "objects": objects,
     }
 
@@ -277,7 +275,6 @@ def Rel(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
         "lib": lib_name,
         "mw_version": config.linker_version,
         "cflags": cflags_rel,
-        "host": True,
         "objects": objects,
     }
 
@@ -329,7 +326,6 @@ config.libs = [
         "lib": "Runtime.PPCEABI.H",
         "mw_version": config.linker_version,
         "cflags": cflags_runtime,
-        "host": False,
         "objects": [
             Object(NonMatching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
             Object(NonMatching, "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
@@ -352,6 +348,13 @@ def link_order_callback(module_id: int, objects: List[str]) -> List[str]:
 
 # Uncomment to enable the link order callback.
 # config.link_order_callback = link_order_callback
+
+
+# Optional extra categories for progress tracking
+# Adjust as desired for your project
+config.progress_categories = [
+    # Unused since full splits not known
+]
 
 if args.mode == "configure":
     # Write build.ninja and objdiff.json
