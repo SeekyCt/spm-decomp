@@ -57,7 +57,7 @@
 #include <wii/sc.h>
 #include <wii/vi.h>
 #include <wii/wpad.h>
-#include <nw4r/snd.h>
+#include <nw4r/snd.hpp>
 #include <msl/string.h>
 
 extern "C" {

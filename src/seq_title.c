@@ -15,9 +15,9 @@
 #include <wii/cx.h>
 #include <wii/mtx.h>
 #include <msl/math.h>
-#include <msl/new.h>
-#include <nw4r/db/panic.h>
-#include <nw4r/math/types.h>
+#include <msl/new>
+#include <nw4r/db/panic.hpp>
+#include <nw4r/math/types.hpp>
 
 extern "C" {
 
