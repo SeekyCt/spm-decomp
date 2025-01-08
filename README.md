@@ -44,10 +44,9 @@ sudo xattr -rd com.apple.quarantine '/Applications/Wine Crossover.app'
 
 ## Building
 
-- Using [Dolphin Emulator](https://dolphin-emu.org/), extract your game to `orig/EU0`.
-  - To save space, the only necessary files are the following. Any others can be deleted.
-    - `sys/main.dol`
-    - `files/rel/relF.bin`
+- Copy your game's disc image to `orig/EU0`.
+  - Supported formats: ISO (GCM), RVZ, WIA, WBFS, CISO, NFS, GCZ, TGC
+  - After the initial build, the disc image can be deleted to save space.
 - Run configure.py
 - Run ninja
 

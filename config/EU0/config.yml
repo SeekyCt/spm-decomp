@@ -1,4 +1,5 @@
-object: orig/EU0/sys/main.dol
+object: sys/main.dol
+object_base: orig/EU0
 hash: 3fd3d9815528d1c04bc433d67d273b1e3301e976
 symbols: config/EU0/symbols.txt
 splits: config/EU0/splits.txt
@@ -6,7 +7,7 @@ mw_comment_version: 15
 quick_analysis: true
 
 modules:
-- object: orig/EU0/files/rel/relF.bin:nlzss
+- object: files/rel/relF.bin:nlzss
   hash: 9b9b92c370b1aab68cf6ff5a3eb824fdab6a55ff
   symbols: config/EU0/relF/symbols.txt
   splits: config/EU0/relF/splits.txt
