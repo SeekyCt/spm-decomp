@@ -22,13 +22,15 @@ typedef struct __va_list_struct {
 
 void* __va_arg(va_list, int);
 
-#ifndef __INTELLISENSE__
+#if (defined __INTELLISENSE__) || (defined __CLANGD__)
+#define va_start(ap, param)
+#define va_end(ap)
+#define va_arg(ap, type)
+#else
 #define va_start(VA_LIST, ARG) ((void)ARG, __builtin_va_info(&VA_LIST))
 #define va_end(VA_LIST) ((void)VA_LIST)
 #define va_arg(VA_LIST, ARG_TYPE)                                              \
     (*(ARG_TYPE*)__va_arg(VA_LIST, _var_arg_typeof(ARG_TYPE)))
-#else
-#include <stdarg.h> // makectx-ignore
 #endif
 
 CPP_WRAPPER_END()

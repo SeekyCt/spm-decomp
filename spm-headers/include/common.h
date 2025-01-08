@@ -4,7 +4,7 @@
 #define UNKNOWN_FUNCTION(name) void name(void)
 
 // Intellisense doesn't like asm compiler extensions
-#ifdef __INTELLISENSE__ 
+#if (defined __INTELLISENSE__) || (defined __CLANGD__) 
     #define asm
 #endif
 
@@ -23,7 +23,7 @@
 // Use required static_assert keyword
 #ifdef __MWERKS__
     #define static_assert __static_assert 
-#elif !(defined __cplusplus)
+#elif !(defined __cplusplus) || (defined __CLANGD__)
     #define static_assert _Static_assert
 #endif
 
