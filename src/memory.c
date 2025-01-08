@@ -347,7 +347,6 @@ void smartFree(SmartAllocation * lp)
     }
 }
 
-// NON_MATCHING
 SmartAllocation * smartAlloc(size_t size, u8 type)
 {
     // Special behaviour if this is the first time running
@@ -421,9 +420,10 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
 
         if(IS_LAST_SMART_ALLOC(new_lp))
         {
-            // This line isn't matching
-            new_lp->spaceAfter = (u32)swp->heapStart + GET_SMART_HEAP_SIZE()
-                                    - (u32) new_lp->data - new_lp->size;
+            u32 heapSize = GET_SMART_HEAP_SIZE();
+            new_lp->spaceAfter = (u32)swp->heapStart + heapSize
+                                 - (u32)new_lp->data - new_lp->size;
+
             swp->allocatedEnd = new_lp;
         }
 
