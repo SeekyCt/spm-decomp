@@ -10,6 +10,7 @@
 #include <wii/gx.h>
 #include <wii/os.h>
 #include <wii/mem.h>
+#include <msl/new>
 #include <msl/string.h>
 
 extern "C" {
@@ -591,13 +592,13 @@ GXTexObj * smartTexObj(GXTexObj * texObj, SmartAllocation * imageAllocation)
 
 }
 
-void * operator new(size_t size) throw()
+void * operator new(size_t size) throw(std::bad_alloc)
 {
     if (!memInitFlag)
     {
         if (fallbackHeap == 0) {
             void * memory = OSGetMEM1ArenaLo();
-            fallbackHeap = MEMCreateExpHeapEx(memory, 0x2000, 5);
+            fallbackHeap = MEMCreateExpHeapEx(memory, 0x2000, MEM_FLAG_THREAD_CONTROL | MEM_FLAG_FILL_0);
             OSSetMEM1ArenaLo((void *)((u32)memory + 0x2000));
         }
         return MEMAllocFromExpHeapEx(fallbackHeap, size, 4);
