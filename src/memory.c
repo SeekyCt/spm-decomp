@@ -502,7 +502,6 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
     }
 }
 
-// NON_MATCHING
 void smartGarbage()
 {
     sysWaitDrawSync();
@@ -562,8 +561,8 @@ LB_801a6c64:
     // Update spaceAfter of final allocation, since assumption it'd be 0 wasn't true
     if (swp->allocatedEnd != NULL)
     {
-        // This line isn't matching
-        swp->allocatedEnd->spaceAfter = (u32) swp->heapStart + GET_SMART_HEAP_SIZE()
+        u32 heapSize = GET_SMART_HEAP_SIZE();
+        swp->allocatedEnd->spaceAfter = (u32) swp->heapStart + heapSize
                                         - (u32) swp->allocatedEnd->data - swp->allocatedEnd->size;
     }
 
