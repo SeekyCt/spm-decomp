@@ -258,7 +258,6 @@ void smartInit()
     g_bFirstSmartAlloc = false;
 }
 
-// TODO: type weirdness
 void smartAutoFree(s32 type)
 {
     SmartAllocation * curAllocation;
@@ -268,20 +267,13 @@ void smartAutoFree(s32 type)
     {
         next = curAllocation->next;
 
-        if (curAllocation->type == (type & 0xffff))
+        // TODO: type weirdness
+        if (curAllocation->type == (u16)type)
             smartFree(curAllocation);
     }
 
     if (type == 3)
-    {
-        for (curAllocation = swp->allocatedStart; curAllocation; curAllocation = next)
-        {
-            next = curAllocation->next;
-
-            if ((s8) curAllocation->type == 4)
-                smartFree(curAllocation);
-        }
-    }
+        smartAutoFree(4);
 }
 
 void smartFree(SmartAllocation * lp)
