@@ -238,6 +238,7 @@ cflags_dol = [
     "-inline all",
     "-sdata 4",
     "-sdata2 4",
+    "-sym on", # Enable line numbers in objdiff
 ]
 
 # REL flags
