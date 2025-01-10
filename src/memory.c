@@ -583,7 +583,11 @@ GXTexObj * smartTexObj(GXTexObj * texObj, SmartAllocation * imageAllocation)
 
 }
 
+#ifdef __CLANGD__
 void * operator new(size_t size) throw(std::bad_alloc)
+#else
+void * operator new(size_t size) throw()
+#endif
 {
     if (!memInitFlag)
     {

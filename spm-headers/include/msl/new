@@ -25,7 +25,11 @@ public:
 
 }
 
+#ifdef __CLANGD__
 void * operator new(size_t size) throw(std::bad_alloc);
+#else
+void * operator new(size_t size) throw();
+#endif
 
 void * operator new (size_t size, void * mem) throw();
 inline void * operator new (size_t size, void * mem) throw()
