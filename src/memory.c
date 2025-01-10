@@ -506,7 +506,7 @@ void smartGarbage()
 {
     sysWaitDrawSync();
 
-    // Update space at the start of the heap (redundant? alloc & free do this whenever it changes)
+    // Update space at the start of the heap
     if (swp->allocatedStart != 0)
         swp->heapStartSpace = 0;
     else
@@ -515,7 +515,7 @@ void smartGarbage()
     // Move all allocations closer together if possible
     SmartAllocation * prevAllocation = NULL;
     void * space = swp->heapStart;
-    for (SmartAllocation * curAllocation = swp->allocatedStart; curAllocation; curAllocation = curAllocation->next)
+    for (SmartAllocation * curAllocation = swp->allocatedStart; curAllocation; prevAllocation = curAllocation, curAllocation = curAllocation->next)
     {
         // If this allocation can be moved forwards
         if (curAllocation->data != space)
@@ -532,10 +532,10 @@ void smartGarbage()
                     else
                         swp->heapStartSpace = (u32) curAllocation->data - (u32) space;
 
-                    // Do the exact things the goto skips anyway
+                    // Do the exact things the continue skips anyway
                     space = (void *) ((u32)curAllocation->data + curAllocation->size);
                     curAllocation->spaceAfter = 0;
-                    goto LB_801a6c64;
+                    continue;
                 }
                 else
                 {
@@ -553,9 +553,6 @@ void smartGarbage()
         // Assume there'll be no space after this, will be updated by the allocation after if this ends up being not true
         curAllocation->spaceAfter = 0;
         space = (void *) ((u32)curAllocation->data + curAllocation->size);
-
-LB_801a6c64:
-        prevAllocation = curAllocation;
     }
 
     // Update spaceAfter of final allocation, since assumption it'd be 0 wasn't true
