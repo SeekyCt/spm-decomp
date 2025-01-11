@@ -107,7 +107,7 @@ void swByteSet(s32 id, s32 num)
     else
     {
         // "The value is strange"
-        assertf(0x9c, num < 256, "値がおかしい sw_byte[%d] = %d", id + EVTDAT_GSW_BASE, num);
+        assertf(156, num < 256, "値がおかしい sw_byte[%d] = %d", id + EVTDAT_GSW_BASE, num);
 
         gp->gsw[id] = (s8) num;
     }

@@ -146,7 +146,7 @@ void memInit()
             wp->heapEnd[i] = (void* ) (min + size);
 
             // "Error: Overheap of heap from arena [%d] \ n"
-            assertf(0x61, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            assertf(97, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             min += size;
         }
@@ -161,7 +161,7 @@ void memInit()
             size = (u32) (((u64) space * size_table[i].size) / 100);
 
             // "ERROR: Excessive heap acquisition from arena\n"
-            assert(0x6f, size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
+            assert(111, size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
 
             size -= size & 0x1f;
 
@@ -169,7 +169,7 @@ void memInit()
             wp->heapEnd[i] = (void *) (min + size);
 
             // "ERROR: Overheap of heap from arena [%d] \ n"
-            assertf(0x75, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            assertf(117, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             min += size;
         }
@@ -199,7 +199,7 @@ void memInit()
             wp->heapEnd[i] = (void *) (min + size);
 
             // "Error: Overheap of heap from arena [%d] \ n"
-            assertf(0x94, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            assertf(148, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             min += size;
         }
@@ -214,7 +214,7 @@ void memInit()
             size = (u32) (((u64) space * size_table[i].size) / 100);
 
             // "ERROR: Excessive heap acquisition from arena\n"
-            assert(0xa2, size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
+            assert(162, size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
 
             size -= size & 0x1f;
 
@@ -222,7 +222,7 @@ void memInit()
             wp->heapEnd[i] = (void *) (min + size);
 
             // "Error: Overheap of heap from arena [%d] \ n"
-            assertf(0xa8, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            assertf(168, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             min += size;
         }
@@ -263,7 +263,7 @@ void * __memAlloc(s32 heapId, size_t size)
     void * p = MEMAllocFromExpHeapEx(wp->heapHandle[heapId], size, 0x20);
 
     // "Memory allocation error"
-    assertf(0xdd, p, "メモリ確保エラー [id = %d][size = %d]", heapId, size);
+    assertf(221, p, "メモリ確保エラー [id = %d][size = %d]", heapId, size);
 
     return p;
 }
@@ -323,10 +323,10 @@ void smartAutoFree(s32 type)
 void smartFree(SmartAllocation * lp)
 {
     // "Invalid pointer. p=0x%x"
-    assertf(0x193, lp, "無効なポインタです。p=0x%x\n", lp);
+    assertf(403, lp, "無効なポインタです。p=0x%x\n", lp);
 
     // "Already free. p=0x%x"
-    assertf(0x194, lp->flag != 0, "すでに開放されています。p=0x%x\n", lp);
+    assertf(404, lp->flag != 0, "すでに開放されています。p=0x%x\n", lp);
 
     if (lp->type == 4)
     {
@@ -375,7 +375,7 @@ void smartFree(SmartAllocation * lp)
         {
             // "The list structure is broken"
             // was getting a compiler error with plain sjis
-            assert(0x1be, swp->freeEnd, "リスト" "\x8d\x5c\x91\xA2" "が壊れています");
+            assert(446, swp->freeEnd, "リスト" "\x8d\x5c\x91\xA2" "が壊れています");
 
             swp->freeEnd->next = lp;
             lp->prev = swp->freeEnd;
@@ -411,7 +411,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
     SmartAllocation * new_lp = swp->freeStart;
 
     // "Heap list shortage"
-    assert(0x1e2, new_lp, "ヒープリスト足りない\n");
+    assert(482, new_lp, "ヒープリスト足りない\n");
     
     // Update previous item in the free list
     if (IS_FIRST_SMART_ALLOC(new_lp))
@@ -540,7 +540,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
         }
 
         // "Garbage collect, but not enough heap"
-        assert(0x280, 0, "smartAlloc: ガーベージコレクトしたけどヒープ足りない\n");
+        assert(640, 0, "smartAlloc: ガーベージコレクトしたけどヒープ足りない\n");
 
         return NULL;
     }
@@ -617,7 +617,7 @@ GXTexObj * smartTexObj(GXTexObj * texObj, SmartAllocation * imageAllocation)
         GXInitTexObjData(texObj, imageAllocation->data);
     else
         // "There is no smart memory information"
-        assert(0x2d5, 0, "スマートメモリの情報がないよ\n");
+        assert(725, 0, "スマートメモリの情報がないよ\n");
 
     return texObj;
 }
