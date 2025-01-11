@@ -23,15 +23,18 @@ USING(spm::filemgr::_FileEntry)
 USING(wii::gx::GXTexObj)
 USING(wii::mem::MEMHeapHandle)
 
-#define MEM1_HEAP_COUNT 3
-
-// Korean adds a 10th heap
 #ifdef SPM_KR0
-#define MEM2_HEAP_COUNT 7
-#define HEAP_COUNT 10
+    #define MEM1_HEAP_COUNT 3
+    #define MEM2_HEAP_COUNT 7
+    #define HEAP_COUNT 10
+#elif (defined SPM_EU0) || (defined SPM_EU1)
+    #define MEM1_HEAP_COUNT 3
+    #define MEM2_HEAP_COUNT 6
+    #define HEAP_COUNT 9
 #else
-#define MEM2_HEAP_COUNT 6
-#define HEAP_COUNT 9
+    #define MEM1_HEAP_COUNT 5
+    #define MEM2_HEAP_COUNT 4
+    #define HEAP_COUNT 9
 #endif
 
 #define SMART_HEAP_ID 7

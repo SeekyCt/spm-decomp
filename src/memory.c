@@ -18,6 +18,9 @@ extern "C" {
 // .data
 static HeapSize size_table[HEAP_COUNT] =
 {
+#ifdef SPM_KR0
+    #error "TODO"
+#elif (defined SPM_EU0) || (defined SPM_EU1)
     // MEM1
     { // 0
         HEAPSIZE_ABSOLUTE_KB,
@@ -57,6 +60,47 @@ static HeapSize size_table[HEAP_COUNT] =
         HEAPSIZE_ABSOLUTE_KB,
         1
     }
+#else
+    // MEM1
+    { // 0
+        HEAPSIZE_ABSOLUTE_KB,
+        0x2400
+    },
+    { // 1
+        HEAPSIZE_ABSOLUTE_KB,
+        0x1800
+    },
+    { // 2
+        HEAPSIZE_ABSOLUTE_KB,
+        0x100
+    },
+    { // 3
+        HEAPSIZE_ABSOLUTE_KB,
+        0x100
+    },
+    { // 4
+        HEAPSIZE_PERCENT_REMAINING,
+        100
+    },
+
+    // MEM2
+    { // 5
+        HEAPSIZE_ABSOLUTE_KB,
+        0x80
+    },
+    { // 6
+        HEAPSIZE_ABSOLUTE_KB,
+        0x4400
+    },
+    { // 7 - smart heap
+        HEAPSIZE_PERCENT_REMAINING,
+        100
+    },
+    { // 8
+        HEAPSIZE_ABSOLUTE_KB,
+        1
+    }
+#endif
 };
 
 // .bss
