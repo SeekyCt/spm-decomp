@@ -62,6 +62,18 @@ enum HeapSizeType
 /* 0x1 */ HEAPSIZE_ABSOLUTE_KB
 };
 
+enum SmartAllocType
+{
+/* 0x0 */ SMART_TYPE_0,
+/* 0x1 */ SMART_TYPE_1,
+/* 0x2 */ SMART_TYPE_2,
+/* 0x3 */ SMART_TYPE_3,
+
+    // On smartFree, demotes to type 3 instead of freeing
+    // For smartAutoFree, is freed when type 3 is freed
+/* 0x4 */ SMART_TYPE_4
+};
+
 typedef struct
 {
 /* 0x0 */ s32 type; // see enum above

@@ -103,18 +103,23 @@ static HeapSize size_table[HEAP_COUNT] =
 #endif
 };
 
-// .bss
 static MemWork work;
-static SmartWork smartWork;
-
-// .sdata
 static MemWork * wp = &work;
+
+static SmartWork smartWork;
 static SmartWork * swp = &smartWork;
 
-// .sbss
+/*
+    Whether the library has been initialised
+*/
 static bool memInitFlag = false;
-s32 g_bFirstSmartAlloc;
-static MEMHeapHandle fallbackHeap;
+
+/*
+    Whether smartAlloc has been used since the last spmarioDisp 
+*/
+s32 g_bFirstSmartAlloc = false;
+
+static MEMHeapHandle fallbackHeap = NULL;
 
 #define IS_FIRST_SMART_ALLOC(allocation) (allocation->prev == NULL)
 #define IS_LAST_SMART_ALLOC(allocation) (allocation->next == NULL)
@@ -145,7 +150,7 @@ void memInit()
             wp->heapStart[i] = (void *) min;
             wp->heapEnd[i] = (void* ) (min + size);
 
-            // "Error: Overheap of heap from arena [%d] \ n"
+            // "ERROR: Excessive heap acquisition from arena"
             assertf(97, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             min += size;
@@ -160,15 +165,16 @@ void memInit()
         {
             size = (u32) (((u64) space * size_table[i].size) / 100);
 
-            // "ERROR: Excessive heap acquisition from arena\n"
+            // "ERROR: Excessive heap acquisition from arena"
             assert(111, size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
 
+            // Round down 0x20
             size -= size & 0x1f;
 
             wp->heapStart[i] = (void *) min;
             wp->heapEnd[i] = (void *) (min + size);
 
-            // "ERROR: Overheap of heap from arena [%d] \ n"
+            // "ERROR: Excessive heap acquisition from arena"
             assertf(117, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             min += size;
@@ -182,6 +188,7 @@ void memInit()
         wp->heapHandle[i]  = MEMCreateExpHeapEx(wp->heapStart[i], size, 0);
     }
 
+    // Claim memory from arena
     OSSetMEM1ArenaLo((void *) max);
 
     // Register usage for min & max wrong way around from here
@@ -198,7 +205,7 @@ void memInit()
             wp->heapStart[i] = (void *) min;
             wp->heapEnd[i] = (void *) (min + size);
 
-            // "Error: Overheap of heap from arena [%d] \ n"
+            // "ERROR: Excessive heap acquisition from arena"
             assertf(148, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             min += size;
@@ -213,15 +220,16 @@ void memInit()
         {
             size = (u32) (((u64) space * size_table[i].size) / 100);
 
-            // "ERROR: Excessive heap acquisition from arena\n"
+            // "ERROR: Excessive heap acquisition from arena"
             assert(162, size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
 
+            // Align size down to 0x20
             size -= size & 0x1f;
 
             wp->heapStart[i] = (void *) min;
             wp->heapEnd[i] = (void *) (min + size);
 
-            // "Error: Overheap of heap from arena [%d] \ n"
+            // "ERROR: Excessive heap acquisition from arena"
             assertf(168, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             min += size;
@@ -235,6 +243,7 @@ void memInit()
         wp->heapHandle[i]  = MEMCreateExpHeapEx(wp->heapStart[i], size, 0);
     }
 
+    // Claim memory from arena
     OSSetMEM2ArenaLo((void *) max);
     
     // Clear all heaps
@@ -316,21 +325,21 @@ void smartAutoFree(s32 type)
             smartFree(curAllocation);
     }
 
-    if (type == 3)
-        smartAutoFree(4);
+    if (type == SMART_TYPE_3)
+        smartAutoFree(SMART_TYPE_4);
 }
 
 void smartFree(SmartAllocation * lp)
 {
-    // "Invalid pointer. p=0x%x"
+    // "Invalid pointer."
     assertf(403, lp, "無効なポインタです。p=0x%x\n", lp);
 
-    // "Already free. p=0x%x"
+    // "Already free."
     assertf(404, lp->flag != 0, "すでに開放されています。p=0x%x\n", lp);
 
-    if (lp->type == 4)
+    if (lp->type == SMART_TYPE_4)
     {
-        lp->type = 3;
+        lp->type = SMART_TYPE_3;
     }
     else
     {
@@ -374,8 +383,7 @@ void smartFree(SmartAllocation * lp)
         else
         {
             // "The list structure is broken"
-            // was getting a compiler error with plain sjis
-            assert(446, swp->freeEnd, "リスト" "\x8d\x5c\x91\xA2" "が壊れています");
+            assert(446, swp->freeEnd, "リスト構造が壊れています");
 
             swp->freeEnd->next = lp;
             lp->prev = swp->freeEnd;
@@ -393,21 +401,18 @@ void smartFree(SmartAllocation * lp)
 
 SmartAllocation * smartAlloc(size_t size, u8 type)
 {
-    // Special behaviour if this is the first time running
     if (!g_bFirstSmartAlloc)
     {
         g_bFirstSmartAlloc = true;
-        smartAutoFree(3); // inline
+        smartAutoFree(SMART_TYPE_3); // inline
     }
 
-    // Wait if any allocations were freed this frame
     if (swp->freedThisFrame != 0)
     {
         sysWaitDrawSync();
         swp->freedThisFrame = 0;
     }
 
-    // Pick a free SmartAllocation to use
     SmartAllocation * new_lp = swp->freeStart;
 
     // "Heap list shortage"
@@ -441,7 +446,6 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
     if (size & 0x1f)
         size += 0x20 - (size & 0x1f);
 
-    // Fill in some of the new allocation
     new_lp->flag = 1;
     new_lp->type = type;
     new_lp->size = size;
@@ -550,7 +554,7 @@ void smartGarbage()
 {
     sysWaitDrawSync();
 
-    // Update space at the start of the heap
+    // Assume a block will be moved to the start of the heap if any exist
     if (swp->allocatedStart != 0)
         swp->heapStartSpace = 0;
     else
@@ -632,7 +636,7 @@ void * operator new(size_t size) throw()
 {
     if (!memInitFlag)
     {
-        if (fallbackHeap == 0) {
+        if (fallbackHeap == NULL) {
             void * memory = OSGetMEM1ArenaLo();
             fallbackHeap = MEMCreateExpHeapEx(memory, 0x2000, MEM_FLAG_THREAD_CONTROL | MEM_FLAG_FILL_0);
             OSSetMEM1ArenaLo((void *)((u32)memory + 0x2000));
