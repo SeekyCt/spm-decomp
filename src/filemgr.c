@@ -3,6 +3,7 @@
     This file is currently not linked into the final dol
 */
 
+#include "wii/os/OSThread.h"
 #include <spm/dvdmgr.h>
 #include <spm/filemgr.h>
 #include <spm/memory.h>
@@ -279,7 +280,116 @@ FileEntry * fileAlloc(const char * path, s32 fileType)
     return _fileAlloc(path, fileType, 0);
 }
 
-// NOT_DECOMPILED _fileAlloc
+FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused)
+{
+    (void) unused;
+
+    // Try find existing entry
+    for (FileEntry * lp = afp->allocatedStart; lp != NULL; lp = lp->next)
+    {
+        // Check if name matches
+        if (lp->state == FILE_EMPTY || strcmp(lp->path, path) != 0)
+            continue;
+
+        // "The file type is different from before"
+        assert(876, lp->fileType == fileType, "ファイルタイプが以前と違います\n");
+
+        // Wait for reading to finish
+        while (lp->dvdEntry != NULL)
+            OSYieldThread();
+
+        // Update state and reference count
+        if (lp->state == FILE_ASYNC_CALLED)
+        {
+            lp->state = FILE_ALLOC_CALLED;
+            lp->touchCnt = 0;
+        }
+        else if (lp->state == FILE_WAITING_GARBAGE)
+        {
+            lp->state = FILE_ALLOC_CALLED;
+        }
+        lp->touchCnt++;
+
+        return lp;
+    }
+    
+    // Read file synchronously if not found
+
+    // Try get a free entry
+    FileEntry * new_lp = afp->freeStart; // r31
+    if (new_lp == NULL) {
+        _fileGarbage(1);
+        new_lp = afp->freeStart;
+    }
+    if (new_lp == NULL) {
+        _fileGarbage(0);
+        new_lp = afp->freeStart;
+    }
+    // "File list is missing"
+    assert(917, new_lp, "ファイルリストが足りない\n");
+
+    // Backup next pointer
+    FileEntry * newFreeStart = new_lp->next;
+
+    // Try open file
+    DVDEntry * dvdEntry = DVDMgrOpen(path, 2, 0);
+    if (dvdEntry == NULL)
+        return NULL;
+
+    // Check file isn't empty
+    s32 length = DVDMgrGetLength(dvdEntry);
+    u32 roundedLength = (length + 0x1f) & 0xffffffe0;
+    if (roundedLength == 0) {
+        DVDMgrClose(dvdEntry);
+        return NULL;
+    }
+
+    // No effect, length is already aligned
+    roundedLength = (roundedLength + 0x1f) & 0xffffffe0;
+
+    // Create space on smart heap
+    SmartAllocation * new_sp = smartAlloc(roundedLength, 0);
+    memset(new_sp->data, 0, new_sp->size);
+    // Memory allocation failure
+    assert(969, new_sp, "メモリ確保に失敗\n");
+    new_sp->fileEntry = new_lp;
+
+    // Read into memory
+    if (DVDMgrRead(dvdEntry, new_sp->data, (s32)roundedLength, 0) <= 0)
+        assert(978, 0, "ＤＶＤだめでっすちめいてきえらー\n");
+    DVDMgrClose(dvdEntry);
+
+    // Update file entry
+    new_lp->sp = new_sp;
+    new_lp->state = FILE_ALLOC_CALLED;
+    new_lp->touchCnt = 1;
+    new_lp->fileType = (s8) fileType;
+    new_lp->next = NULL;
+    new_lp->length = (u32)length;
+    strcpy(new_lp->path, path);
+    new_lp->dvdEntry = NULL;
+
+    // Apply relocations to file contents
+    fileGarbageDataAdrSet(new_sp->data, fileType);
+
+    // Remove from free list
+    afp->freeStart = newFreeStart;
+    if (afp->freeStart == NULL) {
+        afp->freeEnd = NULL;
+    }
+
+    // Insert into allocated list
+    if (afp->allocatedStart == NULL) {
+        afp->allocatedStart = new_lp;
+        afp->allocatedEnd = new_lp;
+    }
+    else {
+        afp->allocatedEnd->next = new_lp;
+        afp->allocatedEnd = new_lp;
+    }
+
+    return new_lp;
+}
 
 // NOT_DECOMPILED fileFree
 

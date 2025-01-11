@@ -117,7 +117,7 @@ void _fileGarbage(s32);
 */
 FileEntry * fileAllocf(s32 fileType, const char * format, ...);
 FileEntry * fileAlloc(const char * path, s32 fileType);
-FileEntry * _fileAlloc(const char * path, s32 fileType, s32 p3);
+FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused);
 
 /*
     Unloads a file
