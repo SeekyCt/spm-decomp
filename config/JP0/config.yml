@@ -1,0 +1,13 @@
+object: sys/main.dol
+object_base: orig/JP0
+hash: dcb4008bc3465156895a10c4d7a7bd56223bee5a
+symbols: config/JP0/symbols.txt
+splits: config/JP0/splits.txt
+mw_comment_version: 15
+quick_analysis: false
+
+modules:
+- object: files/rel/relF.bin:nlzss
+  hash: 679d960150577de4b3e4d49af92ae719184edb4c
+  symbols: config/JP0/relF/symbols.txt
+  splits: config/JP0/relF/splits.txt

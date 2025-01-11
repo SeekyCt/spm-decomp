@@ -30,6 +30,7 @@ from tools.project import (
 DEFAULT_VERSION = 0
 VERSIONS = [
     "EU0",  # 0
+    "JP0",  # 1
 ]
 
 parser = argparse.ArgumentParser()

@@ -1,0 +1,13 @@
+Sections:
+	.text       type:code align:4
+	.ctors      type:rodata align:4
+	.dtors      type:rodata align:4
+	.rodata     type:rodata align:8
+	.data       type:data align:32
+	.bss        type:bss align:8
+
+Runtime.PPCEABI.H/global_destructor_chain.c:
+	.text       start:0x0003DF24 end:0x0003DF94
+	.dtors      start:0x00000000 end:0x00000004 rename:.dtors$10
+	.dtors      start:0x00000004 end:0x00000008 skip
+	.bss        start:0x00000B50 end:0x00000B54
