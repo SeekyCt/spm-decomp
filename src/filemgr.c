@@ -9,6 +9,7 @@
 #include <spm/system.h>
 #include <wii/dvd.h>
 #include <wii/os.h>
+#include <msl/stdarg.h>
 #include <msl/stdio.h>
 #include <msl/string.h>
 
@@ -16,7 +17,7 @@ extern "C" {
 
 // .bss
 static FileWork work;
-static char lbl_80516fa0[1024];
+static char PathBuffer[1024];
 
 // .sdata
 static FileWork * afp = &work;
@@ -262,11 +263,21 @@ void _fileGarbage(s32 patience)
     afp->allocatedEnd = allocatedEnd;
 }
 
+FileEntry * fileAllocf(s32 fileType, const char * format, ...)
+{
+    va_list args;
 
+    va_start(args, format);
+    vsprintf(PathBuffer, format, args);
+    va_end(args);
 
-// NOT_DECOMPILED fileAllocf
+    return _fileAlloc(PathBuffer, fileType, 0);
+}
 
-// NOT_DECOMPILED fileAlloc
+FileEntry * fileAlloc(const char * path, s32 fileType)
+{
+    return _fileAlloc(path, fileType, 0);
+}
 
 // NOT_DECOMPILED _fileAlloc
 
