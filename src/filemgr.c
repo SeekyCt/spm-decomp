@@ -174,6 +174,96 @@ void fileGarbageMoveMem(void * dest, FileEntry * src)
 
 // NOT_DECOMPILED _fileGarbage
 
+void _fileGarbage(s32 patience)
+{
+    // Wait on any files being read
+    if (patience == 0)
+    {
+        for (FileEntry * entry = afp->allocatedStart; entry != NULL; entry = entry->next)
+        {
+            if (entry->state == FILE_ASYNC_CALLED)
+            {
+                if (entry->dvdEntry != NULL)
+                {
+                    while (entry->dvdEntry != NULL)
+                        OSYieldThread();
+                }
+
+                entry->state = FILE_WAITING_GARBAGE;
+            }
+        }
+    }
+    else if (patience == 1)
+    {
+        for (FileEntry * entry = afp->allocatedStart; entry != NULL; entry = entry->next)
+        {
+            if (entry->state == FILE_ASYNC_CALLED)
+            {
+                if (entry->dvdEntry != NULL)
+                {
+                    while (entry->dvdEntry != NULL)
+                        OSYieldThread();
+                }
+                else
+                {
+                    entry->touchCnt--;
+                    if (entry->touchCnt <= -2)
+                        entry->state = FILE_WAITING_GARBAGE;
+                }
+            }
+        }
+    }
+    
+    // Free any unused files and update lists
+    FileEntry * entry = afp->allocatedStart;
+    FileEntry * allocatedEnd = NULL;
+    FileEntry * allocatedStart = NULL;
+    while (entry != NULL)
+    {
+        // Backup next pointer
+        FileEntry * next = entry->next;
+
+        if (entry->state == FILE_WAITING_GARBAGE)
+        {
+            // Deallocate
+            entry->state = FILE_EMPTY;
+            if ((void *)entry->unknown_0x4 != (void *)entry->sp)
+                smartFree(entry->sp);
+
+            // Remove from allocated list
+            if (allocatedEnd != NULL)
+                allocatedEnd->next = entry->next;
+
+            // Append to free list
+            if (afp->freeStart == NULL)
+            {
+                afp->freeStart = entry;
+            }
+            else
+            {
+                // "The list structure is broken"
+                assert(772, afp->freeEnd, "リスト構造が壊れています");
+                afp->freeEnd->next = entry;
+            }
+            entry->next = NULL;
+            afp->freeEnd = entry;
+        }
+        else
+        {
+            // Add to allocated list
+            if (allocatedEnd == NULL)
+                allocatedStart = entry;
+            allocatedEnd = entry;
+        }
+
+        entry = next;
+    }
+    afp->allocatedStart = allocatedStart;
+    afp->allocatedEnd = allocatedEnd;
+}
+
+
+
 // NOT_DECOMPILED fileAllocf
 
 // NOT_DECOMPILED fileAlloc

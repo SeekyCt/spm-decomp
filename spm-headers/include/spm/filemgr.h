@@ -40,6 +40,14 @@ enum FileType
 /* 0xB */ FILETYPE_11 // eff/%s/%s.dat, eff/%seffdata.dat
 };
 
+enum FileState
+{
+/* 0x0 */ FILE_EMPTY,
+/* 0x1 */ FILE_ALLOC_CALLED,
+/* 0x2 */ FILE_WAITING_GARBAGE,
+/* 0x3 */ FILE_ASYNC_CALLED
+};
+
 typedef struct _FileEntry
 {
 /* 0x00 */ u8 state;
