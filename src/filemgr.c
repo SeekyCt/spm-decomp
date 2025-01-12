@@ -333,7 +333,7 @@ FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused)
     // Backup next pointer
     FileEntry * newFreeStart = new_lp->next;
 
-    // Try open file
+    // Check file exists
     DVDEntry * dvdEntry = DVDMgrOpen(path, 2, 0);
     if (dvdEntry == NULL)
         return NULL;
@@ -448,7 +448,7 @@ static void dvdReadDoneCallback(s32 result, DVDFileInfo * fp)
     else
     {
         lp->dvdEntry = NULL;
-        fileGarbageDataAdrSet((TPLHeader *)lp->sp->data,lp->fileType);
+        fileGarbageDataAdrSet(lp->sp->data, lp->fileType);
         DVDMgrClose(dvdEntry);
         if (lp->readDoneCb != NULL)
             lp->readDoneCb(lp);
@@ -466,6 +466,110 @@ FileEntry * fileAsyncf(s32 fileType, FilemgrCallback * readDoneCb, const char * 
     return fileAsync(PathBuffer, fileType, readDoneCb);
 }
 
-// NOT_DECOMPILED fileAsync
+FileEntry * fileAsync(const char * path, s32 fileType, FilemgrCallback * readDoneCb)
+{
+    if (DVDConvertPathToEntrynum(path) == -1)
+        return (FileEntry *)-1;
+
+    // Try find existing entry
+    for (FileEntry * lp = afp->allocatedStart; lp != NULL; lp = lp->next)
+    {
+        // Check if name matches
+        if (lp->state == FILE_EMPTY || strcmp(lp->path, path) != 0)
+            continue;
+
+        // "The file type is different from before"
+        assertf(1158, lp->fileType == fileType, "ファイルタイプが以前と違います[%s]\n", path);
+
+        // Wait for reading to finish
+        if (lp->dvdEntry != NULL)
+            return NULL;
+
+        if (lp->state == FILE_ASYNC_CALLED)
+            return lp;
+    
+        if (lp->state == FILE_WAITING_GARBAGE)
+            lp->state = FILE_ASYNC_CALLED;
+
+        return lp;
+    }
+
+    // Try get a free entry
+    FileEntry * new_lp = afp->freeStart; // r31
+    if (new_lp == NULL)
+    {
+        _fileGarbage(1);
+        new_lp = afp->freeStart;
+    }
+    if (new_lp == NULL)
+    {
+        _fileGarbage(0);
+        new_lp = afp->freeStart;
+    }
+    // "File list is missing"
+    assert(1196, new_lp, "ファイルリストが足りない\n");
+
+    // Backup next pointer
+    FileEntry * newFreeStart = new_lp->next;
+    
+    // Check file exists
+    DVDEntry * dvdEntry = DVDMgrOpen(path, 2, 0);
+    if (dvdEntry == NULL)
+        return (FileEntry *)-1;
+
+    // Check file isn't empty
+    s32 length = DVDMgrGetLength(dvdEntry);
+    u32 roundedLength = (length + 0x1f) & 0xffffffe0;
+    if (roundedLength == 0)
+    {
+        DVDMgrClose(dvdEntry);
+        return NULL;
+    }
+    DVDMgrClose(dvdEntry);
+
+    // No effect, length is already aligned
+    roundedLength = (roundedLength + 0x1f) & 0xffffffe0;
+
+    // Create space on smart heap
+    SmartAllocation * new_sp = smartAlloc(roundedLength, 0);
+    memset(new_sp->data, 0, new_sp->size);
+    // Memory allocation failure
+    assert(1251, new_sp, "メモリ確保に失敗\n");
+    new_sp->fileEntry = new_lp;
+
+    // Update file entry
+    new_lp->sp = new_sp;
+    new_lp->state = FILE_ASYNC_CALLED;
+    new_lp->touchCnt = 0;
+    new_lp->fileType = (s8) fileType;
+    new_lp->next = NULL;
+    new_lp->readDoneCb = readDoneCb;
+    new_lp->length = (u32) length;
+    strcpy(new_lp->path, path);
+
+    // Remove from free list
+    afp->freeStart = newFreeStart;
+    if (afp->freeStart == NULL)
+        afp->freeEnd = NULL;
+
+    // Insert into allocated list
+    if (afp->allocatedStart == NULL)
+    {
+        afp->allocatedStart = new_lp;
+        afp->allocatedEnd = new_lp;
+    }
+    else
+    {
+        afp->allocatedEnd->next = new_lp;
+        afp->allocatedEnd = new_lp;
+    }
+
+    // Start async read
+    dvdEntry = DVDMgrOpen(path, 2, 0);
+    new_lp->dvdEntry = dvdEntry;
+    DVDMgrReadAsync(dvdEntry, new_sp->data, (s32)roundedLength,  0,  dvdReadDoneCallback);
+    return NULL;
+}
+
 
 }
