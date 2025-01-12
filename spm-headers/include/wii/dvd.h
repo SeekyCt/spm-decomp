@@ -9,6 +9,15 @@ USING(wii::os::OSThreadQueue)
 
 #define DVD_ALIGN 32
 
+typedef enum
+{
+    DVD_RESULT_COVER_CLOSED = -4,
+    DVD_RESULT_CANCELED = -3,
+    DVD_RESULT_M2 = -2,
+    DVD_RESULT_FATAL_ERROR = -1,
+    DVD_RESULT_OK = 0
+} DVDResult;
+
 struct _DVDCommandBlock;
 typedef void (DVDCBCallback)(s32 code, struct _DVDCommandBlock * block);
 

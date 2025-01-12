@@ -317,11 +317,13 @@ FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused)
 
     // Try get a free entry
     FileEntry * new_lp = afp->freeStart; // r31
-    if (new_lp == NULL) {
+    if (new_lp == NULL)
+    {
         _fileGarbage(1);
         new_lp = afp->freeStart;
     }
-    if (new_lp == NULL) {
+    if (new_lp == NULL)
+    {
         _fileGarbage(0);
         new_lp = afp->freeStart;
     }
@@ -339,7 +341,8 @@ FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused)
     // Check file isn't empty
     s32 length = DVDMgrGetLength(dvdEntry);
     u32 roundedLength = (length + 0x1f) & 0xffffffe0;
-    if (roundedLength == 0) {
+    if (roundedLength == 0)
+    {
         DVDMgrClose(dvdEntry);
         return NULL;
     }
@@ -374,16 +377,17 @@ FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused)
 
     // Remove from free list
     afp->freeStart = newFreeStart;
-    if (afp->freeStart == NULL) {
+    if (afp->freeStart == NULL)
         afp->freeEnd = NULL;
-    }
 
     // Insert into allocated list
-    if (afp->allocatedStart == NULL) {
+    if (afp->allocatedStart == NULL)
+    {
         afp->allocatedStart = new_lp;
         afp->allocatedEnd = new_lp;
     }
-    else {
+    else
+    {
         afp->allocatedEnd->next = new_lp;
         afp->allocatedEnd = new_lp;
     }
@@ -400,7 +404,8 @@ void fileFree(FileEntry * lp)
         return;
 
     // Check file has actually been claimed
-    if (lp->state == FILE_ALLOC_CALLED) {
+    if (lp->state == FILE_ALLOC_CALLED)
+    {
         // Decrement reference count
         lp->touchCnt--;
         // "It's too free"
@@ -416,7 +421,39 @@ void fileFree(FileEntry * lp)
     }
 }
 
-// NOT_DECOMPILED dvdReadDoneCallback
+static void dvdReadDoneCallback(s32 result, DVDFileInfo * fp)
+{
+    // Find the entry for this file
+    int i;
+    FileEntry *lp;
+    for (i = 0, lp = afp->allocatedStart; lp != NULL; i++, lp = lp->next)
+    {
+        if (&lp->dvdEntry->fileInfo == fp)
+            break;
+    }
+    DVDEntry * dvdEntry = lp->dvdEntry;
+    assertf(1076, lp, "listが見つからなかった\ni=%d fp=%x useBegin=%x\n", i, fp, afp->allocatedStart);
+
+    // Check read was successful
+    if (result == DVD_RESULT_FATAL_ERROR)
+        _assert(1080, !"致命的なエラー DVD_RESULT_FATAL_ERROR \n");
+
+    if (result == DVD_RESULT_CANCELED)
+    {
+        lp->state = FILE_WAITING_GARBAGE;
+        lp->fileType = FILETYPE_12; // FILETYPE_WAITING_GARBAGE?
+        lp->dvdEntry = NULL;
+        DVDMgrClose(dvdEntry);
+    }
+    else
+    {
+        lp->dvdEntry = NULL;
+        fileGarbageDataAdrSet((TPLHeader *)lp->sp->data,lp->fileType);
+        DVDMgrClose(dvdEntry);
+        if (lp->readDoneCb != NULL)
+            lp->readDoneCb(lp);
+    }
+}
 
 // NOT_DECOMPILED fileAsyncf
 

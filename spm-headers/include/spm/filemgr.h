@@ -37,7 +37,8 @@ enum FileType
 /* 0x8 */ FILETYPE_8,
 /* 0x9 */ FILETYPE_9,
 /* 0xA */ FILETYPE_10,
-/* 0xB */ FILETYPE_11 // eff/%s/%s.dat, eff/%seffdata.dat
+/* 0xB */ FILETYPE_11, // eff/%s/%s.dat, eff/%seffdata.dat
+/* 0xC */ FILETYPE_12
 };
 
 enum FileState
@@ -47,6 +48,9 @@ enum FileState
 /* 0x2 */ FILE_WAITING_GARBAGE,
 /* 0x3 */ FILE_ASYNC_CALLED
 };
+
+struct _FileEntry;
+typedef void (FilemgrCallback)(struct _FileEntry * entry);
 
 typedef struct _FileEntry
 {
@@ -59,7 +63,7 @@ typedef struct _FileEntry
 /* 0xA0 */ u32 length;
 /* 0xA4 */ struct _SmartAllocation * sp; // smart pointer to file data
 /* 0xA8 */ struct _FileEntry * next; // next entry in free or allocated list
-/* 0xAC */ void * readDoneCb;
+/* 0xAC */ FilemgrCallback * readDoneCb;
 /* 0xB0 */ DVDEntry * dvdEntry;
 } FileEntry;
 SIZE_ASSERT(FileEntry, 0xb4)

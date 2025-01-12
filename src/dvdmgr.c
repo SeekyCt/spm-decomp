@@ -86,7 +86,7 @@ s32 DVDMgrRead(DVDEntry * entry, void * dest, s32 length, s32 offset)
     {
         ret = DVDReadPrio(&entry->fileInfo, entry->dest, lengthToRead,
                           entry->offset + entry->lengthRead, entry->priority);
-        if (ret == -3 || ret < 0)
+        if (ret == DVD_RESULT_CANCELED || ret < 0)
             break;
         
         entry->lengthRemaining -= lengthToRead;
