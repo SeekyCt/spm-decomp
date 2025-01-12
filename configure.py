@@ -175,7 +175,9 @@ config.reconfig_deps = []
 
 # Optional numeric ID for decomp.me preset
 # Can be overridden in libraries or objects
-config.scratch_preset_id = None
+DECOMPME_PRESET_DOL = 74
+DECOMPME_PRESET_REL = 75
+config.scratch_preset_id = DECOMPME_PRESET_DOL
 
 SPM_HEADERS = "spm-headers"
 
@@ -278,6 +280,7 @@ def Rel(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
         "mw_version": config.linker_version,
         "cflags": cflags_rel,
         "objects": objects,
+        "scratch_preset_id": DECOMPME_PRESET_REL,
     }
 
 
