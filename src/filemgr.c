@@ -27,7 +27,7 @@ static FileWork * afp = &work;
 
 void fileInit()
 {
-    FileEntry * curRecord;
+    FileEntry * entry;
     s32 i;
 
     // Allocate file entry array
@@ -41,11 +41,11 @@ void fileInit()
     memset(afp->entries, 0, sizeof(FileEntry[FILE_ENTRY_MAX]));
 
     // Initialise free linked list
-    curRecord = afp->entries;
+    entry = afp->entries;
     for (i = 0; i < FILE_ENTRY_MAX; i++)
     {
-        curRecord->next = curRecord + 1;
-        curRecord++;
+        entry->next = entry + 1;
+        entry++;
     }
     afp->freeStart = &afp->entries[0];
     afp->freeEnd = &afp->entries[FILE_ENTRY_MAX - 1];
