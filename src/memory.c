@@ -1,8 +1,3 @@
-/*
-    WARNING: Not fully decompiled
-    This file is currently not linked into the final dol
-*/
-
 #include <common.h>
 #include <spm/filemgr.h>
 #include <spm/memory.h>
