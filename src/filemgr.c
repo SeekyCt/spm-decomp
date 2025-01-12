@@ -1122,5 +1122,11 @@ FileEntry * fileAsync(const char * path, s32 fileType, FilemgrCallback * readDon
     return NULL;
 }
 
+// To add string to pool
+void unkStriped();
+void unkStriped()
+{
+    __assert(NULL, -1, "lp->sp");
+}
 
 }
