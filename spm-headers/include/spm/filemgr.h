@@ -25,19 +25,18 @@ USING(wii::tpl::TPLHeader)
 
 enum FileType
 {
-/* 0x0 */ FILETYPE_0, // home button bins, rel (comp & decomp), setup dats, win/card.dat,
-                      // lyt/title.bin, camera_road.bin
+/* 0x0 */ FILETYPE_GENERIC, // No relocations
 /* 0x1 */ FILETYPE_1,
 /* 0x2 */ FILETYPE_2,
 /* 0x3 */ FILETYPE_3,
 /* 0x4 */ FILETYPE_TPL, // not used for bg tpls?
-/* 0x5 */ FILETYPE_5, // a/%s (no dash)
+/* 0x5 */ FILETYPE_ANIMPOSE, // a/%s (no dash)
 /* 0x6 */ FILETYPE_6,
 /* 0x7 */ FILETYPE_7,
 /* 0x8 */ FILETYPE_8,
 /* 0x9 */ FILETYPE_9,
 /* 0xA */ FILETYPE_10,
-/* 0xB */ FILETYPE_11, // eff/%s/%s.dat, eff/%seffdata.dat
+/* 0xB */ FILETYPE_EFFDAT, // eff/%s/%s.dat, eff/%seffdata.dat
 /* 0xC */ FILETYPE_12
 };
 
@@ -99,12 +98,12 @@ void PackTexPalette(TPLHeader * palette);
 /*
     Converts self-pointers in file data to offsets to allow safe moving
 */
-void fileGarbageDataAdrClear(FileEntry * entry);
+DECOMP_STATIC(void fileGarbageDataAdrClear(FileEntry * entry))
 
 /*
     Converts offsets in file data back to self-pointers
 */
-void fileGarbageDataAdrSet(void * data, s32 fileType);
+DECOMP_STATIC(void fileGarbageDataAdrSet(void * data, s32 fileType))
 
 /*
     Safely moves memory containing file data, preserving any self-pointers
@@ -121,7 +120,7 @@ void _fileGarbage(s32);
 */
 FileEntry * fileAllocf(s32 fileType, const char * format, ...);
 FileEntry * fileAlloc(const char * path, s32 fileType);
-FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused);
+DECOMP_STATIC(FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused))
 
 /*
     Unloads a file

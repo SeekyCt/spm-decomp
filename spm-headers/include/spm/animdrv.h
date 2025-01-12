@@ -11,21 +11,102 @@ USING(wii::mtx::Mtx34)
 
 typedef void (AnimPoseDisplayCb)(void * param, s32 animGroupIdx, s32 param_3);
 
-typedef struct 
+typedef struct
 {
-/* 0x00 */ char name[60];
-/* 0x3C */ void * data;
-} AnimationModelFileAnimTableEntry;
-SIZE_ASSERT(AnimationModelFileAnimTableEntry, 0x40)
+/* 0x00 */ u32 dataSize;
+/* 0x04 */ u32 loopCount;
+/* 0x08 */ u32 keyframeCount;
+/* 0x0c */ u32 vertexPositionDeltaCount;
+/* 0x10 */ u32 vertexNormalDeltaCount;
+/* 0x14 */ u32 textureCoordinateTransformDeltaCount;
+/* 0x18 */ u32 visibilityGroupDeltaCount;
+/* 0x1c */ u32 groupTransformDeltaCount;
+/* 0x20 */ u32 animDataType8Count;
+/* 0x24 */ void * loopData;
+/* 0x28 */ void * keyframes;
+/* 0x2c */ void * vertexPositionDeltas;
+/* 0x30 */ void * vertexNormalDeltras;
+/* 0x34 */ void * textureCoordinateTransformDeltas;
+/* 0x38 */ void * visibilityGroupDeltas;
+/* 0x3c */ void * groupTransformDataDeltas;
+/* 0x40 */ void * animDataType8Data;
+/* 0x44 */ u8 unknown_0x44[0x5c - 0x44];
+} AnimPoseData_AnimData;
+SIZE_ASSERT(AnimPoseData_AnimData, 0x5c)
 
 typedef struct 
 {
-/* 0x000 */ u8 unknown_0x0[0x148 - 0x0];
-/* 0x148 */ u32 animCount;
-/* 0x14C */ u8 unknown_0x14c[0x1ac - 0x14c];
-/* 0x1AC */ AnimationModelFileAnimTableEntry * anims;
-} AnimationModelFileHeader;
-SIZE_ASSERT(AnimationModelFileHeader, 0x1b0)
+/* 0x00 */ char name[60];
+/* 0x3C */ AnimPoseData_AnimData * data;
+} AnimPoseData_AnimTableEntry;
+SIZE_ASSERT(AnimPoseData_AnimTableEntry, 0x40)
+
+/*
+    Header of an AnimPose file from the /a/ folder
+*/
+typedef struct 
+{
+/* 0x000 */ u32 headerSize;
+/* 0x004 */ char modelName[64];
+/* 0x044 */ char textureName[64];
+/* 0x084 */ char buildTime[64];
+/* 0x0C4 */ u32 flags;
+/* 0x0C8 */ u32 radius;
+/* 0x0CC */ u32 height;
+/* 0x0D0 */ float bboxMin[3];
+/* 0x0DC */ float bboxMax[3];
+/* 0x0E8 */ u32 shapeCount;
+/* 0x0EC */ u32 polygonCount;
+/* 0x0F0 */ u32 vertexPositionCount;
+/* 0x0F4 */ u32 vertexPositionIndexCount;
+/* 0x0F8 */ u32 vertexNormalCount;
+/* 0x0FC */ u32 vertexNormalIndexCount;
+/* 0x100 */ u32 vertexColorCount;
+/* 0x104 */ u32 vertexColorIndexCount;
+/* 0x108 */ u32 vertexTextureCoordinate0IndexCount;
+/* 0x10C */ u32 vertexTextureCoordinate1IndexCount;
+/* 0x110 */ u32 vertexTextureCoordinate2IndexCount;
+/* 0x114 */ u32 vertexTextureCoordinate3IndexCount;
+/* 0x118 */ u32 vertexTextureCoordinate4IndexCount;
+/* 0x11C */ u32 vertexTextureCoordinate5IndexCount;
+/* 0x120 */ u32 vertexTextureCoordinate6IndexCount;
+/* 0x124 */ u32 vertexTextureCoordinate7IndexCount;
+/* 0x128 */ u32 vertexTextureCoordinateCount;
+/* 0x12C */ u32 textureCoordinateTransformCount;
+/* 0x130 */ u32 samplerCount;
+/* 0x134 */ u32 textureCount;
+/* 0x138 */ u32 subshapeCount;
+/* 0x13C */ u32 visibilityGroupCount;
+/* 0x140 */ u32 groupTransformDataCount;
+/* 0x144 */ u32 groupCount;
+/* 0x148 */ s32 animCount;
+/* 0x14C */ void * shapes;
+/* 0x150 */ void * polygons;
+/* 0x154 */ void * vertexPositions;
+/* 0x158 */ void * vertexPositionIndices;
+/* 0x15C */ void * vertexNormals;
+/* 0x160 */ void * vertexNormalIndices;
+/* 0x164 */ void * vertexColors;
+/* 0x168 */ void * vertexColorIndices;
+/* 0x16C */ void * vertexTextureCoordinate0Indices;
+/* 0x170 */ void * vertexTextureCoordinate1Indices;
+/* 0x174 */ void * vertexTextureCoordinate2Indices;
+/* 0x178 */ void * vertexTextureCoordinate3Indices;
+/* 0x17C */ void * vertexTextureCoordinate4Indices;
+/* 0x180 */ void * vertexTextureCoordinate5Indices;
+/* 0x184 */ void * vertexTextureCoordinate6Indices;
+/* 0x188 */ void * vertexTextureCoordinate7Indices;
+/* 0x18C */ void * vertexTextureCoordinates;
+/* 0x190 */ void * textureCoordinateTransforms;
+/* 0x194 */ void * samplers;
+/* 0x198 */ void * textures;
+/* 0x19C */ void * subshapes;
+/* 0x1A0 */ void * visibilityGroups;
+/* 0x1A4 */ void * groupTransformData;
+/* 0x1A8 */ void * groups;
+/* 0x1AC */ AnimPoseData_AnimTableEntry * anims;
+} AnimPoseData;
+SIZE_ASSERT(AnimPoseData, 0x1b0)
 
 typedef struct
 {
@@ -93,7 +174,7 @@ UNKNOWN_FUNCTION(animSetPaperTexMtx);
 UNKNOWN_FUNCTION(animGroupBaseAsync);
 UNKNOWN_FUNCTION(animPoseGetAnimPosePtr);
 UNKNOWN_FUNCTION(animPoseGetAnimDataPtr);
-AnimationModelFileHeader * animPoseGetAnimBaseDataPtr(s32 id);
+AnimPoseData * animPoseGetAnimBaseDataPtr(s32 id);
 UNKNOWN_FUNCTION(animPoseGetCurrentAnim);
 UNKNOWN_FUNCTION(func_8004ca08);
 UNKNOWN_FUNCTION(func_8004caec);

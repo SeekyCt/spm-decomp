@@ -3,6 +3,8 @@
     This file is currently not linked into the final dol
 */
 
+#include "spm/animdrv.h"
+#include "spm/effdrv.h"
 #include "wii/os/OSThread.h"
 #include <spm/dvdmgr.h>
 #include <spm/filemgr.h>
@@ -139,9 +141,558 @@ void PackTexPalette(TPLHeader * palette)
     palette->imageTableOffset = (u32) palette->imageTable - (u32) palette;
 }
 
-// NOT_DECOMPILED fileGarbageDataAdrClear
+typedef struct {
+/* 0x000 */ u8 unknown_0x0[0x14c - 0x0];
+/* 0x14C */ u32 unknown_0x14c;
+/* 0x150 */ u32 unknown_0x150;
+/* 0x154 */ u32 unknown_0x154;
+/* 0x158 */ u32 unknown_0x158;
+/* 0x15C */ u32 unknown_0x15c;
+/* 0x160 */ u32 unknown_0x160;
+/* 0x164 */ u32 unknown_0x164;
+/* 0x168 */ u32 unknown_0x168;
+/* 0x16C */ u32 unknown_0x16c;
+/* 0x170 */ u32 unknown_0x170;
+/* 0x174 */ u32 unknown_0x174;
+/* 0x178 */ u32 unknown_0x178;
+/* 0x17C */ u32 unknown_0x17c;
+/* 0x180 */ u32 unknown_0x180;
+/* 0x184 */ u32 unknown_0x184;
+/* 0x188 */ u32 unknown_0x188;
+/* 0x18C */ u32 unknown_0x18c;
+/* 0x190 */ u32 unknown_0x190;
+/* 0x194 */ u32 unknown_0x194;
+/* 0x198 */ u32 unknown_0x198;
+/* 0x19C */ u32 unknown_0x19c;
+/* 0x1A0 */ u32 unknown_0x1a0;
+/* 0x1A4 */ u32 unknown_0x1a4;
+/* 0x1A8 */ u32 unknown_0x1a8;
+/* 0x1AC */ u32 unknown_0x1ac;
+    // Unknown total size
+} UnkFileData1;
 
-// NOT_DECOMPILED fileGarbageDataAdrSet
+typedef struct {
+/* 0x00 */ u8 unknown_0x0[0x24 - 0x0];
+/* 0x24 */ u32 unknown_0x24; 
+/* 0x28 */ u32 unknown_0x28; 
+/* 0x2C */ u32 unknown_0x2c; 
+/* 0x30 */ u32 unknown_0x30; 
+/* 0x34 */ u32 unknown_0x34; 
+/* 0x38 */ u32 unknown_0x38; 
+/* 0x3C */ u32 unknown_0x3c; 
+/* 0x40 */ u32 unknown_0x40; 
+    // Unknown total size
+} UnkFileData2;
+
+typedef struct {
+/* 0x00 */ u8 unkown_0x0[0x48 - 0x0];
+/* 0x48 */ u32 unknown_0x48;
+    // Unknown total size
+} UnkFileData3;
+
+typedef struct {
+/* 0x00 */ u8 unkown_0x0[0x48 - 0x0];
+/* 0x48 */ u32 unknown_0x48;
+    // Unknown total size
+} UnkFileData6;
+
+typedef struct {
+/* 0x00 */ u8 unkown_0x0[0x64 - 0x0];
+/* 0x64 */ u32 unknown_0x64;
+/* 0x68 */ u32 unknown_0x68;
+/* 0x6C */ u32 unknown_0x6c;
+    // Unknown total size
+} UnkFileData7;
+
+typedef struct {
+/* 0x000 */ u8 unknown_0x0[0xc8 - 0x0];
+/* 0x0c8 */ u32 unknown_0xc8;
+/* 0x0cc */ u32 unknown_0xcc;
+/* 0x0d0 */ u32 unknown_0xd0;
+/* 0x0d4 */ u32 unknown_0xd4;
+/* 0x0d8 */ u32 unknown_0xd8;
+/* 0x0dc */ u32 unknown_0xdc;
+/* 0x0e0 */ u32 unknown_0xe0;
+/* 0x0e4 */ u32 unknown_0xe4;
+/* 0x0e8 */ u32 unknown_0xe8;
+/* 0x0ec */ u32 unknown_0xec;
+/* 0x0f0 */ u32 unknown_0xf0;
+/* 0x0f4 */ u32 unknown_0xf4;
+/* 0x0f8 */ u32 unknown_0xf8;
+/* 0x0fc */ u32 unknown_0xfc;
+/* 0x100 */ u32 unknown_0x100;
+/* 0x104 */ u32 unknown_0x104;
+/* 0x108 */ u32 unknown_0x108;
+/* 0x10c */ u32 unknown_0x10c;
+/* 0x110 */ u32 unknown_0x110;
+/* 0x114 */ u32 unknown_0x114;
+/* 0x118 */ u32 unknown_0x118;
+/* 0x11c */ u32 unknown_0x11c;
+/* 0x120 */ u32 unknown_0x120;
+    // Unknown total size
+} UnkFileData8;
+
+typedef struct {
+/* 0x00 */ u8 unknown_0x0[0x58 - 0x0];
+/* 0x58 */ u32 unknown_0x58;
+/* 0x5c */ u32 unknown_0x5c;
+/* 0x60 */ u32 unknown_0x60;
+/* 0x64 */ u32 unknown_0x64;
+    // Unknown total size
+} UnkFileData9;
+
+typedef struct {
+/* 0x00 */ u8 unknown_0x0[0x48 - 0x0];
+/* 0x48 */ u32 unknown_0x48;
+    // Unknown total size
+} UnkFileData10;
+
+#define IS_RELOCATED(field, base) ((u32)(field) >= (u32)(base))
+#define IS_NOT_RELOCATED(field, base) ((u32)(field) < (u32)(base))
+#define APPLY_RELOC(field, base) ((u32)(field) + (u32)(base))
+#define CLEAR_RELOC(field, base) ((u32)(field) - (u32)(base))
+
+static void fileGarbageDataAdrClear(FileEntry * entry)
+{
+    void * data = entry->sp->data;
+    switch(entry->fileType)
+    {
+        case FILETYPE_1:
+        {
+            UnkFileData1 * unk1 = (UnkFileData1 *)data;
+            // Skip if not already relocated
+            if (IS_NOT_RELOCATED(unk1->unknown_0x14c, unk1))
+                return;
+
+            unk1->unknown_0x14c = CLEAR_RELOC(unk1->unknown_0x14c, unk1);
+            unk1->unknown_0x150 = CLEAR_RELOC(unk1->unknown_0x150, unk1);
+            unk1->unknown_0x154 = CLEAR_RELOC(unk1->unknown_0x154, unk1);
+            unk1->unknown_0x158 = CLEAR_RELOC(unk1->unknown_0x158, unk1);
+            unk1->unknown_0x15c = CLEAR_RELOC(unk1->unknown_0x15c, unk1);
+            unk1->unknown_0x160 = CLEAR_RELOC(unk1->unknown_0x160, unk1);
+            unk1->unknown_0x164 = CLEAR_RELOC(unk1->unknown_0x164, unk1);
+            unk1->unknown_0x168 = CLEAR_RELOC(unk1->unknown_0x168, unk1);
+            unk1->unknown_0x16c = CLEAR_RELOC(unk1->unknown_0x16c, unk1);
+            unk1->unknown_0x170 = CLEAR_RELOC(unk1->unknown_0x170, unk1);
+            unk1->unknown_0x174 = CLEAR_RELOC(unk1->unknown_0x174, unk1);
+            unk1->unknown_0x178 = CLEAR_RELOC(unk1->unknown_0x178, unk1);
+            unk1->unknown_0x17c = CLEAR_RELOC(unk1->unknown_0x17c, unk1);
+            unk1->unknown_0x180 = CLEAR_RELOC(unk1->unknown_0x180, unk1);
+            unk1->unknown_0x184 = CLEAR_RELOC(unk1->unknown_0x184, unk1);
+            unk1->unknown_0x188 = CLEAR_RELOC(unk1->unknown_0x188, unk1);
+            unk1->unknown_0x18c = CLEAR_RELOC(unk1->unknown_0x18c, unk1);
+            unk1->unknown_0x190 = CLEAR_RELOC(unk1->unknown_0x190, unk1);
+            unk1->unknown_0x194 = CLEAR_RELOC(unk1->unknown_0x194, unk1);
+            unk1->unknown_0x198 = CLEAR_RELOC(unk1->unknown_0x198, unk1);
+            unk1->unknown_0x19c = CLEAR_RELOC(unk1->unknown_0x19c, unk1);
+            unk1->unknown_0x1a0 = CLEAR_RELOC(unk1->unknown_0x1a0, unk1);
+            unk1->unknown_0x1a4 = CLEAR_RELOC(unk1->unknown_0x1a4, unk1);
+            unk1->unknown_0x1a8 = CLEAR_RELOC(unk1->unknown_0x1a8, unk1);
+            unk1->unknown_0x1ac = CLEAR_RELOC(unk1->unknown_0x1ac, unk1);
+            return;
+        }
+
+        case FILETYPE_2:
+        {
+            UnkFileData2 * unk2 = (UnkFileData2 *)data;
+            if (IS_NOT_RELOCATED(unk2->unknown_0x24, data))
+                return;
+
+            unk2->unknown_0x24 = CLEAR_RELOC(unk2->unknown_0x24, unk2);
+            unk2->unknown_0x28 = CLEAR_RELOC(unk2->unknown_0x28, unk2);
+            unk2->unknown_0x2c = CLEAR_RELOC(unk2->unknown_0x2c, unk2);
+            unk2->unknown_0x30 = CLEAR_RELOC(unk2->unknown_0x30, unk2);
+            unk2->unknown_0x34 = CLEAR_RELOC(unk2->unknown_0x34, unk2);
+            unk2->unknown_0x38 = CLEAR_RELOC(unk2->unknown_0x38, unk2);
+            unk2->unknown_0x3c = CLEAR_RELOC(unk2->unknown_0x3c, unk2);
+            unk2->unknown_0x40 = CLEAR_RELOC(unk2->unknown_0x40, unk2);
+            return;
+        }
+
+        case FILETYPE_3:
+        {
+            UnkFileData3 * unk3 = (UnkFileData3 *) data;
+            if (IS_NOT_RELOCATED(unk3->unknown_0x48, unk3))
+                return;
+
+            unk3->unknown_0x48 = CLEAR_RELOC(unk3->unknown_0x48, unk3);
+            return;
+        }
+
+        case FILETYPE_TPL:
+            PackTexPalette((TPLHeader *) entry->sp->data);
+            return;
+
+        case FILETYPE_ANIMPOSE:
+        {
+            AnimPoseData * pose = (AnimPoseData *) data;
+            if (IS_NOT_RELOCATED(pose->shapes, pose))
+                return;
+
+            s32 animCount = pose->animCount;
+            for (s32 i = 0; i < animCount; i++)
+            {
+                AnimPoseData_AnimData * animData = pose->anims[i].data;
+                pose->anims[i].data = (AnimPoseData_AnimData *) CLEAR_RELOC(pose->anims[i].data, pose);
+                if (IS_NOT_RELOCATED(animData->loopData, animData))
+                    continue;
+
+                animData->loopData = (void *) CLEAR_RELOC(animData->loopData, animData);
+                animData->keyframes = (void *) CLEAR_RELOC(animData->keyframes, animData);
+                animData->vertexPositionDeltas = (void *) CLEAR_RELOC(animData->vertexPositionDeltas, animData);
+                animData->vertexNormalDeltras = (void *) CLEAR_RELOC(animData->vertexNormalDeltras, animData);
+                animData->textureCoordinateTransformDeltas = (void *) CLEAR_RELOC(animData->textureCoordinateTransformDeltas, animData);
+                animData->visibilityGroupDeltas = (void *) CLEAR_RELOC(animData->visibilityGroupDeltas, animData);
+                animData->groupTransformDataDeltas = (void *) CLEAR_RELOC(animData->groupTransformDataDeltas, animData);
+                animData->animDataType8Data = (void *) CLEAR_RELOC(animData->animDataType8Data, animData);
+            }
+
+            pose->shapes = (void *) CLEAR_RELOC(pose->shapes, pose);
+            pose->polygons = (void *) CLEAR_RELOC(pose->polygons, pose);
+            pose->vertexPositions = (void *) CLEAR_RELOC(pose->vertexPositions, pose);
+            pose->vertexPositionIndices = (void *) CLEAR_RELOC(pose->vertexPositionIndices, pose);
+            pose->vertexNormals = (void *) CLEAR_RELOC(pose->vertexNormals, pose);
+            pose->vertexNormalIndices = (void *) CLEAR_RELOC(pose->vertexNormalIndices, pose);
+            pose->vertexColors = (void *) CLEAR_RELOC(pose->vertexColors, pose);
+            pose->vertexColorIndices = (void *) CLEAR_RELOC(pose->vertexColorIndices, pose);
+            pose->vertexTextureCoordinate0Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate0Indices, pose);
+            pose->vertexTextureCoordinate1Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate1Indices, pose);
+            pose->vertexTextureCoordinate2Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate2Indices, pose);
+            pose->vertexTextureCoordinate3Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate3Indices, pose);
+            pose->vertexTextureCoordinate4Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate4Indices, pose);
+            pose->vertexTextureCoordinate5Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate5Indices, pose);
+            pose->vertexTextureCoordinate6Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate6Indices, pose);
+            pose->vertexTextureCoordinate7Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate7Indices, pose);
+            pose->vertexTextureCoordinates = (void *) CLEAR_RELOC(pose->vertexTextureCoordinates, pose);
+            pose->textureCoordinateTransforms = (void *) CLEAR_RELOC(pose->textureCoordinateTransforms, pose);
+            pose->samplers = (void *) CLEAR_RELOC(pose->samplers, pose);
+            pose->textures = (void *) CLEAR_RELOC(pose->textures, pose);
+            pose->subshapes = (void *) CLEAR_RELOC(pose->subshapes, pose);
+            pose->visibilityGroups = (void *) CLEAR_RELOC(pose->visibilityGroups, pose);
+            pose->groupTransformData = (void *) CLEAR_RELOC(pose->groupTransformData, pose);
+            pose->groups = (void *) CLEAR_RELOC(pose->groups, pose);
+            pose->anims = (AnimPoseData_AnimTableEntry *) CLEAR_RELOC(pose->anims, pose);
+            return;
+        }
+        case FILETYPE_6:
+        {
+            UnkFileData6 * unk6 = (UnkFileData6 *) data;
+            if (IS_NOT_RELOCATED(unk6->unknown_0x48, data))
+                return;
+
+            unk6->unknown_0x48 = CLEAR_RELOC(unk6->unknown_0x48, unk6);
+            return;
+        }
+
+        case FILETYPE_7:
+        {
+            UnkFileData7 * unk7 = (UnkFileData7 *) data;
+            if (IS_NOT_RELOCATED(unk7->unknown_0x64, unk7))
+                return;
+
+            unk7->unknown_0x64 = CLEAR_RELOC(unk7->unknown_0x64, unk7);
+            unk7->unknown_0x68 = CLEAR_RELOC(unk7->unknown_0x68, unk7);
+            unk7->unknown_0x6c = CLEAR_RELOC(unk7->unknown_0x6c, unk7);
+            return;
+        }
+
+        case FILETYPE_8:
+        {
+            UnkFileData8 * unk8 = (UnkFileData8 *) data;
+            if (IS_NOT_RELOCATED(unk8->unknown_0xc8, unk8))
+                return;
+
+            unk8->unknown_0xc8 = CLEAR_RELOC(unk8->unknown_0xc8, unk8);
+            unk8->unknown_0xcc = CLEAR_RELOC(unk8->unknown_0xcc, unk8);
+            unk8->unknown_0xd0 = CLEAR_RELOC(unk8->unknown_0xd0, unk8);
+            unk8->unknown_0xd4 = CLEAR_RELOC(unk8->unknown_0xd4, unk8);
+            unk8->unknown_0xd8 = CLEAR_RELOC(unk8->unknown_0xd8, unk8);
+            unk8->unknown_0xdc = CLEAR_RELOC(unk8->unknown_0xdc, unk8);
+            unk8->unknown_0xe0 = CLEAR_RELOC(unk8->unknown_0xe0, unk8);
+            unk8->unknown_0xe4 = CLEAR_RELOC(unk8->unknown_0xe4, unk8);
+            unk8->unknown_0xe8 = CLEAR_RELOC(unk8->unknown_0xe8, unk8);
+            unk8->unknown_0xec = CLEAR_RELOC(unk8->unknown_0xec, unk8);
+            unk8->unknown_0xf0 = CLEAR_RELOC(unk8->unknown_0xf0, unk8);
+            unk8->unknown_0xf4 = CLEAR_RELOC(unk8->unknown_0xf4, unk8);
+            unk8->unknown_0xf8 = CLEAR_RELOC(unk8->unknown_0xf8, unk8);
+            unk8->unknown_0xfc = CLEAR_RELOC(unk8->unknown_0xfc, unk8);
+            unk8->unknown_0x100 = CLEAR_RELOC(unk8->unknown_0x100, unk8);
+            unk8->unknown_0x104 = CLEAR_RELOC(unk8->unknown_0x104, unk8);
+            unk8->unknown_0x108 = CLEAR_RELOC(unk8->unknown_0x108, unk8);
+            unk8->unknown_0x10c = CLEAR_RELOC(unk8->unknown_0x10c, unk8);
+            unk8->unknown_0x110 = CLEAR_RELOC(unk8->unknown_0x110, unk8);
+            unk8->unknown_0x114 = CLEAR_RELOC(unk8->unknown_0x114, unk8);
+            unk8->unknown_0x118 = CLEAR_RELOC(unk8->unknown_0x118, unk8);
+            unk8->unknown_0x11c = CLEAR_RELOC(unk8->unknown_0x11c, unk8);
+            unk8->unknown_0x120 = CLEAR_RELOC(unk8->unknown_0x120, unk8);
+            return;
+        }
+
+        case FILETYPE_9:
+        {
+            UnkFileData9 * unk9 = (UnkFileData9 *) data;
+            if (IS_NOT_RELOCATED(unk9->unknown_0x58, unk9))
+                return;
+
+            unk9->unknown_0x58 = CLEAR_RELOC(unk9->unknown_0x58, unk9);
+            unk9->unknown_0x5c = CLEAR_RELOC(unk9->unknown_0x5c, unk9);
+            unk9->unknown_0x60 = CLEAR_RELOC(unk9->unknown_0x60, unk9);
+            unk9->unknown_0x64 = CLEAR_RELOC(unk9->unknown_0x64, unk9);
+            return;
+        }
+
+        case FILETYPE_10:
+        {
+            UnkFileData10 * unk10 = (UnkFileData10 *) data;
+            if (IS_NOT_RELOCATED(unk10->unknown_0x48, unk10))
+                return;
+
+            unk10->unknown_0x48 = CLEAR_RELOC(unk10->unknown_0x48, unk10);
+            return;
+        }
+
+        case FILETYPE_EFFDAT:
+        {
+            EffDataHeader * eff = (EffDataHeader *) data;
+            if (IS_NOT_RELOCATED(eff->sections, eff))
+                return;
+
+            eff->sections = (void *) CLEAR_RELOC(eff->sections, eff);
+            eff->entries = (void *) CLEAR_RELOC(eff->entries, eff);
+            eff->unknown_0x8 = (void *) CLEAR_RELOC(eff->unknown_0x8, eff);
+            eff->unknown_0xc = (void *) CLEAR_RELOC(eff->unknown_0xc, eff);
+            eff->unknown_0x10 = (void *) CLEAR_RELOC(eff->unknown_0x10, eff);
+            eff->unknown_0x14 = (void *) CLEAR_RELOC(eff->unknown_0x14, eff);
+            eff->unknown_0x18 = (void *) CLEAR_RELOC(eff->unknown_0x18, eff);
+            eff->unknown_0x1c = (void *) CLEAR_RELOC(eff->unknown_0x1c, eff);
+            eff->unknown_0x20 = (void *) CLEAR_RELOC(eff->unknown_0x20, eff);
+            eff->unknown_0x24 = (void *) CLEAR_RELOC(eff->unknown_0x24, eff);
+            eff->unknown_0x28 = (void *) CLEAR_RELOC(eff->unknown_0x28, eff);
+            eff->unknown_0x2c = (void *) CLEAR_RELOC(eff->unknown_0x2c, eff);
+            eff->unknown_0x30 = (void *) CLEAR_RELOC(eff->unknown_0x30, eff);
+            eff->unknown_0x34 = (void *) CLEAR_RELOC(eff->unknown_0x34, eff);
+            eff->unknown_0x38 = (void *) CLEAR_RELOC(eff->unknown_0x38, eff);
+            eff->unknown_0x3c = (void *) CLEAR_RELOC(eff->unknown_0x3c, eff);
+            return;
+        }
+    }
+}
+
+static void fileGarbageDataAdrSet(void * data, s32 fileType)
+{
+    switch(fileType)
+    {
+        case FILETYPE_1:
+        {
+            UnkFileData1 * unk1 = (UnkFileData1 *)data;
+            // Skip if not already relocated
+            if (IS_RELOCATED(unk1->unknown_0x14c, unk1))
+                return;
+
+            unk1->unknown_0x14c = APPLY_RELOC(unk1->unknown_0x14c, unk1);
+            unk1->unknown_0x150 = APPLY_RELOC(unk1->unknown_0x150, unk1);
+            unk1->unknown_0x154 = APPLY_RELOC(unk1->unknown_0x154, unk1);
+            unk1->unknown_0x158 = APPLY_RELOC(unk1->unknown_0x158, unk1);
+            unk1->unknown_0x15c = APPLY_RELOC(unk1->unknown_0x15c, unk1);
+            unk1->unknown_0x160 = APPLY_RELOC(unk1->unknown_0x160, unk1);
+            unk1->unknown_0x164 = APPLY_RELOC(unk1->unknown_0x164, unk1);
+            unk1->unknown_0x168 = APPLY_RELOC(unk1->unknown_0x168, unk1);
+            unk1->unknown_0x16c = APPLY_RELOC(unk1->unknown_0x16c, unk1);
+            unk1->unknown_0x170 = APPLY_RELOC(unk1->unknown_0x170, unk1);
+            unk1->unknown_0x174 = APPLY_RELOC(unk1->unknown_0x174, unk1);
+            unk1->unknown_0x178 = APPLY_RELOC(unk1->unknown_0x178, unk1);
+            unk1->unknown_0x17c = APPLY_RELOC(unk1->unknown_0x17c, unk1);
+            unk1->unknown_0x180 = APPLY_RELOC(unk1->unknown_0x180, unk1);
+            unk1->unknown_0x184 = APPLY_RELOC(unk1->unknown_0x184, unk1);
+            unk1->unknown_0x188 = APPLY_RELOC(unk1->unknown_0x188, unk1);
+            unk1->unknown_0x18c = APPLY_RELOC(unk1->unknown_0x18c, unk1);
+            unk1->unknown_0x190 = APPLY_RELOC(unk1->unknown_0x190, unk1);
+            unk1->unknown_0x194 = APPLY_RELOC(unk1->unknown_0x194, unk1);
+            unk1->unknown_0x198 = APPLY_RELOC(unk1->unknown_0x198, unk1);
+            unk1->unknown_0x19c = APPLY_RELOC(unk1->unknown_0x19c, unk1);
+            unk1->unknown_0x1a0 = APPLY_RELOC(unk1->unknown_0x1a0, unk1);
+            unk1->unknown_0x1a4 = APPLY_RELOC(unk1->unknown_0x1a4, unk1);
+            unk1->unknown_0x1a8 = APPLY_RELOC(unk1->unknown_0x1a8, unk1);
+            unk1->unknown_0x1ac = APPLY_RELOC(unk1->unknown_0x1ac, unk1);
+            return;
+        }
+
+        case FILETYPE_2:
+        {
+            UnkFileData2 * unk2 = (UnkFileData2 *)data;
+            if (IS_RELOCATED(unk2->unknown_0x24, data))
+                return;
+
+            unk2->unknown_0x24 = APPLY_RELOC(unk2->unknown_0x24, unk2);
+            unk2->unknown_0x28 = APPLY_RELOC(unk2->unknown_0x28, unk2);
+            unk2->unknown_0x2c = APPLY_RELOC(unk2->unknown_0x2c, unk2);
+            unk2->unknown_0x30 = APPLY_RELOC(unk2->unknown_0x30, unk2);
+            unk2->unknown_0x34 = APPLY_RELOC(unk2->unknown_0x34, unk2);
+            unk2->unknown_0x38 = APPLY_RELOC(unk2->unknown_0x38, unk2);
+            unk2->unknown_0x3c = APPLY_RELOC(unk2->unknown_0x3c, unk2);
+            unk2->unknown_0x40 = APPLY_RELOC(unk2->unknown_0x40, unk2);
+            return;
+        }
+
+        case FILETYPE_3:
+        {
+            UnkFileData3 * unk3 = (UnkFileData3 *) data;
+            if (IS_RELOCATED(unk3->unknown_0x48, unk3))
+                return;
+
+            unk3->unknown_0x48 = APPLY_RELOC(unk3->unknown_0x48, unk3);
+            return;
+        }
+
+        case FILETYPE_TPL:
+            UnpackTexPalette((TPLHeader *) data);
+            return;
+
+        case FILETYPE_ANIMPOSE:
+        {
+            AnimPoseData * pose = (AnimPoseData *) data;
+            if (IS_RELOCATED(pose->shapes, pose))
+                return;
+
+            pose->shapes = (void *) APPLY_RELOC(pose->shapes, pose);
+            pose->polygons = (void *) APPLY_RELOC(pose->polygons, pose);
+            pose->vertexPositions = (void *) APPLY_RELOC(pose->vertexPositions, pose);
+            pose->vertexPositionIndices = (void *) APPLY_RELOC(pose->vertexPositionIndices, pose);
+            pose->vertexNormals = (void *) APPLY_RELOC(pose->vertexNormals, pose);
+            pose->vertexNormalIndices = (void *) APPLY_RELOC(pose->vertexNormalIndices, pose);
+            pose->vertexColors = (void *) APPLY_RELOC(pose->vertexColors, pose);
+            pose->vertexColorIndices = (void *) APPLY_RELOC(pose->vertexColorIndices, pose);
+            pose->vertexTextureCoordinate0Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate0Indices, pose);
+            pose->vertexTextureCoordinate1Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate1Indices, pose);
+            pose->vertexTextureCoordinate2Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate2Indices, pose);
+            pose->vertexTextureCoordinate3Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate3Indices, pose);
+            pose->vertexTextureCoordinate4Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate4Indices, pose);
+            pose->vertexTextureCoordinate5Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate5Indices, pose);
+            pose->vertexTextureCoordinate6Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate6Indices, pose);
+            pose->vertexTextureCoordinate7Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate7Indices, pose);
+            pose->vertexTextureCoordinates = (void *) APPLY_RELOC(pose->vertexTextureCoordinates, pose);
+            pose->textureCoordinateTransforms = (void *) APPLY_RELOC(pose->textureCoordinateTransforms, pose);
+            pose->samplers = (void *) APPLY_RELOC(pose->samplers, pose);
+            pose->textures = (void *) APPLY_RELOC(pose->textures, pose);
+            pose->subshapes = (void *) APPLY_RELOC(pose->subshapes, pose);
+            pose->visibilityGroups = (void *) APPLY_RELOC(pose->visibilityGroups, pose);
+            pose->groupTransformData = (void *) APPLY_RELOC(pose->groupTransformData, pose);
+            pose->groups = (void *) APPLY_RELOC(pose->groups, pose);
+            pose->anims = (AnimPoseData_AnimTableEntry *) APPLY_RELOC(pose->anims, pose);
+
+            s32 animCount = pose->animCount;
+            for (s32 i = 0; i < animCount; i++)
+            {
+                AnimPoseData_AnimTableEntry * anim = pose->anims + i;
+                anim->data = (AnimPoseData_AnimData *) ((u32) anim->data + (u32) pose);
+
+                AnimPoseData_AnimData * animData = pose->anims[i].data;
+                if (IS_RELOCATED(animData->loopData, animData))
+                    continue;
+
+                animData->loopData = (void *) APPLY_RELOC(animData->loopData, animData);
+                animData->keyframes = (void *) APPLY_RELOC(animData->keyframes, animData);
+                animData->vertexPositionDeltas = (void *) APPLY_RELOC(animData->vertexPositionDeltas, animData);
+                animData->vertexNormalDeltras = (void *) APPLY_RELOC(animData->vertexNormalDeltras, animData);
+                animData->textureCoordinateTransformDeltas = (void *) APPLY_RELOC(animData->textureCoordinateTransformDeltas, animData);
+                animData->visibilityGroupDeltas = (void *) APPLY_RELOC(animData->visibilityGroupDeltas, animData);
+                animData->groupTransformDataDeltas = (void *) APPLY_RELOC(animData->groupTransformDataDeltas, animData);
+                animData->animDataType8Data = (void *) APPLY_RELOC(animData->animDataType8Data, animData);
+            }
+
+            return;
+        }
+        case FILETYPE_6:
+        {
+            UnkFileData6 * unk6 = (UnkFileData6 *) data;
+            if (IS_RELOCATED(unk6->unknown_0x48, data))
+                return;
+
+            unk6->unknown_0x48 = APPLY_RELOC(unk6->unknown_0x48, unk6);
+            return;
+        }
+
+        case FILETYPE_7:
+        {
+            UnkFileData7 * unk7 = (UnkFileData7 *) data;
+            if (IS_RELOCATED(unk7->unknown_0x64, unk7))
+                return;
+
+            unk7->unknown_0x64 = APPLY_RELOC(unk7->unknown_0x64, unk7);
+            unk7->unknown_0x68 = APPLY_RELOC(unk7->unknown_0x68, unk7);
+            unk7->unknown_0x6c = APPLY_RELOC(unk7->unknown_0x6c, unk7);
+            return;
+        }
+
+        case FILETYPE_8:
+        {
+            UnkFileData8 * unk8 = (UnkFileData8 *) data;
+            if (IS_RELOCATED(unk8->unknown_0xc8, unk8))
+                return;
+
+            unk8->unknown_0xc8 = APPLY_RELOC(unk8->unknown_0xc8, unk8);
+            unk8->unknown_0xcc = APPLY_RELOC(unk8->unknown_0xcc, unk8);
+            unk8->unknown_0xd0 = APPLY_RELOC(unk8->unknown_0xd0, unk8);
+            unk8->unknown_0xd4 = APPLY_RELOC(unk8->unknown_0xd4, unk8);
+            unk8->unknown_0xd8 = APPLY_RELOC(unk8->unknown_0xd8, unk8);
+            unk8->unknown_0xdc = APPLY_RELOC(unk8->unknown_0xdc, unk8);
+            unk8->unknown_0xe0 = APPLY_RELOC(unk8->unknown_0xe0, unk8);
+            unk8->unknown_0xe4 = APPLY_RELOC(unk8->unknown_0xe4, unk8);
+            unk8->unknown_0xe8 = APPLY_RELOC(unk8->unknown_0xe8, unk8);
+            unk8->unknown_0xec = APPLY_RELOC(unk8->unknown_0xec, unk8);
+            unk8->unknown_0xf0 = APPLY_RELOC(unk8->unknown_0xf0, unk8);
+            unk8->unknown_0xf4 = APPLY_RELOC(unk8->unknown_0xf4, unk8);
+            unk8->unknown_0xf8 = APPLY_RELOC(unk8->unknown_0xf8, unk8);
+            unk8->unknown_0xfc = APPLY_RELOC(unk8->unknown_0xfc, unk8);
+            unk8->unknown_0x100 = APPLY_RELOC(unk8->unknown_0x100, unk8);
+            unk8->unknown_0x104 = APPLY_RELOC(unk8->unknown_0x104, unk8);
+            unk8->unknown_0x108 = APPLY_RELOC(unk8->unknown_0x108, unk8);
+            unk8->unknown_0x10c = APPLY_RELOC(unk8->unknown_0x10c, unk8);
+            unk8->unknown_0x110 = APPLY_RELOC(unk8->unknown_0x110, unk8);
+            unk8->unknown_0x114 = APPLY_RELOC(unk8->unknown_0x114, unk8);
+            unk8->unknown_0x118 = APPLY_RELOC(unk8->unknown_0x118, unk8);
+            unk8->unknown_0x11c = APPLY_RELOC(unk8->unknown_0x11c, unk8);
+            unk8->unknown_0x120 = APPLY_RELOC(unk8->unknown_0x120, unk8);
+            return;
+        }
+
+        case FILETYPE_9:
+        {
+            UnkFileData9 * unk9 = (UnkFileData9 *) data;
+            if (IS_RELOCATED(unk9->unknown_0x58, unk9))
+                return;
+
+            unk9->unknown_0x58 = APPLY_RELOC(unk9->unknown_0x58, unk9);
+            unk9->unknown_0x5c = APPLY_RELOC(unk9->unknown_0x5c, unk9);
+            unk9->unknown_0x60 = APPLY_RELOC(unk9->unknown_0x60, unk9);
+            unk9->unknown_0x64 = APPLY_RELOC(unk9->unknown_0x64, unk9);
+            return;
+        }
+
+        case FILETYPE_10:
+        {
+            UnkFileData10 * unk10 = (UnkFileData10 *) data;
+            if (IS_RELOCATED(unk10->unknown_0x48, unk10))
+                return;
+
+            unk10->unknown_0x48 = APPLY_RELOC(unk10->unknown_0x48, unk10);
+            return;
+        }
+
+        case FILETYPE_EFFDAT:
+        {
+            EffDataHeader * eff = (EffDataHeader *) data;
+            if (IS_RELOCATED(eff->sections, eff))
+                return;
+
+            // TODO: fakematch, figure out real type
+            u32 * p = (u32 *)eff;
+            for (int i = 0; i < 16; i++, p++)
+                *p = APPLY_RELOC(*p, eff);
+            return;
+        }
+    }
+}
 
 void fileGarbageMoveMem(void * dest, FileEntry * src)
 {
@@ -173,8 +724,6 @@ void fileGarbageMoveMem(void * dest, FileEntry * src)
         fileGarbageDataAdrSet(src->sp->data, src->fileType);
     }
 }
-
-// NOT_DECOMPILED _fileGarbage
 
 void _fileGarbage(s32 patience)
 {
@@ -264,6 +813,8 @@ void _fileGarbage(s32 patience)
     afp->allocatedEnd = allocatedEnd;
 }
 
+static FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused);
+
 FileEntry * fileAllocf(s32 fileType, const char * format, ...)
 {
     va_list args;
@@ -280,7 +831,7 @@ FileEntry * fileAlloc(const char * path, s32 fileType)
     return _fileAlloc(path, fileType, 0);
 }
 
-FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused)
+static FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused)
 {
     (void) unused;
 
