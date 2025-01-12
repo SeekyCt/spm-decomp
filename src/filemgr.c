@@ -455,7 +455,16 @@ static void dvdReadDoneCallback(s32 result, DVDFileInfo * fp)
     }
 }
 
-// NOT_DECOMPILED fileAsyncf
+FileEntry * fileAsyncf(s32 fileType, FilemgrCallback * readDoneCb, const char * format, ...)
+{
+    va_list args;
+
+    va_start(args, format);
+    vsprintf(PathBuffer, format, args);
+    va_end(args);
+
+    return fileAsync(PathBuffer, fileType, readDoneCb);
+}
 
 // NOT_DECOMPILED fileAsync
 
