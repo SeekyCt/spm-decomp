@@ -39,6 +39,14 @@ typedef f32 (IntplUserFunc)(s32, s32, f32, f32);
 // assertf dan.c line 144 is incompatible with !(condition)
 // assertf dvdmgr.c line 51 is incompatible with bool check = (condition); !check
 
+// TODO: better name
+#define _assert(line, condition) \
+    do \
+    { \
+        bool check = (condition); \
+        if (!check) __assert(__FILE__, line, #condition); \
+    } while (0)
+
 #define assert(line, condition, message) \
     do \
     { \

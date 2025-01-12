@@ -391,7 +391,30 @@ FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused)
     return new_lp;
 }
 
-// NOT_DECOMPILED fileFree
+void fileFree(FileEntry * lp)
+{
+    // Ignore if nothing to free
+    if (lp == NULL)
+        return;
+    if (lp->sp == NULL)
+        return;
+
+    // Check file has actually been claimed
+    if (lp->state == FILE_ALLOC_CALLED) {
+        // Decrement reference count
+        lp->touchCnt--;
+        // "It's too free"
+        assert(1039, lp->touchCnt>=0, "フリーしすぎです。\n");
+        if (lp->touchCnt == 0) {
+            lp->state = FILE_WAITING_GARBAGE;
+        }
+    }
+    else
+    {
+        // "!An unalocated pointer was pointed to"
+        _assert(1049, !"Alloc されていないポインタを示しました\n");
+    }
+}
 
 // NOT_DECOMPILED dvdReadDoneCallback
 
