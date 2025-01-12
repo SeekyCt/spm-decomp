@@ -310,7 +310,7 @@ config.libs = [
             Object(Matching, "dvdmgr.c"),
             Object(Matching, "debug.c"),
             Object(NonMatching, "filemgr.c"),
-            Object(NonMatching, "memory.c"),
+            Object(Matching, "memory.c"),
             Object(NonMatching, "spmario.c"),
             Object(NonStarted, "npcdrv.c"),
             Object(NonMatching, "wpadmgr.c"),
