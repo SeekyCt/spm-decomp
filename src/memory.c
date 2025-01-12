@@ -125,45 +125,39 @@ static MEMHeapHandle fallbackHeap = NULL;
 #define IS_LAST_SMART_ALLOC(allocation) (allocation->next == NULL)
 #define GET_SMART_HEAP_SIZE() (MEMGetSizeForMBlockExpHeap(swp->heapStart))
 
-// NON_MATCHING - https://decomp.me/scratch/fZFB1
 void memInit()
 {
-    // Register usage not matching
-    s32 i;
-    u32 max;
-    u32 min;
-    u32 size;
-    u32 space;
+    s32 i; // Needed for regalloc
 
-    // Instruction order doesn't match when geting size_table pointer at the start
-
-    min = (u32) OSGetMEM1ArenaLo();
-    max = (u32) OSGetMEM1ArenaHi();
+    // Get available memory space
+    u32 min = (u32) OSGetMEM1ArenaLo();
+    u32 max = (u32) OSGetMEM1ArenaHi();
+    u32 nextFree = min;
 
     // Set up MEM1 absolute size heaps
     for (i = 0; i < MEM1_HEAP_COUNT; i++)
     {
         if (size_table[i].type == HEAPSIZE_ABSOLUTE_KB)
         {
-            size = (u32) (size_table[i].size * 1024);
+            u32 size = (u32) (size_table[i].size * 1024);
 
-            wp->heapStart[i] = (void *) min;
-            wp->heapEnd[i] = (void* ) (min + size);
+            wp->heapStart[i] = (void *) nextFree;
+            wp->heapEnd[i] = (void* ) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
             assertf(97, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
-            min += size;
+            nextFree += size;
         }
     }
 
     // Set up MEM1 relative size heaps with remaining space
-    space = max - min;
+    u32 space = max - nextFree;
     for (i = 0; i < MEM1_HEAP_COUNT; i++)
     {
         if (size_table[i].type == HEAPSIZE_PERCENT_REMAINING)
         {
-            size = (u32) (((u64) space * size_table[i].size) / 100);
+            u32 size = (u32) (((u64) space * size_table[i].size) / 100);
 
             // "ERROR: Excessive heap acquisition from arena"
             assert(111, size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
@@ -171,54 +165,55 @@ void memInit()
             // Round down 0x20
             size -= size & 0x1f;
 
-            wp->heapStart[i] = (void *) min;
-            wp->heapEnd[i] = (void *) (min + size);
+            wp->heapStart[i] = (void *) nextFree;
+            wp->heapEnd[i] = (void *) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
             assertf(117, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
-            min += size;
+            nextFree += size;
         }
     }
 
     // Pass MEM1 heaps into MEM library
     for (i = 0; i < MEM1_HEAP_COUNT; i++)
     {
-        size = (u32)wp->heapEnd[i] - (u32)wp->heapStart[i];
+        u32 size = (u32)wp->heapEnd[i] - (u32)wp->heapStart[i];
         wp->heapHandle[i]  = MEMCreateExpHeapEx(wp->heapStart[i], size, 0);
     }
 
     // Claim memory from arena
     OSSetMEM1ArenaLo((void *) max);
 
-    // Register usage for min & max wrong way around from here
+    // Move to MEM2
     min = (u32) OSGetMEM2ArenaLo();
     max = (u32) OSGetMEM2ArenaHi();
+    nextFree = min;
 
     // Set up MEM2 absolute size heaps
     for (i = MEM1_HEAP_COUNT; i < HEAP_COUNT; i++)
     {
         if (size_table[i].type == HEAPSIZE_ABSOLUTE_KB)
         {
-            size = (u32) (size_table[i].size * 1024);
+            u32 size = (u32) (size_table[i].size * 1024);
 
-            wp->heapStart[i] = (void *) min;
-            wp->heapEnd[i] = (void *) (min + size);
+            wp->heapStart[i] = (void *) nextFree;
+            wp->heapEnd[i] = (void *) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
             assertf(148, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
-            min += size;
+            nextFree += size;
         }
     }
 
     // Set up MEM2 relative size heaps with remaining space
-    space = max - min;
+    space = max - nextFree;
     for (i = MEM1_HEAP_COUNT; i < HEAP_COUNT; i++)
     {
         if (size_table[i].type == HEAPSIZE_PERCENT_REMAINING)
         {
-            size = (u32) (((u64) space * size_table[i].size) / 100);
+            u32 size = (u32) (((u64) space * size_table[i].size) / 100);
 
             // "ERROR: Excessive heap acquisition from arena"
             assert(162, size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
@@ -226,20 +221,20 @@ void memInit()
             // Align size down to 0x20
             size -= size & 0x1f;
 
-            wp->heapStart[i] = (void *) min;
-            wp->heapEnd[i] = (void *) (min + size);
+            wp->heapStart[i] = (void *) nextFree;
+            wp->heapEnd[i] = (void *) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
             assertf(168, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
-            min += size;
+            nextFree += size;
         }
     }
 
     // Pass MEM2 heaps into MEM library
     for (i = MEM1_HEAP_COUNT; i < HEAP_COUNT; i++)
     {
-        size = (u32)wp->heapEnd[i] - (u32)wp->heapStart[i];
+        u32 size = (u32)wp->heapEnd[i] - (u32)wp->heapStart[i];
         wp->heapHandle[i]  = MEMCreateExpHeapEx(wp->heapStart[i], size, 0);
     }
 
