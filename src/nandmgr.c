@@ -105,7 +105,7 @@ void nandInit()
     }
 
     // Setup banner icons
-    tpl = (TPLHeader *) __memAlloc(0, CXGetUncompressedSize(&lz_saveImagesTpl));
+    tpl = (TPLHeader *) __memAlloc(HEAP_MAIN, CXGetUncompressedSize(&lz_saveImagesTpl));
     CXUncompressLZ(&lz_saveImagesTpl, tpl);
     TPLBind(tpl);
     memcpy(wp->banner->bannerTexture, tpl->imageTable[0].image->data,
@@ -607,7 +607,7 @@ void nandWriteBannerLoadAllSavesMain()
 
         case 2:
             nand_open("banner.bin", &wp->fileInfo, NAND_MODE_READ | NAND_MODE_WRITE);
-            wp->tempBanner = __memAlloc(0, wp->bannerSize);
+            wp->tempBanner = __memAlloc(HEAP_MAIN, wp->bannerSize);
             break;
 
         case 3:

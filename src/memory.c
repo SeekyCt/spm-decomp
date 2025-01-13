@@ -245,7 +245,7 @@ void memInit()
 
 void memClear(s32 heapId)
 {
-    if (heapId == SMART_HEAP_ID)
+    if (heapId == HEAP_SMART)
     {
         MEMDestroyExpHeap(wp->heapHandle[heapId]);
         MEMCreateExpHeapEx(wp->heapStart[heapId], (u32)wp->heapEnd[heapId] - (u32)wp->heapStart[heapId], MEM_FLAG_THREAD_CONTROL);
@@ -275,8 +275,8 @@ void __memFree(s32 heapId, void * ptr)
 void smartInit()
 {
     // Allocate the entire heap for custom use
-    u32 size = MEMGetAllocatableSizeForExpHeapEx(wp->heapHandle[SMART_HEAP_ID], 4);
-    void * p = __memAlloc(SMART_HEAP_ID, size);
+    u32 size = MEMGetAllocatableSizeForExpHeapEx(wp->heapHandle[HEAP_SMART], 4);
+    void * p = __memAlloc(HEAP_SMART, size);
 
     // Space at the start of the heap is the whole heap, allocated list is empty
     swp->heapStart = p;

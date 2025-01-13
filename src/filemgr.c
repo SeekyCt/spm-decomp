@@ -26,7 +26,7 @@ void fileInit()
     s32 i;
 
     // Allocate file entry array
-    afp->entries = (FileEntry *) __memAlloc(0, sizeof(FileEntry[FILE_ENTRY_MAX]));
+    afp->entries = (FileEntry *) __memAlloc(HEAP_MAIN, sizeof(FileEntry[FILE_ENTRY_MAX]));
 
     // Initialise allocated linked list
     afp->allocatedStart = NULL;

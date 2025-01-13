@@ -26,7 +26,7 @@ static u32 lbl_805ae79c;
 
 void windowInit()
 {
-    WindowEntry * entries = (WindowEntry *) __memAlloc(0, sizeof(WindowEntry[WINDOW_MAX]));
+    WindowEntry * entries = (WindowEntry *) __memAlloc(HEAP_MAIN, sizeof(WindowEntry[WINDOW_MAX]));
     wp = entries;
     for (s32 i = 0; i < WINDOW_MAX; i++)
     {

@@ -27,7 +27,7 @@ WpadWork * wpadGetWork()
 
 static void * wpad_alloc(u32 size)
 {
-    return __memAlloc(5, size);
+    return __memAlloc(HEAP_WPAD, size);
 }
 
 static bool wpad_free(void * ptr)

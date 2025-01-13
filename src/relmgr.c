@@ -53,18 +53,18 @@ void relMain()
 
     if (!isCompressed)
     {
-        wp->relFile = (RelHeader *) __memAlloc(0, file->sp->size);
+        wp->relFile = (RelHeader *) __memAlloc(HEAP_MAIN, file->sp->size);
         memcpy(wp->relFile, file->sp->data, file->sp->size);
     }
     else
     {
-        wp->relFile = (RelHeader *) __memAlloc(0, CXGetCompressionHeader(file->sp->data).decompSize);
+        wp->relFile = (RelHeader *) __memAlloc(HEAP_MAIN, CXGetCompressionHeader(file->sp->data).decompSize);
         CXUncompressLZ(file->sp->data, wp->relFile);
     }
 
     fileFree(file);
 
-    wp->bss = __memAlloc(0, wp->relFile->bssSize);
+    wp->bss = __memAlloc(HEAP_MAIN, wp->relFile->bssSize);
     memset(wp->bss, 0, wp->relFile->bssSize);
     OSLink(wp->relFile, wp->bss);
     wp->relFile->prolog();

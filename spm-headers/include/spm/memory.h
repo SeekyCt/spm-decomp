@@ -37,7 +37,6 @@ USING(wii::mem::MEMHeapHandle)
     #define HEAP_COUNT 9
 #endif
 
-#define SMART_HEAP_ID 7
 #define SMART_ALLOCATION_MAX 2048
 
 enum Heap

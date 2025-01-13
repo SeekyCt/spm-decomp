@@ -128,7 +128,7 @@ void evtmgrInit()
     wp = evtGetWork();
     
     wp->entryCount = EVT_ENTRY_MAX;
-    wp->entries = (EvtEntry *) __memAlloc(0, wp->entryCount * sizeof(EvtEntry));
+    wp->entries = (EvtEntry *) __memAlloc(HEAP_MAIN, wp->entryCount * sizeof(EvtEntry));
     wp->time = gp->time;
     memset(wp->entries, 0, wp->entryCount * sizeof(EvtEntry));
     memset(wp->gw, 0, sizeof(wp->gw));

@@ -108,15 +108,15 @@ s32 evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
     // (check is a relD leftover, this only runs once on retail anyway)
     if (isFirstCall)
     {
-        wp = (DanWork *) __memAlloc(1, sizeof(*wp));
+        wp = (DanWork *) __memAlloc(HEAP_MAP, sizeof(*wp));
         memset(wp, 0, sizeof(*wp));
-        wp->dungeons = (DanDungeon *) __memAlloc(1, sizeof(DanDungeon[DUNGEON_MAX]));
+        wp->dungeons = (DanDungeon *) __memAlloc(HEAP_MAP, sizeof(DanDungeon[DUNGEON_MAX]));
         memset(wp->dungeons, 0, sizeof(DanDungeon[DUNGEON_MAX]));
     }
     
     // Prepare pit text to be read
     u32 size = CXGetCompressionHeader(pitText).decompSize;
-    char * decompPitText = (char *) __memAlloc(0, size);
+    char * decompPitText = (char *) __memAlloc(HEAP_MAIN, size);
     CXUncompressLZ(pitText, decompPitText);
     parseInit(decompPitText, size);
 
