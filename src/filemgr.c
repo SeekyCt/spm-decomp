@@ -1,8 +1,3 @@
-/*
-    WARNING: Not fully decompiled
-    This file is currently not linked into the final dol
-*/
-
 #include "spm/animdrv.h"
 #include "spm/effdrv.h"
 #include "wii/os/OSThread.h"
@@ -24,8 +19,6 @@ static char PathBuffer[1024];
 
 // .sdata
 static FileWork * afp = &work;
-
-// fileGetWorkPointer inlined, may be needed to match like evtGetWork was
 
 void fileInit()
 {
