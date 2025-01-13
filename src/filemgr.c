@@ -454,25 +454,11 @@ static void fileGarbageDataAdrClear(FileEntry * entry)
         case FILETYPE_EFFDAT:
         {
             EffDataHeader * eff = (EffDataHeader *) data;
-            if (IS_NOT_RELOCATED(eff->sections, eff))
+            if (IS_NOT_RELOCATED(eff->offsets[0], eff))
                 return;
 
-            eff->sections = (void *) CLEAR_RELOC(eff->sections, eff);
-            eff->entries = (void *) CLEAR_RELOC(eff->entries, eff);
-            eff->unknown_0x8 = (void *) CLEAR_RELOC(eff->unknown_0x8, eff);
-            eff->unknown_0xc = (void *) CLEAR_RELOC(eff->unknown_0xc, eff);
-            eff->unknown_0x10 = (void *) CLEAR_RELOC(eff->unknown_0x10, eff);
-            eff->unknown_0x14 = (void *) CLEAR_RELOC(eff->unknown_0x14, eff);
-            eff->unknown_0x18 = (void *) CLEAR_RELOC(eff->unknown_0x18, eff);
-            eff->unknown_0x1c = (void *) CLEAR_RELOC(eff->unknown_0x1c, eff);
-            eff->unknown_0x20 = (void *) CLEAR_RELOC(eff->unknown_0x20, eff);
-            eff->unknown_0x24 = (void *) CLEAR_RELOC(eff->unknown_0x24, eff);
-            eff->unknown_0x28 = (void *) CLEAR_RELOC(eff->unknown_0x28, eff);
-            eff->unknown_0x2c = (void *) CLEAR_RELOC(eff->unknown_0x2c, eff);
-            eff->unknown_0x30 = (void *) CLEAR_RELOC(eff->unknown_0x30, eff);
-            eff->unknown_0x34 = (void *) CLEAR_RELOC(eff->unknown_0x34, eff);
-            eff->unknown_0x38 = (void *) CLEAR_RELOC(eff->unknown_0x38, eff);
-            eff->unknown_0x3c = (void *) CLEAR_RELOC(eff->unknown_0x3c, eff);
+            for (int i = 0; i < 16; i++)
+                eff->offsets[i] = (void *) CLEAR_RELOC(eff->offsets[i], eff);
             return;
         }
     }
@@ -682,13 +668,14 @@ static void fileGarbageDataAdrSet(void * data, s32 fileType)
         case FILETYPE_EFFDAT:
         {
             EffDataHeader * eff = (EffDataHeader *) data;
-            if (IS_RELOCATED(eff->sections, eff))
+            if (IS_RELOCATED(eff->offsets[0], eff))
                 return;
 
-            // TODO: fakematch, figure out real type
-            u32 * p = (u32 *)eff;
-            for (int i = 0; i < 16; i++, p++)
-                *p = APPLY_RELOC(*p, eff);
+            for (int i = 0; i < 16; i++)
+            {
+                void * temp = eff->offsets[i];
+                eff->offsets[i] = (void *) APPLY_RELOC(temp, eff);
+            }
             return;
         }
     }

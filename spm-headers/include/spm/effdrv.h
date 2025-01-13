@@ -21,22 +21,7 @@ typedef void (EffFunc)(struct _EffEntry * entry);
 */
 typedef struct
 {
-/* 0x00 */ void * sections;
-/* 0x04 */ void * entries;
-/* 0x08 */ void * unknown_0x8;
-/* 0x0C */ void * unknown_0xc;
-/* 0x10 */ void * unknown_0x10;
-/* 0x14 */ void * unknown_0x14;
-/* 0x18 */ void * unknown_0x18;
-/* 0x1C */ void * unknown_0x1c;
-/* 0x20 */ void * unknown_0x20;
-/* 0x24 */ void * unknown_0x24;
-/* 0x28 */ void * unknown_0x28;
-/* 0x2C */ void * unknown_0x2c;
-/* 0x30 */ void * unknown_0x30;
-/* 0x34 */ void * unknown_0x34;
-/* 0x38 */ void * unknown_0x38;
-/* 0x3C */ void * unknown_0x3c;
+/* 0x00 */ void * offsets[16];
 } EffDataHeader;
 SIZE_ASSERT(EffDataHeader, 0x40)
 
