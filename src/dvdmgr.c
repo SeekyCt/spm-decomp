@@ -130,7 +130,7 @@ void DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, s32 offset,
     entry->fileInfo.commandBlock.userData = entry;
 
     // Start read
-    return DVDReadAsyncPrio(&entry->fileInfo, dest, length, offset, _cb, entry->priority);
+    DVDReadAsyncPrio(&entry->fileInfo, dest, length, offset, _cb, entry->priority);
 }
 #else // 1
 static void readAsync(DVDEntry * entry, s32 lengthToRead, DVDFICallback * callback)
