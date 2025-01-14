@@ -13,9 +13,9 @@ extern "C" {
 // .data
 static HeapSize size_table[HEAP_COUNT] =
 {
-#ifdef SPM_KR0
+#if MEMORY_C_VERSION >= 3
     #error "TODO"
-#elif (defined SPM_EU0) || (defined SPM_EU1)
+#elif MEMORY_C_VERSION == 2
     // MEM1
     { // 0
         HEAPSIZE_ABSOLUTE_KB,
@@ -55,7 +55,7 @@ static HeapSize size_table[HEAP_COUNT] =
         HEAPSIZE_ABSOLUTE_KB,
         1
     }
-#else
+#else // == 1
     // MEM1
     { // 0
         HEAPSIZE_ABSOLUTE_KB,

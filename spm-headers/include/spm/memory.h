@@ -24,14 +24,22 @@ USING(wii::gx::GXTexObj)
 USING(wii::mem::MEMHeapHandle)
 
 #ifdef SPM_KR0
+    #define MEMORY_C_VERSION 3
+#elif (defined SPM_EU0) || (defined SPM_EU1)
+    #define MEMORY_C_VERSION 2
+#else
+    #define MEMORY_C_VERSION 1
+#endif
+
+#if MEMORY_C_VERSION >= 3
     #define MEM1_HEAP_COUNT 3
     #define MEM2_HEAP_COUNT 7
     #define HEAP_COUNT 10
-#elif (defined SPM_EU0) || (defined SPM_EU1)
+#elif MEMORY_C_VERSION == 2
     #define MEM1_HEAP_COUNT 3
     #define MEM2_HEAP_COUNT 6
     #define HEAP_COUNT 9
-#else
+#else // == 1
     #define MEM1_HEAP_COUNT 5
     #define MEM2_HEAP_COUNT 4
     #define HEAP_COUNT 9
