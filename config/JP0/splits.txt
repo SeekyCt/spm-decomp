@@ -13,6 +13,14 @@ Sections:
 	.sdata2     type:rodata align:16
 	.sbss2      type:bss align:32
 
+dvdmgr.c:
+	extab       start:0x8000C8B0 end:0x8000C8E0
+	extabindex  start:0x80018FCC end:0x80019014
+	.text       start:0x8019D1B0 end:0x8019D58C
+	.rodata     start:0x803347B0 end:0x80334800
+	.bss        start:0x804A9260 end:0x804A9268
+	.sdata      start:0x80542440 end:0x80542448
+
 filemgr.c:
 	extab       start:0x8000C8E8 end:0x8000C948
 	extabindex  start:0x80019020 end:0x800190B0
