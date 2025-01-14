@@ -1,3 +1,4 @@
+#include "wii/dvd.h"
 #include <common.h>
 #include <spm/dvdmgr.h>
 #include <spm/memory.h>
@@ -101,6 +102,7 @@ s32 DVDMgrRead(DVDEntry * entry, void * dest, s32 length, s32 offset)
         return (s32) entry->fileInfo.length;
 }
 
+#if DVDMGR_C_VERSION >= 2
 static void _cb(s32 result, DVDFileInfo * fileInfo)
 {
     DVDEntry * entry;
@@ -112,7 +114,7 @@ static void _cb(s32 result, DVDFileInfo * fileInfo)
     entry->readCallback(result, fileInfo);
 }
 
-s32 DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, s32 offset,
+void DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, s32 offset,
                         DVDMgrCallback * callback)
 {
     // Backup data
@@ -130,6 +132,58 @@ s32 DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, s32 offset,
     // Start read
     return DVDReadAsyncPrio(&entry->fileInfo, dest, length, offset, _cb, entry->priority);
 }
+#else // 1
+static void readAsync(DVDEntry * entry, s32 lengthToRead, DVDFICallback * callback)
+{
+    // Setup callback context
+    entry->fileInfo.commandBlock.userData = entry;
+
+    // Start read
+    DVDReadAsyncPrio(&entry->fileInfo, entry->dest, lengthToRead, entry->offset + entry->lengthRead, callback, entry->priority);
+
+    entry->lengthRemaining -= lengthToRead;
+    entry->lengthRead += lengthToRead;
+    entry->dest = (void *) ((u32)entry->dest + lengthToRead);
+}
+
+static void _cb(s32 result, DVDFileInfo * fileInfo)
+{
+    DVDEntry * entry;
+    
+    // Get context
+    entry = (DVDEntry *)fileInfo->commandBlock.userData;
+
+    if (result < 0)
+    {
+        // Run user callback on failure
+        entry->readCallback(result, fileInfo);
+    }
+    else if (entry->lengthRemaining == 0)
+    {
+        // Run user callback on completion
+        entry->readCallback(result, fileInfo);
+    }
+    else
+    {
+        readAsync(entry, entry->lengthRemaining, _cb); // inline
+    }
+}
+
+// NON_MATCHING: _cb pointer is loaded too late
+void DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, s32 offset,
+                        DVDMgrCallback * callback)
+{
+    // Backup data
+    entry->readCallback = callback;
+    entry->dest = dest;
+    entry->lengthRemaining = length;
+    entry->offset = offset;
+    entry->lengthRead = 0;
+
+    readAsync(entry, entry->lengthRemaining, _cb); // inline
+}
+
+#endif
 
 void DVDMgrClose(DVDEntry * entry)
 {

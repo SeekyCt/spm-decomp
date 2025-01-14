@@ -11,6 +11,12 @@ CPP_WRAPPER(spm::dvdmgr)
 
 USING(wii::dvd::DVDFileInfo)
 
+#if (defined SPM_EU0) || (defined SPM_EU1) || (defined SPM_US2) || (defined SPM_KR0)
+    #define DVDMGR_C_VERSION 2
+#else
+    #define DVDMGR_C_VERSION 1
+#endif
+
 typedef void (DVDMgrCallback)(s32 result, DVDFileInfo * fileInfo);
 
 #define MAX_DVD_ENTRY 0x200
@@ -72,7 +78,7 @@ DECOMP_STATIC(void dvdmgr__cb(s32 result, DVDFileInfo * fileInfo))
 /*
     Read from a file asynchronously
 */
-s32 DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, s32 offset,
+void DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, s32 offset,
                     DVDMgrCallback * callback);
 
 /*
