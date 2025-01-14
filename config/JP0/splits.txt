@@ -19,7 +19,7 @@ memory.c:
 	.text       start:0x801A5184 end:0x801A6254
 	.rodata     start:0x80334B20 end:0x80334CC8
 	.data       start:0x803BFC68 end:0x803BFCB0
-	.bss        start:0x804A96E0 end:0x804A974C
+	.bss        start:0x804A96E0 end:0x804B7768
 	.sdata      start:0x80542488 end:0x80542490
 	.sbss       start:0x80542CC8 end:0x80542CD8
 
