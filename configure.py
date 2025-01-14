@@ -363,6 +363,7 @@ config.progress_categories = [
 
 if args.mode == "configure":
     # Write build.ninja and objdiff.json
+    print("Configure for", args.version)
     generate_build(config)
 elif args.mode == "progress":
     # Print progress and write progress.json
