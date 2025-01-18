@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [EU0]
+        version: [EU0, EU1, JP0]
 
     steps:
     # Checkout the repository
