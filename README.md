@@ -1,4 +1,12 @@
 # spm-decomp
+[![Code Progress]][progress] [![Data Progress]][progress] [![Discord Badge]][discord]
+=============
+
+[Code Progress]: https://decomp.dev/SeekyCt/spm-decomp.svg?mode=shield&measure=code&label=Code
+[Data Progress]: https://decomp.dev/SeekyCt/spm-decomp.svg?mode=shield&measure=data&label=Data
+[progress]: https://decomp.dev/SeekyCt/spm-decomp
+[Discord Badge]: https://img.shields.io/discord/727908905392275526?color=%237289DA&logo=discord&logoColor=%23FFFFFF
+[discord]: https://discord.gg/dbd733H
 
 Decompilation of Super Paper Mario PAL revision 0. This will never be a decompilation of the full game, just specific parts that are useful or interesting, and it certainly won't lead to ports to any other platform. In theory the repo is shiftable (i.e. files marked as `Matching` in configure.py can be edited to change the behaviour of the game) but this hasn't been thorougly tested. The SDK, NW4R and MSL libraries are out of scope for this project and will not be decompiled (though partial headers will be needed for them to allow other code to be decompiled).
 
