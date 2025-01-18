@@ -1,0 +1,25 @@
+object: sys/main.dol
+object_base: orig/EU1
+hash: 3fd3d9815528d1c04bc433d67d273b1e3301e976
+mw_comment_version: 15
+quick_analysis: true
+# Addresses match EU0
+symbols: config/EU0/symbols.txt 
+splits: config/EU0/splits.txt
+
+modules:
+- object: files/rel/relF.bin:nlzss
+  hash: 29c78007559996dee6b615005fa3369d4cc1f5e3
+  # Addresses match EU0
+  symbols: config/EU0/relF/symbols.txt
+  splits: config/EU0/relF/splits.txt
+
+extract:
+- symbol: lz_saveImagesTpl
+  binary: saveImages.tpl.lz
+  header: assets/saveImages.tpl.lz.inc
+
+block_relocations:
+# extab contains these values, but they're not dtors
+- target: 0x80080000
+- target: 0x800A0000
