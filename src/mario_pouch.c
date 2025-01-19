@@ -379,7 +379,21 @@ s32 pouchGetLevel()
     return pp->level;
 }
 
-// NOT_DECOMPILED pouchGetNextLevelXp
+s32 pouchGetNextLevelXp()
+{
+    s32 ret;
+    s32 level;
+    s32 i;
+
+    ret = 0;
+    level = pouchGetLevel();
+    for (i = 0; i < level; i++)
+    {
+        ret += ((i / 2) + 1) * 10000;
+    }
+
+    return ret;
+}
 
 void pouchSetAttack(s32 attack)
 {
