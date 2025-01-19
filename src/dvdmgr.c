@@ -169,13 +169,12 @@ static void _cb(s32 result, DVDFileInfo * fileInfo)
     }
 }
 
-// NON_MATCHING: _cb pointer is loaded too late
 void DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, s32 offset,
                         DVDMgrCallback * callback)
 {
     // Backup data
-    entry->readCallback = callback;
     entry->dest = dest;
+    entry->readCallback = callback;
     entry->lengthRemaining = length;
     entry->offset = offset;
     entry->lengthRead = 0;

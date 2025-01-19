@@ -311,7 +311,7 @@ config.libs = [
             Object(Matching, "seqdef.c"),
             Object(Matching, "seqdrv.c"),
             Object(NonMatching, "system.c"),
-            Object(MatchingFor("EU0"), "dvdmgr.c"),
+            Object(Matching, "dvdmgr.c"),
             Object(Matching, "debug.c"),
             Object(Matching, "filemgr.c"),
             Object(Matching, "memory.c"),
