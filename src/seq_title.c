@@ -154,6 +154,7 @@ static const char * languageNames[] = {
 };
 
 // NON_MATCHING: try-catches are wrong
+// https://decomp.me/scratch/7rAz6
 void seqTitleInitLayout()
 {
     // Load archive
