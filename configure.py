@@ -255,29 +255,30 @@ cflags_rel = [
 config.linker_version = "GC/3.0a5.2"
 
 
-# Helper function for Dolphin libraries
-def DolphinLib(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+# Helper functions for libraries
+
+def Runtime(*objects: Object) -> Dict[str, Any]:
     return {
-        "lib": lib_name,
-        "mw_version": "GC/1.2.5n",
-        "cflags": cflags_base,
+        "lib": "Runtime.PPCEABI.H",
+        "mw_version": config.linker_version,
+        "cflags": cflags_runtime,
         "objects": objects,
     }
 
-
-def Dol(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+def Dol(*objects: Object) -> Dict[str, Any]:
     return {
-        "lib": lib_name,
+        "lib": "dol",
+        "src_dir": "src",
         "mw_version": config.linker_version,
         "cflags": cflags_dol,
         "objects": objects,
     }
 
 
-# Helper function for REL script objects
-def Rel(lib_name: str, objects: List[Object]) -> Dict[str, Any]:
+def Rel(*objects: Object) -> Dict[str, Any]:
     return {
-        "lib": lib_name,
+        "lib": "rel",
+        "src_dir": "rel",
         "mw_version": config.linker_version,
         "cflags": cflags_rel,
         "objects": objects,
@@ -298,45 +299,34 @@ config.warn_missing_config = True
 config.warn_missing_source = False
 config.libs = [
     Dol(
-        "dol",
-        [
-            Object(Matching, "main.c"),
-            Object(Matching, "swdrv.c"),
-            Object(NonMatching, "windowdrv.c"),
-            Object(Matching, "evtmgr.c"),
-            Object(Matching, "evtmgr_cmd.c"),
-            Object(NonMatching, "mario_pouch.c"),
-            Object(NonStarted, "mario.c"),
-            Object(NonMatching, "seq_title.c"),
-            Object(Matching, "seqdef.c"),
-            Object(Matching, "seqdrv.c"),
-            Object(NonMatching, "system.c"),
-            Object(Matching, "dvdmgr.c"),
-            Object(Matching, "debug.c"),
-            Object(Matching, "filemgr.c"),
-            Object(Matching, "memory.c"),
-            Object(NonMatching, "spmario.c"),
-            Object(NonStarted, "npcdrv.c"),
-            Object(NonMatching, "wpadmgr.c"),
-            Object(Matching, "relmgr.c"),
-            Object(Matching, "nandmgr.c"),
-        ]
+        Object(Matching, "main.c"),
+        Object(Matching, "swdrv.c"),
+        Object(NonMatching, "windowdrv.c"),
+        Object(Matching, "evtmgr.c"),
+        Object(Matching, "evtmgr_cmd.c"),
+        Object(NonMatching, "mario_pouch.c"),
+        Object(NonStarted, "mario.c"),
+        Object(NonMatching, "seq_title.c"),
+        Object(Matching, "seqdef.c"),
+        Object(Matching, "seqdrv.c"),
+        Object(NonMatching, "system.c"),
+        Object(Matching, "dvdmgr.c"),
+        Object(Matching, "debug.c"),
+        Object(Matching, "filemgr.c"),
+        Object(Matching, "memory.c"),
+        Object(NonMatching, "spmario.c"),
+        Object(NonStarted, "npcdrv.c"),
+        Object(NonMatching, "wpadmgr.c"),
+        Object(Matching, "relmgr.c"),
+        Object(Matching, "nandmgr.c"),
     ),
     Rel(
-        "rel",
-        [
-            Object(NonMatching, "rel/dan.c"),
-        ],
+        Object(NonMatching, "dan.c"),
     ),
-    {
-        "lib": "Runtime.PPCEABI.H",
-        "mw_version": config.linker_version,
-        "cflags": cflags_runtime,
-        "objects": [
-            Object(NonMatching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
-            Object(NonMatching, "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
-        ],
-    },
+    Runtime(
+        Object(NonMatching, "Runtime.PPCEABI.H/global_destructor_chain.c"),
+        Object(NonMatching, "Runtime.PPCEABI.H/__init_cpp_exceptions.cpp"),
+    ),
 ]
 
 # Optional callback to adjust link order. This can be used to add, remove, or reorder objects.
