@@ -265,7 +265,7 @@ void pouchSetPixlSelected(s16 itemId);
     Turns on the foundMaps/knownRecipes bitflag for the specified item id
 */
 void pouchRegisterMapFound(s16 itemId);
-void pouchRegisterRecipeKnown(s16 itemId);
+void pouchRegisterRecipeKnown(s32 itemId);
 
 /*
     Returns whether the specified recipe item id has ever been cooked/collected

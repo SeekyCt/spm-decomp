@@ -3,6 +3,7 @@
     This file is currently not linked into the final dol
 */
 
+#include "spm/item_data_ids.h"
 #include <common.h>
 #include <spm/camdrv.h>
 #include <spm/fadedrv.h>
@@ -590,7 +591,119 @@ void pouchAddCoin(s32 increase)
         pouchAddTotalCoin(increase);
 }
 
-// NOT_DECOMPILED pouchAddItem
+bool pouchAddItem(s32 itemId)
+{
+    MarioPouchWork * pp = pouchGetPtr();
+
+    if (itemId >= ITEM_ID_KEY_START && itemId < ITEM_ID_KEY_MAX)
+    {
+        int i;
+        for (i = 0; i < POUCH_KEY_ITEM_MAX; i++)
+        {
+            if (pp->keyItem[i] == ITEM_ID_NULL)
+                break;
+        }
+
+        if (i >= POUCH_KEY_ITEM_MAX)
+            return false;
+
+        pp->keyItem[i] = (u16) itemId;
+    }
+    else if (itemId >= ITEM_ID_USE_START && itemId < ITEM_ID_USE_MAX)
+    {
+        int i;
+        for (i = POUCH_USE_ITEM_MAX - 1; i >= 0; i--)
+        {
+            if (pp->useItem[i] != ITEM_ID_NULL)
+                continue;
+
+            for (; i > 0; i--)
+                pp->useItem[i] = pp->useItem[i - 1];
+            pp->useItem[0] = (u16) itemId;
+
+            if (itemId >= ITEM_ID_COOK_START && itemId < ITEM_ID_COOK_MAX)
+                pouchRegisterRecipeKnown(itemId);
+
+            return true;
+        }
+
+        return false;
+
+    }
+    else if (itemId >= ITEM_ID_CHAR_START && itemId < ITEM_ID_CHAR_MAX)
+    {
+        int i;
+        for (i = 0; i < POUCH_CHAR_ITEM_MAX; i++)
+        {
+            if (pp->characters[i].itemType != NULL && pp->characters[i].itemType == itemId)
+                break;
+        }
+        if (i < POUCH_CHAR_ITEM_MAX)
+            return true;
+
+        for (i = 0; i < POUCH_CHAR_ITEM_MAX; i++)
+        {
+            if (pp->characters[i].itemType == ITEM_ID_NULL)
+                break;
+        }
+        if (i >= POUCH_CHAR_ITEM_MAX)
+            return false;
+
+        pp->characters[i].selectable = true;
+        pp->characters[i].itemType = (u16) itemId;
+        pp->characters[i].selected = true;
+    }
+    else if (itemId >= ITEM_ID_FAIRY_START && itemId < ITEM_ID_FAIRY_MAX)
+    {
+        int i;
+        for (i = 0; i < POUCH_FAIRY_ITEM_MAX; i++)
+        {
+            if (pp->pixls[i].itemType != NULL && pp->pixls[i].itemType == itemId)
+                break;
+        }
+        if (i < POUCH_FAIRY_ITEM_MAX)
+            return true;
+
+        for (i = 0; i < POUCH_FAIRY_ITEM_MAX; i++)
+        {
+            if (pp->pixls[i].itemType == ITEM_ID_NULL)
+                break;
+        }
+        if (i >= POUCH_FAIRY_ITEM_MAX)
+            return false;
+
+        pp->pixls[i].selectable = true;
+        pp->pixls[i].itemType = (u16) itemId;
+        pp->pixls[i].selected = false;
+    }
+    else if (itemId >= ITEM_ID_MAP_START && itemId < ITEM_ID_MAP_MAX)
+    {
+        s32 mapId = itemId - ITEM_ID_MAP_START;
+        s32 idx = mapId / 32;
+        s32 shift = mapId % 32;
+
+        pp->ownedMaps[idx] |= 1 << (shift);
+    }
+    else if (itemId >= ITEM_ID_CARD_START && itemId < ITEM_ID_CARD_MAX)
+    {
+        s32 cardId = itemId - ITEM_ID_CARD_START;
+        s32 idx = cardId / 32;
+        s32 shift =  (cardId % 32);
+
+        pp->catchCards[cardId] += 1;
+        if (pp->catchCards[cardId] > 99)
+            pp->catchCards[cardId] = 99;
+
+        pp->knownCards[idx] |= 1 << shift;
+    }
+    else
+    {
+        assertf(742, 0, "おかしいです id = %d", itemId);
+    }
+
+    return true;
+
+}
 
 // NOT_DECOMPILED pouchCheckHaveItem
 
@@ -752,7 +865,7 @@ void pouchRegisterMapFound(s16 itemId)
     pp->foundMaps[mapId / 32] |= (1 << (mapId % 32));
 }
 
-void pouchRegisterRecipeKnown(s16 itemId) {
+void pouchRegisterRecipeKnown(s32 itemId) {
     s32 cookId;
     MarioPouchWork * pp;
 
