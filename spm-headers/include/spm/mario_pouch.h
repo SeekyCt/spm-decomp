@@ -191,37 +191,37 @@ bool pouchAddItem(s32 itemId);
     Checks whether the specified item id is in its corresponding inventory
     (can't be used for shop items)
 */
-bool pouchCheckHaveItem(s16 itemId);
+bool pouchCheckHaveItem(s32 itemId);
 
 /*
     Removes the first item with the specified id in its corresponding inventory
     (can't be used for shop items)
 */
-void pouchRemoveItem(s16 itemId);
+void pouchRemoveItem(s32 itemId);
 
 /*
     Removes the with the specified id at the specified index in its corresponding inventory
     Only supports keyItem and useItem
     Asserts that the id of the item at the index is what was passed in
 */
-void pouchRemoveItemIdx(s16 itemId, s32 idx);
+void pouchRemoveItemIdx(s32 itemId, s32 idx);
 
 /*
     Adds the specified item id to the player's shop stored inventory
     Returns whether it was successfully added
 */
-bool pouchAddShopItem(s16 itemId);
+bool pouchAddShopItem(s32 itemId);
 
 /*
     Removes the first item with the specified id in the player's shop stored inventory
 */
-void pouchRemoveShopItem(s16 itemId);
+void pouchRemoveShopItem(s32 itemId);
 
 /*
     Removes the with the specified id at the specified index in the player's shop stored inventory
     Asserts that the id of the item at the index is what was passed in
 */
-void pouchRemoveShopItemIdx(s16 itemId, s32 idx);
+void pouchRemoveShopItemIdx(s32 itemId, s32 idx);
 
 /*
     Get the information about a character slot
@@ -231,8 +231,8 @@ PouchCharOrPixlInfo * pouchGetCharInfo(s32 slot);
 /*
     Make a character selectable/not by id, if it exists in a slot
 */
-void pouchMakeCharSelectable(s16 itemId);
-void pouchMakeCharNotSelectable(s16 itemId);
+void pouchMakeCharSelectable(s32 itemId);
+void pouchMakeCharNotSelectable(s32 itemId);
 
 /*
     Get the information about a pixl slot
@@ -242,13 +242,13 @@ PouchCharOrPixlInfo * pouchGetPixlInfo(s32 slot);
 /*
     Make a pixl selectable/not by id, if it exists in a slot
 */
-void pouchMakePixlSelectable(s16 itemId);
-void pouchMakePixlNotSelectable(s16 itemId);
+void pouchMakePixlSelectable(s32 itemId);
+void pouchMakePixlNotSelectable(s32 itemId);
 
 /*
     Check if a pixl is selected by id
 */
-bool pouchCheckPixlSelected(s16 itemId);
+bool pouchCheckPixlSelected(s32 itemId);
 
 /*
     Returns the id of the currently selected pixl
@@ -259,28 +259,28 @@ u16 pouchGetCurPixl();
     Makes a pixl selected by id, if it exists in a slot
     Deselects all other pixls
 */
-void pouchSetPixlSelected(s16 itemId);
+void pouchSetPixlSelected(s32 itemId);
 
 /*
     Turns on the foundMaps/knownRecipes bitflag for the specified item id
 */
-void pouchRegisterMapFound(s16 itemId);
+void pouchRegisterMapFound(s32 itemId);
 void pouchRegisterRecipeKnown(s32 itemId);
 
 /*
     Returns whether the specified recipe item id has ever been cooked/collected
 */
-bool pouchCheckRecipeKnown(s16 itemId);
+bool pouchCheckRecipeKnown(s32 itemId);
 
 /*
     Returns the amount of the specified card in the inventory
 */
-s32 pouchGetCardCount(s16 itemId);
+s32 pouchGetCardCount(s32 itemId);
 
 /*
     Returns whether the specified card item id has ever been collected
 */
-bool pouchCheckCardKnown(s16 itemId);
+bool pouchCheckCardKnown(s32 itemId);
 
 /*
     Takes a jump/stylish combo length and updates maxJumpCombo/maxStylishCombo if it's higher

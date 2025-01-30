@@ -726,7 +726,7 @@ PouchCharOrPixlInfo * pouchGetCharInfo(s32 slot)
     return &pp->characters[slot];
 }
 
-void pouchMakeCharSelectable(s16 itemId)
+void pouchMakeCharSelectable(s32 itemId)
 {
     MarioPouchWork * pp;
     s32 i;
@@ -741,7 +741,7 @@ void pouchMakeCharSelectable(s16 itemId)
         pp->characters[i].selectable = true;
 }
 
-void pouchMakeCharNotSelectable(s16 itemId)
+void pouchMakeCharNotSelectable(s32 itemId)
 {
     MarioPouchWork * pp;
     s32 i;
@@ -765,7 +765,7 @@ PouchCharOrPixlInfo * pouchGetPixlInfo(s32 slot)
     return &pp->pixls[slot];
 }
 
-void pouchMakePixlSelectable(s16 itemId)
+void pouchMakePixlSelectable(s32 itemId)
 {
     MarioPouchWork * pp;
     s32 i;
@@ -780,7 +780,7 @@ void pouchMakePixlSelectable(s16 itemId)
         pp->pixls[i].selectable = true;
 }
 
-void pouchMakePixlNotSelectable(s16 itemId)
+void pouchMakePixlNotSelectable(s32 itemId)
 {
     MarioPouchWork * pp;
     s32 i;
@@ -795,7 +795,7 @@ void pouchMakePixlNotSelectable(s16 itemId)
         pp->pixls[i].selectable = false;
 }
 
-bool pouchCheckPixlSelected(s16 itemId)
+bool pouchCheckPixlSelected(s32 itemId)
 {
     MarioPouchWork * pp;
     s32 i;
@@ -829,7 +829,7 @@ u16 pouchGetCurPixl()
     return 0;
 }
 
-void pouchSetPixlSelected(s16 itemId)
+void pouchSetPixlSelected(s32 itemId)
 {
     MarioPouchWork * pp;
     s32 i;
@@ -851,7 +851,7 @@ void pouchSetPixlSelected(s16 itemId)
     }
 }
 
-void pouchRegisterMapFound(s16 itemId)
+void pouchRegisterMapFound(s32 itemId)
 {
     s32 mapId;
     MarioPouchWork * pp;
@@ -878,7 +878,7 @@ void pouchRegisterRecipeKnown(s32 itemId) {
     pp->knownRecipes[cookId / 32] |= (1 << (cookId % 32));
 }
 
-bool pouchCheckRecipeKnown(s16 itemId)
+bool pouchCheckRecipeKnown(s32 itemId)
 {
     MarioPouchWork * pp;
     s32 cookId;
@@ -895,7 +895,7 @@ bool pouchCheckRecipeKnown(s16 itemId)
     return false;
 }
 
-s32 pouchGetCardCount(s16 itemId)
+s32 pouchGetCardCount(s32 itemId)
 {
     MarioPouchWork * pp;
     s32 cardId;
@@ -909,7 +909,7 @@ s32 pouchGetCardCount(s16 itemId)
     return pp->catchCards[cardId];
 }
 
-bool pouchCheckCardKnown(s16 itemId)
+bool pouchCheckCardKnown(s32 itemId)
 {
     MarioPouchWork * pp;
     s32 cardId;
