@@ -777,7 +777,96 @@ bool pouchCheckHaveItem(s32 itemId)
     return false;
 }
 
-// NOT_DECOMPILED pouchRemoveItem
+void pouchRemoveItem(s32 itemId)
+{
+    int i;
+    int j;
+    MarioPouchWork * pp = pouchGetPtr();
+
+    if (itemId >= ITEM_ID_KEY_START && itemId < ITEM_ID_KEY_MAX)
+    {
+        for (i = 0; i < POUCH_KEY_ITEM_MAX; i++)
+        {
+            if (pp->keyItem[i] == itemId)
+                break;
+        }
+        if (i >= POUCH_KEY_ITEM_MAX)
+            return;
+
+        pp->keyItem[i] = ITEM_ID_NULL;
+
+        for (j = i; j < POUCH_KEY_ITEM_MAX - 1; j++)
+            pp->keyItem[j] = pp->keyItem[j + 1];
+        pp->keyItem[j] = ITEM_ID_NULL;
+    }
+    else if (itemId >= ITEM_ID_USE_START && itemId < ITEM_ID_USE_MAX)
+    {
+        for (i = 0; i < POUCH_USE_ITEM_MAX; i++)
+        {
+            if (pp->useItem[i] == itemId)
+                break;
+        }
+        if (i >= POUCH_USE_ITEM_MAX)
+            return;
+
+        pp->useItem[i] = ITEM_ID_NULL;
+
+        for (j = i; j < POUCH_USE_ITEM_MAX - 1; j++)
+            pp->useItem[j] = pp->useItem[j + 1];
+        pp->useItem[j] = ITEM_ID_NULL;
+    }
+    else if (itemId >= ITEM_ID_CHAR_START && itemId < ITEM_ID_CHAR_MAX)
+    {
+        for (i = 0; i < POUCH_CHAR_ITEM_MAX; i++)
+        {
+            if (pp->characters[i].itemType == itemId)
+                break;
+        }
+        if (i >= POUCH_CHAR_ITEM_MAX)
+            return;
+
+        pp->characters[i].selected = false;
+    }
+    else if (itemId >= ITEM_ID_FAIRY_START && itemId < ITEM_ID_FAIRY_MAX)
+    {
+        for (i = 0; i < POUCH_FAIRY_ITEM_MAX; i++)
+        {
+            if (pp->pixls[i].itemType == itemId)
+                break;
+        }
+        if (i >= POUCH_FAIRY_ITEM_MAX)
+            return;
+
+        pp->pixls[i].itemType = ITEM_ID_NULL;
+        pp->pixls[i].selected = false;
+        for (j = i; j < POUCH_FAIRY_ITEM_MAX - 1; j++)
+            pp->pixls[j] = pp->pixls[j + 1];
+        pp->pixls[j].itemType = ITEM_ID_NULL;
+        pp->pixls[j].selected = false;
+    }
+    else if (itemId >= ITEM_ID_MAP_START && itemId < ITEM_ID_MAP_MAX)
+    {
+        s32 mapId = itemId - ITEM_ID_MAP_START;
+        s32 idx = mapId / 32;
+        s32 shift = mapId % 32;
+
+        pp->ownedMaps[idx] &= ~(1 << (shift));
+    }
+    else if (itemId >= ITEM_ID_CARD_START && itemId < ITEM_ID_CARD_MAX)
+    {
+        s32 cardId = itemId - ITEM_ID_CARD_START;
+        s32 idx = cardId / 32;
+        s32 shift =  (cardId % 32);
+
+        if (pp->catchCards[cardId] > 0)
+            pp->catchCards[cardId] -= 1;
+    }
+    else
+    {
+        // "Strange id"
+        assertf(870, 0, "おかしいです id = %d", itemId);
+    }
+}
 
 // NOT_DECOMPILED pouchRemoveItemIdx
 
