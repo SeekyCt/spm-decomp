@@ -603,7 +603,6 @@ bool pouchAddItem(s32 itemId)
             if (pp->keyItem[i] == ITEM_ID_NULL)
                 break;
         }
-
         if (i >= POUCH_KEY_ITEM_MAX)
             return false;
 
@@ -611,8 +610,7 @@ bool pouchAddItem(s32 itemId)
     }
     else if (itemId >= ITEM_ID_USE_START && itemId < ITEM_ID_USE_MAX)
     {
-        int i;
-        for (i = POUCH_USE_ITEM_MAX - 1; i >= 0; i--)
+        for (int i = POUCH_USE_ITEM_MAX - 1; i >= 0; i--)
         {
             if (pp->useItem[i] != ITEM_ID_NULL)
                 continue;
@@ -628,7 +626,6 @@ bool pouchAddItem(s32 itemId)
         }
 
         return false;
-
     }
     else if (itemId >= ITEM_ID_CHAR_START && itemId < ITEM_ID_CHAR_MAX)
     {
@@ -698,11 +695,11 @@ bool pouchAddItem(s32 itemId)
     }
     else
     {
+        // "Strange id"
         assertf(742, 0, "おかしいです id = %d", itemId);
     }
 
     return true;
-
 }
 
 // NOT_DECOMPILED pouchCheckHaveItem
