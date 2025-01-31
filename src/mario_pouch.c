@@ -702,7 +702,80 @@ bool pouchAddItem(s32 itemId)
     return true;
 }
 
-// NOT_DECOMPILED pouchCheckHaveItem
+bool pouchCheckHaveItem(s32 itemId)
+{
+    MarioPouchWork * pp = pouchGetPtr();
+
+    if (itemId >= ITEM_ID_KEY_START && itemId < ITEM_ID_KEY_MAX)
+    {
+        int i;
+        for (i = 0; i < POUCH_KEY_ITEM_MAX; i++)
+        {
+            if (pp->keyItem[i] == itemId)
+                break;
+        }
+        if (i < POUCH_KEY_ITEM_MAX)
+            return true;
+    }
+    else if (itemId >= ITEM_ID_USE_START && itemId < ITEM_ID_USE_MAX)
+    {
+        int i;
+        for (i = 0 ; i < POUCH_USE_ITEM_MAX; i++)
+        {
+            if (pp->useItem[i] == itemId)
+                break;
+        }
+        if (i < POUCH_USE_ITEM_MAX)
+            return true;
+    }
+    else if (itemId >= ITEM_ID_CHAR_START && itemId < ITEM_ID_CHAR_MAX)
+    {
+        int i;
+        for (i = 0; i < POUCH_CHAR_ITEM_MAX; i++)
+        {
+            if (pp->characters[i].itemType == itemId)
+                break;
+        }
+        if (i < POUCH_CHAR_ITEM_MAX)
+            return true;
+    }
+    else if (itemId >= ITEM_ID_FAIRY_START && itemId < ITEM_ID_FAIRY_MAX)
+    {
+        int i;
+        for (i = 0; i < POUCH_FAIRY_ITEM_MAX; i++)
+        {
+            if (pp->pixls[i].itemType == itemId)
+                break;
+        }
+        if (i < POUCH_FAIRY_ITEM_MAX)
+            return true;
+    }
+    else if (itemId >= ITEM_ID_MAP_START && itemId < ITEM_ID_MAP_MAX)
+    {
+        s32 mapId = itemId - ITEM_ID_MAP_START;
+        s32 idx = mapId / 32;
+        s32 shift = mapId % 32;
+
+        if (pp->ownedMaps[idx] & (1 << (shift)))
+            return true;
+    }
+    else if (itemId >= ITEM_ID_CARD_START && itemId < ITEM_ID_CARD_MAX)
+    {
+        s32 cardId = itemId - ITEM_ID_CARD_START;
+        s32 idx = cardId / 32;
+        s32 shift =  (cardId % 32);
+
+        if (pp->catchCards[cardId] != 0)
+            return true;
+    }
+    else
+    {
+        // "Strange id"
+        assertf(793, 0, "おかしいです id = %d", itemId);
+    }
+
+    return false;
+}
 
 // NOT_DECOMPILED pouchRemoveItem
 
