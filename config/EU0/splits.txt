@@ -35,6 +35,12 @@ windowdrv.c:
 	.sbss       start:0x805AE790 end:0x805AE7A0
 	.sdata2     start:0x805AF7E0 end:0x805AF870
 
+animdrv.c:
+	extab       start:0x80006C88 end:0x80006EC8
+	extabindex  start:0x8001063C end:0x8001099C
+	.text       start:0x8004158C end:0x8004E09C
+	.sdata      start:0x805adf58 end:0x805adf60
+
 evtmgr.c:
 	extab       start:0x80008D68 end:0x80008E08
 	extabindex  start:0x8001378C end:0x8001387C

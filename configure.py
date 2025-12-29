@@ -302,6 +302,7 @@ config.libs = [
         Object(Matching, "main.c"),
         Object(Matching, "swdrv.c"),
         Object(NonMatching, "windowdrv.c"),
+        Object(NonMatching, "animdrv.c"),
         Object(Matching, "evtmgr.c"),
         Object(Matching, "evtmgr_cmd.c"),
         Object(NonMatching, "mario_pouch.c"),

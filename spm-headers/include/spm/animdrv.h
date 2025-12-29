@@ -1,13 +1,16 @@
 #pragma once
 
 #include <common.h>
+#include <spm/filemgr.h>
 #include <wii/os.h>
 #include <wii/mtx.h>
 
 CPP_WRAPPER(spm::animdrv)
 
+USING(spm::filemgr::FileEntry)
 USING(wii::os::OSTime)
 USING(wii::mtx::Mtx34)
+USING(wii::mtx::Vec3)
 
 typedef void (AnimPoseDisplayCb)(void * param, s32 animGroupIdx, s32 param_3);
 
@@ -110,8 +113,61 @@ SIZE_ASSERT(AnimPoseData, 0x1b0)
 
 typedef struct
 {
-/* 0x000 */ u8 unknown_0x0[0x110 - 0x0];
-} AnimWork; // Uncertain size;
+/* 0x000 */ u32 flag;
+/* 0x004 */ u8 unknown_0x4[0xc - 0x4];
+/* 0x00C */ s32 releaseType;
+/* 0x010 */ int animGroupId;
+/* 0x014 */ u8 unknown_0x14[0x44 - 0x14];
+/* 0x044 */ int lastAnimFrame0;
+/* 0x048 */ float lastAnimFrameTime;
+/* 0x04C */ float localTimeRate;
+/* 0x050 */ void * bufferVtxPos;
+/* 0x054 */ Vec3 * vtxArrayPos;
+/* 0x058 */ void * bufferVtxNorm;
+/* 0x05C */ Vec3 * vtxArrayNorm;
+/* 0x060 */ void * bufferGroupVisibility;
+/* 0x064 */ void * groupVisibility;
+/* 0x068 */ void * bufferNodes;
+/* 0x06C */ void * nodes;
+/* 0x070 */ void * bufferTexAnimEntries;
+/* 0x074 */ void * texAnimEntries;
+/* 0x078 */ u8 unknown_0x78[0x188 - 0x78];
+} AnimPoseEntry;
+SIZE_ASSERT(AnimPoseEntry, 0x188)
+
+typedef struct
+{
+/* 0x0 */ BOOL inUse;
+/* 0x4 */ int refCnt;
+/* 0x8 */ FileEntry * file;
+/* 0xC */ int textureGroupId;
+} AnimGroupEntry;
+SIZE_ASSERT(AnimGroupEntry, 0x10)
+
+typedef struct
+{
+/* 0x000 */ AnimGroupEntry * animGroups;
+/* 0x004 */ int animGroupNum;
+/* 0x008 */ void * textureGroups;
+/* 0x00C */ int textureGroupNum;
+/* 0x010 */ AnimPoseEntry * animPose;
+/* 0x014 */ int animPoseNum;
+/* 0x018 */ void * curPose;
+/* 0x01C */ void * curAnimData;
+/* 0x020 */ void * curPoseData;
+/* 0x024 */ void * texDatas[2];
+/* 0x02C */ void * curTexData;
+/* 0x030 */ void * texObjs[2];
+/* 0x038 */ void * curTexObj;
+/* 0x03C */ u8 unknown_0x3c[0xf8 - 0x3c];
+/* 0x0F8 */ Vec3 * vtxArrayPos;
+/* 0x0FC */ Vec3 * vtxArrayNorm;
+/* 0x100 */ void * ag2tg; 
+/* 0x104 */ void * testHeap;
+/* 0x108 */ void * testHeapNextFree;
+/* 0x10C */ BOOL inBattle; 
+} AnimWork;
+SIZE_ASSERT(AnimWork, 0x110)
 
 AnimWork * animGetPtr();
 OSTime animTimeGetTime();
@@ -172,7 +228,7 @@ UNKNOWN_FUNCTION(animPaperPoseDispSub);
 UNKNOWN_FUNCTION(animPoseDisp_MakeExtTexture);
 UNKNOWN_FUNCTION(animSetPaperTexMtx);
 UNKNOWN_FUNCTION(animGroupBaseAsync);
-UNKNOWN_FUNCTION(animPoseGetAnimPosePtr);
+AnimPoseEntry * animPoseGetAnimPosePtr(s32 id);
 UNKNOWN_FUNCTION(animPoseGetAnimDataPtr);
 AnimPoseData * animPoseGetAnimBaseDataPtr(s32 id);
 UNKNOWN_FUNCTION(animPoseGetCurrentAnim);
