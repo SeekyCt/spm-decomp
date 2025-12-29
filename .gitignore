@@ -36,3 +36,4 @@ compile_commands.json
 *.dll
 *.m2c
 *.bat
+venv
