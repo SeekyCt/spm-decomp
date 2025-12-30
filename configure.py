@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Based on dtk-template df2b8586ae5dc181852cd009d21318a2c6a0c61c
+
 ###
 # Generates build files for the project.
 # This file also includes the project configuration,
@@ -106,6 +108,12 @@ parser.add_argument(
     help="path to sjiswrap.exe (optional)",
 )
 parser.add_argument(
+    "--ninja",
+    metavar="BINARY",
+    type=Path,
+    help="path to ninja binary (optional)",
+)
+parser.add_argument(
     "--verbose",
     action="store_true",
     help="print verbose output",
@@ -137,6 +145,7 @@ config.compilers_path = args.compilers
 config.generate_map = args.map
 config.non_matching = args.non_matching
 config.sjiswrap_path = args.sjiswrap
+config.ninja_path = args.ninja
 config.progress = args.progress
 if not is_windows():
     config.wrapper = args.wrapper
@@ -146,11 +155,11 @@ if not config.non_matching:
 
 # Tool versions
 config.binutils_tag = "2.42-1"
-config.compilers_tag = "20240706"
-config.dtk_tag = "v1.3.0"
-config.objdiff_tag = "v2.6.0"
-config.sjiswrap_tag = "v1.2.0"
-config.wibo_tag = "0.6.11"
+config.compilers_tag = "20250812"
+config.dtk_tag = "v1.7.6"
+config.objdiff_tag = "v3.4.1"
+config.sjiswrap_tag = "v1.2.2"
+config.wibo_tag = "1.0.0-beta.5"
 
 # Project
 config.config_path = Path("config") / config.version / "config.yml"
@@ -292,9 +301,11 @@ NonStarted = False                # Object has no source file created
 NonMatching = False               # Object does not match and should not be linked
 Equivalent = config.non_matching  # Object should be linked when configured with --non-matching
 
+
 # Object is only matching for specific versions
 def MatchingFor(*versions):
     return config.version in versions
+
 
 config.warn_missing_config = True
 config.warn_missing_source = False
@@ -330,6 +341,7 @@ config.libs = [
     ),
 ]
 
+
 # Optional callback to adjust link order. This can be used to add, remove, or reorder objects.
 # This is called once per module, with the module ID and the current link order.
 #
@@ -352,13 +364,20 @@ def link_order_callback(module_id: int, objects: List[str]) -> List[str]:
 config.progress_categories = [
     # Unused since full splits not known
 ]
+config.progress_each_module = args.verbose
+# Optional extra arguments to `objdiff-cli report generate`
+config.progress_report_args = [
+    # Marks relocations as mismatching if the target value is different
+    # Default is "functionRelocDiffs=none", which is most lenient
+    # "--config functionRelocDiffs=data_value",
+]
 
 if args.mode == "configure":
     # Write build.ninja and objdiff.json
     print("Configure for", args.version)
     generate_build(config)
 elif args.mode == "progress":
-    # Print progress and write progress.json
+    # Print progress information
     config.progress_each_module = args.verbose
     calculate_progress(config)
 else:

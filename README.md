@@ -34,33 +34,27 @@ When running under WSL, objdiff is unable to get filesystem notifications for au
   brew install ninja
   ```
 
-- Install [wine-crossover](https://github.com/Gcenx/homebrew-wine):
-
-  ```sh
-  brew install --cask --no-quarantine gcenx/wine/wine-crossover
-  ```
-
-After OS upgrades, if macOS complains about `Wine Crossover.app` being unverified, you can unquarantine it using:
-
-```sh
-sudo xattr -rd com.apple.quarantine '/Applications/Wine Crossover.app'
-```
+[wibo](https://github.com/decompals/wibo), a minimal 32-bit Windows binary wrapper, will be automatically downloaded and used.
 
 ### Linux
 
 - Install [ninja](https://github.com/ninja-build/ninja/wiki/Pre-built-Ninja-packages).
-- For non-x86(_64) platforms: Install wine from your package manager.
-  - For x86(_64), [wibo](https://github.com/decompals/wibo), a minimal 32-bit Windows binary wrapper, will be automatically downloaded and used.
+
+[wibo](https://github.com/decompals/wibo), a minimal 32-bit Windows binary wrapper, will be automatically downloaded and used.
 
 ## Building
 
-- Copy your game's disc image to `orig/EU0` for PAL revision 0, `orig/EU1` for revision 1, or `orig/JP0` for NTSC-J revision 0.
+- Copy your game's disc image to the subfolder of `orig` for your version
+  - Supported versions:
+    - EU0: PAL revision 0
+    - EU1: PAL revision 1
+    - JP0: NTSC-J revision 0
+    - KR0: NTSC-K revision 0
   - Supported formats: ISO (GCM), RVZ, WIA, WBFS, CISO, NFS, GCZ, TGC
   - After the initial build, the disc image can be deleted to save space.
 - Run configure.py
   - For EU0, no additional arguments are required
-  - For EU1, pass `--version EU1`
-  - For JP0, pass `--version JP0`
+  - For any other version, use `--version RGX` where `RGX` is the region and revision of your version
 - Run ninja
 
 ## Contributing
