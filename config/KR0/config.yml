@@ -1,0 +1,13 @@
+object: sys/main.dol
+object_base: orig/KR0
+hash: 571b51f1b494af1b8b6671f696b8283cc73ee24e
+symbols: config/KR0/symbols.txt
+splits: config/KR0/splits.txt
+mw_comment_version: 15
+quick_analysis: false
+
+modules:
+- object: files/rel/relF.bin:nlzss
+  hash: 170c6ae363dc5ae3ebc0ef494d53925aa85d51b0
+  symbols: config/KR0/relF/symbols.txt
+  splits: config/KR0/relF/splits.txt

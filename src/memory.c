@@ -10,12 +10,15 @@
 
 extern "C" {
 
-// .data
+#ifdef SPM_KR0
+    #define LINE_SHIFT 1
+#else
+    #define LINE_SHIFT 0
+#endif
+
 static HeapSize size_table[HEAP_COUNT] =
 {
-#if MEMORY_C_VERSION >= 3
-    #error "TODO"
-#elif MEMORY_C_VERSION == 2
+#if MEMORY_C_VERSION >= 2
     // MEM1
     { // 0
         HEAPSIZE_ABSOLUTE_KB,
@@ -51,6 +54,12 @@ static HeapSize size_table[HEAP_COUNT] =
         HEAPSIZE_PERCENT_REMAINING,
         100
     },
+#if MEMORY_C_VERSION >= 3
+    { // Korean font heap
+        HEAPSIZE_ABSOLUTE_KB,
+        0x520
+    },
+#endif
     { // 8
         HEAPSIZE_ABSOLUTE_KB,
         1
@@ -140,7 +149,7 @@ void memInit()
             wp->heapEnd[i] = (void* ) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
-            assertf(97, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            assertf(97 + LINE_SHIFT, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             nextFree += size;
         }
@@ -155,7 +164,7 @@ void memInit()
             u32 size = (u32) (((u64) space * size_table[i].size) / 100);
 
             // "ERROR: Excessive heap acquisition from arena"
-            assert(111, size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
+            assert(111 + LINE_SHIFT, size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
 
             // Round down 0x20
             size -= size & 0x1f;
@@ -164,7 +173,7 @@ void memInit()
             wp->heapEnd[i] = (void *) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
-            assertf(117, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            assertf(117 + LINE_SHIFT, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             nextFree += size;
         }
@@ -196,7 +205,7 @@ void memInit()
             wp->heapEnd[i] = (void *) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
-            assertf(148, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            assertf(148 + LINE_SHIFT, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             nextFree += size;
         }
@@ -211,7 +220,7 @@ void memInit()
             u32 size = (u32) (((u64) space * size_table[i].size) / 100);
 
             // "ERROR: Excessive heap acquisition from arena"
-            assert(162, size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
+            assert(162 + LINE_SHIFT, size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
 
             // Align size down to 0x20
             size -= size & 0x1f;
@@ -220,7 +229,7 @@ void memInit()
             wp->heapEnd[i] = (void *) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
-            assertf(168, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            assertf(168 + LINE_SHIFT, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             nextFree += size;
         }
@@ -262,7 +271,7 @@ void * __memAlloc(s32 heapId, size_t size)
     void * p = MEMAllocFromExpHeapEx(wp->heapHandle[heapId], size, 0x20);
 
     // "Memory allocation error"
-    assertf(221, p, "メモリ確保エラー [id = %d][size = %d]", heapId, size);
+    assertf(221 + LINE_SHIFT, p, "メモリ確保エラー [id = %d][size = %d]", heapId, size);
 
     return p;
 }
@@ -322,10 +331,10 @@ void smartAutoFree(s32 type)
 void smartFree(SmartAllocation * lp)
 {
     // "Invalid pointer."
-    assertf(403, lp, "無効なポインタです。p=0x%x\n", lp);
+    assertf(403 + LINE_SHIFT, lp, "無効なポインタです。p=0x%x\n", lp);
 
     // "Already free."
-    assertf(404, lp->flag != 0, "すでに開放されています。p=0x%x\n", lp);
+    assertf(404 + LINE_SHIFT, lp->flag != 0, "すでに開放されています。p=0x%x\n", lp);
 
     if (lp->type == SMART_TYPE_4)
     {
@@ -373,7 +382,7 @@ void smartFree(SmartAllocation * lp)
         else
         {
             // "The list structure is broken"
-            assert(446, swp->freeEnd, "リスト構造が壊れています");
+            assert(446 + LINE_SHIFT, swp->freeEnd, "リスト構造が壊れています");
 
             swp->freeEnd->next = lp;
             lp->prev = swp->freeEnd;
@@ -406,7 +415,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
     SmartAllocation * new_lp = swp->freeStart;
 
     // "Heap list shortage"
-    assert(482, new_lp, "ヒープリスト足りない\n");
+    assert(482 + LINE_SHIFT, new_lp, "ヒープリスト足りない\n");
     
     // Update previous item in the free list
     if (IS_FIRST_SMART_ALLOC(new_lp))
@@ -534,7 +543,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
         }
 
         // "Garbage collect, but not enough heap"
-        assert(640, 0, "smartAlloc: ガーベージコレクトしたけどヒープ足りない\n");
+        assert(640 + LINE_SHIFT, 0, "smartAlloc: ガーベージコレクトしたけどヒープ足りない\n");
 
         return NULL;
     }
@@ -611,7 +620,7 @@ GXTexObj * smartTexObj(GXTexObj * texObj, SmartAllocation * imageAllocation)
         GXInitTexObjData(texObj, imageAllocation->data);
     else
         // "There is no smart memory information"
-        assert(725, 0, "スマートメモリの情報がないよ\n");
+        assert(725 + LINE_SHIFT, 0, "スマートメモリの情報がないよ\n");
 
     return texObj;
 }
@@ -636,7 +645,7 @@ void * operator new(size_t size) throw()
     else
     {
         void * p = MEMAllocFromExpHeapEx(wp->heapHandle[0], size, 0x20);
-        assertf(221, p, "メモリ確保エラー [id = %d][size = %d]", 0, size);
+        assertf(221 + LINE_SHIFT, p, "メモリ確保エラー [id = %d][size = %d]", 0, size);
         return p;
     }
 }
