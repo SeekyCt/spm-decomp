@@ -43,7 +43,7 @@ void OSClearContext(OSContext * context);
 void OSInitContext(OSContext * context, u32 pc, u32 r1);
 void OSDumpContext(OSContext * context);
 
-UNKNOWN_FUNCTION(OSSwitchFPUContext);
+UNKNOWN_FUNCTION(OSSwitchFPUContext)
 void __OSContextInit();
 
 CPP_WRAPPER_END()

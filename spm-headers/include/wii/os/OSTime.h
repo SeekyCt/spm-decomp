@@ -15,9 +15,9 @@ typedef u32 OSTick;
 OSTime OSGetTime();
 OSTick OSGetTick();
 
-UNKNOWN_FUNCTION(__OSGetSystemTime);
-UNKNOWN_FUNCTION(__OSTimeToSystemTime);
-UNKNOWN_FUNCTION(GetDates);
-UNKNOWN_FUNCTION(OSTicksToCalendarTime);
+UNKNOWN_FUNCTION(__OSGetSystemTime)
+UNKNOWN_FUNCTION(__OSTimeToSystemTime)
+UNKNOWN_FUNCTION(GetDates)
+UNKNOWN_FUNCTION(OSTicksToCalendarTime)
 
 CPP_WRAPPER_END()

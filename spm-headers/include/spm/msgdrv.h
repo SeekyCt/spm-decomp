@@ -158,7 +158,7 @@ void msgDispKeyWait();
 /*
     Configures GX settings for
 */
-UNKNOWN_FUNCTION(msgDispKeyWait_render);
+UNKNOWN_FUNCTION(msgDispKeyWait_render)
 
 /*
     Adds message text to a MsgSpeaker
@@ -185,7 +185,7 @@ DECOMP_STATIC(bool msgdrv__ismbblead(char param_1))
     Splits a message command into tag and value
     For example, command "<col ffffff80>" writes "col" to tag and "ffffff80" to value
 */
-const char * msgGetCommand(const char * command, char * tag, char * value);
+const char * msgGetCommand(const char * command, char * tagOut, char * valueOut);
 
 /*
     Takes an icon name (like "STICK") and returns the icon id for it

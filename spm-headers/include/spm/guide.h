@@ -98,10 +98,10 @@ void runMode3Main(GuideWork * work);
 void runMode4Main(GuideWork * work);
 void runMode5Main(GuideWork * work);
 
-UNKNOWN_FUNCTION(func_801215f0);
-UNKNOWN_FUNCTION(func_8012167c);
-UNKNOWN_FUNCTION(func_80121900);
-UNKNOWN_FUNCTION(func_80121948);
+UNKNOWN_FUNCTION(func_801215f0)
+UNKNOWN_FUNCTION(func_8012167c)
+UNKNOWN_FUNCTION(func_80121900)
+UNKNOWN_FUNCTION(func_80121948)
 
 /*
     Sets curAnimName to an new name, and allows animChangeHandler to override it
@@ -116,12 +116,12 @@ void guideEnterRunMode1();
 void guideEnterRunMode2();
 void guideEnterRunMode5(f32, f32, Vec3 *);
 
-UNKNOWN_FUNCTION(func_80121ba4);
-UNKNOWN_FUNCTION(func_80121bc8);
-UNKNOWN_FUNCTION(func_80121bcc);
-UNKNOWN_FUNCTION(guideCanSearch);
-UNKNOWN_FUNCTION(func_80121d84);
-UNKNOWN_FUNCTION(func_80121db4);
-UNKNOWN_FUNCTION(func_80121e18);
+UNKNOWN_FUNCTION(func_80121ba4)
+UNKNOWN_FUNCTION(func_80121bc8)
+UNKNOWN_FUNCTION(func_80121bcc)
+UNKNOWN_FUNCTION(guideCanSearch)
+UNKNOWN_FUNCTION(func_80121d84)
+UNKNOWN_FUNCTION(func_80121db4)
+UNKNOWN_FUNCTION(func_80121e18)
 
 CPP_WRAPPER_END()

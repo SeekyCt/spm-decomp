@@ -68,6 +68,6 @@ STRIPPED(void seqTitleDeleteLayout())
 void seqTitleDisp();
 
 // No idea why this is in this file of all places, but it is
-const char * getDanMapName(s32 dungeonNo);
+const char * getNextDanMapName(s32 dungeonNo);
 
 CPP_WRAPPER_END()

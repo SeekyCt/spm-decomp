@@ -74,13 +74,13 @@ DECOMP_STATIC(FairyWork fairy_work)
 
 DECOMP_STATIC(const char * fairy_extraAnimPoseNames[2])
 
-UNKNOWN_FUNCTION(func_8011bc08);
-UNKNOWN_FUNCTION(func_8011c4d8);
-UNKNOWN_FUNCTION(func_8011c920);
-UNKNOWN_FUNCTION(func_8011ceb4);
-UNKNOWN_FUNCTION(func_8011d300);
-UNKNOWN_FUNCTION(func_8011d3bc);
-UNKNOWN_FUNCTION(func_8011d440);
+UNKNOWN_FUNCTION(func_8011bc08)
+UNKNOWN_FUNCTION(func_8011c4d8)
+UNKNOWN_FUNCTION(func_8011c920)
+UNKNOWN_FUNCTION(func_8011ceb4)
+UNKNOWN_FUNCTION(func_8011d300)
+UNKNOWN_FUNCTION(func_8011d3bc)
+UNKNOWN_FUNCTION(func_8011d440)
 
 /*
     Creates a fairy entry for the currently selected pixl
@@ -148,7 +148,7 @@ FairyEntry * fairyGetExtra();
 */
 void fairySetAnim(FairyEntry * fairy, const char * animName);
 
-UNKNOWN_FUNCTION(func_8011ea48);
+UNKNOWN_FUNCTION(func_8011ea48)
 
 /*
     Functions to change the current run mode of a fairy
@@ -169,8 +169,8 @@ void fairyAllEnterRunMode2();
 */
 void fairySetAllPositions(Vec3 * position);
 
-UNKNOWN_FUNCTION(func_8011f2d4);
-UNKNOWN_FUNCTION(func_8011f320);
+UNKNOWN_FUNCTION(func_8011f2d4)
+UNKNOWN_FUNCTION(func_8011f320)
 
 /*
     Returns a pointer to all FairyEntries
@@ -183,10 +183,12 @@ FairyEntry * fairyGetEntries();
 s32 fairyGetNum();
 s32 fairyGetNumExtra();
 
-UNKNOWN_FUNCTION(func_8011f39c);
-UNKNOWN_FUNCTION(func_8011f3b0);
-UNKNOWN_FUNCTION(func_8011f45c);
-UNKNOWN_FUNCTION(func_8011f534);
+UNKNOWN_FUNCTION(func_8011f39c)
+UNKNOWN_FUNCTION(func_8011f3b0)
+
+void func_8011f45c(double param_1, FairyEntry *fairy, Vec3 *position);
+
+UNKNOWN_FUNCTION(func_8011f534)
 
 /*
     Configures the animPose for this fairy based on entry fields

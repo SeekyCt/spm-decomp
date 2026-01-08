@@ -25,6 +25,8 @@ For use in decomp, the `include`, `include_cpp` and `decomp` folders should be a
 
 For use in mods, the `include` and `mod` folders should be added to the include path and an lst from `linker` should be used. Mods should include their compiler's standard library headers (do not use `-nostdinc`), though linking it is not required (so `-nostdlib` is fine).
 
+Optionally, you may wish to add the preprocessor define `RELAX_NAMESPACING` to allow omitting the namespaces (for example, `spm::memory::MemWork` becomes `MemWork`).
+
 **Warning**: NW4R headers are probably unsafe to use with GCC currently
 
 # Licensing

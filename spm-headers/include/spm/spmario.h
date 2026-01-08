@@ -29,7 +29,7 @@ typedef struct
 /* 0x0008 */ s32 language; // not read from save file
 /* 0x000C */ u32 discIsEjected;
 /* 0x0010 */ u32 systemLevelFlags;
-/* 0x0014 */ u8 unknown_0x14[0x18 - 0x14];
+/* 0x0014 */ u32 frameCounter;
 /* 0x0018 */ u16 framebufferWidth;
 /* 0x001A */ u16 framebufferHeight;
 /* 0x001C */ f32 gameSpeed;

@@ -8,6 +8,7 @@
 
 /* Dol */
 
+
 // Runtime.PPCEABI.H.a
 // __mem.c
 80004000:memcpy
@@ -19,16 +20,37 @@
 // data
 804031b8:mapData
 
+// evt_dimen.c (temp)
+8040f6d8:evt_dimen_handle_cutscenes
+8040f3e8:evt_dimen_handle_rifts
+8040f1a0:evt_dimen_handle_mapchanges
+
 // mobjdrv.c
 8002c834:mobjNameToPtr
 8002c8e8:mobjNameToPtrNoAssert
+8002c980:mobjRunEvent
+8002b664:mobjDelete
+8002b390:mobjEntry
+8002ca04:mobjCalcMtx
+8002eb38:mobjGetModelName
+8002d640:mobjHitOff
+8002b72c:mobjSetPosition
+8002ed80:func_8002ed80
+8002ed90:func_8002ed90
 // more
 
 // msgdrv.c
 8002f130:msgLoad
 8002f35c:msgUnLoad
 8003270c:msgSearch
+800327e4:msgSearchNoFallback
+80032f84:msgWindow_Add
+//data
+80405bd8:msgdrv_msgIcon
 // more
+
+// offscreendrv.c 
+800354d8:offscreenSetEntryType
 
 // swdrv.c
 80037eac:swInit
@@ -49,6 +71,11 @@
 8003ab80:windowDispGX2_Waku_col
 // more
 
+// winmgr.c
+8003bc78:winMgrSelectEntry
+8003c8a8:winMgrSelect
+8003c90c:winMgrSelectDelete
+
 // acdrv.c
 8003eb4c:acInit
 8003eba0:acReInit
@@ -61,15 +88,29 @@
 8003f730:acIsRunning
 8003f780:acNameToPtr
 8003f818:acMsgDisp
+80406ed8:acdrv_acDefs
 
 // animdrv.c
 8004249c:animPoseEntry
 80043410:animPoseSetAnim
+80044664:animPoseGetLoopTimes
+80044734:animPoseSetMaterialFlagOn
+80044818:animPoseSetMaterialFlagOff
+80044c8c:animPoseSetMaterialEvtColor
+80044e68:animPoseGetMaterialFlag
+80045008:animPoseGetMaterialEvtColor
+800450d8:animPoseSetDispCallback2
 80045288:animPoseMain
 800497c8:animPoseDrawMtx
 80049fc4:animPoseRelease
 8004a5bc:animPoseAutoRelease
+8004c518:animGroupBaseAsync
 8004c828:animPoseGetAnimBaseDataPtr
+8004d52c:animPoseSetDispCallback
+8004c660:animPoseGetAnimPosePtr
+8004158c:animGetPtr
+// data 
+805adf58:animdrv_wp
 // more
 
 // camdrv.c
@@ -90,29 +131,71 @@
 8005af04:dispEntry
 // more
 
+800b3014:effHappyFlower
+
 // effdrv.c
+800616e4:effEntryType
+800618b0:effMain
+800617fc:effSetName
+80061af4:effSoftDelete
 80061d78:func_80061d78
+800a2fe4:eff_item_thunder
+800a315c:func_800a315c
+800a82c0:func_800a82c0
+800bc828:damageEffect
+80061b90:effNameToPtr
+// data
+805adf90:effdrv_wp
+
+// eff_sub.c
+8005bf08:effSubMain
+// data
+805ae7e4:effsub_wp
 
 // fadedrv.c
+80065d60:fadeEntry
 800677f8:fadeIsFinish
+800678d0:fadeGetMapChangeInTransition
+800678dc:fadeGetMapChangeOutTransition
 800678e8:fadeSetMapChangeTransition
+800678fc:fadeGetFadeOutLength
+80067908:fadeGetFadeInLength
+80067914:fadeSetTransitionLengths
 // more
 805ae828:fadedrv_wp
 
-// hitdrv.c
-8006f920:hitNameToPtr
-// more
+// framedrv.c
+80067ab8:frameInit
+80067b24:frameMain
+80069b8c:frameDispCb
+805adfc8:framedrv_wp
 
 // hitdrv.c
 8006c4b4:hitGrpFlagOn
 8006c6ac:hitGrpFlagOff
 8006ee2c:hitCheckFilter
 8006ffe4:hitObjGetPos
+8006bac0:hitDelete
 800703b0:hitGetMapEntryBbox
+8006f920:hitNameToPtr
+8006bd80:hitObjFlagOn
+8006be08:hitObjFlagOff
 // more
 
 // icondrv.c
+800721dc:iconReInit
+80072c48:iconDelete
+80072ea8:iconDispGxAlpha
+80073980:iconGX
 800731b0:iconDispGx
+800721f4:iconMain
+80072710:iconEntry
+80072cdc:iconDisp
+80073444:iconDispGxCol
+80074690:iconNameToPtr
+80074814:iconFlagOn
+// sdata
+805adfd0:icondrv_wp
 // more
 
 // itemdrv.c
@@ -129,71 +212,118 @@
 // item_event_data.c
 80025164:getItemUseEvt
 803fbc10:itemEventDataTable
+803ff190:default_item_use_evt
+803fc770:item_data_map_darken_evt
+803fc7e8:item_data_map_lighten_evt
+// data
+805adf00:item_event_data_wp
 // more
 
 // mapdrv.c
+8007f1dc:mapGetWork
 8008cf30:mapGrpFlagOn
 8008d2fc:mapGrpFlagOff
 8008e11c:mapGrpFlag4On
+8008e4e8:mapGrpFlag4Off
+8008c440:mapObjFlagOn
+8008c618:mapObjFlagOff
+80090680:mapObjSetColor
+80090a80:mapGrpSetColor
+8008181c:mapLoad
 // more
 
 // somewhere
 800b426c:func_800b426c
 800cd554:func_800cd554
 805aea50:errno
+1,5,15b5b0:dan_rotenShopItems
+
+// eff_spm_recovery.c
+80091654:effSpmRecoveryEntry
+
+// eff_spm_spindash.c
+800970ac:effSpmSpindashEntry
+800971cc:effSpmSpindashUpdateUnkEff
+
+// eff_kemuri_test.c
+800c7944:effKemuriTestEntry
+
+// eff_spm_hit.c
+80094020:effSpmHitEntry
+
+// eff_small_star.c
+800c1d60:effSmallStarEntry
+
+// eff_fire.c
+800c2990:effFireEntry
 
 // eff_nice.c
 800CC01C:effNiceEntry
+800cc1a0:effMainFunc
+
+// eff_ddtas_block.c
+800aa838:effDdtasBlockEntry
+
+// eff_map_block_del.c
+800b5938:effMapBlockDelEntry
 
 // evt_cam.c
 800dff20:evt_cam3d_evt_zoom_in
+800e01f8:func_800e01f8
+800dfc80:evt_cam_flag_onoff
 800e0430:evt_cam_zoom_to_coords
 800e04fc:evt_cam_look_at_door
 800dfe08:evt_cam_shake
+800dfd88:evt_cam_get_pos
 
 // evt_snd.c
 800d2148:evt_snd_bgmon
 800d218c:evt_snd_bgmon_f_d
 800d21f8:evt_snd_bgmoff
 800d2224:evt_snd_bgmoff_f_d
+800d22d8:evt_snd_bgm_fadein
+800d23cc:evt_snd_bgm_set_vol
+800d24b8:evt_snd_get_bgm_wait_time
 800d2800:evt_snd_sfxon
 800d28fc:evt_snd_sfxon_character
 800d29cc:evt_snd_sfxon_3d
+800d2294:evt_snd_channel_fadeout
 800d2af4:evt_snd_sfxon_npc
 800d2b64:evt_snd_sfxon_npc_delay
 800d2cd8:evt_snd_sfxon_3d_player_character
-800d2fa4:func_800d2fa4
+800d2fa4:evt_snd_sfx_fadeout
 800d2f74:evt_snd_sfxoff
 800d3030:evt_snd_get_last_sfx_id
 800d32a4:evt_snd_sfx_wait
 800d32e4:evt_snd_sfx_wait_name
 800d3464:evt_snd_envon_f
 800d34b8:evt_snd_string_call
-800d36f4:func_800d36f4
+800d36f4:evt_snd_set_sfx_reverb_mode
+800d2c00:evt_snd_sfxon_3d_player
 // more
-
-// evt_item.c
-800ecc84:evt_item_entry
-800ecda0:evt_item_get_position
-800ece50:evt_item_set_position
-800eced8:evt_item_flag_onoff
-800ed12c:evt_item_wait_collected
 
 // evt_sub.c
 800d37d8:evt_sub_intpl_msec_init
 800d3878:evt_sub_intpl_msec_get_value
 800d40a4:evt_sub_random
+800d44b0:evt_key_get_button
 800d46d8:evt_sub_set_game_speed
+800d470c:evt_sub_get_mapname
 800d4de4:func_800d4de4
+800d41fc:evt_sub_get_dist
 800d4774:evt_sub_get_entername
+800d47a8:evt_sub_set_entername
 800d4960:evt_sub_get_language
-800d74a0:func_800d74a0
+800d4d30:evt_sub_hud_configure
+800d74a0:evt_sub_display_room_name
+800d7930:evt_sub_item_select_menu
+800d8700:func_800d8700
 // more
 
 // evtmgr.c
 800d87e4:evtGetWork
 800d890c:make_jump_table
-800D8B2C:evtmgrReInit
+800d8b2c:evtmgrReInit
 800d8b88:evtEntry
 800d8df4:evtEntryType
 800d9060:evtChildEntry
@@ -204,6 +334,7 @@
 
 // evtmgr_cmd.c
 // text
+800da0d4:evt_lbl
 800dd0b8:evt_inline_evt
 800ddd5c:evtmgrCmd
 800dd500:evt_debug_put_msg
@@ -211,6 +342,7 @@
 800de594:evtGetValue
 800de9b8:evtSetValue
 800df1fc:evtSetFloat
+800dedb8:evtGetFloat
 // bss
 8050ce30:evt_debug_put_reg_str
 // more
@@ -226,13 +358,24 @@
 800e11e0:evt_door_wait_flag
 800e2610:evt_door_set_door_descs
 800e3588:evt_door_set_dokan_descs
+800e3804:evt_door_enable_disable_dokan_desc
 800e4118:evt_door_set_map_door_descs
 800e4308:evt_door_enable_disable_map_door_desc
 800e45c8:evt_door_set_event
 800e468c:evt_door_openable_onoff
+800e2908:evt_door_enable_disable_door_desc
 // more
 // data
+80412d18:evt_door_dan_dokan
 8041a2b0:door_init_evt
+804149b4:evt_door_dan_dokan_left_one
+80414a80:evt_door_dan_dokan_left_two
+80414ad0:evt_door_dan_dokan_left_three
+80414b88:evt_door_dan_dokan_left_four
+80415020:evt_door_dan_dokan_right_one
+80415154:evt_door_dan_dokan_right_two
+804151a4:evt_door_dan_dokan_right_three
+8041525c:evt_door_dan_dokan_right_four
 // more
 // sdata
 805ae020:evt_door_wp
@@ -240,6 +383,7 @@
 // evt_eff.c
 800e57bc:evt_eff
 800e6148:evt_eff_softdelete
+800E6250:evt_eff_exclamation_question
 // more
 
 // evt_env.c
@@ -249,24 +393,60 @@
 // evt_fade.c
 800e7050:evt_fade_entry
 800e7100:evt_fade_end_wait
+800e715c:evt_fade_set_center_pos
 800e71dc:evt_fade_callfade
+800E720C:evt_set_transition
 // more
 
 // evt_case.c
 800e0dfc:evt_exit_case_evt
 800e0e24:evt_del_case_evt
+800e0ca4:evt_run_case_evt
 
 // evt_fairy.c
+800e7404:evt_fairy_all_enter_run_mode1
+800e7458:evt_fairy_all_enter_run_mode2
+800e74ec:evt_fairy_set_pos
+800e7620:evt_fairy_get_pos
+800e7d88:evt_fairy_fly_to
+800e86dc:evt_fairy_set_anim
+800e8748:evt_fairy_wait_anim_end
 800e8214:evt_fairy_flag_onoff
+800e84e4:evt_fairy_reset
+8011f45c:func_8011f45c
 // more
+
+// evt_frame.c 
+800e8824:evt_frame_delete
+800e8854:evt_frame_offscreen_draw_flag_onoff
+800e88d0:evt_frame_offscreen_entry
+800e89d4:evt_frame_bind_offscreen
+800e8a58:evt_frame_set_img_anim
+800e8ab4:evt_frame_set_color
+800e8b48:evt_frame_flag_onoff
+800e8be8:evt_frame_wire_entry
+800e8cd0:evt_frame_wire_wait_draw_finished
+800e8d0c:evt_frame_set_draw_speed
+800e8d98:evt_frame_set_wire_color
+800e8e2c:evt_frame_set_wire_line_width
+800e8e94:evt_frame_set_wire_draw_rotation
+800e8f4c:evt_frame_evt_entry
+800e902c:evt_frame_set_rotation
+800e90e4:evt_frame_set_color2
+800e9178:evt_frame_spin_device_entry
 
 // evt_guide.c
 800ea87c:evt_guide_flag2_onoff
 800ea984:evt_guide_check_flag0
+800eaa88:evt_guide_get_can_search
 // more
 
 // evt_hit.c
+800eac54:evt_hitobj_onoff
+800eb458:evt_hit_bind_mapobj
+800eb500:evt_hit_bind_update
 800eb72c:evt_hitobj_attr_onoff
+800eb564:evt_hitobj_get_pos
 // more
 
 // evt_img.c
@@ -279,6 +459,7 @@
 800ec920:evt_img_wait_animend
 
 // evt_map.c
+800ed9b0:evt_map_set_blend
 800edf24:evt_mapobj_flag_onoff
 800edfec:evt_mapobj_flag4_onoff
 800ed6c0:evt_mapobj_trans
@@ -287,6 +468,8 @@
 800edcd8:evt_map_checkanim
 800ee1c4:evt_mapobj_get_position
 800ee55c:evt_mapdisp_onoff
+800ef198:evt_map_spawn_ladder
+800ed7f8:evt_mapobj_scale
 // more
 
 // evt_mario.c
@@ -298,14 +481,25 @@
 800ef988:evt_mario_set_pos
 800f19c0:evt_mario_wait_anim
 800efa4c:evt_mario_get_pos
+800efce0:evt_mario_get_height
 800efd28:evt_mario_direction_reset
 800efd88:evt_mario_direction_face
+800effb8:evt_mario_face_npc
 800f0074:evt_mario_face_coords
+800f0304:evt_mario_walk_to
 800f046c:evt_mario_pos_change
+800f05b0:func_800f05b0
+800f0d58:evt_mario_jump_to
+800f119c:func_800f119c
 800f1954:evt_mario_set_pose
+800F19C0:evt_mario_wait_anim
+800f1a4c:func_800f1a4c
 800f2450:evt_mario_fairy_reset
 800f25b0:evt_set_gravity
+800f29c8:evt_mario_take_damage
 800f2f68:evt_mario_set_anim_change_handler
+800f3364:evt_mario_check_3d
+800f09c4:evt_mario_walk_back_from_pos
 // more
 
 // evt_mobj.c
@@ -313,58 +507,162 @@
 800f39e4:evt_mobj_get_position
 800f3e34:evt_mobj_wait_animation_end
 800f3608:evt_mobj_delete
+800f3638:evt_mobj_exec_cancel
+800f36b0:evt_mobj_hit_onoff
 800f380c:evt_mobj_flag_onoff
+800f3a88:evt_mobj_set_position
+800f3b90:evt_mobj_set_scale
+800f3c98:evt_mobj_set_rotation
+800f36b0:evt_mobj_hit_onoff
+800f3da0:evt_mobj_set_anim
 800f5ad8:evt_mobj_zyo
+800f52a4:evt_mobj_jumpstand
+800f5c78:mobj_thako
 800f61ac:evt_mobj_thako
 800f6440:evt_mobj_kan
 800f6610:evt_mobj_arrow
 800f8be8:evt_mobj_blk
+800fb118:evt_mobj_save_blk
+800f430c:mobj_sui
+800f46a8:mobj_sui_stg3
+800f49bc:evt_mobj_sui
+800f379c:evt_mobj_get_joint_names
+800f548c:evt_mobj_hunmer_blk
+800f9688:evt_mobj_eria_block
+800fa024:evt_mobj_fire_block
+800fa75c:evt_mobj_hip_kui
+
+800fab28:mobjGetKazePosition
+800fab88:updateKazePosition
+800fac0c:mobjDeleteKaze
+800f71d8:mobj_blk_multicoin
+800f7680:mobj_blk_breakable
+800f7ac0:mobj_blk_used
+800f7bac:mobj_blk_ladder
+800f7d7c:mobj_blk_flip
+800f8030:mobj_blk_switch
+800f8214:mobj_blk_throwable
+800f821c:mobj_blk_colour
+800f8408:mobj_blk_gravity
+800f8a08:mobj_blk_bleck_switch
 // more
 // data
 8041b6d8:mobj_save_blk_sysevt
 // more
 
 // evt_msg.c
+800fb280:_evt_msg_print
 800fba54:evt_msg_print
+800fbad8:evt_msg_print_insert
 800fbe74:evt_msg_continue
+800fbf4c:evt_msg_select
 800fbc64:evt_msg_print_add
 800fbd00:evt_msg_print_add_insert
 800fc02c:evt_msg_toge
 800fd0c4:evt_msg_fmt_str
 // more
+
 // evt_npc.c
+800fde94:evtNpcNameToPtr
+800fdfd4:evtNpcNameToPtr_NoAssert
+800fef30:evt_npc_set_scale
+800ff8f8:func_800ff8f8
 80102c7c:evt_npc_get_hp
 80102d3c:evt_npc_get_max_hp
 80102dfc:evt_npc_set_hp
+801037a4:evt_npc_flag46C_onoff
 800fe124:evt_npc_get_position
 800fe21c:evt_npc_set_position
 800fe668:evt_npc_rotate
 800fe92c:func_800fe92c
+800fee80:evt_npc_get_scale
+800fef30:evt_npc_set_scale
+800ff470:evt_npc_set_color
+800ff5a4:evt_npc_set_colorcopy
+800ff6f4:evt_npc_set_colorcopytwo
 800ffbd8:evt_npc_walk_to
+801006fc:evt_npc_arc_to
 801004c0:evt_npc_jump_to
 80102574:evt_npc_glide_to
+80102bf8:evt_npc_restart_evt_id
+80102d3c:evt_npc_get_max_hp
+80102e68:evt_npc_delete
 80102EB8:evt_npc_stats_set_up
 80102f5c:evt_npc_entry
-80103054:func_80103054
+80103054:evt_npc_add_flip_part
 80103108:evt_npc_set_anim
-80103410:func_80103410
+8010330c:evt_npc_get_cur_anim
+80103410:evt_npc_wait_anim_end
 8010368c:evt_npc_flag8_onoff
+80103718:evt_npc_flagC_onoff
 801039b8:evt_npc_animflag_onoff
 80103dbc:evt_npc_get_unitwork
 80103ea8:evt_npc_set_unitwork
-80104694:func_80104694
+80104694:evt_npc_set_move_mode
+801046f4:evt_npc_get_damage_type
+80104084:evt_npc_set_partswork
+801049ec:func_801049ec
+80104a3c:func_80104a3c
 80104c94:evt_npc_set_property
 80104fac:evt_npc_modify_part
-801059d0:func_801059d0
+8010508c:evt_npc_get_property
+80105550:evt_npc_wait_flip_finished
+801055a4:evt_npc_finish_flip_instant
+801055ec:evt_npc_check_3d
+80105708:evt_npc_flip_to
+80105924:evt_npc_get_axis_movement_unit
+801059d0:evt_npc_set_axis_movement_unit
+80105768:evt_npc_flip
+80106390:evt_read_setup_file
 80106724:evt_npc_entry_from_template
+801072a4:func_801072a4
+80106db4:evt_npc_spawn_sammer_guy
 80107540:evt_npc_id_to_name
 80107bcc:evt_npc_set_camid
-80107cfc:func_80107cfc
-80107d20:func_80107d20
+801072a4:func_801072a4
+80107c38:func_80107c38
+80107cfc:evt_npc_freeze_all
+80107d20:evt_npc_unfreeze_all
 80108194:func_80108194
+801086fc:evt_npc_get_active_count
+80108d98:evt_npc_set_part_attack_power
+801093E0:evt_npc_wait_axis_movement_unit_end
+80109548:evt_npc_set_thoreau_override
+80109900:marioLuigiNpcDispCb
+80109a00:peachNpcDispCb
+80109d20:oChunksNpcDispCb
+80109da0:evt_npc_set_disp_callback
+8010a418:evt_npc_wait_for
+8010a37c:evt_npc_set_animpose_disp_callback
+8010a418:func_8010a418
 8010a910:evt_npc_teleport_effect
+8010be00:evt_npc_agb_async
 8010be80:evt_npc_tribe_agb_async
+801f0d30:func_801f0d30
+801f1880:func_801f1880
+801f2344:func_801f2344
+801f2af8:func_801f2af8
+801f2664:func_801f2664
+802154fc:func_802154fc
+80215514:func_80215514
+80215540:func_80215540
+80215f44:func_80215f44
+8021fbac:bomb_damage_mario
+80224804:func_80224804
+80224874:func_80224874
+80225380:func_80225380
+1,1,24fe4:evt_npc_sammer_display_count
 // more
+
+// not sure where you want this
+8040E598:evt_cutscene_pure_heart
+804E5C20:evt_memcard_save
+80436a68:wracktail_defeat
+
+// evt_offscreen.c
+8010c4a4:evt_offscreen_entry
+8010c4d4:evt_offscreen_delete
+8010c504:evt_offscreen_get_boundingbox2
 
 // evt_paper.c
 8010c600:evt_paper_entry
@@ -381,38 +679,76 @@
 8010c86c:evt_pouch_get_attack
 8010c83c:evt_pouch_set_attack
 8010c8b8:evt_pouch_add_attack
+8010c8e8:evt_pouch_set_coins
+8010c918:evt_pouch_get_coins
+8010c964:evt_pouch_add_coins
 8010c9c4:evt_pouch_check_have_item
+8010c994:evt_pouch_add_item
 8010CA18:evt_pouch_remove_item
+8010cb60:evt_pouch_set_pixl_selected
+8010cc74:evt_pouch_check_free_use_item
 8010cdd4:evt_pouch_set_level
 8010cd88:evt_pouch_get_level
 8010ce04:evt_pouch_get_next_level_xp
 8010cffc:evt_pouch_increment_enemies_defeated
 8014f7c8:pouchGetCardCount
 
+
 // evt_seq.c
 8010d028:evt_seq_set_seq
 8010d0a0:evt_seq_wait
+8010D0F0:evt_seq_mapchange
 // more
 
 // evt_shop.c
 80111d1c:evt_shop_set_defs
 804220D0:saffronCookingScript
+8010d194:evt_shop_wait_coin_sfx
+8010e8bc:evt_shop_merlee_charm_eff
+80111378:evt_shop_build_flimm_pit_item_tables
 // more
 
 // mario.c
+801243a8:marioMain
+80121e50:marioGetGameSpeedScale
 80121f48:marioGetPtr
+80122af0:marioChkKey
+80122b4c:marioCtrlOnChk
 80122b68:marioCtrlOffChk
+80122bbc:marioCtrlOn
 80122b7c:marioKeyOffChk
 80122bf4:marioKeyOff
 80122c2c:marioKeyOn
-8012a680:marioTakeDamage
-8012b50c:marioSetGravity
+801243a8:marioMain
+801266e4:marioChgPose
+80126940:marioChgPaper
+80126aac:marioPaperOn
+80126b88:marioPaperOff
+80126d48:marioGetScreenPos
+8012823c:marioEffectFlagOn
+80128360:marioEffectFlagOff
 8012a3a8:marioCalcDamageToEnemy
+8012a680:marioTakeDamage
+8012b018:marioSetInvincibility
+8012b080:marioCheck3d
+8012b50c:marioSetGravity
+8012bd5c:marioHandleSquash
+//data
+805ae8e8:mario_gameSpeedScale
 // more
 
 // mario_motion.c
+80143370:marioMotion
 801433dc:marioChgMot
+8014465c:marioCalcFramesToPeak
+80144908:marioCalcFramesToTerminalVel
+80146570:marioEndMotIfJump
 80146f0c:func_80146f0c
+80147604:_marioChangeCharacter
+80147e18:marioChangePixl
+80148c28:func_80148c28
+801624b8:boomerFuseMain
+// data
 80426bb8:marioMotTbl
 // more
 
@@ -421,6 +757,7 @@
 8014f080:pouchGetPixlInfo
 // text
 8014c088:pouchGetPtr
+8014d1bc:pouchSetLevel
 8014d394:pouchSetAttack
 8014d3c8:pouchGetAttack
 8014d3d8:pouchAddAttack
@@ -428,42 +765,85 @@
 8014d458:pouchGetHp
 8014d468:pouchAddHp
 8014d4b4:pouchSetMaxHp
-8014d4e8:pouchGetMaxHp
 8014d4f8:pouchGetXp
 8014d508:pouchAddXp
+8014d3c8:pouchGetAttack
 8014d548:pouchSetCoin
 8014d57c:pouchGetCoin
 8014d58c:pouchAddCoin
+8014d1bc:pouchSetLevel
+8014d394:pouchSetAttack
 8014d5f8:pouchAddItem
 8014dbf4:pouchCheckHaveItem
 8014df4c:pouchRemoveItem
 8014eb68:pouchRemoveShopItem
 8014f31c:pouchGetCurPixl
+8014f7c8:pouchGetCardCount
+8014f978:pouchSetEnemiesDefeated
 8014fa20:pouchCountUseItems
 8014fad0:pouchCountKeyItems
 8014fb78:pouchCountShopItems
 8014fc20:pouchCountChars
 8014fc70:pouchCountPixls
+8014fdb0:pouchCheckFreeUseItem
+8014e6d0:pouchRemoveItemIdx
 // more
 // bss
 80511a28:mario_pouch_work
 
+// mario_sbr.c
+801502bc:marioAdjustMoveDir
+8015161c:marioCheck1HeldFor3
+801504e8:revise360
+80146570:marioCheck2HeldFor2
+
 // mario_status.c
 80154f3c:marioStatusApplyStatuses
-// more
+8015601c:marioStatusEntry
+80156dec:statusFlippedControlsMain
+8015640c:statusPoisonMain
+801568f0:statusNoSkillsMain
+801562a8:marioCheckStatusPauseMot
+
+// mario_fairy.c
+801311bc:marioFairyUse
+// data
+80426b30:fairyUseFuncs
+
+// mot_fairy_mario.c
+8016c0ac:fairySpindashUseFunc
+8016c0b4:mot_spindash
+8016c568:mot_spindash_post
+8016ece4:func_8016ece4
+80170384:func_80170384
+8016e520:mot_hammer
+8016ebb0:mot_hammer_post
+
+// mario_hit.c
+801318f8:marioGetHeight
+80131ad4:marioGetHitboxWidth
+
+// mot_walk.c
+80118f80:marioGetDashSpd
+
+// mot_damage.c
+80161cf8:onHpEquals0
 
 // seq_logo.c
 80179140:seq_logoMain
 // more
 
 // seq_mapchange.c
+8017a33c:seq_mapChangeInit
 8017a464:seq_mapChangeMain
 8017af98:_unload
+//sdata
+805ae0a8:seq_mapchange_wp
 // more
 
 // seq_title.c
 8017b250:seq_titleMain
-8017bc4c:getNextDanMapname
+8017bc4c:getNextDanMapName
 // more
 
 // seq_game.c
@@ -485,7 +865,6 @@
 // data
 805ae0d0:seq_load_sub_wp
 
-
 // pausewin.c
 // text
 80184c18:pausewinEntry
@@ -496,9 +875,13 @@
 801853cc:pausewinPauseGame
 80185510:pausewinUnpauseGame
 80188508:pausewinSetMessage
+80188628:pausewinSetMessageCard
+80188a64:pluswinKeyItemMain
 80189cf0:pluswinChapterWinOpen
+80181248:levelUpWindowMain
 // more
 // data
+80513970:pausewinCardDescBuf
 805ae0f0:pausewin_pluswinWp
 805ae930:pausewin_wp
 // more
@@ -511,6 +894,10 @@
 80199490:hudLoadStats
 80199ad0:hudHide
 80199cc4:hudStartCountdown
+8019a16c:hudDisp
+801994e0:hudMain
+// data
+805ae100:hud_wp
 // more
 
 // system.c
@@ -518,6 +905,10 @@
 8019d254:irand
 8019c54c:__assert2
 8019cf84:qqsort
+8019c688:distABf
+8019c508:getSpmarioDVDRoot
+8019c62c:reviseAngle
+8019dc94:intplGetValue
 // more
 
 // debug.c
@@ -558,6 +949,7 @@
 801a09d4:FontDrawString
 801a151c:FontDrawMessage
 801a1d50:FontDrawMessageMtx
+801a255c:FontGetMessageWidthLine
 801a28ac:FontGetMessageWidth
 // more
 
@@ -638,24 +1030,71 @@
 // npcdrv.c
 // text
 801adef0:npcDispMain
+801b19e4:func_801b19e4
+801b33a0:npcHandleCollision
+801b6430:npcEntry
 801b6f2c:npcNameToPtr
+801b6fd4:npcNameToPtr_NoAssert
 801b7064:npcDelete
+801b84d4:npcHandleDmg
+801be198:npcEntryFromTemplate
+801bf7a0:npcEntryFromSetupEnemy
 801bfc48:npcSearchAnimDefs
+801c2130:npcGetMaxEntries
+801c2148:npcAddPart
+801c2458:npcGetPartById
+801c2558:npcPartUpdatePosition
+801c4afc:npcGetFrameBoundingBox
+801c65e8:npcTakeDamage
+801c82a8:npcHandleHitXp
+801c8b44:npcFleeped
+801c9ac8:npcGetTribe
 801c9adc:npcGetWorkPtr
-801e3a1c:npcDropItem
+801cc150:npcDamageMario
+801ca1a4:func_801ca1a4
+801d233c:npcFreezeAll
+801e5fd0:func_801e5fd0
 // more
 // data
+805ae188:npcdrv_wp
 8043bf30:npcTribes
 80449888:npcEnemyTemplates
 // more
 
+// npcmisc.c
+// TODO: this isn't a proper file, figure out what it really is
+801e3a1c:npcDropItem
+
 // npc_dimeen_l.c
+// text
+801084fc:npc_dimeen_l_box_deal_damage
+801e59c4:npc_dimeen_l_determine_move_pos
 // data
+80457140:dimen_unk_fight_script_1
+80457190:dimen_unk_fight_script_2
+80459028:dimen_unk_fight_script_3
 8045B9E0:superDimentioHeadDefenses
 8045B9F8:superDimentioBodyDefenses
 //more
 
+// npc_shadoo
+802154fc:func_802154fc
+80215514:func_80215514
+80215540:func_80215540
+80215f44:func_80215f44
+80224804:func_80224804
+80224874:func_80224874
+80225380:func_80225380
+
+// npc_ninja.c
+// data
+8021de00:ninjoe_bomb_calc_chance
+8021fbac:bomb_damage_mario
+8021ec54:ninjoe_thoreau_override
+//more
+
 // wpadmgr.c
+8023697c:wpadGetWork
 80237688:wpadGetButtonsHeld
 802376b0:wpadGetButtonsPressed
 802376c4:wpadGetButtonsHeldRepeat
@@ -663,10 +1102,27 @@
 
 // spmario_snd.c
 80238598:spsndExit
+8023a818:__spsndSFXOn
 8023b0f0:spsndSFXOn
+8023b2a0:spsndSFXOff
+8023b108:spsndSFXOnVol
+8023b298:spsndSFXOn_3D
+8023cfe8:spsndBGMSetVol
+8023cab4:spsndBGMFadeout
+8023cc9c:spsndBGMFadein
 8023c93c:spsndBGMOn
+8023c4d8:spsndBGMOn_f_d
 8023c948:spsndBGMOff_f_d
 8023d1b0:spsndCheckBgmPlaying
+8023b4d4:spsndSetSfxPlayerPos
+// data
+80532fe0:spsndBgmPlayers
+// more
+
+// nw4r::snd.cpp
+8030019c:Skip
+8030afc0:GetBasicPlayer
+8030a548:UpdateLoadingBlockIndex
 // more
 
 // relmgr.c
@@ -693,6 +1149,12 @@
 // more
 // data
 805ae1b8:homebuttondrv_wp
+
+// search.c 
+8024602c:searchGetNpcMsg
+// more
+// data
+805ae1c0:search_wp
 
 // lz_embedded.c
 8036afc0:pitText
@@ -723,6 +1185,11 @@
 8025ebd4:strchr
 80267018:strlen
 // more
+
+// math workarounds
+80264408:pow
+80263f74:floor
+
 // s_cos.c
 80263ea0:cos
 // s_sin.c
@@ -799,6 +1266,7 @@
 8027a834:PSMTXScale
 8027a85c:PSMTXScaleApply
 8027afac:C_MTXOrtho
+8027b4fc:PSVECSquareDistance
 // more
 
 // dvd.a
@@ -843,6 +1311,8 @@
 802901f8:GXSetCullMode
 802912f4:GXSetNumChans
 80291318:GXSetChanCtrl
+802915a0:GXInitTexObj
+802917f4:GXInitTexObjLOD
 802929d4:GXSetTevOp
 80292e10:GXSetAlphaCompare
 80292ed4:GXSetTevOrder
@@ -927,6 +1397,7 @@
 
 // tpl.c
 802e30ec:TPLBind
+802e3220:TPLGetGXTexObjFromPalette
 // more
 
 /* Rel */
@@ -940,11 +1411,46 @@
 //   80cf5180 5 .data
 //   80f64340 6 .bss
 
+// relocatable_module.c
+1,1,3e798:_prolog
+//more
+
 // machi.c
 1,1,52e4:evt_machi_set_elv_descs
+1,5,1feac:mac_06_pure_heart_return_evt
 // more
 
-//sp4_13.c
+// he1_01.c
+// data
+1,5,3aa88:he1_01_tippi_tutorial_evt
+// more
+
+// mi4.c
+1,1,cac4:mi4MimiHolographicEffect
+
+// ta3_02.c
+1,5,85b00:ta3_02_tree_block_trigger
+// more
+
+// ta4_01.c
+// data
+1,5,88f7c:ta4_01_lock_open_evt
+
+// ta4_02.c
+// data
+1,5,896f8:ta4_02_chest_open_evt
+
+// aa1_01.c 
+// data
+1,5,154820:aa1_01_mario_house_transition_evt
+
+
+// bos_01.c 
+// data
+1,1,38c9c:evt_bos_01_pure_heart_set_pos
+1,1,38d48:evt_bos_01_pure_heart_get_pos
+
+// sp4_13.c
 // text
 1,1,16854:spReturnAngryAnimPos
 1,1,16a08:func_80c5c304
@@ -962,6 +1468,7 @@
 // text
 1,1,2700c:func_80c6c908
 1,1,27050:rpgHandleMenu
+1,1,273D0:func_80c6cccc
 1,1,27590:rpg_screen_draw
 1,1,27c88:evt_rpg_npctribe_handle
 1,1,27f80:evt_rpg_change_menu_flag
@@ -999,13 +1506,18 @@
 1,5,fe150:final_rpg_child_evt
 1,5,fe1cc:begin_rpg_parent_evt
 // bss
-1,6,1320:an2_08_wp
+1,6,1320:rpgdrv_wp
 
-//an.c
+// an.c
 1,1,319ac:evt_an_init_tpl
 1,1,31bc8:evt_an_darkness_onoff
 1,1,31cb4:evt_an_remove_npcs
 // more
+
+// ls3_12.c
+// data
+1,5,137ff0:ls3_12_blk_hit
+1,5,138200:ls3_12_dimentio_intro
 
 // dan.c
 // text
@@ -1036,20 +1548,20 @@
 1,1,3e670:func_80c83f6c
 // data
 1,5,15ad78:danMapParts
-1,5,15adb8:danDokanDescs
-1,5,15aeb8:danMapDoorDescs
-1,5,15aef8:danFlipsideLockItems
-1,5,15af00:danFlopsideLockItems
+1,5,15adb8:dan_dokanDescs
+1,5,15aeb8:dan_mapDoorDescs
+1,5,15aef8:dan_flipsideLockItems
+1,5,15af00:dan_flopsideLockItems
 1,5,15af08:dan_lock_interact_evt
 1,5,15afe0:dan_lock_open_evt
 1,5,15b018:dan_enemy_room_init_evt
-1,5,15b3e0:danChestRoomDokanDesc
-1,5,15b400:danChestRoomMapDoorDescs
+1,5,15b3e0:dan_chestRoomDokanDesc
+1,5,15b400:dan_chestRoomMapDoorDescs
 1,5,15b440:dan_exit_pipe_sign_interact_evt
 1,5,15b478:dan_chest_open_evt
 1,5,15b5b0:rotenShopItems
-1,5,15b6c8:rotenShopDef
-1,5,15b6e0:rotenTribeAnimDefs
+1,5,15b6c8:dan_rotenShopDef
+1,5,15b6e0:dan_rotenTribeAnimDefs
 1,5,15b720:dan_chest_room_init_evt
 1,5,15bf68:dan_30_map_door_desc
 1,5,15bf88:dan_30_dokan_desc
@@ -1077,6 +1589,16 @@
 1,5,1606c8:dan_start_shadoo_evt
 // bss
 1,6,1548:dan_wp
+
+// evt_item.c
+800277fc:evt_item_spawn_thunder
+80025700:evt_item_event_free_work
+800ecc84:evt_item_entry
+800ecda0:evt_item_set_position
+800ece50:evt_item_get_position
+800eced8:evt_item_flag_onoff
+800ed12c:evt_item_wait_collected
+800ed0bc:evt_item_set_scale
 
 // wa1_02.c
 1,5,d2820:sammerDefsCh6

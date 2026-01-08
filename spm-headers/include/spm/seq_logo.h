@@ -30,6 +30,6 @@ DECOMP_STATIC(SeqLogoWork * seq_logo_wp)
 void seq_logoInit(SeqWork * work);
 void seq_logoMain(SeqWork * work);
 void seq_logoExit(SeqWork * work);
-UNKNOWN_FUNCTION(seq_logoDisp);
+UNKNOWN_FUNCTION(seq_logoDisp)
 
 CPP_WRAPPER_END()

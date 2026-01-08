@@ -60,15 +60,15 @@ ItemWork * itemGetWork();
 void itemInit();
 void itemReInit();
 
-UNKNOWN_FUNCTION(func_80077724);
+UNKNOWN_FUNCTION(func_80077724)
 
 /*
     Handles the effect on the player and sound effects of picking up an item
 */
 void itemHandlePickupEffect(Vec3 * itemPos, s32 itemType);
 
-UNKNOWN_FUNCTION(func_80077c48);
-UNKNOWN_FUNCTION(func_80077c90);
+UNKNOWN_FUNCTION(func_80077c48)
+UNKNOWN_FUNCTION(func_80077c90)
 
 /*
     Updates items
@@ -92,13 +92,13 @@ void itemDelete(const char * name);
 */
 ItemEntry * itemNameToPtr(const char * name);
 
-UNKNOWN_FUNCTION(func_80079468);
-UNKNOWN_FUNCTION(func_800795b8);
-UNKNOWN_FUNCTION(func_80079814);
-UNKNOWN_FUNCTION(func_80079df4);
-UNKNOWN_FUNCTION(func_8007a2e0);
-UNKNOWN_FUNCTION(func_8007a598);
-UNKNOWN_FUNCTION(func_8007a758);
+UNKNOWN_FUNCTION(func_80079468)
+UNKNOWN_FUNCTION(func_800795b8)
+UNKNOWN_FUNCTION(func_80079814)
+UNKNOWN_FUNCTION(func_80079df4)
+UNKNOWN_FUNCTION(func_8007a2e0)
+UNKNOWN_FUNCTION(func_8007a598)
+UNKNOWN_FUNCTION(func_8007a758)
 
 /*
     Handles most of the pickup behaviour for items (deletion, xp, switchNumber etc),
@@ -106,7 +106,7 @@ UNKNOWN_FUNCTION(func_8007a758);
 */
 s32 itemCollect(s32 entryId, ItemEntry * entry);
 
-UNKNOWN_FUNCTION(func_8007bc2c);
+UNKNOWN_FUNCTION(func_8007bc2c)
 
 /*
     Converts an item type name to the id for that item type
@@ -118,23 +118,23 @@ UNKNOWN_FUNCTION(func_8007bc2c);
 */
 s32 itemTypeNameToId(const char * typeNmae);
 
-UNKNOWN_FUNCTION(func_8007be24);
-UNKNOWN_FUNCTION(func_8007bee4);
-UNKNOWN_FUNCTION(func_8007c3b8);
-UNKNOWN_FUNCTION(func_8007c8ec);
-UNKNOWN_FUNCTION(func_8007ce34);
-UNKNOWN_FUNCTION(func_8007cfc0);
-UNKNOWN_FUNCTION(func_8007d1f4);
-UNKNOWN_FUNCTION(func_8007d454);
-UNKNOWN_FUNCTION(func_8007d568);
-UNKNOWN_FUNCTION(func_8007d684);
+UNKNOWN_FUNCTION(func_8007be24)
+UNKNOWN_FUNCTION(func_8007bee4)
+UNKNOWN_FUNCTION(func_8007c3b8)
+UNKNOWN_FUNCTION(func_8007c8ec)
+UNKNOWN_FUNCTION(func_8007ce34)
+UNKNOWN_FUNCTION(func_8007cfc0)
+UNKNOWN_FUNCTION(func_8007d1f4)
+UNKNOWN_FUNCTION(func_8007d454)
+UNKNOWN_FUNCTION(func_8007d568)
+UNKNOWN_FUNCTION(func_8007d684)
 
 /*
     Sets the current animation of an item
 */
-void itemSetAnim(char * itemName,char * animName);
+void itemSetAnim(const char * itemName, const char * animName);
 
-UNKNOWN_FUNCTION(func_8007d868);
+UNKNOWN_FUNCTION(func_8007d868)
 
 /*
     Checks for the existence of any items in the world with
@@ -142,11 +142,11 @@ UNKNOWN_FUNCTION(func_8007d868);
 */
 bool itemCheckForId(s32 typeId);
 
-UNKNOWN_FUNCTION(func_8007d8fc);
-UNKNOWN_FUNCTION(func_8007dc24);
-UNKNOWN_FUNCTION(func_8007dd50);
-UNKNOWN_FUNCTION(func_8007dd60);
-UNKNOWN_FUNCTION(func_8007de50);
-UNKNOWN_FUNCTION(func_8007e0e4);
+UNKNOWN_FUNCTION(func_8007d8fc)
+UNKNOWN_FUNCTION(func_8007dc24)
+UNKNOWN_FUNCTION(func_8007dd50)
+UNKNOWN_FUNCTION(func_8007dd60)
+UNKNOWN_FUNCTION(func_8007de50)
+UNKNOWN_FUNCTION(func_8007e0e4)
 
 CPP_WRAPPER_END()

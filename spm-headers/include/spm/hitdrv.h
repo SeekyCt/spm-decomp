@@ -123,25 +123,25 @@ void hitReCalcMatrix(HitObj *, Unk);
 void hitReCalcMatrix2(HitObj *, Mtx34 *, bool);
 void hitCalcVtxPosition(HitObj *);
 
-UNKNOWN_FUNCTION(func_8006da4c);
-UNKNOWN_FUNCTION(func_8006debc);
-UNKNOWN_FUNCTION(func_8006e160);
-UNKNOWN_FUNCTION(func_8006e400);
+UNKNOWN_FUNCTION(func_8006da4c)
+UNKNOWN_FUNCTION(func_8006debc)
+UNKNOWN_FUNCTION(func_8006e160)
+UNKNOWN_FUNCTION(func_8006e400)
 
-UNKNOWN_FUNCTION(hitCheckVecFilter);
+UNKNOWN_FUNCTION(hitCheckVecFilter)
 bool hitCheckFilter(f32, f32, f32, f32, f32, f32, void *, f32 *, f32 *,
                     f32 *, f32 *, f32 *, f32 *, f32 *);
 
-UNKNOWN_FUNCTION(func_8006ef1c);
+UNKNOWN_FUNCTION(func_8006ef1c)
 
-UNKNOWN_FUNCTION(chkFilterAttr);
-UNKNOWN_FUNCTION(hitCheckAttr);
+UNKNOWN_FUNCTION(chkFilterAttr)
+UNKNOWN_FUNCTION(hitCheckAttr)
 
-UNKNOWN_FUNCTION(func_8006f128);
-UNKNOWN_FUNCTION(func_8006f47c);
-UNKNOWN_FUNCTION(func_8006f710);
-UNKNOWN_FUNCTION(func_8006f7cc);
-UNKNOWN_FUNCTION(func_8006f884);
+UNKNOWN_FUNCTION(func_8006f128)
+UNKNOWN_FUNCTION(func_8006f47c)
+UNKNOWN_FUNCTION(func_8006f710)
+UNKNOWN_FUNCTION(func_8006f7cc)
+UNKNOWN_FUNCTION(func_8006f884)
 
 /*
     Gets a HitObj by name / a string anwyhere in its name
@@ -165,8 +165,8 @@ void hitObjGetNormal(const char * name, Vec3 * normalOut);
 */
 void hitGetMapEntryBbox(s32 mapEntryIdx, Vec3 * minOut, Vec3 * maxOut);
 
-UNKNOWN_FUNCTION(func_8007058c);
-UNKNOWN_FUNCTION(func_80070790);
+UNKNOWN_FUNCTION(func_8007058c)
+UNKNOWN_FUNCTION(func_80070790)
 
 /*
     Gets the name of a HitObj's joint
@@ -186,9 +186,8 @@ void hitBindMapObj(const char * hitName, const char * mapObjName);
 void hitBindUpdate();
 void hitCheckVecFilter2();
 
-UNKNOWN_FUNCTION(func_800710b4);
-UNKNOWN_FUNCTION(func_800717d8);
-UNKNOWN_FUNCTION(func_80071f44);
+UNKNOWN_FUNCTION(func_800710b4)
+UNKNOWN_FUNCTION(func_800717d8)
+UNKNOWN_FUNCTION(func_80071f44)
 
 CPP_WRAPPER_END()
-

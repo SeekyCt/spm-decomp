@@ -265,11 +265,11 @@ DECOMP_STATIC(MapWork * mapdrv_wp)
         0 - MapObj
         1 - HitObj
 */
-void mapErrorEntry(s32 type, char * elementName);
+void mapErrorEntry(s32 type, const char * elementName);
 
-UNKNOWN_FUNCTION(func_8007ecc4);
-UNKNOWN_FUNCTION(func_8007ee24);
-UNKNOWN_FUNCTION(func_8007eff0);
+UNKNOWN_FUNCTION(func_8007ecc4)
+UNKNOWN_FUNCTION(func_8007ee24)
+UNKNOWN_FUNCTION(func_8007eff0)
 
 /*
     Hides/unhides the map
@@ -324,7 +324,7 @@ MapObj * mapEntrySub(MapFileJoint * joint, MapObj * parent, Mtx34 * mtx, bool is
 */
 DECOMP_STATIC(void mapdrv_makeDisplayList(s32 mapEntryId))
 
-UNKNOWN_FUNCTION(func_800808f0);
+UNKNOWN_FUNCTION(func_800808f0)
 
 /*
     Gets a MapAnimObj by name
@@ -385,13 +385,13 @@ void mapUnload();
 */
 void mapLoad(const char * name);
 
-UNKNOWN_FUNCTION(func_80083aa4);
+UNKNOWN_FUNCTION(func_80083aa4)
 
 void mapCalcAnimMatrix(Mtx34 * dest, Mtx34 * parentMtx, MapAnimObj * obj, MapFileMeshTrack * track);
 
-UNKNOWN_FUNCTION(func_80083eb4);
-UNKNOWN_FUNCTION(func_80084098);
-UNKNOWN_FUNCTION(func_80084274);
+UNKNOWN_FUNCTION(func_80083eb4)
+UNKNOWN_FUNCTION(func_80084098)
+UNKNOWN_FUNCTION(func_80084274)
 
 void mapReCalcMatrix(MapObj * mapObj, Mtx34 * dest, bool includeRoot);
 
@@ -432,22 +432,22 @@ void mapDispMapGrp_bbox(s8 cameraId, void * param);
 void mapDisp();
 
 void mapSetLight(MapObj *, Unk);
-UNKNOWN_FUNCTION(mapSetMaterialTev);
-UNKNOWN_FUNCTION(mapSetMaterialLastStageBlend);
-UNKNOWN_FUNCTION(mapSetMaterialFog);
-UNKNOWN_FUNCTION(mapSetMaterialFogMapObj);
-UNKNOWN_FUNCTION(mapSetTextureMatrix);
-UNKNOWN_FUNCTION(mapSetMaterial);
+UNKNOWN_FUNCTION(mapSetMaterialTev)
+UNKNOWN_FUNCTION(mapSetMaterialLastStageBlend)
+UNKNOWN_FUNCTION(mapSetMaterialFog)
+UNKNOWN_FUNCTION(mapSetMaterialFogMapObj)
+UNKNOWN_FUNCTION(mapSetTextureMatrix)
+UNKNOWN_FUNCTION(mapSetMaterial)
 void mapSetPaperAmbColor(GXColor * colour);
-UNKNOWN_FUNCTION(mapResetPaperAmbColor);
-UNKNOWN_FUNCTION(mapSetMaterialLight);
-UNKNOWN_FUNCTION(mapSetPolygon);
-UNKNOWN_FUNCTION(mapSetPolygonVtxDesc);
+UNKNOWN_FUNCTION(mapResetPaperAmbColor)
+UNKNOWN_FUNCTION(mapSetMaterialLight)
+UNKNOWN_FUNCTION(mapSetPolygon)
+UNKNOWN_FUNCTION(mapSetPolygonVtxDesc)
 
-UNKNOWN_FUNCTION(func_8008b4c8);
+UNKNOWN_FUNCTION(func_8008b4c8)
 
 MapFileJoint * mapSearchDmdJointSub(MapFileJoint * joint, const char * name);
-UNKNOWN_FUNCTION(mapSearchDmdJointSub2);
+UNKNOWN_FUNCTION(mapSearchDmdJointSub2)
 Unk * mapSearchDmdMaterial(const char * name);
 
 /*
@@ -514,8 +514,8 @@ void mapObjScale(const char * objName, f32 x, f32 y, f32 z);
 void mapObjGetPosSub(MapObj * obj, Vec3 * posOut, s32 * countOut, bool allowSiblings);
 void mapObjGetPos(const char * name, Vec3 * posOut);
 
-UNKNOWN_FUNCTION(func_800900cc);
-UNKNOWN_FUNCTION(func_80090270);
+UNKNOWN_FUNCTION(func_800900cc)
+UNKNOWN_FUNCTION(func_80090270)
 
 /*
     Sets the fog parameters for a map group
@@ -554,8 +554,8 @@ void mapObjSetColor(const char * name, GXColor * colour);
 DECOMP_STATIC(void mapdrv_setColor(MapObj * obj, GXColor * colour, bool allowSiblings))
 void mapGrpSetColor(const char * name, GXColor * colour);
 
-UNKNOWN_FUNCTION(spline_maketable);
-UNKNOWN_FUNCTION(spline_getvalue);
+UNKNOWN_FUNCTION(spline_maketable)
+UNKNOWN_FUNCTION(spline_getvalue)
 
 /*
     Applies relocations to a map.dat file and generates its context
@@ -563,6 +563,6 @@ UNKNOWN_FUNCTION(spline_getvalue);
 */
 s32 Locate(MapFileContext * outCtx, void * mapDat, u32 mapDatSize);
 
-UNKNOWN_FUNCTION(mapTextXLU);
+UNKNOWN_FUNCTION(mapTextXLU)
 
 CPP_WRAPPER_END()

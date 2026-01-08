@@ -2,6 +2,7 @@
     setup_data defines the structure of the dat files in "./setup/"
     and handles the item-spawning side of them
 */
+#pragma once
 
 #include <common.h>
 #include <wii/mtx.h>

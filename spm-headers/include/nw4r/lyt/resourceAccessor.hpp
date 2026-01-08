@@ -11,7 +11,7 @@ public:
     ResourceAccessor();
     virtual ~ResourceAccessor();
     virtual void * GetResource(u32 type, const char * name, u32 * sizeOut);
-    virtual UNKNOWN_FUNCTION(GetFont);
+    virtual UNKNOWN_FUNCTION(GetFont)
 };
 SIZE_ASSERT(ResourceAccessor, 0x4)
 

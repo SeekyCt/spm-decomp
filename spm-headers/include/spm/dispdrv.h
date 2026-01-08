@@ -66,6 +66,6 @@ f32 dispCalcZ(f32 param_1);
 */
 DispEntry * dispGetCurWork();
 
-UNKNOWN_FUNCTION(func_8005b52c);
+UNKNOWN_FUNCTION(func_8005b52c)
 
 CPP_WRAPPER_END()

@@ -34,13 +34,13 @@ DECOMP_STATIC(char __OSUnhandledException_msg2[])
 DECOMP_STATIC(char __OSUnhandledException_msg3[])
 
 ATTRIBUTE_FORMAT(printf, 1, 2) void OSReport(const char * message, ...);
-UNKNOWN_FUNCTION(OSVReport);
+UNKNOWN_FUNCTION(OSVReport)
 
 // Weak symbol, game overrides with its own
 ATTRIBUTE_FORMAT(printf, 3, 4) void OSPanic(const char * filename, s32 line,
                                             const char * msg, ...);
 
-UNKNOWN_FUNCTION(OSSetErrorHandler);
+UNKNOWN_FUNCTION(OSSetErrorHandler)
 void __OSUnhandledException(u8 exception, OSContext* context, u32 dsisr, u32 dar);
 
 CPP_WRAPPER_END()

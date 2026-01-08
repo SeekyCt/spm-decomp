@@ -89,7 +89,8 @@ typedef struct _PausewinEntry
 /* 0x4C */ s32 curMsgLine;
 /* 0x50 */ s32 msgWidth;
 /* 0x54 */ const char * msg;
-/* 0x58 */ u8 unknown_0x58[0x64 - 0x58];
+/* 0x58 */ f32 unk_float;
+/* 0x5C */ s32 userWork[2];
 /* 0x5C */ PausewinFunc * initFunc;
 /* 0x60 */ PausewinFunc * mainFunc;
 /* 0x64 */ PausewinFunc * dispFunc;
@@ -149,21 +150,22 @@ SIZE_ASSERT(PluswinWork, 0x1b8)
 
 DECOMP_STATIC(PluswinWork * pausewin_pluswinWp)
 DECOMP_STATIC(PausewinWork * pausewin_wp)
+DECOMP_STATIC(char pausewinCardDescBuf[512])
 
-UNKNOWN_FUNCTION(pausewinGetEntry);
-UNKNOWN_FUNCTION(pausewinGetTpl);
+UNKNOWN_FUNCTION(pausewinGetEntry)
+UNKNOWN_FUNCTION(pausewinGetTpl)
 void pausewinInit();
-UNKNOWN_FUNCTION(pausewinReInit);
-UNKNOWN_FUNCTION(pausewinGetOpenButtonMask);
-UNKNOWN_FUNCTION(pausewinCheckMoveUp);
-UNKNOWN_FUNCTION(pausewinCheckMoveDown);
-UNKNOWN_FUNCTION(pausewinCheckMoveLeft);
-UNKNOWN_FUNCTION(pausewinCheckMoveRight);
-UNKNOWN_FUNCTION(pausewinCheckPressOk);
-UNKNOWN_FUNCTION(pausewinCheckPressBack);
+UNKNOWN_FUNCTION(pausewinReInit)
+UNKNOWN_FUNCTION(pausewinGetOpenButtonMask)
+UNKNOWN_FUNCTION(pausewinCheckMoveUp)
+UNKNOWN_FUNCTION(pausewinCheckMoveDown)
+UNKNOWN_FUNCTION(pausewinCheckMoveLeft)
+UNKNOWN_FUNCTION(pausewinCheckMoveRight)
+UNKNOWN_FUNCTION(pausewinCheckPressOk)
+UNKNOWN_FUNCTION(pausewinCheckPressBack)
 void pausewinMain();
-UNKNOWN_FUNCTION(pausewinDisp);
-UNKNOWN_FUNCTION(pausewinEntryDisp);
+UNKNOWN_FUNCTION(pausewinDisp)
+UNKNOWN_FUNCTION(pausewinEntryDisp)
 s32 pausewinEntry(f32 x, f32 y, f32 width, f32 height, bool boxOnly, s32 textureId,
                   s32 priority, PausewinFunc * initFunc, PausewinFunc * mainFunc,
                   PausewinFunc * dispFunc, PausewinFunc * lateDispFunc, PausewinFunc * deleteFunc);
@@ -171,89 +173,91 @@ void pausewinMoveTo(s32 id, f32 x, f32 y);
 void pausewinAppear(s32 id);
 void pausewinDisappear(s32 id);
 void pausewinDelete(s32 id);
-UNKNOWN_FUNCTION(pausewinGoNeutral);
-UNKNOWN_FUNCTION(pausewinHide);
-UNKNOWN_FUNCTION(pausewinCheckVisible);
-UNKNOWN_FUNCTION(_pausewinDelete);
+UNKNOWN_FUNCTION(pausewinGoNeutral)
+UNKNOWN_FUNCTION(pausewinHide)
+UNKNOWN_FUNCTION(pausewinCheckVisible)
+UNKNOWN_FUNCTION(_pausewinDelete)
 void pausewinPauseGame();
 void pausewinUnpauseGame();
-UNKNOWN_FUNCTION(pausewinUpdate);
-UNKNOWN_FUNCTION(pausewinNumberToString);
-UNKNOWN_FUNCTION(pausewinCheckHavePixls);
-UNKNOWN_FUNCTION(pausewinCheckHaveCards);
-UNKNOWN_FUNCTION(pausewinCheckHaveRecipes);
-UNKNOWN_FUNCTION(pausewinCheckHaveMaps);
-UNKNOWN_FUNCTION(pluswinStubButtonCheck);
-UNKNOWN_FUNCTION(pluswinOpen);
-UNKNOWN_FUNCTION(pluswinClose);
-UNKNOWN_FUNCTION(pluswinCloseFromSubmenu);
-UNKNOWN_FUNCTION(pluswinMain);
-UNKNOWN_FUNCTION(pluswinCursorDisp);
-UNKNOWN_FUNCTION(pluswinStatsDisp);
-UNKNOWN_FUNCTION(pluswinBgDispSub);
-UNKNOWN_FUNCTION(pluswinBgDisp);
-UNKNOWN_FUNCTION(pausewinMsgBoxInit);
-UNKNOWN_FUNCTION(pausewinMsgBoxMain);
-UNKNOWN_FUNCTION(pausewinMsgBoxDisp);
-UNKNOWN_FUNCTION(pausewinMsgBoxDelete);
+UNKNOWN_FUNCTION(pausewinUpdate)
+UNKNOWN_FUNCTION(pausewinNumberToString)
+UNKNOWN_FUNCTION(pausewinCheckHavePixls)
+UNKNOWN_FUNCTION(pausewinCheckHaveCards)
+UNKNOWN_FUNCTION(pausewinCheckHaveRecipes)
+UNKNOWN_FUNCTION(pausewinCheckHaveMaps)
+UNKNOWN_FUNCTION(pluswinStubButtonCheck)
+UNKNOWN_FUNCTION(pluswinOpen)
+UNKNOWN_FUNCTION(pluswinClose)
+UNKNOWN_FUNCTION(pluswinCloseFromSubmenu)
+UNKNOWN_FUNCTION(pluswinMain)
+UNKNOWN_FUNCTION(pluswinCursorDisp)
+UNKNOWN_FUNCTION(pluswinStatsDisp)
+UNKNOWN_FUNCTION(pluswinBgDispSub)
+UNKNOWN_FUNCTION(pluswinBgDisp)
+UNKNOWN_FUNCTION(pausewinMsgBoxInit)
+UNKNOWN_FUNCTION(pausewinMsgBoxMain)
+UNKNOWN_FUNCTION(pausewinMsgBoxDisp)
+UNKNOWN_FUNCTION(pausewinMsgBoxDelete)
 void pausewinSetMessage(PausewinEntry * entry, s32 itemId, const char * msgName);
-UNKNOWN_FUNCTION(pausewinSetMessageCard);
-UNKNOWN_FUNCTION(pluswinKeyItemWinOpen);
-UNKNOWN_FUNCTION(pluswinKeyItemMain);
-UNKNOWN_FUNCTION(pluswinKeyItemDisp);
-UNKNOWN_FUNCTION(evt_pluswin_select_return_pipe);
-UNKNOWN_FUNCTION(evt_pluswin_get_return_pipe_msg);
-UNKNOWN_FUNCTION(pluswinCheckChapterUnlocked);
+void pausewinSetMessageCard(PausewinEntry * entry, s32 itemId);
+UNKNOWN_FUNCTION(pluswinKeyItemWinOpen)
+void pluswinKeyItemMain(PausewinEntry * entry);
+UNKNOWN_FUNCTION(pluswinKeyItemDisp)
+UNKNOWN_FUNCTION(evt_pluswin_select_return_pipe)
+UNKNOWN_FUNCTION(evt_pluswin_get_return_pipe_msg)
+UNKNOWN_FUNCTION(pluswinCheckChapterUnlocked)
 void pluswinChapterWinOpen();
-UNKNOWN_FUNCTION(pluswinCloseChapters);
-UNKNOWN_FUNCTION(pluswinIsChapter1Unlocked);
-UNKNOWN_FUNCTION(pluswinIsChapter2Unlocked);
-UNKNOWN_FUNCTION(pluswinIsChapter3Unlocked);
-UNKNOWN_FUNCTION(pluswinIsChapter4Unlocked);
-UNKNOWN_FUNCTION(pluswinIsChapter5Unlocked);
-UNKNOWN_FUNCTION(pluswinIsChapter6Unlocked);
-UNKNOWN_FUNCTION(pluswinIsChapter7Unlocked);
-UNKNOWN_FUNCTION(pluswinIsChapter8Unlocked);
-UNKNOWN_FUNCTION(pluswinChapterCtrlMain);
-UNKNOWN_FUNCTION(pluswinChapterCtrlDisp);
-UNKNOWN_FUNCTION(pluswinChapterLevelDisp);
-UNKNOWN_FUNCTION(pluswinChapterLevelPreviewDisp);
-UNKNOWN_FUNCTION(pluswinChapterButtonDisp);
-UNKNOWN_FUNCTION(pluswinChapterTitleDisp);
-UNKNOWN_FUNCTION(func_8018c7dc);
-UNKNOWN_FUNCTION(func_8018c85c);
-UNKNOWN_FUNCTION(func_8018c8dc);
-UNKNOWN_FUNCTION(func_8018c95c);
-UNKNOWN_FUNCTION(pluswinCardsWinOpen);
-UNKNOWN_FUNCTION(func_8018cf18);
-UNKNOWN_FUNCTION(func_8018d1ac);
-UNKNOWN_FUNCTION(pluswinCardBgMain);
-UNKNOWN_FUNCTION(pluswinCardBgDisp);
-UNKNOWN_FUNCTION(func_8018e9cc);
-UNKNOWN_FUNCTION(func_8018ea4c);
-UNKNOWN_FUNCTION(pluswinCardCtrlDisp);
-UNKNOWN_FUNCTION(func_8018f200);
-UNKNOWN_FUNCTION(pluswinRecipesWinOpen);
-UNKNOWN_FUNCTION(func_801901b0);
-UNKNOWN_FUNCTION(func_80190444);
-UNKNOWN_FUNCTION(func_80190eb8);
-UNKNOWN_FUNCTION(func_80191128);
-UNKNOWN_FUNCTION(func_80191350);
-UNKNOWN_FUNCTION(pluswinMapsWinOpen);
-UNKNOWN_FUNCTION(func_80191ac0);
-UNKNOWN_FUNCTION(func_80191d54);
-UNKNOWN_FUNCTION(func_80192a98);
-UNKNOWN_FUNCTION(func_80192d78);
-UNKNOWN_FUNCTION(func_8019345c);
-UNKNOWN_FUNCTION(func_80193498);
-UNKNOWN_FUNCTION(func_801936b8);
-UNKNOWN_FUNCTION(func_80193860);
-UNKNOWN_FUNCTION(func_80193874);
-UNKNOWN_FUNCTION(func_80193888);
-UNKNOWN_FUNCTION(func_80193a04);
-UNKNOWN_FUNCTION(minuswinOpen);
-UNKNOWN_FUNCTION(minuswinDisp);
-UNKNOWN_FUNCTION(minuswinMain);
-UNKNOWN_FUNCTION(func_801950f8);
+UNKNOWN_FUNCTION(pluswinCloseChapters)
+UNKNOWN_FUNCTION(pluswinIsChapter1Unlocked)
+UNKNOWN_FUNCTION(pluswinIsChapter2Unlocked)
+UNKNOWN_FUNCTION(pluswinIsChapter3Unlocked)
+UNKNOWN_FUNCTION(pluswinIsChapter4Unlocked)
+UNKNOWN_FUNCTION(pluswinIsChapter5Unlocked)
+UNKNOWN_FUNCTION(pluswinIsChapter6Unlocked)
+UNKNOWN_FUNCTION(pluswinIsChapter7Unlocked)
+UNKNOWN_FUNCTION(pluswinIsChapter8Unlocked)
+UNKNOWN_FUNCTION(pluswinChapterCtrlMain)
+UNKNOWN_FUNCTION(pluswinChapterCtrlDisp)
+UNKNOWN_FUNCTION(pluswinChapterLevelDisp)
+UNKNOWN_FUNCTION(pluswinChapterLevelPreviewDisp)
+UNKNOWN_FUNCTION(pluswinChapterButtonDisp)
+UNKNOWN_FUNCTION(pluswinChapterTitleDisp)
+UNKNOWN_FUNCTION(func_8018c7dc)
+UNKNOWN_FUNCTION(func_8018c85c)
+UNKNOWN_FUNCTION(func_8018c8dc)
+UNKNOWN_FUNCTION(func_8018c95c)
+UNKNOWN_FUNCTION(pluswinCardsWinOpen)
+UNKNOWN_FUNCTION(func_8018cf18)
+UNKNOWN_FUNCTION(func_8018d1ac)
+UNKNOWN_FUNCTION(pluswinCardBgMain)
+UNKNOWN_FUNCTION(pluswinCardBgDisp)
+UNKNOWN_FUNCTION(func_8018e9cc)
+UNKNOWN_FUNCTION(func_8018ea4c)
+UNKNOWN_FUNCTION(pluswinCardCtrlDisp)
+UNKNOWN_FUNCTION(func_8018f200)
+UNKNOWN_FUNCTION(pluswinRecipesWinOpen)
+UNKNOWN_FUNCTION(func_801901b0)
+UNKNOWN_FUNCTION(func_80190444)
+UNKNOWN_FUNCTION(func_80190eb8)
+UNKNOWN_FUNCTION(func_80191128)
+UNKNOWN_FUNCTION(func_80191350)
+UNKNOWN_FUNCTION(pluswinMapsWinOpen)
+UNKNOWN_FUNCTION(func_80191ac0)
+UNKNOWN_FUNCTION(func_80191d54)
+UNKNOWN_FUNCTION(func_80192a98)
+UNKNOWN_FUNCTION(func_80192d78)
+UNKNOWN_FUNCTION(func_8019345c)
+UNKNOWN_FUNCTION(func_80193498)
+UNKNOWN_FUNCTION(func_801936b8)
+UNKNOWN_FUNCTION(func_80193860)
+UNKNOWN_FUNCTION(func_80193874)
+UNKNOWN_FUNCTION(func_80193888)
+UNKNOWN_FUNCTION(func_80193a04)
+UNKNOWN_FUNCTION(minuswinOpen)
+UNKNOWN_FUNCTION(minuswinDisp)
+UNKNOWN_FUNCTION(minuswinMain)
+UNKNOWN_FUNCTION(func_801950f8)
+
+void levelUpWindowMain();
 
 CPP_WRAPPER_END()

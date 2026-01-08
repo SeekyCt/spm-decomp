@@ -1,7 +1,7 @@
 #pragma once
 
 // Unknown function declaration
-#define UNKNOWN_FUNCTION(name) void name(void)
+#define UNKNOWN_FUNCTION(name) void name(void);
 
 // Intellisense doesn't like asm compiler extensions
 #if (defined __INTELLISENSE__) || (defined __CLANGD__) 
@@ -54,15 +54,22 @@
 
 // Use extern "C" in C++, use namespacing in mods
 #ifdef __cplusplus
-    #ifndef DECOMP
+    #ifdef DECOMP
         #define CPP_WRAPPER(ns) \
+            extern "C" {
+        #define CPP_WRAPPER_END() }
+    #elif defined RELAX_NAMESPACING
+        #define CPP_WRAPPER(ns) \
+            namespace ns {} \
+            using namespace ns; \
             namespace ns { \
             extern "C" {
         #define CPP_WRAPPER_END() }}
     #else
         #define CPP_WRAPPER(ns) \
+            namespace ns { \
             extern "C" {
-        #define CPP_WRAPPER_END() }
+        #define CPP_WRAPPER_END() }}
     #endif
 #else
     #define CPP_WRAPPER(ns)

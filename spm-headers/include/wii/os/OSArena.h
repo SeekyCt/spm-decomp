@@ -16,6 +16,6 @@ void OSSetArenaHi(void * arenaHi);
 void OSSetMEM1ArenaLo(void * arenaLo);
 void OSSetMEM2ArenaLo(void * arenaLo);
 void OSSetArenaLo(void * arenaLo);
-UNKNOWN_FUNCTION(OSAllocFromMEM1ArenaLo);
+UNKNOWN_FUNCTION(OSAllocFromMEM1ArenaLo)
 
 CPP_WRAPPER_END()

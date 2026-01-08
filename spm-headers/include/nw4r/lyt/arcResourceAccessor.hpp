@@ -29,7 +29,7 @@ public:
     }
 
     virtual void * GetResource(u32 type, const char * name, u32 * sizeOut);
-    virtual UNKNOWN_FUNCTION(GetFont);
+    virtual UNKNOWN_FUNCTION(GetFont)
 
     bool Attach(void * file, const char * rootDir);
 

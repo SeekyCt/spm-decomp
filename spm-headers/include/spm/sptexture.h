@@ -5,9 +5,9 @@
 CPP_WRAPPER(spm::sptexture)
 
 void sptextureInit();
-UNKNOWN_FUNCTION(sptextureSetUnusedBool);
+UNKNOWN_FUNCTION(sptextureSetUnusedBool)
 void sptextureMain();
-UNKNOWN_FUNCTION(sptextureGet);
-UNKNOWN_FUNCTION(sptextureIsLoaded);
+UNKNOWN_FUNCTION(sptextureGet)
+UNKNOWN_FUNCTION(sptextureIsLoaded)
 
 CPP_WRAPPER_END()

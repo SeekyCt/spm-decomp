@@ -29,7 +29,8 @@ typedef struct _AcEntry
 /* 0x00 */ u16 flags;
 /* 0x02 */ u8 unknown_0x2[0x4 - 0x2];
 /* 0x04 */ s32 type;
-/* 0x08 */ u8 unknown_0x8[0x10 - 0x8];
+/* 0x08 */ s32 results;
+/* 0x0C */ void * acDefEntry;
 /* 0x10 */ const char * name;
 /* 0x14 */ s32 pausewinEntryId;
 /* 0x18 */ s64 startTime;
@@ -37,7 +38,7 @@ typedef struct _AcEntry
 /* 0x28 */ s32 state;
 /* 0x2C */ AcFunc * initFunc;
 /* 0x30 */ AcFunc * mainFunc;
-/* 0x34 */ AcFunc * deleteFUnc;
+/* 0x34 */ AcFunc * deleteFunc;
 /* 0x38 */ AcDispFunc * dispFunc;
 /* 0x3C */ u8 unknown_0x3c[0x40 - 0x3c];
 } AcEntry;
@@ -76,8 +77,8 @@ void acInit();
 */
 void acReInit();
 
-UNKNOWN_FUNCTION(func_8003ebb8);
-UNKNOWN_FUNCTION(func_8003ec24);
+UNKNOWN_FUNCTION(func_8003ebb8)
+UNKNOWN_FUNCTION(func_8003ec24)
 
 /*
     Updates entries based on their state, calls their mainFuncs and queues their dispFuncs
@@ -125,7 +126,7 @@ void acDelete(AcEntry * entry);
 void acPauseAll();
 void acUnpauseAll();
 
-UNKNOWN_FUNCTION(func_8003f6bc);
+UNKNOWN_FUNCTION(func_8003f6bc)
 
 /*
     Returns whether any entries are in use
@@ -142,9 +143,9 @@ AcEntry * acNameToPtr(const char * name);
 */
 void acMsgDisp(PausewinEntry * entry);
 
-UNKNOWN_FUNCTION(func_8003f934);
-UNKNOWN_FUNCTION(func_8004077c);
-UNKNOWN_FUNCTION(func_80040dac);
-UNKNOWN_FUNCTION(func_80040eb4);
+UNKNOWN_FUNCTION(func_8003f934)
+UNKNOWN_FUNCTION(func_8004077c)
+UNKNOWN_FUNCTION(func_80040dac)
+UNKNOWN_FUNCTION(func_80040eb4)
 
 CPP_WRAPPER_END()

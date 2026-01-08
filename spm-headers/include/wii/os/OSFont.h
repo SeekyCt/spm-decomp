@@ -4,14 +4,14 @@
 
 CPP_WRAPPER(wii::os)
 
-UNKNOWN_FUNCTION(GetFontCode);
-UNKNOWN_FUNCTION(Decode);
+UNKNOWN_FUNCTION(GetFontCode)
+UNKNOWN_FUNCTION(Decode)
 s32 OSGetFontEncode();
-UNKNOWN_FUNCTION(OSSetFontEncode);
-UNKNOWN_FUNCTION(ReadFont);
+UNKNOWN_FUNCTION(OSSetFontEncode)
+UNKNOWN_FUNCTION(ReadFont)
 void OSLoadFont(void * fontHeader, void * temp);
-UNKNOWN_FUNCTION(ParseStringS);
-UNKNOWN_FUNCTION(ParseStringW);
+UNKNOWN_FUNCTION(ParseStringS)
+UNKNOWN_FUNCTION(ParseStringW)
 char * OSGetFontTexel(const char * str, void * image, s32 pos, s32 stride, s32 * width);
 
 CPP_WRAPPER_END()

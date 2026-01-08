@@ -3,7 +3,6 @@
 800030c8:firstRel
 800030cc:lastRel
 
-
 // Automatically generated from spm.eu0.lst
 80004000:memcpy
 80004104:memset
@@ -306,7 +305,7 @@
 801112D8:evt_shop_set_defs
 8014CB04:pouchAddItem
 8014D100:pouchCheckHaveItem
-8017AF90:getNextDanMapname
+8017AF90:getNextDanMapName
 80183F1C:pausewinEntry
 8018438C:pausewinMoveTo
 801843DC:pausewinAppear
@@ -515,7 +514,7 @@
 80129C24:marioTakeDamage
 1,5,fcf54:begin_rpg_parent_evt
 800D3258:evt_snd_get_last_sfx_id
-800D31CC:func_800d2fa4
+800D31CC:evt_snd_sfx_fadeout
 1,1,29620:evt_rpg_calc_damage_to_enemy
 1,1,2c998:evt_rpg_char_death_check
 1,1,2ca30:evt_rpg_status_remove
@@ -609,7 +608,7 @@
 800FFB14:evt_npc_jump_to
 1,1,2c998:evt_rpg_enemy_death_check
 1,5,aa450:evt_door_openable_onoff
-1,6,920:an2_08_wp
+1,6,920:rpgdrv_wp
 1,1,26c80:func_80c6c908
 8014E58C:pouchGetPixlInfo
 8019C0F0:qqsort
@@ -624,6 +623,55 @@
 8003F270:acEntry
 8003F4C0:acReturnResults
 8003F4C8:acDelete
+8028E9D4:GXInitTexObj
+8028EC28:GXInitTexObjLOD
+802E02C8:TPLGetGXTexObjFromPalette
+800725F8:iconEntry
+80073868:iconGX
+800720DC:iconMain
+8004454C:animPoseGetLoopTimes
+800BCA24:damageEffect
+800B5B34:effMapBlockDelEntry
+800C1F5C:effSmallStarEntry
+800DEF88:evtGetFloat
+800E7580:evt_fairy_all_enter_run_mode1
+800E75D4:evt_fairy_all_enter_run_mode2
+800E7F04:evt_fairy_fly_to
+800E8660:evt_fairy_reset
+800E8858:evt_fairy_set_anim
+800E88C4:evt_fairy_wait_anim_end
+800F0BB0:evt_mario_jump_to
+80478188:evt_memcard_save
+800F39E8:evt_mobj_set_rotation
+800F38E0:evt_mobj_set_scale
+801093C0:evt_npc_set_disp_callback
+80109A38:evt_npc_wait_for
+8010BF50:evt_pouch_add_item
+8010C11C:evt_pouch_set_pixl_selected
+801059B0:evt_read_setup_file
+8002EC64:func_8002ed80
+8002EC74:func_8002ed90
+800D88D0:func_800d8700
+800F0FF4:func_800f119c
+800F18A4:func_800f1a4c
+801EF3A8:func_801f0d30
+801EFEF8:func_801f1880
+801F112C:func_801f2af8
+8006B9A8:hitDelete
+805422F0:icondrv_wp
+8018054C:levelUpWindowMain
+80108F20:marioLuigiNpcDispCb
+8002C8E8:mobjCalcMtx
+8002B548:mobjDelete
+8002B274:mobjEntry
+8002EA1C:mobjGetModelName
+8002D524:mobjHitOff
+8002C864:mobjRunEvent
+8002B610:mobjSetPosition
+801B5390:npcEntry
+805424A8:npcdrv_wp
+80109340:oChunksNpcDispCb
+8014EE84:pouchSetEnemiesDefeated
 
 // new to rld3 v1
 8025C158:strcat
@@ -660,6 +708,60 @@
 803BC458:marioMotTbl
 803B7970:saffronCookingScript
 804A3D28:marioStatusApplyStatuses
+80394DF0:default_item_use_evt
+80107D1C:evt_npc_get_active_count
+80102218:evt_npc_restart_evt_id
+800FEF4C:func_800ff8f8
+80107258:func_80107c38
+80104B70:evt_npc_wait_flip_finished
+80104BC4:evt_npc_finish_flip_instant
+80104D28:evt_npc_flip_to
+80104D88:evt_npc_flip
+801E4148:npc_dimeen_l_determine_move_pos
+803EC6D0:dimen_unk_fight_script_1
+803EC720:dimen_unk_fight_script_2
+803EE560:dimen_unk_fight_script_3
+8019B7F4:distABf
+801046AC:evt_npc_get_property
+8021BA28:ninjoe_bomb_calc_chance
+801CA994:npcDamageMario
+805422F0:icondrv_wp
+80478188:evt_memcard_save
+8012A5BC:marioSetInvincibility
+800FBB60:evt_msg_select
+80104F44:evt_npc_get_axis_movement_unit
+800D4934:evt_sub_get_mapname
+800FB6EC:evt_msg_print_insert
+800ECB18:evt_item_entry
+800ECD6C:evt_item_flag_onoff
+800ECFC0:evt_item_wait_collected
+800EFE10:evt_mario_face_npc
+800FAD2C:evt_mobj_save_blk
+801C1058:npcGetMaxEntries
+8010400C:func_801049ec
+8010405C:func_80104a3c
+801068C4:func_801072a4
+80213208:func_802154fc
+80213220:func_80215514
+8021324C:func_80215540
+80213C50:func_80215f44
+80222408:func_80224804
+80222478:func_80224874
+80222F84:func_80225380
+801C5510:npcTakeDamage
+800FE584:evt_npc_set_scale
+801063D4:evt_npc_spawn_sammer_guy
+8021C87C:ninjoe_thoreau_override
+
+// new to SPMMulti
+80179694:seq_mapChangeInit
+801083B8:evt_npc_set_part_attack_power
+801C8F58:func_801ca1a4
+800FFD50:evt_npc_arc_to
+80102488:evt_npc_delete
+80109A38:evt_npc_wait_for
+8010292C:evt_npc_get_cur_anim
+800DEF88:evtGetFloat
 
 // 2023-09-02
 802957E4:IOS_OpenAsync
@@ -679,8 +781,26 @@
 80275378:OSResumeThread
 802580F0:memcmp
 
+// new to april fools 2024
+800E63CC:evt_eff_exclamation_question
+800F1818:evt_mario_wait_anim
+80104FF0:evt_npc_set_axis_movement_unit
+80108A00:evt_npc_wait_axis_movement_unit_end
+803A3EB0:evt_cutscene_pure_heart
+8010C6AC:evt_seq_mapchange
+800E7388:evt_set_transition
+800DA2A4:evt_lbl
+
 // new to v10
 805423F0:seq_load_sub_wp
 805424D0:nandmgr_wp
 80238A9C:spsndSFXOn
 8017C4F0:loadMain
+
+// 2025-09-27
+800677B8:fadeGetMapChangeInTransition
+800677C4:fadeGetMapChangeOutTransition
+800677E4:fadeGetFadeOutLength
+800677F0:fadeGetFadeInLength
+800677FC:fadeSetTransitionLengths
+80542B48:fadedrv_wp

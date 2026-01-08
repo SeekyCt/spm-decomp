@@ -4,3 +4,4 @@ build.ninja
 .vscode
 .cache
 compile_commands.json
+venv

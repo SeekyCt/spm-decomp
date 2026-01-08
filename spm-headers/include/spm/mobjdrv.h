@@ -25,7 +25,7 @@ USING(spm::mapdrv::MapFileJoint)
 USING(wii::mtx::Vec3)
 
 struct _MobjEntry;
-typedef void (MobjUpdateFunc)(struct _MobjEntry * entry);
+typedef s32 (MobjUpdateFunc)(struct _MobjEntry * entry);
 
 typedef struct
 {
@@ -33,6 +33,19 @@ typedef struct
 /* 0x4 */ s32 chance;
 } MobjDropItem;
 SIZE_ASSERT(MobjDropItem, 0x8)
+
+typedef struct
+{
+/* 0x00 */ struct _HitObj * hitObj; 
+/* 0x04 */ char name[16];
+/* 0x14 */ u8 unknown_0x14[0x1c - 0x14];
+    /*
+        MapFileJoint ends in a VLA, so it can't be used directly here
+    */
+/* 0x1C */ u8 joint[sizeof(MapFileJoint)];
+/* 0x84 */ u8 unknown_0x84[0x88 - 0x84];
+} MobjJoint;
+SIZE_ASSERT(MobjJoint, 0x88)
 
 typedef struct _MobjEntry
 {
@@ -50,25 +63,10 @@ typedef struct _MobjEntry
 /* 0x03C */ u8 unknown_0x3c[0x48 - 0x3c];
 /* 0x048 */ s32 animPoseId;
 /* 0x04C */ u8 unknown_0x4c[0x5c - 0x4c];
-    /*
-        These are likely an array of structs, but the exact boundaries are unknown
-        MapFileJoint ends in a VLA, so it can't be used directly here
-    */
-/* 0x05c */ struct _HitObj * joint1_HitObj;
-/* 0x060 */ char joint1_Name[16];
-/* 0x070 */ u8 unknown_0x70[0x78 - 0x70];
-/* 0x078 */ u8 joint1[sizeof(MapFileJoint)];
-/* 0x0E0 */ u8 unknown_0xe0[0xe4 - 0xe0];
-/* 0x0E4 */ struct _HitObj * joint2_HitObj;
-/* 0x0E8 */ char joint2_Name[16];
-/* 0x0F8 */ u8 unknown_0xf8[0x100 - 0xf8];
-/* 0x100 */ u8 joint2[sizeof(MapFileJoint)];
-/* 0x168 */ u8 unknown_0x168[0x16c - 0x168];
-/* 0x16C */ struct _HitObj * joint3_HitObj;
-/* 0x170 */ char joint3_Name[16];
-/* 0x180 */ u8 unknown_0x180[0x188 - 0x180];
-/* 0x188 */ u8 joint3[sizeof(MapFileJoint)];
-/* 0x1F0 */ u8 unknown_0x1f0[0x210 - 0x1f0];
+/* 0x05C */ MobjJoint joints[3];
+/* 0x1F4 */ Vec3 unkScale;
+/* 0x200 */ Vec3 translation;
+/* 0x20C */ u8 unknown_0x20c[0x210 - 0x20c];
 /* 0x210 */ union
             {
                 MobjDropItem * items;
@@ -76,13 +74,17 @@ typedef struct _MobjEntry
             };
 /* 0x214 */ u8 unknown_0x214[0x218 - 0x214];
 /* 0x218 */ ItemEntry * itemEntry;
-/* 0x21C */ u8 unknown_0x21c[0x23c - 0x21c];
+/* 0x21C */ u8 unknown_0x21c[0x230 - 0x21c];
+/* 0x230 */ void * userWork;
+/* 0x234 */ u8 unknown_0x234[0x23c - 0x234];
 /* 0x23C */ s32 evtId; // id of the EvtEntry from mobjRunEvent
 /* 0x240 */ MobjUpdateFunc * updateFunction; // runs every frame in mobjMain
 /* 0x244 */ EvtScriptCode * interactScript; // ran when the player interacts with the object
 /* 0x248 */ EvtScriptCode * afterInteractScript; // usage varies by MOBJ
 /* 0x24C */ s32 state; // values vary by MOBJ
-/* 0x250 */ u8 unknown_0x250[0x2a8 - 0x250];
+/* 0x250 */ s32 unknown_0x250;
+/* 0x254 */ s32 collectedVar;
+/* 0x258 */ u8 unknown_0x258[0x2a8 - 0x258];
 } MobjEntry;
 SIZE_ASSERT(MobjEntry, 0x2a8)
 
@@ -104,15 +106,15 @@ typedef struct
 } MobjWork;
 SIZE_ASSERT(MobjWork, 0x18)
 
-UNKNOWN_FUNCTION(func_800297c0);
-UNKNOWN_FUNCTION(func_80029c34);
-UNKNOWN_FUNCTION(func_80029e50);
-UNKNOWN_FUNCTION(func_8002a03c);
-UNKNOWN_FUNCTION(func_8002a0bc);
-UNKNOWN_FUNCTION(func_8002a150);
-UNKNOWN_FUNCTION(func_8002a1d4);
-UNKNOWN_FUNCTION(func_8002a258);
-UNKNOWN_FUNCTION(func_8002a31c);
+UNKNOWN_FUNCTION(func_800297c0)
+UNKNOWN_FUNCTION(func_80029c34)
+UNKNOWN_FUNCTION(func_80029e50)
+UNKNOWN_FUNCTION(func_8002a03c)
+UNKNOWN_FUNCTION(func_8002a0bc)
+UNKNOWN_FUNCTION(func_8002a150)
+UNKNOWN_FUNCTION(func_8002a1d4)
+UNKNOWN_FUNCTION(func_8002a258)
+UNKNOWN_FUNCTION(func_8002a31c)
 
 /*
     Allocates entries and otherEntries, sets entryCountMax and initialises other unknown data
@@ -167,33 +169,33 @@ EvtEntry * mobjRunEvent(MobjEntry * entry, EvtScriptCode * script);
 void mobjCalcMtx(MobjEntry * entry);
 void mobjCalcMtx2(MobjEntry * entry);
 
-UNKNOWN_FUNCTION(func_8002cf0c);
-UNKNOWN_FUNCTION(func_8002cfcc);
-UNKNOWN_FUNCTION(func_8002d2c0);
-UNKNOWN_FUNCTION(mobjHitOn);
-UNKNOWN_FUNCTION(mobjHitOff);
-UNKNOWN_FUNCTION(func_8002d720);
-UNKNOWN_FUNCTION(func_8002d7d8);
-UNKNOWN_FUNCTION(func_8002d890);
-UNKNOWN_FUNCTION(func_8002d89c);
-UNKNOWN_FUNCTION(func_8002d8a8);
-UNKNOWN_FUNCTION(func_8002d914);
-UNKNOWN_FUNCTION(func_8002d9bc);
-UNKNOWN_FUNCTION(func_8002de94);
-UNKNOWN_FUNCTION(func_8002dfc4);
-UNKNOWN_FUNCTION(func_8002e278);
-UNKNOWN_FUNCTION(func_8002e4c8);
-UNKNOWN_FUNCTION(func_8002e940);
-UNKNOWN_FUNCTION(mobjDropFromCatch);
-UNKNOWN_FUNCTION(func_8002e968);
-UNKNOWN_FUNCTION(func_8002e980);
-UNKNOWN_FUNCTION(func_8002e9bc);
-UNKNOWN_FUNCTION(func_8002ea0c);
-UNKNOWN_FUNCTION(func_8002ea54);
-UNKNOWN_FUNCTION(func_8002eb0c);
-UNKNOWN_FUNCTION(mobjGetModelName);
-UNKNOWN_FUNCTION(func_8002eb60);
-UNKNOWN_FUNCTION(func_8002ed80);
-UNKNOWN_FUNCTION(func_8002ed90);
+UNKNOWN_FUNCTION(func_8002cf0c)
+UNKNOWN_FUNCTION(func_8002cfcc)
+UNKNOWN_FUNCTION(func_8002d2c0)
+UNKNOWN_FUNCTION(mobjHitOn)
+void mobjHitOff(const char * name);
+UNKNOWN_FUNCTION(func_8002d720)
+UNKNOWN_FUNCTION(func_8002d7d8)
+UNKNOWN_FUNCTION(func_8002d890)
+UNKNOWN_FUNCTION(func_8002d89c)
+UNKNOWN_FUNCTION(func_8002d8a8)
+UNKNOWN_FUNCTION(func_8002d914)
+UNKNOWN_FUNCTION(func_8002d9bc)
+UNKNOWN_FUNCTION(func_8002de94)
+UNKNOWN_FUNCTION(func_8002dfc4)
+UNKNOWN_FUNCTION(func_8002e278)
+UNKNOWN_FUNCTION(func_8002e4c8)
+UNKNOWN_FUNCTION(func_8002e940)
+UNKNOWN_FUNCTION(mobjDropFromCatch)
+UNKNOWN_FUNCTION(func_8002e968)
+UNKNOWN_FUNCTION(func_8002e980)
+UNKNOWN_FUNCTION(func_8002e9bc)
+UNKNOWN_FUNCTION(func_8002ea0c)
+UNKNOWN_FUNCTION(func_8002ea54)
+UNKNOWN_FUNCTION(func_8002eb0c)
+const char * mobjGetModelName(MobjEntry * mobj);
+UNKNOWN_FUNCTION(func_8002eb60)
+void func_8002ed80();
+void func_8002ed90();
  
 CPP_WRAPPER_END()

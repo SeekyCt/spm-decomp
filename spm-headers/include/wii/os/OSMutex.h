@@ -19,6 +19,6 @@ SIZE_ASSERT(OSMutex, 0x18)
 void OSInitMutex(OSMutex * mutex);
 void OSLockMutex(OSMutex * mutex);
 void OSUnlockMutex(OSMutex * mutex);
-UNKNOWN_FUNCTION(__OSUnlockAllMutex);
+UNKNOWN_FUNCTION(__OSUnlockAllMutex)
 
 CPP_WRAPPER_END()

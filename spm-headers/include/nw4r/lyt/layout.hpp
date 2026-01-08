@@ -24,12 +24,12 @@ public:
     virtual AnimTransform * CreateAnimTransform(void * animResBuf, ResourceAccessor * pResAcsr);
     virtual void BindAnimation(AnimTransform * pAnimTrans);
     virtual void UnbindAnimation(AnimTransform * pAnimTrans);
-    virtual UNKNOWN_FUNCTION(UnbindAllAnimation);
-    virtual UNKNOWN_FUNCTION(SetAnimationEnable);
+    virtual UNKNOWN_FUNCTION(UnbindAllAnimation)
+    virtual UNKNOWN_FUNCTION(SetAnimationEnable)
     virtual void CalculateMtx(const DrawInfo& drawInfo);
     virtual void Draw(const DrawInfo& drawInfo);
     virtual void Animate(u32 option);
-    virtual UNKNOWN_FUNCTION(SetTagProcessor);
+    virtual UNKNOWN_FUNCTION(SetTagProcessor)
 
     ut::Rect GetLayoutRect();
 

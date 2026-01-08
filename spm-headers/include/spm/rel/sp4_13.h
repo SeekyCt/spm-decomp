@@ -9,8 +9,8 @@ CPP_WRAPPER(spm::sp4_13)
 
 USING(spm::npcdrv::NPCTribeAnimDef)
 
-char * spReturnAngryAnimPos(char *param_1);
-char * func_80c5c304(char *param_1);
+const char * spReturnAngryAnimPos(const char *param_1);
+const char * func_80c5c304(const char *param_1);
 EVT_DECLARE_USER_FUNC(func_80c5c36c, 0)
 
 DECOMP_STATIC(NPCTribeAnimDef spMrLStartTribeAnimDefs[1])

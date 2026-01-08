@@ -19,14 +19,14 @@ SIZE_ASSERT(HomeButtonWork, 0xa0)
 DECOMP_STATIC(HomeButtonWork * homebuttondrv_wp)
 
 void homebuttonInit();
-UNKNOWN_FUNCTION(func_802418c8);
+UNKNOWN_FUNCTION(func_802418c8)
 bool homebuttonMain();
 bool func_80242198();
-UNKNOWN_FUNCTION(homebuttonAllowOpen);
-UNKNOWN_FUNCTION(homebuttonForbidOpen);
-UNKNOWN_FUNCTION(func_802421dc);
-UNKNOWN_FUNCTION(func_802421f0);
-UNKNOWN_FUNCTION(homebuttonDumpEfb);
-UNKNOWN_FUNCTION(homebuttonDisp);
+UNKNOWN_FUNCTION(homebuttonAllowOpen)
+UNKNOWN_FUNCTION(homebuttonForbidOpen)
+UNKNOWN_FUNCTION(func_802421dc)
+UNKNOWN_FUNCTION(func_802421f0)
+UNKNOWN_FUNCTION(homebuttonDumpEfb)
+UNKNOWN_FUNCTION(homebuttonDisp)
 
 CPP_WRAPPER_END()

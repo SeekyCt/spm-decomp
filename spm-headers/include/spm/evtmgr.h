@@ -102,7 +102,7 @@ typedef struct _EvtEntry
 /* 0x188 */ s32 msgPri;
 /* 0x18C */ u8 unknown_0x18c[0x198 - 0x18c];
 /* 0x198 */ EvtScriptCode * scriptStart; // Pointer to the start of this script
-/* 0x19C */ char * name; // debug thing, unused?
+/* 0x19C */ const char * name; // debug thing, unused?
 /* 0x1A0 */ void * pPrevInstruction; // Pointer to last instruction executed
 /* 0x1A4 */ u8 unknown_0x1a4[0x1a8 - 0x1a4];
 } EvtEntry;
