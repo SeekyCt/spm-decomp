@@ -311,12 +311,12 @@ void mapBuildTexture(MapObj * mapObj, TPLHeader * tpl, Unk * textureTable);
 /*
     Creates a MapObj from a MapFileJoint
 */
-MapObj * _mapEnt(MapFileJoint * joint, MapObj * parent, Mtx34 * mtx, s32 mapEntryId);
+MapObj * _mapEnt(MapFileJoint * joint, MapObj * parent, Mtx34 mtx, s32 mapEntryId);
 
 /*
     Creates MapObjs for a joint and its children
 */
-MapObj * mapEntrySub(MapFileJoint * joint, MapObj * parent, Mtx34 * mtx, bool isRoot,
+MapObj * mapEntrySub(MapFileJoint * joint, MapObj * parent, Mtx34 mtx, bool isRoot,
                      s32 mapEntryId);
 
 /*
@@ -387,13 +387,13 @@ void mapLoad(const char * name);
 
 UNKNOWN_FUNCTION(func_80083aa4)
 
-void mapCalcAnimMatrix(Mtx34 * dest, Mtx34 * parentMtx, MapAnimObj * obj, MapFileMeshTrack * track);
+void mapCalcAnimMatrix(Mtx34 dest, Mtx34 parentMtx, MapAnimObj * obj, MapFileMeshTrack * track);
 
 UNKNOWN_FUNCTION(func_80083eb4)
 UNKNOWN_FUNCTION(func_80084098)
 UNKNOWN_FUNCTION(func_80084274)
 
-void mapReCalcMatrix(MapObj * mapObj, Mtx34 * dest, bool includeRoot);
+void mapReCalcMatrix(MapObj * mapObj, Mtx34 dest, bool includeRoot);
 
 /*
     Updates map visuals and collision

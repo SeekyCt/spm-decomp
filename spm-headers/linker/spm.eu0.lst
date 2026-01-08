@@ -861,7 +861,7 @@
 
 //seq_load_sub.c
 // text
-8017d1ac:loadMain
+8017d1ac:seq_load_sub_loadMain
 // data
 805ae0d0:seq_load_sub_wp
 

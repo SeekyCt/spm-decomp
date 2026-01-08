@@ -215,7 +215,7 @@ UNKNOWN_FUNCTION(renderProc)
 UNKNOWN_FUNCTION(dispProc)
 UNKNOWN_FUNCTION(animPoseDraw)
 UNKNOWN_FUNCTION(_animPoseDrawMtx)
-void animPoseDrawMtx(s32 id, Mtx34 * mtx, s32 xluStage, f32 rotY, f32 scale);
+void animPoseDrawMtx(s32 id, Mtx34 mtx, s32 xluStage, f32 rotY, f32 scale);
 UNKNOWN_FUNCTION(animSetPaperTexObj)
 s32 animPoseRelease(s32 id);
 UNKNOWN_FUNCTION(animPaperPoseRelease)

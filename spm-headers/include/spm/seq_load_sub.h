@@ -31,6 +31,6 @@ SIZE_ASSERT(SeqLoadSubWork, 0x5c)
 
 DECOMP_STATIC(SeqLoadSubWork* seq_load_sub_wp)
 
-s32 loadMain();
+DECOMP_STATIC(s32 seq_load_sub_loadMain())
 
 CPP_WRAPPER_END()

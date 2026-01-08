@@ -464,7 +464,7 @@
 805D78D0:seq_load_sub_wp
 805d79b0:nandmgr_wp
 80233884:spsndSFXOn
-80178EFC:loadMain
+80178EFC:seq_load_sub_loadMain
 
 // 2025-09-27
 80061D04:fadeGetMapChangeInTransition

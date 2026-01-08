@@ -928,7 +928,7 @@
 80258148:memcmp
 
 // new to v10
-8017c500:loadMain
+8017c500:seq_load_sub_loadMain
 8056d0f0:seq_load_sub_wp
 8056d1d0:nandmgr_wp
 80238af4:spsndSFXOn

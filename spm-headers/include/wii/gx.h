@@ -218,7 +218,7 @@ UNKNOWN_FUNCTION(__GXSetProjection)
 void GXSetProjection(Mtx44 mtx, GXProjectionType type);
 UNKNOWN_FUNCTION(GXSetProjectionv)
 UNKNOWN_FUNCTION(GXGetProjectionv)
-void GXLoadPosMtxImm(Mtx34 * mtx, u32 pnidx);
+void GXLoadPosMtxImm(Mtx34 mtx, u32 pnidx);
 UNKNOWN_FUNCTION(GXLoadNrmMtxImm)
 void GXSetCurrentMtx(u32 mtx);
 UNKNOWN_FUNCTION(GXLoadTexMtxImm)

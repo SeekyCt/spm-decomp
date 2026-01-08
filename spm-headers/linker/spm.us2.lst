@@ -974,7 +974,7 @@
 8056CAD0:seq_load_sub_wp
 8056CBB0:nandmgr_wp
 8023950C:spsndSFXOn
-8017C96C:loadMain
+8017C96C:seq_load_sub_loadMain
 
 // 2025-09-27
 80067758:fadeGetMapChangeInTransition

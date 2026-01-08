@@ -61,19 +61,19 @@ void hitReinit();
 /*
     Creates a HitObj for a joint
 */
-HitObj * _hitEnt(MapFileJoint * joint, HitObj * parent, Mtx34 * parentMtx, s32 mapEntryIdx);
+HitObj * _hitEnt(MapFileJoint * joint, HitObj * parent, Mtx34 parentMtx, s32 mapEntryIdx);
 
 /*
     Recursively creates HitObjs for a joint and its children
 */
-HitObj * hitEntrySub(MapFileJoint * joint, HitObj * parent, Mtx34 * parentMtx, bool ignoreSiblings,
+HitObj * hitEntrySub(MapFileJoint * joint, HitObj * parent, Mtx34 parentMtx, bool ignoreSiblings,
                      s32 mapEntryIdx);
 
 /*
     Create HitObjs for a joint and its children
 */
-HitObj * hitEntry(MapFileJoint * joint, Mtx34 * mtx, s32 mapEntryIdx);
-HitObj * hitEntryMOBJ(MapFileJoint * joint, Mtx34 * mtx);
+HitObj * hitEntry(MapFileJoint * joint, Mtx34 mtx, s32 mapEntryIdx);
+HitObj * hitEntryMOBJ(MapFileJoint * joint, Mtx34 mtx);
 
 /*
     Deletes a HitObj by name
@@ -120,7 +120,7 @@ void hitGrpAttrOn(bool allowSubName, const char * name, u32 mask);
 void hitGrpAttrOff(bool allowSubName, const char * name, u32 mask);
 
 void hitReCalcMatrix(HitObj *, Unk);
-void hitReCalcMatrix2(HitObj *, Mtx34 *, bool);
+void hitReCalcMatrix2(HitObj *, Mtx34, bool);
 void hitCalcVtxPosition(HitObj *);
 
 UNKNOWN_FUNCTION(func_8006da4c)

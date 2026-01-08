@@ -134,19 +134,19 @@ void iconDispGxAlpha(f32 scale, Vec3 * position, Unk param_3, s32 iconId, u8 alp
 */
 void iconDispGx(f32 scale, const Vec3 * position, u32 flags, s32 iconId);
 
-void iconDispGx2(Mtx34 * param_1, Unk param_2, s32 iconId);
-void iconDispGxCol(Mtx34 * param_1, u32 flags, s32 iconId, GXColor color);
+void iconDispGx2(Mtx34 param_1, Unk param_2, s32 iconId);
+void iconDispGxCol(Mtx34 param_1, u32 flags, s32 iconId, GXColor color);
 void iconGetTexObj(GXTexObj * dest, s32 iconId);
 void iconGetTexObj2(GXTexObj * dest, s32 iconId, Unk param_3, Unk param_4);
 void iconGetWidthHeight(s16 * width, s16 * height, s32 iconId);
-void iconGX(Mtx34 * param_1, IconEntry * entry);
+void iconGX(Mtx34 param_1, IconEntry * entry);
 IconEntry * iconNameToPtr(const char * name);
 void iconSetPos(const char * name, f32 x, f32 y, f32 z);
 void iconFlagOn(const char * name, u32 flag);
 void iconFlagOff(const char * name, u32 flag);
 void iconSetScale(const char * name, f32 scale);
 void iconSetAlpha(const char * name, u8 alpha);
-void iconNumberDispGx(Mtx34 * param_1, s32 number, s32 keta, Unk param_4, void * param_5,
+void iconNumberDispGx(Mtx34 param_1, s32 number, s32 keta, Unk param_4, void * param_5,
                       Unk param_6);
 
 UNKNOWN_FUNCTION(func_80074f80)
