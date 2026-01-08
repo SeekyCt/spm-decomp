@@ -305,7 +305,7 @@
 801112F8:evt_shop_set_defs
 8014CB4C:pouchAddItem
 8014D148:pouchCheckHaveItem
-8017AFD8:getNextDanMapName
+8017AFD8:getDanMapName
 80183F64:pausewinEntry
 801843D4:pausewinMoveTo
 80184424:pausewinAppear

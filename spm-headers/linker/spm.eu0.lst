@@ -843,7 +843,7 @@
 
 // seq_title.c
 8017b250:seq_titleMain
-8017bc4c:getNextDanMapName
+8017bc4c:getDanMapName
 // more
 
 // seq_game.c
