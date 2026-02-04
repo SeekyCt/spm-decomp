@@ -55,7 +55,7 @@ UNKNOWN_FUNCTION(PSMTXMultVec)
 UNKNOWN_FUNCTION(PSMTXMultVecArray)
 UNKNOWN_FUNCTION(PSMTXMultVecSR)
 UNKNOWN_FUNCTION(C_MTXFrustum)
-UNKNOWN_FUNCTION(C_MTXPerspective)
+void C_MTXPerspective(Mtx44 dest, f32 fovY, f32 aspect, f32 near, f32 far);
 void C_MTXOrtho(Mtx44 dest, f32 top, f32 bottom, f32 left, f32 right, f32 near, f32 far);
 UNKNOWN_FUNCTION(PSMTX44Copy)
 UNKNOWN_FUNCTION(PSMTX44MultVec)

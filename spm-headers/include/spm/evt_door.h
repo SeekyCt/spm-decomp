@@ -43,7 +43,7 @@ typedef struct
 /* 0x0C */ const char * hitName2d;
 /* 0x10 */ const char * hitName3d;
 /* 0x14 */ const char * destMapName;
-/* 0x18 */ const char * destBeroName; // loading zone; door, pipe, etc.
+/* 0x18 */ const char * destDoorName; // loading zone; door, pipe, etc.
 /* 0x1C */ u32 doorSfxIdx;
 } MapDoorDesc;
 SIZE_ASSERT(MapDoorDesc, 0x20)
@@ -58,7 +58,7 @@ typedef struct
 /* 0x10 */ const char * hitName2d;
 /* 0x14 */ const char * hitName3d;
 /* 0x19 */ const char * destMapName;
-/* 0x1C */ const char * unknown_0x1c;
+/* 0x1C */ const char * destDoorName;
 } DokanDesc;
 SIZE_ASSERT(DokanDesc, 0x20)
 

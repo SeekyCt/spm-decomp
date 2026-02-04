@@ -753,8 +753,6 @@
 // more
 
 // mario_pouch.c
-8014ef98:pouchGetCharInfo
-8014f080:pouchGetPixlInfo
 // text
 8014c088:pouchGetPtr
 8014d1bc:pouchSetLevel
@@ -777,6 +775,10 @@
 8014dbf4:pouchCheckHaveItem
 8014df4c:pouchRemoveItem
 8014eb68:pouchRemoveShopItem
+8014ef98:pouchGetCharInfo
+8014f080:pouchGetPixlInfo
+8014F018:pouchMakeCharNotSelectable
+8014F154:pouchMakePixlNotSelectable
 8014f31c:pouchGetCurPixl
 8014f7c8:pouchGetCardCount
 8014f978:pouchSetEnemiesDefeated
@@ -1265,6 +1267,7 @@
 8027a7e8:PSMTXTransApply
 8027a834:PSMTXScale
 8027a85c:PSMTXScaleApply
+8027aec0:C_MTXPerspective
 8027afac:C_MTXOrtho
 8027b4fc:PSVECSquareDistance
 // more

@@ -983,3 +983,7 @@
 80067790:fadeGetFadeInLength
 8006779C:fadeSetTransitionLengths
 8056D228:fadedrv_wp
+
+// New to SPM door rando 
+8014EAB8:pouchMakePixlNotSelectable
+8014E97C:pouchMakeCharNotSelectable

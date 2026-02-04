@@ -34,39 +34,25 @@ typedef f32 (IntplUserFunc)(s32, s32, f32, f32);
 
 #ifdef DECOMP
 
-// TODO: figure out what's going on with the assert if statement in decomp
-// assert in evtmgr.c line 161 is incompatible with (condition) == false
-// assertf dan.c line 144 is incompatible with !(condition)
-// assertf dvdmgr.c line 51 is incompatible with bool check = (condition); !check
-
-// TODO: better name
-#define _assert(line, condition) \
+#define SPM_ASSERT_NM(line, condition) \
     do \
     { \
-        bool check = (condition); \
-        if (!check) __assert(__FILE__, line, #condition); \
+        if ((condition) == false) __assert(__FILE__, line, #condition); \
     } while (0)
 
-#define assert(line, condition, message) \
+#define SPM_ASSERT(line, condition, ...) \
     do \
     { \
-        bool check = (condition); \
-        if (!check) __assert2(__FILE__, line, #condition, message); \
-    } while (0)
-
-#define assertf(line, condition, message, ...) \
-    do \
-    { \
-        if ((condition) == false) __assert2(__FILE__, line, #condition, message, __VA_ARGS__); \
+        if ((condition) == false) __assert2(__FILE__, line, #condition, __VA_ARGS__); \
     } while (0)
 
 #else
 
-#define assert(condition, message) \
-    if (!(condition)) spm::system::__assert2(__FILE__, __LINE__, #condition, message)
+#define SPM_ASSERT_NM(condition) \
+    if (!(condition)) spm::system::__assert(__FILE__, __LINE__, #condition)
 
-#define assertf(condition, message, ...) \
-    if (!(condition)) spm::system::__assert2(__FILE__, __LINE__, #condition, message, __VA_ARGS__)
+#define SPM_ASSERT(condition, ...) \
+    if (!(condition)) spm::system::__assert2(__FILE__, __LINE__, #condition, __VA_ARGS__)
 
 #endif
 

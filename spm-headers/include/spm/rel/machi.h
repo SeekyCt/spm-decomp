@@ -11,7 +11,7 @@ typedef struct
 /* 0x04 */ const char * name;
 /* 0x08 */ u8 unknown_0x8[0x24 - 0x8];
 /* 0x24 */ const char * destMapName;
-/* 0x28 */ const char * unkChar;
+/* 0x28 */ const char * destDoorName;
 } ElvDesc;
 SIZE_ASSERT(ElvDesc, 0x2c)
 
