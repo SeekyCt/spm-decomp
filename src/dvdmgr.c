@@ -42,13 +42,13 @@ DVDEntry* DVDMgrOpen(const char * name, s32 priority, s16 param_3)
     }
     if (i >= wp->num)
     {
-        assert(51, i < wp->num, "DVDMgrOpen Error");
+        SPM_ASSERT(51, i < wp->num, "DVDMgrOpen Error");
         return NULL;
     }
 
     // Init entry
     memset(entry, 0, sizeof(*entry));
-    assertf(56, strlen(name) < 64, "名前長すぎ [ %s ]", name);
+    SPM_ASSERT(56, strlen(name) < 64, "名前長すぎ [ %s ]", name);
     strcpy(entry->path, name);
     entry->priority = (u8) priority;
     entry->openP3 = param_3;

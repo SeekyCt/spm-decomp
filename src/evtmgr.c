@@ -98,9 +98,9 @@ static void make_jump_table(EvtEntry * entry)
         pScriptHead++;
 
         if (cmdn < 0)
-            assert(116, cmdn >= 0, "EVTMGR:command line error");
+            SPM_ASSERT(116, cmdn >= 0, "EVTMGR:command line error");
         if (cmd >= EVT_max)
-            assert(119, cmd < EVT_max, "EVTMGR:command line error");
+            SPM_ASSERT(119, cmd < EVT_max, "EVTMGR:command line error");
 
         id = *pScriptHead;
         pScriptHead += cmdn;
@@ -116,7 +116,7 @@ static void make_jump_table(EvtEntry * entry)
         }
 
         if (n >= MAX_EVT_JMPTBL)
-            assert(136, n < MAX_EVT_JMPTBL, "EVTMGR:Jump Table Overflow !![make_jump_table]");
+            SPM_ASSERT(136, n < MAX_EVT_JMPTBL, "EVTMGR:Jump Table Overflow !![make_jump_table]");
     }
     end: ; // didn't match when just using return
 }
@@ -183,7 +183,7 @@ EvtEntry * evtEntry(EvtScriptCode * script, u32 priority, u8 flags) {
             break;
     }
     if (i >= wp->entryCount)
-        assert(264, 0, "EVTMGR:Pointer Table Overflow !![evtEntry]");
+        SPM_ASSERT(264, 0, "EVTMGR:Pointer Table Overflow !![evtEntry]");
     evtMax += 1;
     memset(entry, 0, sizeof(*entry));
     entry->flags = (u8) (flags | EVT_FLAG_IN_USE);
@@ -237,7 +237,7 @@ EvtEntry * evtEntryType(EvtScriptCode * script, u32 priority, u8 flags, u8 type)
             break;
     }
     if (i >= wp->entryCount)
-        assert(341, 0, "EVTMGR:Pointer Table Overflow !![evtEntryType]");
+        SPM_ASSERT(341, 0, "EVTMGR:Pointer Table Overflow !![evtEntryType]");
     evtMax += 1;
     memset(entry, 0, sizeof(*entry));
     entry->flags = (u8) (flags | EVT_FLAG_IN_USE);
@@ -292,7 +292,7 @@ EvtEntry * evtChildEntry(EvtEntry * parent, EvtScriptCode * script, u8 flags)
             break;
     }
     if (i >= wp->entryCount)
-        assert(422, 0, "EVTMGR:Pointer Table Overflow !![evtChildEntry]");
+        SPM_ASSERT(422, 0, "EVTMGR:Pointer Table Overflow !![evtChildEntry]");
     evtMax += 1;
     parent->childEntry = entry;
     parent->flags |= EVT_FLAG_WAIT_CHILD;
@@ -358,7 +358,7 @@ EvtEntry * evtBrotherEntry(EvtEntry * brother, EvtScriptCode * script, u8 flags)
             break;
     }
     if (i >= wp->entryCount)
-        assert(516, 0, "EVTMGR:Pointer Table Overflow !![evtBrotherEntry]");
+        SPM_ASSERT(516, 0, "EVTMGR:Pointer Table Overflow !![evtBrotherEntry]");
     evtMax += 1;
     memset(entry, 0, sizeof(*entry));
     entry->flags = (u8) (flags | EVT_FLAG_IN_USE);

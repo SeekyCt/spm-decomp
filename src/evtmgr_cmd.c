@@ -71,7 +71,7 @@ s32 evt_do(EvtEntry * entry)
     entry->doWhileDepth += 1;
     depth = entry->doWhileDepth;
     if (depth >= 8)
-        assert(103, 0, "EVTMGR_CMD:While Table Overflow !!");
+        SPM_ASSERT(103, 0, "EVTMGR_CMD:While Table Overflow !!");
 
     entry->doWhileStartPtrs[depth] = p;
     entry->doWhileCounters[depth] = count;
@@ -87,7 +87,7 @@ s32 evt_while(EvtEntry * entry)
 
     depth = entry->doWhileDepth;
     if (depth < 0)
-        assert(123, 0, "EVTMGR_CMD:While Table Underflow !!");
+        SPM_ASSERT(123, 0, "EVTMGR_CMD:While Table Underflow !!");
 
     count = entry->doWhileCounters[depth];
     if (count == 0)
@@ -127,7 +127,7 @@ s32 evt_while(EvtEntry * entry)
 s32 evt_do_break(EvtEntry * entry)
 {
     if (entry->doWhileDepth < 0)
-        assert(161, 0, "EVTMGR_CMD:While Table Underflow !!");
+        SPM_ASSERT(161, 0, "EVTMGR_CMD:While Table Underflow !!");
 
     entry->pCurInstruction = evtSearchWhile(entry);
     entry->doWhileDepth -= 1;
@@ -138,7 +138,7 @@ s32 evt_do_break(EvtEntry * entry)
 s32 evt_do_continue(EvtEntry * entry)
 {
     if (entry->doWhileDepth < 0)
-        assert(176, 0, "EVTMGR_CMD:While Table Underflow !!");
+        SPM_ASSERT(176, 0, "EVTMGR_CMD:While Table Underflow !!");
 
     entry->pCurInstruction = evtSearchJustBeforeWhile(entry);
 
@@ -676,7 +676,7 @@ s32 evt_switch(EvtEntry * entry)
     entry->switchDepth += 1;
     depth = entry->switchDepth;
     if (depth >= 8)
-        assert(798, 0, "EVTMGR_CMD:Switch Table Overflow !!");
+        SPM_ASSERT(798, 0, "EVTMGR_CMD:Switch Table Overflow !!");
 
     entry->switchValues[depth] = value;
     entry->switchStates[depth] = 1;
@@ -693,7 +693,7 @@ s32 evt_switchi(EvtEntry * entry)
     entry->switchDepth += 1;
     depth = entry->switchDepth;
     if (depth >= 8)
-        assert(822, 0, "EVTMGR_CMD:Switch Table Overflow !!");
+        SPM_ASSERT(822, 0, "EVTMGR_CMD:Switch Table Overflow !!");
 
     entry->switchValues[depth] = value;
     entry->switchStates[depth] = 1;
@@ -713,7 +713,7 @@ s32 evt_case_equal(EvtEntry * entry)
 
     depth = entry->switchDepth;
     if (depth < 0)
-        assert(843, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+        SPM_ASSERT(843, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
     targetValue = evtGetValue(entry, p[0]);
     state = entry->switchStates[depth];
@@ -748,7 +748,7 @@ s32 evt_case_not_equal(EvtEntry * entry)
 
     depth = entry->switchDepth;
     if (depth < 0)
-        assert(876, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+        SPM_ASSERT(876, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
     targetValue = evtGetValue(entry, p[0]);
     state = entry->switchStates[depth];
@@ -783,7 +783,7 @@ s32 evt_case_small(EvtEntry * entry)
 
     depth = entry->switchDepth;
     if (depth < 0)
-        assert(909, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+        SPM_ASSERT(909, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
     targetValue = evtGetValue(entry, p[0]);
     state = entry->switchStates[depth];
@@ -818,7 +818,7 @@ s32 evt_case_small_equal(EvtEntry * entry)
 
     depth = entry->switchDepth;
     if (depth < 0)
-        assert(942, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+        SPM_ASSERT(942, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
     targetValue = evtGetValue(entry, p[0]);
     state = entry->switchStates[depth];
@@ -854,7 +854,7 @@ s32 evt_case_large(EvtEntry * entry)
 
     depth = entry->switchDepth;
     if (depth < 0)
-        assert(975, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+        SPM_ASSERT(975, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
     targetValue = evtGetValue(entry, p[0]);
     state = entry->switchStates[depth];
@@ -889,7 +889,7 @@ s32 evt_case_large_equal(EvtEntry * entry)
 
     depth = entry->switchDepth;
     if (depth < 0)
-        assert(1008, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+        SPM_ASSERT(1008, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
     targetValue = evtGetValue(entry, p[0]);
     state = entry->switchStates[depth];
@@ -926,7 +926,7 @@ s32 evt_case_between(EvtEntry * entry)
 
     depth = entry->switchDepth;
     if (depth < 0)
-        assert(1041, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+        SPM_ASSERT(1041, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
     min = evtGetValue(entry, p[0]);
     max = evtGetValue(entry, p[1]);
@@ -957,7 +957,7 @@ s32 evt_case_etc(EvtEntry * entry)
 
     depth = entry->switchDepth;
     if (depth < 0)
-        assert(1073, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+        SPM_ASSERT(1073, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
     state = entry->switchStates[depth];
 
@@ -987,7 +987,7 @@ s32 evt_case_flag(EvtEntry * entry)
 
     depth = entry->switchDepth;
     if (depth < 0)
-        assert(1097, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+        SPM_ASSERT(1097, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
     targetMask = (u32) p[0];
     state = entry->switchStates[depth];
@@ -1022,7 +1022,7 @@ s32 evt_case_or(EvtEntry * entry)
 
     depth = entry->switchDepth;
     if (depth < 0)
-        assert(1130, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+        SPM_ASSERT(1130, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
     targetValue = evtGetValue(entry, p[0]);
     inputValue = entry->switchValues[depth];
@@ -1057,7 +1057,7 @@ s32 evt_case_and(EvtEntry * entry)
 
     depth = entry->switchDepth;
     if (depth < 0)
-        assert(1164, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+        SPM_ASSERT(1164, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
     targetValue = evtGetValue(entry, p[0]);
     inputValue = entry->switchValues[depth];
@@ -1102,7 +1102,7 @@ s32 evt_case_end(EvtEntry * entry)
 
     depth = entry->switchDepth;
     if (depth < 0)
-        assert(1201, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+        SPM_ASSERT(1201, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
     inputValue = entry->switchValues[depth];
     state = entry->switchStates[depth];
@@ -1132,7 +1132,7 @@ s32 evt_case_end(EvtEntry * entry)
 s32 evt_switch_break(EvtEntry * entry)
 {
     if (entry->switchDepth < 0)
-        assert(1231, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+        SPM_ASSERT(1231, 0, "EVTMGR_CMD:Switch Table Underflow !!");
     
     entry->pCurInstruction = evtSearchEndSwitch(entry);
 
@@ -1145,7 +1145,7 @@ s32 evt_end_switch(EvtEntry * entry)
 
     depth = entry->switchDepth;
     if (depth < 0)
-        assert(1248, 0, "EVTMGR_CMD:Switch Table Underflow !!");
+        SPM_ASSERT(1248, 0, "EVTMGR_CMD:Switch Table Underflow !!");
 
     entry->switchStates[depth] = 0;
     entry->switchDepth -= 1;
@@ -2704,7 +2704,7 @@ s32 evtmgrCmd(EvtEntry* entry)
                 ret = evt_debug_bp(entry);
                 break;
             default:
-                assert(3335, 0, "EVTMGR_CMD:Command Undefined !!");
+                SPM_ASSERT(3335, 0, "EVTMGR_CMD:Command Undefined !!");
                 break;
         }
 
@@ -3123,7 +3123,7 @@ EvtScriptCode * evtSearchLabel(EvtEntry * entry, s32 lbl)
         }
     }
     if (n >= MAX_EVT_JMPTBL)
-        assertf(3886, 0, "EVTMGR_CMD:Jump Table Search error !!\n [lbl=%d, n=%d]", lbl, n);
+        SPM_ASSERT(3886, 0, "EVTMGR_CMD:Jump Table Search error !!\n [lbl=%d, n=%d]", lbl, n);
 
     return ret;
 }
@@ -3147,7 +3147,7 @@ EvtScriptCode * evtSearchElse(EvtEntry * entry)
         switch (opc)
         {
             case EVT_OPC_END_SCRIPT:
-                assert(3915, 0, "EVTMGR_CMD:'ELSE' Search Error !!");
+                SPM_ASSERT(3915, 0, "EVTMGR_CMD:'ELSE' Search Error !!");
 
             case EVT_OPC_END_IF:
                 if (--ifDepth >= 0)
@@ -3187,7 +3187,7 @@ EvtScriptCode * evtSearchEndIf(EvtEntry * entry)
         switch (opc)
         {
             case EVT_OPC_END_SCRIPT:
-                assert(3977, 0, "EVTMGR_CMD:'END_IF' Search Error !!");
+                SPM_ASSERT(3977, 0, "EVTMGR_CMD:'END_IF' Search Error !!");
 
             case EVT_OPC_END_IF:
                 if (--ifDepth >= 0)
@@ -3223,7 +3223,7 @@ EvtScriptCode * evtSearchEndSwitch(EvtEntry * entry)
         switch (opc)
         {
             case EVT_OPC_END_SCRIPT:
-                assert(4041, 0, "EVTMGR_CMD:'END_SWITCH' Search Error !!");
+                SPM_ASSERT(4041, 0, "EVTMGR_CMD:'END_SWITCH' Search Error !!");
 
             case EVT_OPC_SWITCH:
                 switchDepth += 1;
@@ -3259,7 +3259,7 @@ EvtScriptCode * evtSearchCase(EvtEntry * entry)
         switch (opc)
         {
             case EVT_OPC_END_SCRIPT:
-                assert(4081, 0, "EVTMGR_CMD:'CASE' Search Error !!");
+                SPM_ASSERT(4081, 0, "EVTMGR_CMD:'CASE' Search Error !!");
 
             case EVT_OPC_SWITCH:
                 switchDepth += 1;
@@ -3299,7 +3299,7 @@ EvtScriptCode * evtSearchWhile(EvtEntry * entry)
         switch (opc)
         {
             case EVT_OPC_END_SCRIPT:
-                assert(4135, 0, "EVTMGR_CMD:'WHILE' Search Error !!");
+                SPM_ASSERT(4135, 0, "EVTMGR_CMD:'WHILE' Search Error !!");
 
             case EVT_OPC_WHILE:
                 if (--doWhileDepth >= 0)
@@ -3331,7 +3331,7 @@ EvtScriptCode * evtSearchJustBeforeWhile(EvtEntry * entry)
         switch (opc)
         {
             case EVT_OPC_END_SCRIPT:
-                assert(4169, 0, "EVTMGR_CMD:just before 'WHILE' Search Error !!");
+                SPM_ASSERT(4169, 0, "EVTMGR_CMD:just before 'WHILE' Search Error !!");
 
             case EVT_OPC_WHILE:
                 if (--doWhileDepth >= 0)

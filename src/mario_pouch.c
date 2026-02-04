@@ -696,7 +696,7 @@ bool pouchAddItem(s32 itemId)
     else
     {
         // "Strange id"
-        assertf(742, 0, "おかしいです id = %d", itemId);
+        SPM_ASSERT(742, 0, "おかしいです id = %d", itemId);
     }
 
     return true;
@@ -771,7 +771,7 @@ bool pouchCheckHaveItem(s32 itemId)
     else
     {
         // "Strange id"
-        assertf(793, 0, "おかしいです id = %d", itemId);
+        SPM_ASSERT(793, 0, "おかしいです id = %d", itemId);
     }
 
     return false;
@@ -864,7 +864,7 @@ void pouchRemoveItem(s32 itemId)
     else
     {
         // "Strange id"
-        assertf(870, 0, "おかしいです id = %d", itemId);
+        SPM_ASSERT(870, 0, "おかしいです id = %d", itemId);
     }
 }
 
@@ -1017,7 +1017,7 @@ void pouchRegisterMapFound(s32 itemId)
     
     pp = pouchGetPtr();
 
-    assertf(1117, itemId >= ITEM_ID_MAP_START && itemId < ITEM_ID_MAP_MAX,
+    SPM_ASSERT(1117, itemId >= ITEM_ID_MAP_START && itemId < ITEM_ID_MAP_MAX,
             "そんな地図はない %d", itemId);
 
     mapId = itemId - ITEM_ID_MAP_START;
@@ -1030,7 +1030,7 @@ void pouchRegisterRecipeKnown(s32 itemId) {
 
     pp = pouchGetPtr();
     
-    assertf(1151, itemId >= ITEM_ID_COOK_START && itemId < ITEM_ID_COOK_MAX,
+    SPM_ASSERT(1151, itemId >= ITEM_ID_COOK_START && itemId < ITEM_ID_COOK_MAX,
             "そんな料理はない %d", itemId);
     
     cookId = itemId - ITEM_ID_COOK_START;
@@ -1044,7 +1044,7 @@ bool pouchCheckRecipeKnown(s32 itemId)
 
     pp = pouchGetPtr();
     
-    assertf(1165, itemId >= ITEM_ID_COOK_START && itemId < ITEM_ID_COOK_MAX,
+    SPM_ASSERT(1165, itemId >= ITEM_ID_COOK_START && itemId < ITEM_ID_COOK_MAX,
             "そんな料理はない %d", itemId);
 
     cookId = itemId - ITEM_ID_COOK_START;
@@ -1061,7 +1061,7 @@ s32 pouchGetCardCount(s32 itemId)
 
     pp = pouchGetPtr();
 
-    assertf(1184, itemId >= ITEM_ID_CARD_START && itemId < ITEM_ID_CARD_MAX,
+    SPM_ASSERT(1184, itemId >= ITEM_ID_CARD_START && itemId < ITEM_ID_CARD_MAX,
             "おかしなカード番号です %d", itemId);
 
     cardId = itemId - ITEM_ID_CARD_START;
@@ -1075,7 +1075,7 @@ bool pouchCheckCardKnown(s32 itemId)
 
     pp = pouchGetPtr();
 
-    assertf(1194, itemId >= ITEM_ID_CARD_START && itemId < ITEM_ID_CARD_MAX,
+    SPM_ASSERT(1194, itemId >= ITEM_ID_CARD_START && itemId < ITEM_ID_CARD_MAX,
             "そんなカードはない %d", itemId);
 
     cardId = itemId - ITEM_ID_CARD_START;

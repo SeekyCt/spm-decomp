@@ -107,7 +107,7 @@ void swByteSet(s32 id, s32 num)
     else
     {
         // "The value is strange"
-        assertf(156, num < 256, "値がおかしい sw_byte[%d] = %d", id + EVTDAT_GSW_BASE, num);
+        SPM_ASSERT(156, num < 256, "値がおかしい sw_byte[%d] = %d", id + EVTDAT_GSW_BASE, num);
 
         gp->gsw[id] = (s8) num;
     }
@@ -188,7 +188,7 @@ s32 swGetCoinId()
         }
 
         // "Can't find location for coin flag"
-        assert(245, i < MAX_COIN_MAP, "コインフラグの保存場所がみつかりません");
+        SPM_ASSERT(245, i < MAX_COIN_MAP, "コインフラグの保存場所がみつかりません");
 
         // Init coin entry
         strcpy(entry->mapName, gp->mapName);
@@ -200,7 +200,7 @@ s32 swGetCoinId()
     id = wp->coinId++;
 
     // "Coin flags have overflowed"
-    assert(253, wp->coinId < MAX_COIN_BIT, "コインのフラグが溢れました");
+    SPM_ASSERT(253, wp->coinId < MAX_COIN_BIT, "コインのフラグが溢れました");
 
     return id;
 }
@@ -224,7 +224,7 @@ void swCoinSet(s32 id)
     }
 
     // "No flags entered"
-    assert(269, i < MAX_COIN_MAP, "フラグがエントリされていません");
+    SPM_ASSERT(269, i < MAX_COIN_MAP, "フラグがエントリされていません");
 
     // Turn on bitflag
     entry->coinFlags[id / 32] |= 1 << (id % 32);
@@ -249,7 +249,7 @@ void swCoinClear(s32 id)
     }
 
     // "No flags entered"
-    assert(286, i < MAX_COIN_MAP, "フラグがエントリされていません");
+    SPM_ASSERT(286, i < MAX_COIN_MAP, "フラグがエントリされていません");
 
     // Turn off bitflag
     entry->coinFlags[id / 32] &= ~(1 << (id % 32));
@@ -274,7 +274,7 @@ bool swCoinGet(s32 id)
     }
 
     // "No flags entered"
-    assert(303, i < MAX_COIN_MAP, "フラグがエントリされていません");
+    SPM_ASSERT(303, i < MAX_COIN_MAP, "フラグがエントリされていません");
 
     // Check bitflag
     if ((entry->coinFlags[id / 32] & 1 << (id % 32)) != 0)
@@ -320,7 +320,7 @@ s32 swGetGameCoinId()
     id += wp->gameCoinId++;
     
     // "Coin flags have overflowed"
-    assert(505, (wp->gameCoinId-1) < assign_tbl[i].num, "コインのフラグが溢れました");
+    SPM_ASSERT(505, (wp->gameCoinId-1) < assign_tbl[i].num, "コインのフラグが溢れました");
 
     return id;
 }
@@ -384,7 +384,7 @@ void swGameCoinSet(s32 id)
     }
     else
     {
-        assertf(156, num < 256, "値がおかしい sw_byte[%d] = %d", var + EVTDAT_GSW_BASE, num);
+        SPM_ASSERT(156, num < 256, "値がおかしい sw_byte[%d] = %d", var + EVTDAT_GSW_BASE, num);
         gp->gsw[var] = (s8) num;
     }
 }

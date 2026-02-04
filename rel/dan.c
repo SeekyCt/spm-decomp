@@ -127,7 +127,7 @@ s32 evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
         s32 no = 0;
         s32 i = 0;
         parseTagGet1("<no>", PARSE_VALUE_TYPE_INT, &no);
-        assertf(144, no >= 0 && no < DUNGEON_MAX, "なんか番号がおかしい [%d]", no);
+        SPM_ASSERT(144, no >= 0 && no < DUNGEON_MAX, "なんか番号がおかしい [%d]", no);
 
         // Read item id (chest contents in chest rooms, null & unused elsewhere)
         char itemName[64];
@@ -351,7 +351,7 @@ s32 evt_dan_handle_doors(EvtEntry * entry, bool isFirstCall)
     mapDoorDescs[0].hitName2d = wp->enterDoorHitName2d;
     mapDoorDescs[0].hitName3d = wp->enterDoorHitName3d;
     mapDoorDescs[0].destMapName = wp->prevMapName;
-    mapDoorDescs[0].destBeroName = wp->enterDoor_desc0x18;
+    mapDoorDescs[0].destDoorName = wp->enterDoor_desc0x18;
 
     // Fill in exit DoorDesc
     mapDoorDescs[1].name_l = wp->exitDoorName_l;
@@ -359,7 +359,7 @@ s32 evt_dan_handle_doors(EvtEntry * entry, bool isFirstCall)
     mapDoorDescs[1].hitName2d = wp->exitDoorHitName2d;
     mapDoorDescs[1].hitName3d = wp->exitDoorHitName3d;
     mapDoorDescs[1].destMapName = wp->nextMapName;
-    mapDoorDescs[1].destBeroName = wp->exitDoor_desc0x18;
+    mapDoorDescs[1].destDoorName = wp->exitDoor_desc0x18;
 
     // Output door name
     sprintf(wp->enterDoorName, "doa_%02d", wp->doorInfo.enter);
@@ -436,7 +436,7 @@ s32 evt_dan_get_enemy_info(EvtEntry * entry, bool isFirstCall)
                 if (((curTemplate->unknown_0x8 & 1) == 0) && (curTemplate->tribeId == tribeId))
                     break;
             }
-            assertf(628, i < NPCTEMPLATE_MAX, "みつかりませんでした[%d]", tribeId);
+            SPM_ASSERT(628, i < NPCTEMPLATE_MAX, "みつかりませんでした[%d]", tribeId);
 
             // Return template id and num
             evtSetValue(entry, args[2], i);
@@ -748,13 +748,13 @@ s32 evt_dan_handle_chest_room_dokans_and_doors(EvtEntry * entry, bool isFirstCal
     {
         // Flipside pit
         chestRoomDokanDesc.destMapName = "mac_05";
-        chestRoomDokanDesc.unknown_0x1c = "dokan_1";
+        chestRoomDokanDesc.destDoorName = "dokan_1";
     }
     else
     {
         // Flopside pit
         chestRoomDokanDesc.destMapName = "mac_15";
-        chestRoomDokanDesc.unknown_0x1c = "dokan_1";
+        chestRoomDokanDesc.destDoorName = "dokan_1";
     }
 
     return EVT_RET_CONTINUE;

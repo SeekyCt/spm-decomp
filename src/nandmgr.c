@@ -184,7 +184,7 @@ SaveFile * nandGetSaveFiles()
 void nandCheck()
 {
     // "Already running"
-    assert(300, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    SPM_ASSERT(300, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
  
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_CHECK;
@@ -196,7 +196,7 @@ void nandCheck()
 void nandWriteBanner()
 {
     // "Already running"
-    assert(313, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    SPM_ASSERT(313, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
 
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_WRITE_BANNER;
@@ -208,7 +208,7 @@ void nandWriteBanner()
 void nandWriteAllSaves()
 {
     // "Already running"
-    assert(326, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    SPM_ASSERT(326, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
 
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_WRITE_ALL_SAVES;
@@ -220,7 +220,7 @@ void nandWriteAllSaves()
 void nandWriteSave(s32 saveId)
 {
     // "Already running"
-    assert(339, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    SPM_ASSERT(339, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
 
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_WRITE_SAVE;
@@ -232,7 +232,7 @@ void nandWriteSave(s32 saveId)
 void nandWriteBannerLoadAllSaves()
 {
     // "Already running"
-    assert(352, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    SPM_ASSERT(352, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
 
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_WRITE_BANNER_LOAD_ALL_SAVES;
@@ -247,7 +247,7 @@ void nandDeleteSave(s32 saveId)
     (void) saveId;
 
     // "Already running"
-    assert(365, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
+    SPM_ASSERT(365, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
 
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_DELETE_SAVE;
