@@ -137,7 +137,7 @@ UNKNOWN_FUNCTION(nandGetType)
 UNKNOWN_FUNCTION(NANDPrivateGetTypeAsync)
 UNKNOWN_FUNCTION(nandGetTypeCallback)
 UNKNOWN_FUNCTION(nandGetHomeDir)
-void NANDInitBanner(NANDBanner * banner, u32 flags, wchar16_t * title, wchar16_t * comment);
+void NANDInitBanner(NANDBanner * banner, u32 flags, const wchar16_t * title, const wchar16_t * comment);
 UNKNOWN_FUNCTION(_ES_GetDataDir)
 s32 NANDCheckAsync(u32 blockCount, u32 inodeCount, u32 * answer, NANDCallback * callback,
                    NANDCommandBlock * commandBlock);
