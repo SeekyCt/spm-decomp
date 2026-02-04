@@ -1947,6 +1947,7 @@ s32 evt_inline_evt(EvtEntry * entry)
 {
     EvtScriptCode * inlineEnd;
     s32 opc;
+    s32 argCount;
     EvtScriptCode * script;
     EvtEntry * evt;
 
@@ -1956,7 +1957,8 @@ s32 evt_inline_evt(EvtEntry * entry)
     do
     {
         opc = *inlineEnd & 0xffff;
-        inlineEnd += *inlineEnd++ >> 16;
+        argCount = *inlineEnd++;
+        inlineEnd += argCount >> 16;
     }
     while (opc != EVT_OPC_END_INLINE);
     entry->pCurInstruction = inlineEnd;
@@ -1984,6 +1986,7 @@ s32 evt_inline_evt_id(EvtEntry * entry)
 {
     EvtScriptCode * inlineEnd;
     s32 opc;
+    s32 argCount;
     EvtScriptCode * script;
     EvtEntry * evt;
     EvtScriptCode * p;
@@ -1997,7 +2000,8 @@ s32 evt_inline_evt_id(EvtEntry * entry)
     do
     {
         opc = *inlineEnd & 0xffff;
-        inlineEnd += *inlineEnd++ >> 16;
+        argCount = *inlineEnd++;
+        inlineEnd += argCount >> 16;
     }
     while (opc != EVT_OPC_END_INLINE);
     entry->pCurInstruction = inlineEnd;
@@ -2034,6 +2038,7 @@ s32 evt_brother_evt(EvtEntry * entry)
 {
     EvtScriptCode * brotherEnd;
     s32 opc;
+    s32 argCount;
     EvtScriptCode * script;
     EvtEntry * evt;
 
@@ -2043,7 +2048,8 @@ s32 evt_brother_evt(EvtEntry * entry)
     do
     {
         opc = *brotherEnd & 0xffff;
-        brotherEnd += *brotherEnd++ >> 16;
+        argCount = *brotherEnd++;
+        brotherEnd += argCount >> 16;
     }
     while (opc != EVT_OPC_END_BROTHER);
     entry->pCurInstruction = brotherEnd;
@@ -2062,6 +2068,7 @@ s32 evt_brother_evt_id(EvtEntry * entry)
 {
     EvtScriptCode * brotherEnd;
     s32 opc;
+    s32 argCount;
     EvtScriptCode * script;
     EvtEntry * evt;
     EvtScriptCode * p;
@@ -2075,7 +2082,8 @@ s32 evt_brother_evt_id(EvtEntry * entry)
     do
     {
         opc = *brotherEnd & 0xffff;
-        brotherEnd += *brotherEnd++ >> 16;
+        argCount = *brotherEnd++;
+        brotherEnd += argCount >> 16;
     }
     while (opc != EVT_OPC_END_BROTHER);
     entry->pCurInstruction = brotherEnd;
@@ -3125,6 +3133,7 @@ EvtScriptCode * evtSearchElse(EvtEntry * entry)
     s32 ifDepth;
     EvtScriptCode * pInstr;
     s32 opc;
+    s32 argCount;
 
     ifDepth = 0;
     pInstr = entry->pCurInstruction;
@@ -3132,7 +3141,8 @@ EvtScriptCode * evtSearchElse(EvtEntry * entry)
     while (true)
     {
         opc = *pInstr & 0xffff;
-        pInstr += *pInstr++ >> 16;
+        argCount = *pInstr++;
+        pInstr += argCount >> 16;
 
         switch (opc)
         {
@@ -3163,6 +3173,7 @@ EvtScriptCode * evtSearchEndIf(EvtEntry * entry)
     s32 ifDepth;
     EvtScriptCode * pInstr;
     s32 opc;
+    s32 argCount;
 
     ifDepth = 0;
     pInstr = entry->pCurInstruction;
@@ -3170,7 +3181,8 @@ EvtScriptCode * evtSearchEndIf(EvtEntry * entry)
     while (true)
     {
         opc = *pInstr & 0xffff;
-        pInstr += *pInstr++ >> 16;
+        argCount = *pInstr++;
+        pInstr += argCount >> 16;
 
         switch (opc)
         {
@@ -3195,6 +3207,7 @@ EvtScriptCode * evtSearchEndSwitch(EvtEntry * entry)
     EvtScriptCode * pInstr;
     s32 switchDepth;
     s32 opc;
+    s32 argCount;
     EvtScriptCode * ret;
 
     pInstr = entry->pCurInstruction;
@@ -3204,7 +3217,8 @@ EvtScriptCode * evtSearchEndSwitch(EvtEntry * entry)
     {
         opc = *pInstr & 0xffff;
         ret = pInstr;
-        pInstr += *pInstr++ >> 16;
+        argCount = *pInstr++;
+        pInstr += argCount >> 16;
 
         switch (opc)
         {
@@ -3229,6 +3243,7 @@ EvtScriptCode * evtSearchCase(EvtEntry * entry)
     EvtScriptCode * pInstr;
     s32 switchDepth;
     s32 opc;
+    s32 argCount;
     EvtScriptCode * ret;
 
     pInstr = entry->pCurInstruction;
@@ -3238,7 +3253,8 @@ EvtScriptCode * evtSearchCase(EvtEntry * entry)
     {
         opc = *pInstr & 0xffff;
         ret = pInstr;
-        pInstr += *pInstr++ >> 16;
+        argCount = *pInstr++; 
+        pInstr += argCount >> 16;
 
         switch (opc)
         {
@@ -3269,6 +3285,7 @@ EvtScriptCode * evtSearchWhile(EvtEntry * entry)
     s32 doWhileDepth;
     EvtScriptCode * pInstr;
     s32 opc;
+    s32 argCount;
 
     doWhileDepth = 0;
     pInstr = entry->pCurInstruction;
@@ -3276,7 +3293,8 @@ EvtScriptCode * evtSearchWhile(EvtEntry * entry)
     while (true)
     {
         opc = *pInstr & 0xffff;
-        pInstr += *pInstr++ >> 16;
+        argCount = *pInstr++;
+        pInstr += argCount >> 16;
 
         switch (opc)
         {
@@ -3301,6 +3319,7 @@ EvtScriptCode * evtSearchJustBeforeWhile(EvtEntry * entry)
     s32 doWhileDepth;
     EvtScriptCode * pInstr;
     s32 opc;
+    s32 argCount;
 
     doWhileDepth = 0;
     pInstr = entry->pCurInstruction;
@@ -3325,7 +3344,8 @@ EvtScriptCode * evtSearchJustBeforeWhile(EvtEntry * entry)
                 break;
         }
 
-        pInstr += *pInstr++ >> 16;
+        argCount = *pInstr++;
+        pInstr += argCount >> 16;
     }
 }
 
