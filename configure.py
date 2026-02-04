@@ -372,6 +372,8 @@ config.progress_report_args = [
     # "--config functionRelocDiffs=data_value",
 ]
 
+config.extra_clang_flags = ['-fshort-wchar']
+
 if args.mode == "configure":
     # Write build.ninja and objdiff.json
     print("Configure for", args.version)
