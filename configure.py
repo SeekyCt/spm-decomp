@@ -372,7 +372,11 @@ config.progress_report_args = [
     # "--config functionRelocDiffs=data_value",
 ]
 
-config.extra_clang_flags = ['-fshort-wchar']
+# Custom clangd flags
+config.extra_clang_flags = [
+    "-fshort-wchar", # 16-bit wchar_t to match CW
+    "-Wno-main", # Don't warn for extern C main
+]
 
 if args.mode == "configure":
     # Write build.ninja and objdiff.json

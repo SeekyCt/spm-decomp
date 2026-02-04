@@ -45,7 +45,7 @@ static void make_pri_table()
     priEntryCount = 0;
     for (n = 0; n < wp->entryCount; n++, entry++)
     {
-        if (entry->flags & EVT_FLAG_IN_USE != 0)
+        if ((entry->flags & EVT_FLAG_IN_USE) != 0)
         {
             priTbl[priEntryCount] = n;
             priIdTbl[priEntryCount] = entry->id;
@@ -503,7 +503,7 @@ void evtDelete(EvtEntry * entry)
     s32 i;
 
     wp = evtGetWork();
-    if (entry->flags & EVT_FLAG_IN_USE != 0)
+    if ((entry->flags & EVT_FLAG_IN_USE) != 0)
     {
         if (entry->childEntry != NULL)
             evtDelete(entry->childEntry);
@@ -752,7 +752,7 @@ EvtEntry * evtGetPtrID(s32 id)
     curEntry = wp->entries;
     for (i = 0; i < wp->entryCount; i++, curEntry++)
     {
-        if (curEntry->flags & EVT_FLAG_IN_USE != 0 && curEntry->id == id)
+        if ((curEntry->flags & EVT_FLAG_IN_USE) != 0 && curEntry->id == id)
             return curEntry;
     }
 

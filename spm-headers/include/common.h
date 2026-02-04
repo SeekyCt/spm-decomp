@@ -99,7 +99,7 @@
     #define ATTRIBUTE(x)
 #endif
 
-#if HAS_ATTRIBUTE(noreturn) && (defined __cplusplus) // TODO: the usage sites are probabably what should be fixed here
+#if !defined DECOMP & HAS_ATTRIBUTE(noreturn) && (defined __cplusplus) // TODO: the usage sites are probabably what should be fixed here
     #define NORETURN ATTRIBUTE(noreturn)
 #else
     #define NORETURN
