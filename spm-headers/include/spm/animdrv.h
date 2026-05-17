@@ -114,7 +114,7 @@ SIZE_ASSERT(AnimPoseData, 0x1b0)
 
 typedef struct
 {
-/* 0x00 */ s32 inUse;
+/* 0x00 */ BOOL inUse;
 /* 0x04 */ s32 refCnt;
 /* 0x08 */ FileEntry * file;
 } TextureGroup;
@@ -122,7 +122,7 @@ SIZE_ASSERT(TextureGroup, 0xc)
 
 typedef struct
 {
-/* 0x00 */ s32 inUse;
+/* 0x00 */ BOOL inUse;
 /* 0x04 */ s32 refCnt;
 /* 0x08 */ FileEntry * file;
 /* 0x0C */ s32 textureGroupId;
@@ -139,7 +139,21 @@ typedef struct
 /* 0x014 */ Unk curAnimIndex;
 /* 0x018 */ u8 unknown_0x18[0x020 - 0x018];
 /* 0x020 */ f32 frmCounter; // unconfirmed
-/* 0x024 */ u8 unknown_0x24[0x188 - 0x024];
+/* 0x024 */ u8 unknown_0x24[0x44 - 0x24];
+/* 0x044 */ int lastAnimFrame0;
+/* 0x048 */ float lastAnimFrameTime;
+/* 0x04C */ float localTimeRate;
+/* 0x050 */ void * bufferVtxPos;
+/* 0x054 */ Vec3 * vtxArrayPos;
+/* 0x058 */ void * bufferVtxNorm;
+/* 0x05C */ Vec3 * vtxArrayNorm;
+/* 0x060 */ void * bufferGroupVisibility;
+/* 0x064 */ void * groupVisibility;
+/* 0x068 */ void * bufferNodes;
+/* 0x06C */ void * nodes;
+/* 0x070 */ void * bufferTexAnimEntries;
+/* 0x074 */ void * texAnimEntries;
+/* 0x078 */ u8 unknown_0x78[0x188 - 0x78];
 } AnimPose;
 SIZE_ASSERT(AnimPose, 0x188)
 
@@ -149,9 +163,25 @@ typedef struct
 /* 0x004 */ s32 animGroupNum;
 /* 0x008 */ TextureGroup * textureGroups;
 /* 0x00C */ s32 textureGroupNum;
-/* 0x008 */ u8 unknown_0x8[0x110 - 0x010];
+/* 0x010 */ AnimPose * animPose;
+/* 0x014 */ int animPoseNum;
+/* 0x018 */ void * curPose;
+/* 0x01C */ void * curAnimData;
+/* 0x020 */ void * curPoseData;
+/* 0x024 */ void * texDatas[2];
+/* 0x02C */ void * curTexData;
+/* 0x030 */ void * texObjs[2];
+/* 0x038 */ void * curTexObj;
+/* 0x03C */ u8 unknown_0x3c[0xf8 - 0x3c];
+/* 0x0F8 */ Vec3 * vtxArrayPos;
+/* 0x0FC */ Vec3 * vtxArrayNorm;
+/* 0x100 */ void * ag2tg; 
+/* 0x104 */ void * testHeap;
+/* 0x108 */ void * testHeapNextFree;
+/* 0x10C */ BOOL inBattle; 
 } AnimWork; // Uncertain size
 SIZE_ASSERT(AnimWork, 0x110)
+
 
 DECOMP_STATIC(AnimWork * animdrv_wp)
 
