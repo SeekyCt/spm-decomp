@@ -129,18 +129,6 @@ typedef struct
 } AnimGroup;
 SIZE_ASSERT(AnimGroup, 0x10)
 
-typedef struct
-{
-/* 0x000 */ AnimGroup * animGroups;
-/* 0x004 */ s32 animGroupNum;
-/* 0x008 */ TextureGroup * textureGroups;
-/* 0x00C */ s32 textureGroupNum;
-/* 0x008 */ u8 unknown_0x8[0x110 - 0x010];
-} AnimWork; // Uncertain size
-SIZE_ASSERT(AnimWork, 0x110)
-
-DECOMP_STATIC(AnimWork * animdrv_wp)
-
 typedef struct 
 {
 /* 0x000 */ u32 flag;
@@ -154,6 +142,18 @@ typedef struct
 /* 0x024 */ u8 unknown_0x24[0x188 - 0x024];
 } AnimPose;
 SIZE_ASSERT(AnimPose, 0x188)
+
+typedef struct
+{
+/* 0x000 */ AnimGroup * animGroups;
+/* 0x004 */ s32 animGroupNum;
+/* 0x008 */ TextureGroup * textureGroups;
+/* 0x00C */ s32 textureGroupNum;
+/* 0x008 */ u8 unknown_0x8[0x110 - 0x010];
+} AnimWork; // Uncertain size
+SIZE_ASSERT(AnimWork, 0x110)
+
+DECOMP_STATIC(AnimWork * animdrv_wp)
 
 AnimWork * animGetPtr();
 OSTime animTimeGetTime();
