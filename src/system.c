@@ -28,7 +28,7 @@ static char tmp1[0x100];
 
 // .sdata
 static OSMutex * sysMutexP = &sysMutex;
-static s32 randomSeed = 1;
+static u32 randomSeed = 1;
 
 // .sbss
 static u32 comp;
@@ -214,7 +214,7 @@ void movePos(f32 distance, f32 angle, f32 * x, f32 * z)
 
 // NOT_DECOMPILED qqsort
 
-static s32 _rand_advance()
+static u32 _rand_advance()
 {
     randomSeed = randomSeed * 0x5d588b65 + 1;
     return randomSeed;
@@ -288,7 +288,7 @@ f32 frand(f32 limit)
 
 void sysRandInit()
 {
-    randomSeed = (s32) OSGetTime();
+    randomSeed = (u32) OSGetTime();
 }
 
 u16 sysGetToken()
