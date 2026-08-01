@@ -56,8 +56,8 @@ UNKNOWN_FUNCTION(func_801471e8)
 UNKNOWN_FUNCTION(func_801472b4)
 UNKNOWN_FUNCTION(func_801472ec)
 UNKNOWN_FUNCTION(func_8014744c)
-void marioChangeCharacter(s8 charMode);
-void _marioChangeCharacter(s8 character);
+void marioChangeCharacter(s32 charMode);
+void _marioChangeCharacter(s32 character);
 UNKNOWN_FUNCTION(func_80147748)
 UNKNOWN_FUNCTION(mot_character_change)
 

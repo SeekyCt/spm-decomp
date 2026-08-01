@@ -28,8 +28,12 @@ enum PlayerCharacter
 /* 0x0 */ PLAYER_MARIO,
 /* 0x1 */ PLAYER_PEACH,
 /* 0x2 */ PLAYER_BOWSER,
-/* 0x3 */ PLAYER_LUIGI
+/* 0x3 */ PLAYER_LUIGI,
+/* 0x4 */ PLAYER_CHARACTER_MAX
 };
+
+#define MARIO_MODE PLAYER_MARIO
+#define MARIO_MODE_END PLAYER_CHARACTER_MAX
 
 typedef struct
 {
@@ -313,7 +317,8 @@ typedef struct
         Others unknown
     */
 /* 0x0014 */ u8 effectFlags;
-/* 0x0015 */ u8 unknown_0x15[0x1c - 0x15];
+/* 0x0015 */ u8 unknown_0x15[0x18 - 0x15];
+/* 0x0018 */ s32 unknown_0x18;
 /* 0x001C */ const char * curPoseName; // current animation name
 /* 0x0020 */ const char * paperPoseName;
 /* 0x0024 */ s16 poseTime; // time in current animation
@@ -323,11 +328,12 @@ typedef struct
 /* 0x002E */ u16 prevMotionId; // see enum above
 /* 0x0030 */ u8 unknown_0x30[0x34 - 0x30];
     // freeze the player when > 0 (for cutscenes, talking, etc)
-/* 0x0034 */ u8 ctrl;
-/* 0x0035 */ u8 keyOff;
+/* 0x0034 */ s8 ctrl;
+/* 0x0035 */ s8 keyOff;
 /* 0x0036 */ u8 unknown_0x36[0x38 - 0x36];
 /* 0x0038 */ s8 character; // see enum above
-/* 0x0039 */ u8 unknown_0x39[0x3b - 0x39];
+/* 0x0039 */ u8 unknown_0x39;
+/* 0x003A */ u8 unknown_0x3a;
 /* 0x003B */ u8 wallTimer;
 /* 0x003C */ s32 subMotionId; // values vary by motion id
 /* 0x0040 */ u8 unknown_0x40[0x44 - 0x40];
@@ -338,10 +344,17 @@ typedef struct
 /* 0x0054 */ f32 jumpPeakAirTime; // value of airTimer when reaching top of jump
 /* 0x0058 */ u8 unknown_0x58[0x5c - 0x58];
 /* 0x005C */ Vec3 position;
-/* 0x0068 */ u8 unknown_0x68[0xb0 - 0x68];
+/* 0x0068 */ u8 unknown_0x68[0x8c - 0x68];
+/* 0x008C */ Vec3 unknown_0x8c;
+/* 0x0098 */ Vec3 unknown_0x98;
+/* 0x00A4 */ Vec3 unknown_0xa4;
 /* 0x00B0 */ Vec3 ttydRotation;
 /* 0x00BC */ Vec3 scale;
-/* 0x00C8 */ u8 unknown_0xc8[0x120 - 0xc8];
+/* 0x00C8 */ Vec3 unknown_0xc8;
+/* 0x00D4 */ u8 unknown_0xd4[0xe0 - 0xd4];
+/* 0x00E0 */ Vec3 unknown_0xe0;
+/* 0x00EC */ Vec3 unknown_0xec;
+/* 0x00F8 */ u8 unknown_0xf8[0x120 - 0xf8];
 /* 0x0120 */ s32 camId;
 /* 0x0124 */ u8 unknown_0x124[0x128 - 0x124];
 /* 0x0128 */ Vec3i framebufferPos;
@@ -349,9 +362,11 @@ typedef struct
 /* 0x0148 */ f32 xzSpeed; // current horizontal speed
 /* 0x014C */ f32 walkSpeed; // base walk speed
 /* 0x0150 */ f32 dashSpeed; // base dash speed
-/* 0x0154 */ u8 unknown_0x154[0x160 - 0x154];
+/* 0x0154 */ u8 unknown_0x154[0x158 - 0x154];
+/* 0x0158 */ f32 unknown_0x158;
+/* 0x015C */ u8 unknown_0x15c[0x160 - 0x15c];
 /* 0x0160 */ f32 lastGroundSpeed; // xzSpeed when last on ground
-/* 0x0164 */ u8 unknown_0x164[0x168 - 0x164];
+/* 0x0164 */ f32 unknown_0x164;
 /* 0x0168 */ f32 unknown_0x168;
 /* 0x016C */ u8 unknown_0x16c[0x174 - 0x16c];
 /* 0x0174 */ f32 directionWorld; // degrees
@@ -364,7 +379,8 @@ typedef struct
 /* 0x0198 */ f32 hitboxHeight;
 /* 0x019C */ f32 baseHitboxWidth;
 /* 0x01A0 */ f32 baseHitboxHeight;
-/* 0x01A4 */ u8 unknown_0x1a4[0x1bc - 0x1a4];
+/* 0x01A4 */ f32 unknown_0x1a4;
+/* 0x01A8 */ u8 unknown_0x1a8[0x1bc - 0x1a8];
     /*
         1 is interact (in front of player)
         2 is stand on
@@ -383,7 +399,8 @@ typedef struct
         Others unknown
     */
 /* 0x01FC */ HitObj * hitObjs2[3];
-/* 0x0208 */ u8 unknown_0x208[0x24c - 0x208];
+/* 0x0208 */ u8 unknown_0x208[0x248 - 0x208];
+/* 0x0248 */ f32 unknown_0x248;
     /*
         0 is main model
         1 is back model (Mario only)
@@ -392,7 +409,11 @@ typedef struct
         Others unknown
     */
 /* 0x024C */ s32 animPoseIds[8];
-/* 0x026C */ u8 unknown_0x26c[0x30c - 0x26c];
+/* 0x026C */ s32 unknown_0x26c[10];
+/* 0x0294 */ s32 unknown_0x294[10];
+/* 0x02BC */ s32 unknown_0x2bc[10];
+/* 0x02E4 */ s32 unknown_0x2e4[5];
+/* 0x02F8 */ s32 unknown_0x2f8[5];
 /* 0x030C */ u16 buttonsHeld;
 /* 0x030E */ u16 buttonsPressed;
 /* 0x0310 */ u16 buttonsHeldRepeat;
@@ -432,9 +453,10 @@ typedef struct
 /* 0x03A8 */ s32 catchType;
 /* 0x03AC */ u8 unknown_0x3ac[0x3d0 - 0x3ac];
 /* 0x03D0 */ f32 xzSpeedFactor;
-/* 0x03D4 */ u8 unknown_0x3d4[0x3d8 - 0x3d4];
+/* 0x03D4 */ s32 unknown_0x3d4;
 /* 0x03D8 */ Vec3 respawnPosition;
-/* 0x03E4 */ u8 unknown_0x3e4[0x3ec - 0x3e4];
+/* 0x03E4 */ s32 respawnPositionLockMode;
+/* 0x03E8 */ u8 unknown_0x3e8[0x3ec - 0x3e8];
 /* 0x03EC */ HitObj * hitObjRideArray[24];
 /* 0x044C */ s32 numHitObjRideArray; // number of pointers in the array above
 /* 0x0450 */ u8 unknown_0x450[0x694 - 0x450];
@@ -457,7 +479,9 @@ typedef struct
 /* 0x0E80 */ MarioStatus statusTbl[32];
 /* 0x1300 */ MarioStatus * firstStatus;
 /* 0x1304 */ MarioStatus * lastStatus;
-/* 0x1308 */ u8 unknown_0x1308[0x1360 - 0x1308];
+/* 0x1308 */ s32 unknown_0x1308;
+/* 0x130C */ Mtx34 unknown_0x130c;
+/* 0x133C */ u8 unknown_0x133c[0x1360 - 0x133c];
 /* 0x1360 */ s32 gravityType; // see enum above
     // Unit vectors for each direction under current gravity
 /* 0x1364 */ Vec3 gravUnitRight; // positive x normally
@@ -482,7 +506,8 @@ typedef struct
 /* 0x14C4 */ u8 unknown_0x14c4[0x14dc - 0x14c4];
 /* 0x14DC */ MarioAcrobatCallback * acrobatCb;
 /* 0x14E0 */ s32 acrobatStage;
-/* 0x14E4 */ u8 unknown_0x14e4[0x1550 - 0x14e4];
+/* 0x14E4 */ u8 unknown_0x14e4[0x154c - 0x14e4];
+/* 0x154C */ s32 unknown_0x154c;
 /* 0x1550 */ s32 pane; // row of the map on z-axis the player is in, -1 if no panes
 /* 0x1554 */ MarioPaneBoundary * paneBoundaries; // null if no panes
 /* 0x1558 */ MarioPaneChangeFunc * paneChangeFunc;
@@ -499,7 +524,7 @@ typedef struct
 /* 0x04 */ f32 hitboxHeight;
 /* 0x08 */ f32 walkSpeed;
 /* 0x0C */ f32 dashSpeed;
-/* 0x10 */ u8 unknown_0x10[0x14 - 0x10];
+/* 0x10 */ f32 unknown_0x10;
 } CharacterProperties;
 SIZE_ASSERT(CharacterProperties, 0x14)
 
@@ -531,16 +556,16 @@ UNKNOWN_FUNCTION(func_80121e18)
 f32 marioGetGameSpeedScale();
 
 UNKNOWN_FUNCTION(func_80121e58)
-UNKNOWN_FUNCTION(func_80121f40)
+f32 func_80121f40();
 
 /*
     Returns a pointer to the MarioWork instance
 */
 MarioWork * marioGetPtr();
 
-UNKNOWN_FUNCTION(func_80121f54)
-UNKNOWN_FUNCTION(func_8012217c)
-UNKNOWN_FUNCTION(func_801222a4)
+void func_80121f54();
+bool marioMainPoseDispCb(void * param, s32 animGroupIdx, s32 param_3);
+bool marioSubPoseDispCb(void * param, s32 animGroupIdx, s32 param_3);
 
 /*
     Changes the player's model
@@ -574,7 +599,7 @@ f32 marioGetHitboxHeight_BowserSpecial();
 /*
     Returns the characterProperties dashSpeed for the current character
 */
-f32 marioGetDashSpeedRaw();
+f32 marioGetDashSpeedRaw(s32 character);
 
 /*
     Updates the player on entering a new map
@@ -595,12 +620,12 @@ bool marioCtrlOnChk();
 /*
     Returns whether player movement is disabled based on ctrl
 */
-bool marioCtrlOffChk();
+s32 marioCtrlOffChk();
 
 /*
     Returns whether player movement is disabled based on keyOff
 */
-bool marioKeyOffChk();
+s32 marioKeyOffChk();
 
 /*
     Disables movement, increasing ctrl by one and returning it
@@ -694,7 +719,7 @@ UNKNOWN_FUNCTION(func_80125854)
 UNKNOWN_FUNCTION(func_80125998)
 UNKNOWN_FUNCTION(func_80126034)
 UNKNOWN_FUNCTION(func_801265a0)
-UNKNOWN_FUNCTION(func_80126618)
+bool func_80126618();
 UNKNOWN_FUNCTION(func_8012662c)
 UNKNOWN_FUNCTION(func_80126688)
 
@@ -715,7 +740,14 @@ void marioPaperLightOff();
 /*
     Returns whether the player's current animation has finished
 */
-bool marioIsAnimFinished();
+typedef enum
+{
+    MARIO_ANIM_NOT_FINISHED,
+    MARIO_ANIM_FINISHED,
+    MARIO_ANIM_FINISHED_RESULT_MAX
+} MarioAnimFinishedResult;
+
+MarioAnimFinishedResult marioIsAnimFinished();
 
 UNKNOWN_FUNCTION(func_80126c98)
 UNKNOWN_FUNCTION(func_80126cfc)
@@ -780,7 +812,7 @@ DECOMP_STATIC(const char * mario_toFrontPose(const char * name))
 
 UNKNOWN_FUNCTION(func_801299f8)
 UNKNOWN_FUNCTION(func_80129d8c)
-UNKNOWN_FUNCTION(func_80129db8)
+s32 func_80129db8();
 UNKNOWN_FUNCTION(func_80129ddc)
 UNKNOWN_FUNCTION(func_80129dfc)
 UNKNOWN_FUNCTION(func_8012a064)
@@ -842,9 +874,9 @@ UNKNOWN_FUNCTION(func_8012b218)
 UNKNOWN_FUNCTION(func_8012b2c4)
 UNKNOWN_FUNCTION(func_8012b370)
 UNKNOWN_FUNCTION(func_8012b39c)
-UNKNOWN_FUNCTION(func_8012b498)
+bool func_8012b498();
 UNKNOWN_FUNCTION(func_8012b4ac)
-UNKNOWN_FUNCTION(func_8012b4f8)
+u32 func_8012b4f8();
 
 /*
     Sets the player's gravity direction, see enum above

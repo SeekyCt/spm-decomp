@@ -64,6 +64,11 @@ mario.c:
 	.sbss       start:0x805AE8E8 end:0x805AE8F8
 	.sdata2     start:0x805B23C8 end:0x805B2578
 
+mario_motion.c:
+	extab       start:0x8000B700 end:0x8000B710
+	extabindex  start:0x800175F0 end:0x80017608
+	.text       start:0x80147570 end:0x80147748
+
 mario_pouch.c:
 	extab       start:0x8000B820 end:0x8000B898
 	extabindex  start:0x800177A0 end:0x80017854

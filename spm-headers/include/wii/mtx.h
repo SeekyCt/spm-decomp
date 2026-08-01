@@ -60,7 +60,7 @@ void C_MTXOrtho(Mtx44 dest, f32 top, f32 bottom, f32 left, f32 right, f32 near, 
 UNKNOWN_FUNCTION(PSMTX44Copy)
 UNKNOWN_FUNCTION(PSMTX44MultVec)
 UNKNOWN_FUNCTION(PSMTX44MultVecArray)
-UNKNOWN_FUNCTION(PSVECAdd)
+void PSVECAdd(const Vec3 * src1, const Vec3 * src2, Vec3 * dest);
 void PSVECSubtract(const Vec3 * src1, const Vec3 * src2, Vec3 * dest);
 void PSVECScale(const Vec3 * src, Vec3 * dest, f32 scale);
 void PSVECNormalize(const Vec3 * src, Vec3 * dest);

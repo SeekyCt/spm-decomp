@@ -176,7 +176,7 @@ UNKNOWN_FUNCTION(animPoseSetLocalTime)
 UNKNOWN_FUNCTION(animPoseSetStartTime)
 void animPoseSetAnim(s32 id, const char * animName, bool forceReset);
 UNKNOWN_FUNCTION(animPaperPoseGetId)
-UNKNOWN_FUNCTION(animPoseSetPaperAnimGroup)
+void animPoseSetPaperAnimGroup(s32 animPoseId, s32 group, s32 param_3);
 UNKNOWN_FUNCTION(animPoseSetPaperAnim)
 UNKNOWN_FUNCTION(func_80043b90)
 UNKNOWN_FUNCTION(func_80043ca4)
@@ -184,7 +184,7 @@ UNKNOWN_FUNCTION(animPoseSetEffect)
 UNKNOWN_FUNCTION(animPoseSetEffectAnim)
 UNKNOWN_FUNCTION(animPoseSetGXFunc)
 f32 animPoseGetLoopTimes(s32 animPoseId);
-UNKNOWN_FUNCTION(animPoseSetFlagF0On)
+void animPoseSetFlagF0On(s32 animPoseId, u32 flag);
 UNKNOWN_FUNCTION(animPoseSetFlagF0Off)
 UNKNOWN_FUNCTION(animPoseSetFlagF4On)
 UNKNOWN_FUNCTION(animPoseSetFlagF4Off)
@@ -202,6 +202,7 @@ GXColor animPoseGetMaterialEvtColor(s32 animPoseId);
 u32 animPoseGetMaterialFlag(s32 animPoseId);
 
 UNKNOWN_FUNCTION(animPoseGetFlagF4)
+u32 animPoseGetFlagF0(s32 animPoseId);
 
 void animPoseSetMaterialEvtColor(s32 animPoseId, GXColor color);
 
@@ -222,7 +223,7 @@ UNKNOWN_FUNCTION(_animPoseDrawMtx)
 void animPoseDrawMtx(s32 id, Mtx34 mtx, s32 xluStage, f32 rotY, f32 scale);
 UNKNOWN_FUNCTION(animSetPaperTexObj)
 s32 animPoseRelease(s32 id);
-UNKNOWN_FUNCTION(animPaperPoseRelease)
+void animPaperPoseRelease(s32 animPoseId);
 void animPoseAutoRelease(s32 releaseType);
 UNKNOWN_FUNCTION(animPaperPoseDisp)
 UNKNOWN_FUNCTION(animPaperPoseDispSub)
