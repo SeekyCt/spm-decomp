@@ -236,7 +236,7 @@ EVT_DECLARE_USER_FUNC(evt_dan_get_chest_room_item, 2)
 EVT_DECLARE_USER_FUNC(evt_dan_boss_room_set_door_name, 0)
 
 void func_80c839cc(const char * param_1, bool param_2);
-void wracktailDispCb(void * param, s32 animGroupIdx, s32 param_3);
+bool wracktailDispCb(void * param, s32 animGroupIdx, s32 param_3);
 
 // evt_dan_set_wracktail_disp_cb()
 EVT_DECLARE_USER_FUNC(evt_dan_set_wracktail_disp_cb, 0)

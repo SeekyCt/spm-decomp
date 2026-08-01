@@ -5,6 +5,7 @@ CPP_WRAPPER(spm::eff_spm_confetti)
 // ...
 
 void effSpmConfettiEntry(f32, f32, f32, s32, s32);
+void effSpmConfetti(f32, f32, f32, s32, s32);
 
 // ...
 

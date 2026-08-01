@@ -328,12 +328,12 @@ config.libs = [
         Object(Matching, "memory.c"),
         Object(NonMatching, "spmario.c"),
         Object(NonStarted, "npcdrv.c"),
-        Object(NonMatching, "wpadmgr.c"),
+        Object(Matching, "wpadmgr.c", postprocess="tools/fixup_wpadmgr.py"),
         Object(Matching, "relmgr.c"),
         Object(Matching, "nandmgr.c"),
     ),
     Rel(
-        Object(NonMatching, "dan.c"),
+        Object(Matching, "dan.c", extra_cflags=["-Cpp_exceptions off"]),
     ),
     Runtime(
         Object(NonMatching, "Runtime.PPCEABI.H/global_destructor_chain.c"),

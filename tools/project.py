@@ -63,6 +63,7 @@ class Object:
             "extra_clang_flags": [],
             "lib": None,
             "mw_version": None,
+            "postprocess": None,
             "progress_category": None,
             "scratch_preset_id": None,
             "shift_jis": None,
@@ -719,6 +720,11 @@ def generate_build_ninja(
         mwcc_extab_implicit.append(transform_dep)
         mwcc_sjis_extab_implicit.append(transform_dep)
 
+    mwcc_postprocess_cmd = f"{mwcc_cmd} && $python $postprocess $out"
+    mwcc_postprocess_implicit: List[Optional[Path]] = [*mwcc_implicit]
+    mwcc_sjis_postprocess_cmd = f"{mwcc_sjis_cmd} && $python $postprocess $out"
+    mwcc_sjis_postprocess_implicit: List[Optional[Path]] = [*mwcc_sjis_implicit]
+
     n.comment("Link ELF file")
     n.rule(
         name="link",
@@ -772,6 +778,20 @@ def generate_build_ninja(
         name="mwcc_sjis_extab",
         command=mwcc_sjis_extab_cmd,
         description="MWCC $out",
+        depfile="$basefile.d",
+        deps="gcc",
+    )
+    n.rule(
+        name="mwcc_postprocess",
+        command=mwcc_postprocess_cmd,
+        description="MWCC+PATCH $out",
+        depfile="$basefile.d",
+        deps="gcc",
+    )
+    n.rule(
+        name="mwcc_sjis_postprocess",
+        command=mwcc_sjis_postprocess_cmd,
+        description="MWCC+PATCH $out",
         depfile="$basefile.d",
         deps="gcc",
     )
@@ -1041,6 +1061,13 @@ def generate_build_ninja(
                 variables["extab_padding"] = "".join(
                     f"{i:02x}" for i in obj.options["extab_padding"]
                 )
+            elif obj.options["shift_jis"] and obj.options["postprocess"] is not None:
+                build_rule = "mwcc_sjis_postprocess"
+                build_implcit = [
+                    *mwcc_sjis_postprocess_implicit,
+                    Path(obj.options["postprocess"]),
+                ]
+                variables["postprocess"] = Path(obj.options["postprocess"])
             elif obj.options["shift_jis"]:
                 build_rule = "mwcc_sjis"
                 build_implcit = mwcc_sjis_implicit
@@ -1050,6 +1077,13 @@ def generate_build_ninja(
                 variables["extab_padding"] = "".join(
                     f"{i:02x}" for i in obj.options["extab_padding"]
                 )
+            elif obj.options["postprocess"] is not None:
+                build_rule = "mwcc_postprocess"
+                build_implcit = [
+                    *mwcc_postprocess_implicit,
+                    Path(obj.options["postprocess"]),
+                ]
+                variables["postprocess"] = Path(obj.options["postprocess"])
             n.comment(f"{obj.name}: {lib_name} (linked {obj.completed})")
             n.build(
                 outputs=obj.src_obj_path,

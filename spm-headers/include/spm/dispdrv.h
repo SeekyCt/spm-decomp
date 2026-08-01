@@ -16,7 +16,7 @@ typedef void (DispCallback)(s32 cameraId, void * param);
 typedef struct
 {
 /* 0x0 */ s8 cameraId;
-/* 0x1 */ s8 renderMode;
+/* 0x1 */ u8 renderMode;
 /* 0x2 */ u8 unknown_0x2[0x4 - 0x2];
 /* 0x4 */ f32 order;
 /* 0x8 */ DispCallback * callback;

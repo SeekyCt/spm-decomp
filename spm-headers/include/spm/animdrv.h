@@ -13,7 +13,7 @@ USING(wii::mtx::Mtx34)
 USING(wii::gx::GXColor)
 USING(spm::filemgr::FileEntry)
 
-typedef void (AnimPoseDisplayCb)(void * param, s32 animGroupIdx, s32 param_3);
+typedef bool (AnimPoseDisplayCb)(void * param, s32 animGroupIdx, s32 param_3);
 
 typedef struct
 {
@@ -151,7 +151,11 @@ typedef struct
 /* 0x014 */ Unk curAnimIndex;
 /* 0x018 */ u8 unknown_0x18[0x020 - 0x018];
 /* 0x020 */ f32 frmCounter; // unconfirmed
-/* 0x024 */ u8 unknown_0x24[0x188 - 0x024];
+/* 0x024 */ u8 unknown_0x24[0xf0 - 0x024];
+/* 0x0F0 */ u32 materialFlag;
+/* 0x0F4 */ u8 unknown_0xf4[0xfc - 0xf4];
+/* 0x0FC */ GXColor materialColor;
+/* 0x100 */ u8 unknown_0x100[0x188 - 0x100];
 } AnimPose;
 SIZE_ASSERT(AnimPose, 0x188)
 

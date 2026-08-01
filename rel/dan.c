@@ -55,7 +55,7 @@
 #define CHECK_ALL_MASK(num, mask) (((num) & (mask)) == (mask))
 #define CHECK_ANY_MASK(num, mask) (((num) & (mask)) != 0)
 
-// TODO: static scripts
+// Forward declarations for static data and event scripts
 extern DanWork * wp;
 extern const char * mapParts[DAN_PARTS_COUNT];
 extern DokanDesc dokanDescs[8];
@@ -99,749 +99,44 @@ EVT_DECLARE(dan_70_reward_appear_evt)
 EVT_DECLARE(dan_start_shadoo_evt)
 extern const GXColor shadooBlinkColour;
 extern const f64 lbl_80cf0018;
+extern const f32 lbl_80cf05cc[13];
+extern const char danFunctionStrings[0x3a4];
+#define DAN_STR(offset) (&danFunctionStrings[offset])
 
-s32 evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
+typedef struct
 {
-    (void) entry;
+    u8 unknown_0x0[0x18];
+    AnimPose * currentPose;
+    u8 unknown_0x1c[0x20 - 0x1c];
+    AnimPoseData * currentPoseData;
+} DanAnimWork;
 
-    // Allocate work on first run
-    // (check is a relD leftover, this only runs once on retail anyway)
-    if (isFirstCall)
-    {
-        wp = (DanWork *) __memAlloc(HEAP_MAP, sizeof(*wp));
-        memset(wp, 0, sizeof(*wp));
-        wp->dungeons = (DanDungeon *) __memAlloc(HEAP_MAP, sizeof(DanDungeon[DUNGEON_MAX]));
-        memset(wp->dungeons, 0, sizeof(DanDungeon[DUNGEON_MAX]));
-    }
-    
-    // Prepare pit text to be read
-    u32 size = CXGetCompressionHeader(pitText).decompSize;
-    char * decompPitText = (char *) __memAlloc(HEAP_MAIN, size);
-    CXUncompressLZ(pitText, decompPitText);
-    parseInit(decompPitText, size);
-
-    // Add all dungeon entries to work
-    while (parsePush("<Dungeon>"))
-    {
-        // Read no (dungeon id)
-        s32 no = 0;
-        s32 i = 0;
-        parseTagGet1("<no>", PARSE_VALUE_TYPE_INT, &no);
-        SPM_ASSERT(144, no >= 0 && no < DUNGEON_MAX, "なんか番号がおかしい [%d]", no);
-
-        // Read item id (chest contents in chest rooms, null & unused elsewhere)
-        char itemName[64];
-        parseTagGet1("<item>", PARSE_VALUE_TYPE_STRING, itemName);
-        wp->dungeons[no].item = itemTypeNameToId(itemName);
-
-        // Read map (bitflags for parts of the map to enable and disable in enemy rooms, 0 & unused elsewhere)
-        parseTagGet1("<map>", PARSE_VALUE_TYPE_INT, &wp->dungeons[no].map);
-
-        // Read doors
-        while (parsePush("<door>"))
-        {
-            parseTagGet1("<enter>", PARSE_VALUE_TYPE_INT, &wp->dungeons[no].doors[i].enter);
-            parseTagGet1("<exit>", PARSE_VALUE_TYPE_INT, &wp->dungeons[no].doors[i].exit);
-            parsePopNext();
-            i++;
-        }
-        wp->dungeons[no].doorCount = i;
-
-        // Read enemies
-        i = 0;
-        while (parsePush("<enemy>"))
-        {
-            parseTagGet1("<name>", PARSE_VALUE_TYPE_INT, &wp->dungeons[no].enemies[i].name);
-            parseTagGet1("<num>", PARSE_VALUE_TYPE_INT, &wp->dungeons[no].enemies[i].num);
-            parseTagGet1("<pos>", PARSE_VALUE_TYPE_INT, &wp->dungeons[no].enemies[i].pos);
-            parsePopNext();
-            i++;
-        }
-        wp->dungeons[no].enemyCount = i;
-
-        // Move to next dungeon
-        parsePopNext();
-    }
-
-    // Free pit text
-    parsePop();
-    __memFree(0, decompPitText);
-
-    return EVT_RET_CONTINUE;
-}
-
-s32 evt_dan_handle_map_parts(EvtEntry * entry, bool isFirstCall)
+typedef struct
 {
-    (void) isFirstCall;
+    u8 unknown_0x0[0x48];
+    s32 shapeId;
+    u8 unknown_0x4c[0x58 - 0x4c];
+} DanAnimGroup;
 
-    // Get dungeon
-    s32 no = evtGetValue(entry, entry->pCurData[0]);
-    DanDungeon * dungeon = wp->dungeons + no;
-
-    // Turn off all parts by default
-    mapGrpFlagOn(false, "parts", MAPOBJ_FLAG0_HIDE);
-    hitGrpFlagOn(false, "A2_parts", HITOBJ_FLAG_DISABLE);
-    mapGrpFlag4On(false, "block", 0x20);
-
-    // Enable parts from map mask
-    for (u32 i = 0; i < DAN_PARTS_COUNT; i++)
-    {
-        if (dungeon->map & (1 << i))
-        {
-            char a2Part[256];
-            mapGrpFlagOff(false, mapParts[i], MAPOBJ_FLAG0_HIDE);
-            sprintf(a2Part, "A2_%s", mapParts[i]);
-            hitGrpFlagOff(false, a2Part, HITOBJ_FLAG_DISABLE);
-        }
-    }
-
-    // Enable merged parts where possible
-    if (CHECK_ALL_MASK(dungeon->map, 0xC))
-    {
-        mapGrpFlagOff(false, "parts_12_a", MAPOBJ_FLAG0_HIDE);
-        mapGrpFlagOn(false, "parts_12_b", MAPOBJ_FLAG0_HIDE);
-        mapGrpFlagOn(false, "parts_12_c", MAPOBJ_FLAG0_HIDE);
-        hitGrpFlagOff(false, "A2_parts_12_a", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOn(false, "A2_parts_12_b", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOn(false, "A2_parts_12_c", HITOBJ_FLAG_DISABLE);
-    }
-    if (CHECK_ALL_MASK(dungeon->map, 0xC0))
-    {
-        mapGrpFlagOff(false, "parts_09_a", MAPOBJ_FLAG0_HIDE);
-        mapGrpFlagOn(false, "parts_09_b", MAPOBJ_FLAG0_HIDE);
-        mapGrpFlagOn(false, "parts_09_c", MAPOBJ_FLAG0_HIDE);
-        hitGrpFlagOff(false, "A2_parts_09_a", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOn(false, "A2_parts_09_b", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOn(false, "A2_parts_09_c", HITOBJ_FLAG_DISABLE);
-    }
-    if (CHECK_ALL_MASK(dungeon->map, 0x300))
-    {
-        mapGrpFlagOff(false, "parts_11_a", MAPOBJ_FLAG0_HIDE);
-        mapGrpFlagOn(false, "parts_11_b", MAPOBJ_FLAG0_HIDE);
-        mapGrpFlagOn(false, "parts_11_c", MAPOBJ_FLAG0_HIDE);
-        hitGrpFlagOff(false, "A2_parts_11_a", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOn(false, "A2_parts_11_b", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOn(false, "A2_parts_11_c", HITOBJ_FLAG_DISABLE);
-    }
-    if (CHECK_ALL_MASK(dungeon->map, 0x3000))
-    {
-        mapGrpFlagOff(false, "parts_10_a", MAPOBJ_FLAG0_HIDE);
-        mapGrpFlagOn(false, "parts_10_b", MAPOBJ_FLAG0_HIDE);
-        mapGrpFlagOn(false, "parts_10_c", MAPOBJ_FLAG0_HIDE);
-        hitGrpFlagOff(false, "A2_parts_10_a", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOn(false, "A2_parts_10_b", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOn(false, "A2_parts_10_c", HITOBJ_FLAG_DISABLE);
-    }
-
-    return EVT_RET_CONTINUE;
-}
-
-s32 evt_dan_handle_dokans(EvtEntry * entry, bool isFirstCall)
+typedef struct
 {
-    (void) isFirstCall;
+    u8 unknown_0x0[0xa0];
+    s32 type;
+    u8 unknown_0xa4[0xa8 - 0xa4];
+} DanAnimShape;
 
-    // Get dungeon
-    s32 no = evtGetValue(entry, entry->pCurData[0]);
-    DanDungeon * dungeon = wp->dungeons + no;
-
-    // Turn off all pipes by default
-    mapGrpFlagOn(false, "dokan", MAPOBJ_FLAG0_HIDE);
-    hitGrpFlagOn(false, "A2D_dokan", HITOBJ_FLAG_DISABLE);
-    hitGrpFlagOn(false, "A3D_dokan", HITOBJ_FLAG_DISABLE);
-
-    // Turn on enabled pipes
-    if (CHECK_ANY_MASK(dungeon->map, 0x10000)) {
-        mapGrpFlagOff(false, "dokan_01", MAPOBJ_FLAG0_HIDE);
-        hitGrpFlagOff(false, "A2D_dokan_01", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOff(false, "A3D_dokan_01", HITOBJ_FLAG_DISABLE);
-        mapGrpFlagOff(false, "dokan_02", MAPOBJ_FLAG0_HIDE);
-        hitGrpFlagOff(false, "A2D_dokan_02", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOff(false, "A3D_dokan_02", HITOBJ_FLAG_DISABLE);
-    }
-    if (CHECK_ANY_MASK(dungeon->map, 0x20000)) {
-        mapGrpFlagOff(false, "dokan_03", MAPOBJ_FLAG0_HIDE);
-        hitGrpFlagOff(false, "A2D_dokan_03", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOff(false, "A3D_dokan_03", HITOBJ_FLAG_DISABLE);
-        mapGrpFlagOff(false, "dokan_04", MAPOBJ_FLAG0_HIDE);
-        hitGrpFlagOff(false, "A2D_dokan_04", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOff(false, "A3D_dokan_04", HITOBJ_FLAG_DISABLE);
-    }
-    if (CHECK_ANY_MASK(dungeon->map, 0x40000)) {
-        mapGrpFlagOff(false, "dokan_05", MAPOBJ_FLAG0_HIDE);
-        hitGrpFlagOff(false, "A2D_dokan_05", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOff(false, "A3D_dokan_05", HITOBJ_FLAG_DISABLE);
-        mapGrpFlagOff(false, "dokan_06", MAPOBJ_FLAG0_HIDE);
-        hitGrpFlagOff(false, "A2D_dokan_06", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOff(false, "A3D_dokan_06", HITOBJ_FLAG_DISABLE);
-    }
-    if (CHECK_ANY_MASK(dungeon->map, 0x80000)) {
-        mapGrpFlagOff(false, "dokan_07", MAPOBJ_FLAG0_HIDE);
-        hitGrpFlagOff(false, "A2D_dokan_07", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOff(false, "A3D_dokan_07", HITOBJ_FLAG_DISABLE);
-        mapGrpFlagOff(false, "dokan_08", MAPOBJ_FLAG0_HIDE);
-        hitGrpFlagOff(false, "A2D_dokan_08", HITOBJ_FLAG_DISABLE);
-        hitGrpFlagOff(false, "A3D_dokan_08", HITOBJ_FLAG_DISABLE);
-    }
-
-    return EVT_RET_CONTINUE;
-}
-
-s32 evt_dan_handle_doors(EvtEntry * entry, bool isFirstCall)
+typedef union
 {
-    (void) isFirstCall;
+    volatile f32 f32;
+} DanWGPipe;
 
-    // Get dungeon and room
-    EvtScriptCode * args = entry->pCurData;
-    s32 no = evtGetValue(entry, args[0]);
-    s32 room = evtGetValue(entry, args[1]);
-    DanDungeon * dungeon = wp->dungeons + no;
+volatile DanWGPipe danWGFifo : 0xcc008000;
 
-    // Hide all doors by default
-    mapGrpFlagOn(false, "doa", MAPOBJ_FLAG0_HIDE);
-
-    // Determine which door definition to use
-    // (room is an internal name from relD debug prints)
-    if (room > dungeon->doorCount)
-        room = 1;
-    if (room == 0)
-        room = (rand() % dungeon->doorCount) + 1;
-    room -= 1;
-
-    // Store door ids
-    wp->doorInfo.enter = dungeon->doors[room].enter;
-    wp->doorInfo.exit = dungeon->doors[room].exit;
-
-    char str[64];
-
-    // Show enter door & make tangible
-    sprintf(str, "doa_%02d", wp->doorInfo.enter);
-    mapGrpFlagOff(false, str, MAPOBJ_FLAG0_HIDE);
-    sprintf(str, "A2_doa_%02d", wp->doorInfo.enter);
-    hitGrpFlagOff(false, str, HITOBJ_FLAG_DISABLE);
-    sprintf(str, "A3_doa_%02d", wp->doorInfo.enter);
-    hitGrpFlagOff(false, str, HITOBJ_FLAG_DISABLE);
-
-    // Show exit door & make tangible
-    sprintf(str, "doa_%02d", wp->doorInfo.exit);
-    mapGrpFlagOff(0, str, 1);
-    sprintf(str, "A2_doa_%02d", wp->doorInfo.exit);
-    hitGrpFlagOff(0, str, 1);
-    sprintf(str, "A3_doa_%02d", wp->doorInfo.exit);
-    hitGrpFlagOff(0, str, 1);
-
-    // Generate names for enter DoorDesc
-    sprintf(wp->enterDoorName_l, "doa%d_l", wp->doorInfo.enter);
-    sprintf(wp->enterDoorName_r, "doa%d_r", wp->doorInfo.enter);
-    sprintf(wp->enterDoorHitName2d, "A2_doa_%02d", wp->doorInfo.enter);
-    sprintf(wp->enterDoorHitName3d, "A3_doa_%02d", wp->doorInfo.enter);
-    sprintf(wp->prevMapName, "");
-    sprintf(wp->enterDoor_desc0x18, "");
-
-    // Generate names for exit DoorDesc
-    sprintf(wp->exitDoorName_l, "doa%d_l", wp->doorInfo.exit);
-    sprintf(wp->exitDoorName_r, "doa%d_r", wp->doorInfo.exit);
-    sprintf(wp->exitDoorHitName2d, "A2_doa_%02d", wp->doorInfo.exit);
-    sprintf(wp->exitDoorHitName3d, "A3_doa_%02d", wp->doorInfo.exit);
-    sprintf(wp->nextMapName, getDanMapName(no + 1));
-    sprintf(wp->exitDoor_desc0x18, "");
-
-    // Fill in enter DoorDesc
-    mapDoorDescs[0].name_l = wp->enterDoorName_l;
-    mapDoorDescs[0].name_r = wp->enterDoorName_r;
-    mapDoorDescs[0].hitName2d = wp->enterDoorHitName2d;
-    mapDoorDescs[0].hitName3d = wp->enterDoorHitName3d;
-    mapDoorDescs[0].destMapName = wp->prevMapName;
-    mapDoorDescs[0].destDoorName = wp->enterDoor_desc0x18;
-
-    // Fill in exit DoorDesc
-    mapDoorDescs[1].name_l = wp->exitDoorName_l;
-    mapDoorDescs[1].name_r = wp->exitDoorName_r;
-    mapDoorDescs[1].hitName2d = wp->exitDoorHitName2d;
-    mapDoorDescs[1].hitName3d = wp->exitDoorHitName3d;
-    mapDoorDescs[1].destMapName = wp->nextMapName;
-    mapDoorDescs[1].destDoorName = wp->exitDoor_desc0x18;
-
-    // Output door name
-    sprintf(wp->enterDoorName, "doa_%02d", wp->doorInfo.enter);
-    sprintf(wp->exitDoorName, "doa_%02d", wp->doorInfo.exit);
-    strcpy(gp->doorName, wp->enterDoorName_l);
-    evtSetValue(entry, args[2], (s32) wp->enterDoorName_l);
-    evtSetValue(entry, args[3], (s32) wp->exitDoorName_l);
-
-    // Unknown
-    evtSetValue(entry, GSWF(23), 0);
-
-    // Output lock position
-    Vec3 doorPos;
-    hitObjGetPos(wp->exitDoorHitName2d, &doorPos);
-    evtSetFloat(entry, args[4], doorPos.x);
-    evtSetFloat(entry, args[5], doorPos.y - 40.0f);
-    evtSetFloat(entry, args[6], doorPos.z);
-
-    return EVT_RET_CONTINUE;
-}
-
-s32 evt_dan_get_door_names(EvtEntry * entry, bool isFirstCall)
+inline void danGXPosition3f32(f32 x, f32 y, f32 z)
 {
-    (void) isFirstCall;
-
-    EvtScriptCode * args = entry->pCurData;
-    evtSetValue(entry, args[0], (s32) wp->enterDoorName);
-    evtSetValue(entry, args[1], (s32) wp->exitDoorName);
-
-    return EVT_RET_CONTINUE;
-}
-
-s32 evt_dan_get_exit_door_name_l(EvtEntry * entry, bool isFirstCall)
-{
-    (void) isFirstCall;
-
-    EvtScriptCode * args = entry->pCurData;
-    evtSetValue(entry, args[0], (s32) wp->exitDoorName_l);
-
-    return EVT_RET_CONTINUE;
-}
-
-s32 evt_dan_get_enemy_info(EvtEntry * entry, bool isFirstCall)
-{
-    (void) isFirstCall;
-
-    // Get dungeon and enemy index
-    EvtScriptCode * args = entry->pCurData;    
-    s32 no = evtGetValue(entry, args[0]);
-    s32 enemyIdx = evtGetValue(entry, args[1]);
-    DanDungeon * dungeon = wp->dungeons + no;
-
-    if ((enemyIdx < 0) || (enemyIdx >= 16))
-    {
-        // Return 0 for invalid enemies
-        evtSetValue(entry, args[2], 0);
-        evtSetValue(entry, args[3], 0);
-
-        return EVT_RET_CONTINUE;
-    }
-    else
-    {
-        // Get enemy
-        DanEnemy * enemy = dungeon->enemies + enemyIdx;
-
-        if (enemy->num > 0)
-        {
-            // Find template with correct tribe id
-            s32 tribeId = enemy->name - 1;
-            s32 i;
-            NPCEnemyTemplate * curTemplate = npcEnemyTemplates;
-            for (i = 0; i < NPCTEMPLATE_MAX; i++, curTemplate++)
-            {
-                if (((curTemplate->unknown_0x8 & 1) == 0) && (curTemplate->tribeId == tribeId))
-                    break;
-            }
-            SPM_ASSERT(628, i < NPCTEMPLATE_MAX, "みつかりませんでした[%d]", tribeId);
-
-            // Return template id and num
-            evtSetValue(entry, args[2], i);
-            evtSetValue(entry, args[3], enemy->num);
-        }
-        else
-        {
-            // Return 0 for empty enemy slots
-            evtSetValue(entry, args[2], 0);
-            evtSetValue(entry, args[3], 0);
-        }
-
-        return EVT_RET_CONTINUE;
-    }
-}
-
-inline void danPushSpawnTable(s32 doorId)
-{
-    wp->spawnTable[wp->spawnTableCount++] = doorId;
-}
-
-s32 evt_dan_make_spawn_table(EvtEntry * entry, bool isFirstCall)
-{
-    (void) isFirstCall;
-
-    // Get dungeon
-    s32 no = evtGetValue(entry, entry->pCurData[0]);
-    DanDungeon * dungeon = wp->dungeons + no;
-
-    // Build spawn table with all available doors
-    wp->spawnTableCount = 0;
-    if (CHECK_ANY_MASK(dungeon->map, 0x400))
-        danPushSpawnTable(1);
-    danPushSpawnTable(2);
-    danPushSpawnTable(3);
-    if (CHECK_ANY_MASK(dungeon->map, 0x1000))
-    {
-        danPushSpawnTable(4);
-        danPushSpawnTable(5);
-    }
-    danPushSpawnTable(6);
-    danPushSpawnTable(7);
-    if (CHECK_ANY_MASK(dungeon->map, 0x8000))
-        danPushSpawnTable(8);
-    if (CHECK_ANY_MASK(dungeon->map, 0x40))
-    {
-        danPushSpawnTable(10);
-        danPushSpawnTable(11);
-    }
-    danPushSpawnTable(12);
-    danPushSpawnTable(13);
-    if (CHECK_ANY_MASK(dungeon->map, 0x100))
-    {
-        danPushSpawnTable(14);
-        danPushSpawnTable(15);
-    }
-    if (CHECK_ANY_MASK(dungeon->map, 0x1))
-        danPushSpawnTable(17);
-    danPushSpawnTable(18);
-    danPushSpawnTable(19);
-    if (CHECK_ANY_MASK(dungeon->map, 0x4))
-    {
-        danPushSpawnTable(20);
-        danPushSpawnTable(21);
-    }
-    danPushSpawnTable(22);
-    danPushSpawnTable(23);
-    if (CHECK_ANY_MASK(dungeon->map, 0x20))
-        danPushSpawnTable(24);
-    danPushSpawnTable(25);
-    danPushSpawnTable(26);
-    danPushSpawnTable(27);
-    danPushSpawnTable(28);
-    danPushSpawnTable(29);
-    danPushSpawnTable(30);
-    danPushSpawnTable(31);
-    danPushSpawnTable(32);
-
-    // Randomise spawn table
-    for (s32 i = 0; i < 100; i++)
-    {
-        s32 idx1 = rand() % wp->spawnTableCount;
-        s32 idx2 = rand() % wp->spawnTableCount;
-        s32 temp = wp->spawnTable[idx1];
-        wp->spawnTable[idx1] = wp->spawnTable[idx2];
-        wp->spawnTable[idx2] = temp;
-    }
-
-    return EVT_RET_CONTINUE;
-}
-
-s32 evt_dan_get_enemy_spawn_pos(EvtEntry * entry, bool isInitialCall)
-{
-    (void) isInitialCall;
-
-    // Get enemy number, dungeon, and enemy
-    EvtScriptCode * args = entry->pCurData;
-    s32 enemyNum = evtGetValue(entry, args[0]);
-    s32 no = evtGetValue(entry, args[1]);
-    s32 enemyIdx = evtGetValue(entry, args[2]);
-    DanDungeon * dungeon = wp->dungeons + no;
-    DanEnemy * enemy = dungeon->enemies + enemyIdx;
-
-    // Find the (enemyNum % wp->spawnTableCount)th available door
-    s32 targetPos = enemyNum % wp->spawnTableCount;
-    s32 j = 0;
-    char doorName[64];
-    if (enemy->pos != 0)
-    {
-        sprintf(doorName, "A2_doa_%02d", enemy->pos);
-    }
-    else
-    {
-        s32 i;
-        for (i = 0; i < wp->spawnTableCount; i++)
-        {
-            if ((wp->doorInfo.enter != wp->spawnTable[i]) && (wp->doorInfo.exit != wp->spawnTable[i]))
-            {
-                if (j == targetPos)
-                    break;
-                j++;
-            }
-        }
-        sprintf(doorName, "A2_doa_%02d", wp->spawnTable[i]);
-    }
-
-    // Get the position of the door to spawn the enemy at
-    Vec3 doorPos;
-    hitObjGetPos(doorName, &doorPos);
-    doorPos.z = 0.0f;
-
-    // Unknown, outputs coords with some changes if needed
-    f32 f1, f2, f3, f4, f5, f6, f7;
-    f4 = 1000.0f;
-    if (hitCheckFilter(doorPos.x, doorPos.y, 0.0f, 0.0f, -1.0f, 0.0f, NULL, &f1, &f2, &f3, &f4, &f5, &f6, &f7))
-    {
-        evtSetFloat(entry, args[3], f1);
-        evtSetFloat(entry, args[4], f2);
-        evtSetFloat(entry, args[5], f3);
-    }
-    else
-    {
-        evtSetFloat(entry, args[3], doorPos.x);
-        evtSetFloat(entry, args[4], doorPos.y);
-        evtSetFloat(entry, args[5], doorPos.z);
-    }
-
-    return EVT_RET_CONTINUE;
-}
-
-s32 evt_dan_decide_key_enemy(EvtEntry * entry, bool isFirstCall)
-{
-    (void) isFirstCall;
-
-    // Get the item id of the key
-    s32 itemId = evtGetValue(entry, entry->pCurData[0]);
-
-    // Make a list of all available enemies
-    NPCWork * npcWp = npcGetWorkPtr();
-    NPCEntry * curNpc = npcWp->entries;
-    s32 enemyCount = 0;
-    NPCEntry * enemies[80];
-    for (s32 i = 0; i < npcWp->num; curNpc++, i++)
-    {
-        if (CHECK_ANY_MASK(curNpc->flag8, 0x1) && !CHECK_ANY_MASK(curNpc->flag8, 0x40000))
-            enemies[enemyCount++] = curNpc;
-    }
-
-    // Allocate key
-    enemies[rand() % enemyCount]->dropItemId = itemId;
-
-    return EVT_RET_CONTINUE;
-}
-
-void danCountdownDone()
-{
-    // Kill the player
-    seqSetSeq(SEQ_GAMEOVER, NULL, NULL);
-}
-
-s32 evt_dan_start_countdown(EvtEntry * entry, bool isFirstCall)
-{
-    (void) entry;
-    (void) isFirstCall;
-
-    // Start the 5 minute timer
-    hudStartCountdown(300, danCountdownDone);
-
-    return EVT_RET_CONTINUE;
-}
-
-bool danCheckKeyInMapBbox()
-{
-    // Get the item list
-    ItemWork * itemWp = itemGetWork();
-    ItemEntry * item = itemWp->entries;
-
-    // Get the range of valid coordinates
-    Vec3 min, max;
-    hitGetMapEntryBbox(0, &min, &max);
-    
-    // Check whether any item is the key within valid coordinates
-    s32 itemCount = itemWp->num;
-    s32 i;
-    for (i = 0; i < itemCount; i++, item++)
-    {
-        if (
-            CHECK_ANY_MASK(item->flags, 0x1) &&
-            ((item->type == ITEM_ID_KEY_DAN_KEY) || (item->type == ITEM_ID_KEY_URA_DAN_KEY)) &&
-            (min.x <= item->position.x) && (max.x >= item->position.x) &&
-            (min.y <= item->position.y) && (max.y >= item->position.y) &&
-            (min.z <= item->position.z) && (max.z >= item->position.z)
-        )
-            break;
-    }
-
-    if (i < itemCount)
-        return true;
-    else
-        return false;
-}
-
-bool danCheckEnemyInMapBbox()
-{
-    // Get the enemy list
-    NPCWork * npcWp = npcGetWorkPtr();
-    NPCEntry * npc = npcWp->entries;
-
-    // Get the range of valid coordinates
-    Vec3 min, max;
-    hitGetMapEntryBbox(0, &min, &max);
-
-    // Maybe a typo?
-    min.x -= 5.0f;
-    min.y -= 5.0f;
-    min.z -= 5.0f;
-    min.x += 5.0f;
-    min.y += 5.0f;
-    min.z += 5.0f;
-
-    // Check whether any NPC is within valid coordinates
-    s32 npcCount = npcWp->num;
-    s32 i;
-    for (i = 0; i < npcCount; i++, npc++)
-    {
-        if (CHECK_ANY_MASK(npc->flag8, 0x1))
-        {
-            Vec3 tempMin = {min.x, min.y, min.z};
-            tempMin.y -= npc->unknown_0x3ac;
-            if (
-                (tempMin.x <= npc->position.x) && (max.x >= npc->position.x) &&
-                (tempMin.y <= npc->position.y) && (max.y >= npc->position.y) &&
-                (tempMin.z <= npc->position.z) && (max.z >= npc->position.z)
-            )
-                break;
-        }
-    }
-
-    if (i < npcCount)
-        return true;
-    else
-        return false;
-}
-
-s32 evt_dan_handle_key_failsafe(EvtEntry * entry, bool isFirstCall)
-{
-    (void) isFirstCall;
-
-    // Check whether the key exists anywhere
-    if (
-        !danCheckEnemyInMapBbox() && !danCheckKeyInMapBbox() &&
-        !pouchCheckHaveItem(ITEM_ID_KEY_DAN_KEY) && !pouchCheckHaveItem(ITEM_ID_KEY_URA_DAN_KEY) &&
-        !itemCheckForId(ITEM_ID_KEY_DAN_KEY) && !itemCheckForId(ITEM_ID_KEY_URA_DAN_KEY)
-    )
-    {
-        // Spawn the key at the lock if not
-        MobjEntry * lock = mobjNameToPtr("lock_00");
-        s32 keyId = ITEM_ID_KEY_DAN_KEY;
-        if (evtGetValue(entry, GSW(1)) >= 100)
-            keyId = ITEM_ID_KEY_URA_DAN_KEY;
-        
-        itemEntry(NULL, keyId, 1, lock->pos.x, lock->pos.y, 0.0f, NULL, 0);
-        effSmallStarEntry(lock->pos.x, lock->pos.y, 0.0f, 0.0f, -1.0f, 0.0f, 4, 8);
-        effSpmConfettiEntry(lock->pos.x, lock->pos.y, 0.0f, 1, 0);
-
-        return EVT_RET_CONTINUE;
-    }
-    else
-    {
-        return EVT_RET_BLOCK_WEAK;
-    }
-}
-
-s32 evt_dan_handle_chest_room_dokans_and_doors(EvtEntry * entry, bool isFirstCall)
-{
-    (void) isFirstCall;
-
-    // Get dungeon number
-    s32 no = evtGetValue(entry, entry->pCurData[0]);
-    
-    // Update destination of exit door
-    chestRoomMapDoorDescs[1].destMapName = getDanMapName(no + 1);
-
-    // Set the entering door name
-    strcpy(gp->doorName, "doa1_l");
-    
-    // Set exit pipe destination
-    if (no < 100)
-    {
-        // Flipside pit
-        chestRoomDokanDesc.destMapName = "mac_05";
-        chestRoomDokanDesc.destDoorName = "dokan_1";
-    }
-    else
-    {
-        // Flopside pit
-        chestRoomDokanDesc.destMapName = "mac_15";
-        chestRoomDokanDesc.destDoorName = "dokan_1";
-    }
-
-    return EVT_RET_CONTINUE;
-}
-
-s32 evt_dan_get_chest_room_item(EvtEntry * entry, bool isFirstCall)
-{
-    (void) isFirstCall;
-
-    // Get dungeon number
-    EvtScriptCode * args = entry->pCurData;
-    int no = evtGetValue(entry, args[0]); // must be int to match
-    
-    // Return the item in this room's chest
-    evtSetValue(entry, args[1], wp->dungeons[no - 1].item);
-
-    return EVT_RET_CONTINUE;
-}
-
-s32 evt_dan_boss_room_set_door_name(EvtEntry * entry, bool isFirstCall)
-{
-    (void) entry;
-    (void) isFirstCall;
-
-    // Set the entering door name
-    strcpy(gp->doorName, "doa1_l");
-
-    return EVT_RET_CONTINUE;
-}
-
-void func_80c839cc(const char * param_1, bool param_2)
-{
-    if (param_2)
-    {
-        func_8004f5c8(param_1);
-        func_8008f2a4(param_1);
-        func_801c37e4(param_1);
-        func_801c3694("zun", param_1);
-    }
-    else
-    {
-        func_8004f5f0(param_1);
-        func_8008f324(param_1);
-        func_801c3848(param_1);
-    }
-}
-
-// NOT_DECOMPILED wracktailDispCb
-
-s32 evt_dan_set_wracktail_disp_cb(EvtEntry * entry, bool isFirstCall)
-{
-    (void) entry;
-    (void) isFirstCall;
-
-    // Set wracktail's disp callback to wracktailDispCb
-    NPCEntry * npc = npcNameToPtr("zun");
-    animPoseSetDispCallback(npc->m_Anim.m_nPoseId, wracktailDispCb, npc);
-
-    return EVT_RET_CONTINUE;
-}
-
-// NOT_DECOMPILED func_80c83c48
-
-void screenBlinkDisp(s32 cameraId, void * param)
-{
-    (void) cameraId;
-    (void) param;
-}
-
-s32 evt_dan_screen_blink(EvtEntry * entry, bool isFirstCall)
-{
-    (void) entry;
-    (void) isFirstCall;
-
-    // Chedule screenBlinkDisp to run this frame
-    dispEntry(11, 4, 1100.0f, screenBlinkDisp, NULL);
-
-    return EVT_RET_BLOCK_WEAK;
-}
-
-const char * func_80c83f6c(const char * param_1)
-{
-    MarioWork * mp = marioGetPtr();
-    if (mp->character == PLAYER_PEACH && strcmp(param_1, "S_1") == 0)
-        return "S_1B";
-    else
-        return param_1;
+    danWGFifo.f32 = x;
+    danWGFifo.f32 = y;
+    danWGFifo.f32 = z;
 }
 
 static DanWork * wp = NULL;
@@ -1851,7 +1146,861 @@ EVT_END()
 
 // Must come after "e_W_zun_all"
 static const GXColor shadooBlinkColour = {0x00, 0x00, 0x00, 0xff};
-const f64 lbl_80cf0018 = 4.503601774854144E15; // TODO: this is just a literal, but wasn't placed in the right location as a dummy
+s32 evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
+{
+    (void) entry;
+
+    // Allocate work on first run
+    // (check is a relD leftover, this only runs once on retail anyway)
+    if (isFirstCall)
+    {
+        wp = (DanWork *) __memAlloc(HEAP_MAP, sizeof(*wp));
+        memset(wp, 0, sizeof(*wp));
+        wp->dungeons = (DanDungeon *) __memAlloc(HEAP_MAP, sizeof(DanDungeon[DUNGEON_MAX]));
+        memset(wp->dungeons, 0, sizeof(DanDungeon[DUNGEON_MAX]));
+    }
+
+    // Prepare pit text to be read
+    u32 size = CXGetCompressionHeader(pitText).decompSize;
+    char * decompPitText = (char *) __memAlloc(HEAP_MAIN, size);
+    CXUncompressLZ(pitText, decompPitText);
+    parseInit(decompPitText, size);
+
+    // Add all dungeon entries to work
+    while (parsePush(DAN_STR(0x7f)))
+    {
+        // Read no (dungeon id)
+        s32 no = 0;
+        s32 i = 0;
+        parseTagGet1(DAN_STR(0x0), PARSE_VALUE_TYPE_INT, &no);
+        if ((no >= 0 && no < DUNGEON_MAX) == false)
+            __assert2(DAN_STR(0x5), 144, DAN_STR(0xb), DAN_STR(0x27), no);
+
+        // Read item id (chest contents in chest rooms, null & unused elsewhere)
+        char itemName[64];
+        parseTagGet1(DAN_STR(0x41), PARSE_VALUE_TYPE_STRING, itemName);
+        wp->dungeons[no].item = itemTypeNameToId(itemName);
+
+        // Read map (bitflags for parts of the map to enable and disable in enemy rooms, 0 & unused elsewhere)
+        parseTagGet1(DAN_STR(0x48), PARSE_VALUE_TYPE_INT, &wp->dungeons[no].map);
+
+        // Read doors
+        while (parsePush(DAN_STR(0x5d)))
+        {
+            parseTagGet1(DAN_STR(0x4e), PARSE_VALUE_TYPE_INT, &wp->dungeons[no].doors[i].enter);
+            parseTagGet1(DAN_STR(0x56), PARSE_VALUE_TYPE_INT, &wp->dungeons[no].doors[i].exit);
+            parsePopNext();
+            i++;
+        }
+        wp->dungeons[no].doorCount = i;
+
+        // Read enemies
+        i = 0;
+        while (parsePush(DAN_STR(0x77)))
+        {
+            parseTagGet1(DAN_STR(0x64), PARSE_VALUE_TYPE_INT, &wp->dungeons[no].enemies[i].name);
+            parseTagGet1(DAN_STR(0x6b), PARSE_VALUE_TYPE_INT, &wp->dungeons[no].enemies[i].num);
+            parseTagGet1(DAN_STR(0x71), PARSE_VALUE_TYPE_INT, &wp->dungeons[no].enemies[i].pos);
+            parsePopNext();
+            i++;
+        }
+        wp->dungeons[no].enemyCount = i;
+
+        // Move to next dungeon
+        parsePopNext();
+    }
+
+    // Free pit text
+    parsePop();
+    __memFree(0, decompPitText);
+
+    return EVT_RET_CONTINUE;
+}
+
+s32 evt_dan_handle_map_parts(EvtEntry * entry, bool isFirstCall)
+{
+    (void) isFirstCall;
+
+    // Get dungeon
+    s32 no = evtGetValue(entry, entry->pCurData[0]);
+    DanDungeon * dungeon = wp->dungeons + no;
+
+    // Turn off all parts by default
+    mapGrpFlagOn(false, DAN_STR(0x89), MAPOBJ_FLAG0_HIDE);
+    hitGrpFlagOn(false, DAN_STR(0x8f), HITOBJ_FLAG_DISABLE);
+    mapGrpFlag4On(false, DAN_STR(0x98), 0x20);
+
+    // Enable parts from map mask
+    for (u32 i = 0; i < DAN_PARTS_COUNT; i++)
+    {
+        if (dungeon->map & (1 << i))
+        {
+            char a2Part[256];
+            mapGrpFlagOff(false, mapParts[i], MAPOBJ_FLAG0_HIDE);
+            sprintf(a2Part, DAN_STR(0x9e), mapParts[i]);
+            hitGrpFlagOff(false, a2Part, HITOBJ_FLAG_DISABLE);
+        }
+    }
+
+    // Enable merged parts where possible
+    if (CHECK_ALL_MASK(dungeon->map, 0xC))
+    {
+        mapGrpFlagOff(false, DAN_STR(0xa4), MAPOBJ_FLAG0_HIDE);
+        mapGrpFlagOn(false, DAN_STR(0xaf), MAPOBJ_FLAG0_HIDE);
+        mapGrpFlagOn(false, DAN_STR(0xba), MAPOBJ_FLAG0_HIDE);
+        hitGrpFlagOff(false, DAN_STR(0xc5), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOn(false, DAN_STR(0xd3), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOn(false, DAN_STR(0xe1), HITOBJ_FLAG_DISABLE);
+    }
+    if (CHECK_ALL_MASK(dungeon->map, 0xC0))
+    {
+        mapGrpFlagOff(false, DAN_STR(0xef), MAPOBJ_FLAG0_HIDE);
+        mapGrpFlagOn(false, DAN_STR(0xfa), MAPOBJ_FLAG0_HIDE);
+        mapGrpFlagOn(false, DAN_STR(0x105), MAPOBJ_FLAG0_HIDE);
+        hitGrpFlagOff(false, DAN_STR(0x110), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOn(false, DAN_STR(0x11e), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOn(false, DAN_STR(0x12c), HITOBJ_FLAG_DISABLE);
+    }
+    if (CHECK_ALL_MASK(dungeon->map, 0x300))
+    {
+        mapGrpFlagOff(false, DAN_STR(0x13a), MAPOBJ_FLAG0_HIDE);
+        mapGrpFlagOn(false, DAN_STR(0x145), MAPOBJ_FLAG0_HIDE);
+        mapGrpFlagOn(false, DAN_STR(0x150), MAPOBJ_FLAG0_HIDE);
+        hitGrpFlagOff(false, DAN_STR(0x15b), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOn(false, DAN_STR(0x169), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOn(false, DAN_STR(0x177), HITOBJ_FLAG_DISABLE);
+    }
+    if (CHECK_ALL_MASK(dungeon->map, 0x3000))
+    {
+        mapGrpFlagOff(false, DAN_STR(0x185), MAPOBJ_FLAG0_HIDE);
+        mapGrpFlagOn(false, DAN_STR(0x190), MAPOBJ_FLAG0_HIDE);
+        mapGrpFlagOn(false, DAN_STR(0x19b), MAPOBJ_FLAG0_HIDE);
+        hitGrpFlagOff(false, DAN_STR(0x1a6), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOn(false, DAN_STR(0x1b4), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOn(false, DAN_STR(0x1c2), HITOBJ_FLAG_DISABLE);
+    }
+
+    return EVT_RET_CONTINUE;
+}
+
+s32 evt_dan_handle_dokans(EvtEntry * entry, bool isFirstCall)
+{
+    (void) isFirstCall;
+
+    // Get dungeon
+    s32 no = evtGetValue(entry, entry->pCurData[0]);
+    DanDungeon * dungeon = wp->dungeons + no;
+
+    // Turn off all pipes by default
+    mapGrpFlagOn(false, DAN_STR(0x1d0), MAPOBJ_FLAG0_HIDE);
+    hitGrpFlagOn(false, DAN_STR(0x1d6), HITOBJ_FLAG_DISABLE);
+    hitGrpFlagOn(false, DAN_STR(0x1e0), HITOBJ_FLAG_DISABLE);
+
+    // Turn on enabled pipes
+    if (CHECK_ANY_MASK(dungeon->map, 0x10000)) {
+        mapGrpFlagOff(false, DAN_STR(0x1ea), MAPOBJ_FLAG0_HIDE);
+        hitGrpFlagOff(false, DAN_STR(0x1f3), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOff(false, DAN_STR(0x200), HITOBJ_FLAG_DISABLE);
+        mapGrpFlagOff(false, DAN_STR(0x20d), MAPOBJ_FLAG0_HIDE);
+        hitGrpFlagOff(false, DAN_STR(0x216), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOff(false, DAN_STR(0x223), HITOBJ_FLAG_DISABLE);
+    }
+    if (CHECK_ANY_MASK(dungeon->map, 0x20000)) {
+        mapGrpFlagOff(false, DAN_STR(0x230), MAPOBJ_FLAG0_HIDE);
+        hitGrpFlagOff(false, DAN_STR(0x239), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOff(false, DAN_STR(0x246), HITOBJ_FLAG_DISABLE);
+        mapGrpFlagOff(false, DAN_STR(0x253), MAPOBJ_FLAG0_HIDE);
+        hitGrpFlagOff(false, DAN_STR(0x25c), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOff(false, DAN_STR(0x269), HITOBJ_FLAG_DISABLE);
+    }
+    if (CHECK_ANY_MASK(dungeon->map, 0x40000)) {
+        mapGrpFlagOff(false, DAN_STR(0x276), MAPOBJ_FLAG0_HIDE);
+        hitGrpFlagOff(false, DAN_STR(0x27f), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOff(false, DAN_STR(0x28c), HITOBJ_FLAG_DISABLE);
+        mapGrpFlagOff(false, DAN_STR(0x299), MAPOBJ_FLAG0_HIDE);
+        hitGrpFlagOff(false, DAN_STR(0x2a2), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOff(false, DAN_STR(0x2af), HITOBJ_FLAG_DISABLE);
+    }
+    if (CHECK_ANY_MASK(dungeon->map, 0x80000)) {
+        mapGrpFlagOff(false, DAN_STR(0x2bc), MAPOBJ_FLAG0_HIDE);
+        hitGrpFlagOff(false, DAN_STR(0x2c5), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOff(false, DAN_STR(0x2d2), HITOBJ_FLAG_DISABLE);
+        mapGrpFlagOff(false, DAN_STR(0x2df), MAPOBJ_FLAG0_HIDE);
+        hitGrpFlagOff(false, DAN_STR(0x2e8), HITOBJ_FLAG_DISABLE);
+        hitGrpFlagOff(false, DAN_STR(0x2f5), HITOBJ_FLAG_DISABLE);
+    }
+
+    return EVT_RET_CONTINUE;
+}
+
+s32 evt_dan_handle_doors(EvtEntry * entry, bool isFirstCall)
+{
+    (void) isFirstCall;
+
+    // Get dungeon and room
+    EvtScriptCode * args = entry->pCurData;
+    s32 no = evtGetValue(entry, args[0]);
+    s32 room = evtGetValue(entry, args[1]);
+    DanDungeon * dungeon = wp->dungeons + no;
+
+    // Hide all doors by default
+    mapGrpFlagOn(false, DAN_STR(0x302), MAPOBJ_FLAG0_HIDE);
+
+    // Determine which door definition to use
+    // (room is an internal name from relD debug prints)
+    if (room > dungeon->doorCount)
+        room = 1;
+    if (room == 0)
+        room = (rand() % dungeon->doorCount) + 1;
+    room -= 1;
+
+    // Store door ids
+    wp->doorInfo.enter = dungeon->doors[room].enter;
+    wp->doorInfo.exit = dungeon->doors[room].exit;
+
+    char str[64];
+
+    // Show enter door & make tangible
+    sprintf(str, DAN_STR(0x306), wp->doorInfo.enter);
+    mapGrpFlagOff(false, str, MAPOBJ_FLAG0_HIDE);
+    sprintf(str, DAN_STR(0x30f), wp->doorInfo.enter);
+    hitGrpFlagOff(false, str, HITOBJ_FLAG_DISABLE);
+    sprintf(str, DAN_STR(0x31b), wp->doorInfo.enter);
+    hitGrpFlagOff(false, str, HITOBJ_FLAG_DISABLE);
+
+    // Show exit door & make tangible
+    sprintf(str, DAN_STR(0x306), wp->doorInfo.exit);
+    mapGrpFlagOff(0, str, 1);
+    sprintf(str, DAN_STR(0x30f), wp->doorInfo.exit);
+    hitGrpFlagOff(0, str, 1);
+    sprintf(str, DAN_STR(0x31b), wp->doorInfo.exit);
+    hitGrpFlagOff(0, str, 1);
+
+    // Generate names for enter DoorDesc
+    sprintf(wp->enterDoorName_l, DAN_STR(0x327), wp->doorInfo.enter);
+    sprintf(wp->enterDoorName_r, DAN_STR(0x32f), wp->doorInfo.enter);
+    sprintf(wp->enterDoorHitName2d, DAN_STR(0x30f), wp->doorInfo.enter);
+    sprintf(wp->enterDoorHitName3d, DAN_STR(0x31b), wp->doorInfo.enter);
+    sprintf(wp->prevMapName, DAN_STR(0x337));
+    sprintf(wp->enterDoor_desc0x18, DAN_STR(0x337));
+
+    // Generate names for exit DoorDesc
+    sprintf(wp->exitDoorName_l, DAN_STR(0x327), wp->doorInfo.exit);
+    sprintf(wp->exitDoorName_r, DAN_STR(0x32f), wp->doorInfo.exit);
+    sprintf(wp->exitDoorHitName2d, DAN_STR(0x30f), wp->doorInfo.exit);
+    sprintf(wp->exitDoorHitName3d, DAN_STR(0x31b), wp->doorInfo.exit);
+    sprintf(wp->nextMapName, getDanMapName(no + 1));
+    sprintf(wp->exitDoor_desc0x18, DAN_STR(0x337));
+
+    // Fill in enter DoorDesc
+    mapDoorDescs[0].name_l = wp->enterDoorName_l;
+    mapDoorDescs[0].name_r = wp->enterDoorName_r;
+    mapDoorDescs[0].hitName2d = wp->enterDoorHitName2d;
+    mapDoorDescs[0].hitName3d = wp->enterDoorHitName3d;
+    mapDoorDescs[0].destMapName = wp->prevMapName;
+    mapDoorDescs[0].destDoorName = wp->enterDoor_desc0x18;
+
+    // Fill in exit DoorDesc
+    mapDoorDescs[1].name_l = wp->exitDoorName_l;
+    mapDoorDescs[1].name_r = wp->exitDoorName_r;
+    mapDoorDescs[1].hitName2d = wp->exitDoorHitName2d;
+    mapDoorDescs[1].hitName3d = wp->exitDoorHitName3d;
+    mapDoorDescs[1].destMapName = wp->nextMapName;
+    mapDoorDescs[1].destDoorName = wp->exitDoor_desc0x18;
+
+    // Output door name
+    sprintf(wp->enterDoorName, DAN_STR(0x306), wp->doorInfo.enter);
+    sprintf(wp->exitDoorName, DAN_STR(0x306), wp->doorInfo.exit);
+    strcpy(gp->doorName, wp->enterDoorName_l);
+    evtSetValue(entry, args[2], (s32) wp->enterDoorName_l);
+    evtSetValue(entry, args[3], (s32) wp->exitDoorName_l);
+
+    // Unknown
+    evtSetValue(entry, GSWF(23), 0);
+
+    // Output lock position
+    Vec3 doorPos;
+    hitObjGetPos(wp->exitDoorHitName2d, &doorPos);
+    evtSetFloat(entry, args[4], doorPos.x);
+    evtSetFloat(entry, args[5], doorPos.y - lbl_80cf05cc[0]);
+    evtSetFloat(entry, args[6], doorPos.z);
+
+    return EVT_RET_CONTINUE;
+}
+
+s32 evt_dan_get_door_names(EvtEntry * entry, bool isFirstCall)
+{
+    (void) isFirstCall;
+
+    EvtScriptCode * args = entry->pCurData;
+    evtSetValue(entry, args[0], (s32) wp->enterDoorName);
+    evtSetValue(entry, args[1], (s32) wp->exitDoorName);
+
+    return EVT_RET_CONTINUE;
+}
+
+s32 evt_dan_get_exit_door_name_l(EvtEntry * entry, bool isFirstCall)
+{
+    (void) isFirstCall;
+
+    EvtScriptCode * args = entry->pCurData;
+    evtSetValue(entry, args[0], (s32) wp->exitDoorName_l);
+
+    return EVT_RET_CONTINUE;
+}
+
+s32 evt_dan_get_enemy_info(EvtEntry * entry, bool isFirstCall)
+{
+    (void) isFirstCall;
+
+    // Get dungeon and enemy index
+    EvtScriptCode * args = entry->pCurData;
+    s32 no = evtGetValue(entry, args[0]);
+    s32 enemyIdx = evtGetValue(entry, args[1]);
+    DanDungeon * dungeon = wp->dungeons + no;
+
+    if ((enemyIdx < 0) || (enemyIdx >= 16))
+    {
+        // Return 0 for invalid enemies
+        evtSetValue(entry, args[2], 0);
+        evtSetValue(entry, args[3], 0);
+
+        return EVT_RET_CONTINUE;
+    }
+    else
+    {
+        // Get enemy
+        DanEnemy * enemy = dungeon->enemies + enemyIdx;
+
+        if (enemy->num > 0)
+        {
+            // Find template with correct tribe id
+            s32 tribeId = enemy->name - 1;
+            s32 i;
+            NPCEnemyTemplate * curTemplate = npcEnemyTemplates;
+            for (i = 0; i < NPCTEMPLATE_MAX; i++, curTemplate++)
+            {
+                if (((curTemplate->unknown_0x8 & 1) == 0) && (curTemplate->tribeId == tribeId))
+                    break;
+            }
+            if ((i < NPCTEMPLATE_MAX) == false)
+                __assert2(DAN_STR(0x5), 628, DAN_STR(0x338), DAN_STR(0x34c), tribeId);
+
+            // Return template id and num
+            evtSetValue(entry, args[2], i);
+            evtSetValue(entry, args[3], enemy->num);
+        }
+        else
+        {
+            // Return 0 for empty enemy slots
+            evtSetValue(entry, args[2], 0);
+            evtSetValue(entry, args[3], 0);
+        }
+
+        return EVT_RET_CONTINUE;
+    }
+}
+
+inline void danPushSpawnTable(s32 doorId)
+{
+    wp->spawnTable[wp->spawnTableCount++] = doorId;
+}
+
+s32 evt_dan_make_spawn_table(EvtEntry * entry, bool isFirstCall)
+{
+    (void) isFirstCall;
+
+    // Get dungeon
+    s32 no = evtGetValue(entry, entry->pCurData[0]);
+    DanDungeon * dungeon = wp->dungeons + no;
+
+    // Build spawn table with all available doors
+    wp->spawnTableCount = 0;
+    if (CHECK_ANY_MASK(dungeon->map, 0x400))
+        danPushSpawnTable(1);
+    danPushSpawnTable(2);
+    danPushSpawnTable(3);
+    if (CHECK_ANY_MASK(dungeon->map, 0x1000))
+    {
+        danPushSpawnTable(4);
+        danPushSpawnTable(5);
+    }
+    danPushSpawnTable(6);
+    danPushSpawnTable(7);
+    if (CHECK_ANY_MASK(dungeon->map, 0x8000))
+        danPushSpawnTable(8);
+    if (CHECK_ANY_MASK(dungeon->map, 0x40))
+    {
+        danPushSpawnTable(10);
+        danPushSpawnTable(11);
+    }
+    danPushSpawnTable(12);
+    danPushSpawnTable(13);
+    if (CHECK_ANY_MASK(dungeon->map, 0x100))
+    {
+        danPushSpawnTable(14);
+        danPushSpawnTable(15);
+    }
+    if (CHECK_ANY_MASK(dungeon->map, 0x1))
+        danPushSpawnTable(17);
+    danPushSpawnTable(18);
+    danPushSpawnTable(19);
+    if (CHECK_ANY_MASK(dungeon->map, 0x4))
+    {
+        danPushSpawnTable(20);
+        danPushSpawnTable(21);
+    }
+    danPushSpawnTable(22);
+    danPushSpawnTable(23);
+    if (CHECK_ANY_MASK(dungeon->map, 0x20))
+        danPushSpawnTable(24);
+    danPushSpawnTable(25);
+    danPushSpawnTable(26);
+    danPushSpawnTable(27);
+    danPushSpawnTable(28);
+    danPushSpawnTable(29);
+    danPushSpawnTable(30);
+    danPushSpawnTable(31);
+    danPushSpawnTable(32);
+
+    // Randomise spawn table
+    for (s32 i = 0; i < 100; i++)
+    {
+        s32 idx1 = rand() % wp->spawnTableCount;
+        s32 idx2 = rand() % wp->spawnTableCount;
+        s32 temp = wp->spawnTable[idx1];
+        wp->spawnTable[idx1] = wp->spawnTable[idx2];
+        wp->spawnTable[idx2] = temp;
+    }
+
+    return EVT_RET_CONTINUE;
+}
+
+s32 evt_dan_get_enemy_spawn_pos(EvtEntry * entry, bool isInitialCall)
+{
+    (void) isInitialCall;
+
+    // Get enemy number, dungeon, and enemy
+    EvtScriptCode * args = entry->pCurData;
+    s32 enemyNum = evtGetValue(entry, args[0]);
+    s32 no = evtGetValue(entry, args[1]);
+    s32 enemyIdx = evtGetValue(entry, args[2]);
+    DanDungeon * dungeon = wp->dungeons + no;
+    DanEnemy * enemy = dungeon->enemies + enemyIdx;
+
+    // Find the (enemyNum % wp->spawnTableCount)th available door
+    s32 targetPos = enemyNum % wp->spawnTableCount;
+    s32 j = 0;
+    char doorName[64];
+    if (enemy->pos != 0)
+    {
+        sprintf(doorName, DAN_STR(0x30f), enemy->pos);
+    }
+    else
+    {
+        s32 i;
+        for (i = 0; i < wp->spawnTableCount; i++)
+        {
+            if ((wp->doorInfo.enter != wp->spawnTable[i]) && (wp->doorInfo.exit != wp->spawnTable[i]))
+            {
+                if (j == targetPos)
+                    break;
+                j++;
+            }
+        }
+        sprintf(doorName, DAN_STR(0x30f), wp->spawnTable[i]);
+    }
+
+    // Get the position of the door to spawn the enemy at
+    Vec3 doorPos;
+    hitObjGetPos(doorName, &doorPos);
+    doorPos.z = lbl_80cf05cc[1];
+
+    // Unknown, outputs coords with some changes if needed
+    f32 f1, f2, f3, f4, f5, f6, f7;
+    f4 = lbl_80cf05cc[2];
+    if (hitCheckFilter(doorPos.x, doorPos.y, lbl_80cf05cc[1], lbl_80cf05cc[1],
+                       lbl_80cf05cc[3], lbl_80cf05cc[1], NULL,
+                       &f1, &f2, &f3, &f4, &f5, &f6, &f7))
+    {
+        evtSetFloat(entry, args[3], f1);
+        evtSetFloat(entry, args[4], f2);
+        evtSetFloat(entry, args[5], f3);
+    }
+    else
+    {
+        evtSetFloat(entry, args[3], doorPos.x);
+        evtSetFloat(entry, args[4], doorPos.y);
+        evtSetFloat(entry, args[5], doorPos.z);
+    }
+
+    return EVT_RET_CONTINUE;
+}
+
+s32 evt_dan_decide_key_enemy(EvtEntry * entry, bool isFirstCall)
+{
+    (void) isFirstCall;
+
+    // Get the item id of the key
+    s32 itemId = evtGetValue(entry, entry->pCurData[0]);
+
+    // Make a list of all available enemies
+    NPCWork * npcWp = npcGetWorkPtr();
+    NPCEntry * curNpc = npcWp->entries;
+    s32 enemyCount = 0;
+    NPCEntry * enemies[80];
+    for (s32 i = 0; i < npcWp->num; curNpc++, i++)
+    {
+        if (CHECK_ANY_MASK(curNpc->flag8, 0x1) && !CHECK_ANY_MASK(curNpc->flag8, 0x40000))
+            enemies[enemyCount++] = curNpc;
+    }
+
+    // Allocate key
+    enemies[rand() % enemyCount]->dropItemId = itemId;
+
+    return EVT_RET_CONTINUE;
+}
+
+void danCountdownDone()
+{
+    // Kill the player
+    seqSetSeq(SEQ_GAMEOVER, NULL, NULL);
+}
+
+s32 evt_dan_start_countdown(EvtEntry * entry, bool isFirstCall)
+{
+    (void) entry;
+    (void) isFirstCall;
+
+    // Start the 5 minute timer
+    hudStartCountdown(300, danCountdownDone);
+
+    return EVT_RET_CONTINUE;
+}
+
+bool danCheckKeyInMapBbox()
+{
+    // Get the item list
+    ItemWork * itemWp = itemGetWork();
+    ItemEntry * item = itemWp->entries;
+
+    // Get the range of valid coordinates
+    Vec3 min, max;
+    hitGetMapEntryBbox(0, &min, &max);
+
+    // Check whether any item is the key within valid coordinates
+    s32 itemCount = itemWp->num;
+    s32 i;
+    for (i = 0; i < itemCount; i++, item++)
+    {
+        if (!CHECK_ANY_MASK(item->flags, 0x1))
+            continue;
+        if ((item->type != ITEM_ID_KEY_DAN_KEY) && (item->type != ITEM_ID_KEY_URA_DAN_KEY))
+            continue;
+        if ((min.x > item->position.x) || (max.x < item->position.x))
+            continue;
+        if ((min.y > item->position.y) || (max.y < item->position.y))
+            continue;
+        if ((min.z > item->position.z) || (max.z < item->position.z))
+            continue;
+        break;
+    }
+
+    if (i < itemCount)
+        return true;
+    else
+        return false;
+}
+
+bool danCheckEnemyInMapBbox()
+{
+    // Get the enemy list
+    NPCWork * npcWp = npcGetWorkPtr();
+    NPCEntry * npc = npcWp->entries;
+
+    // Get the range of valid coordinates
+    Vec3 min, max;
+    hitGetMapEntryBbox(0, &min, &max);
+
+    // Maybe a typo?
+    min.x -= lbl_80cf05cc[4];
+    min.y -= lbl_80cf05cc[4];
+    min.z -= lbl_80cf05cc[4];
+    min.x += lbl_80cf05cc[4];
+    min.y += lbl_80cf05cc[4];
+    min.z += lbl_80cf05cc[4];
+
+    // Check whether any NPC is within valid coordinates
+    s32 npcCount = npcWp->num;
+    s32 i;
+    for (i = 0; i < npcCount; i++, npc++)
+    {
+        if (CHECK_ANY_MASK(npc->flag8, 0x1))
+        {
+            Vec3 tempMin = {min.x, min.y, min.z};
+            tempMin.y -= npc->unknown_0x3ac;
+            if ((tempMin.x > npc->position.x) || (max.x < npc->position.x))
+                continue;
+            if ((tempMin.y > npc->position.y) || (max.y < npc->position.y))
+                continue;
+            if ((tempMin.z > npc->position.z) || (max.z < npc->position.z))
+                continue;
+            break;
+        }
+    }
+
+    if (i < npcCount)
+        return true;
+    else
+        return false;
+}
+
+s32 evt_dan_handle_key_failsafe(EvtEntry * entry, bool isFirstCall)
+{
+    (void) isFirstCall;
+
+    // Check whether the key exists anywhere
+    if (
+        !danCheckEnemyInMapBbox() && !danCheckKeyInMapBbox() &&
+        !pouchCheckHaveItem(ITEM_ID_KEY_DAN_KEY) && !pouchCheckHaveItem(ITEM_ID_KEY_URA_DAN_KEY) &&
+        !itemCheckForId(ITEM_ID_KEY_DAN_KEY) && !itemCheckForId(ITEM_ID_KEY_URA_DAN_KEY)
+    )
+    {
+        // Spawn the key at the lock if not
+        MobjEntry * lock = mobjNameToPtr(DAN_STR(0x365));
+        s32 keyId = ITEM_ID_KEY_DAN_KEY;
+        if (evtGetValue(entry, GSW(1)) >= 100)
+            keyId = ITEM_ID_KEY_URA_DAN_KEY;
+
+        itemEntry(NULL, keyId, 1, lock->pos.x, lock->pos.y, lbl_80cf05cc[1], NULL, 0);
+        effSmallStar(lock->pos.x, lock->pos.y, lbl_80cf05cc[1], lbl_80cf05cc[1],
+                     lbl_80cf05cc[3], lbl_80cf05cc[1], 4, 8);
+        effSpmConfetti(lock->pos.x, lock->pos.y, lbl_80cf05cc[1], 1, 0);
+
+        return EVT_RET_CONTINUE;
+    }
+    else
+    {
+        return EVT_RET_BLOCK_WEAK;
+    }
+}
+
+s32 evt_dan_handle_chest_room_dokans_and_doors(EvtEntry * entry, bool isFirstCall)
+{
+    (void) isFirstCall;
+
+    // Get dungeon number
+    s32 no = evtGetValue(entry, entry->pCurData[0]);
+
+    // Update destination of exit door
+    chestRoomMapDoorDescs[1].destMapName = getDanMapName(no + 1);
+
+    // Set the entering door name
+    strcpy(gp->doorName, DAN_STR(0x36d));
+
+    // Set exit pipe destination
+    if (no < 100)
+    {
+        // Flipside pit
+        chestRoomDokanDesc.destMapName = DAN_STR(0x374);
+        chestRoomDokanDesc.destDoorName = DAN_STR(0x37b);
+    }
+    else
+    {
+        // Flopside pit
+        chestRoomDokanDesc.destMapName = DAN_STR(0x383);
+        chestRoomDokanDesc.destDoorName = DAN_STR(0x37b);
+    }
+
+    return EVT_RET_CONTINUE;
+}
+
+s32 evt_dan_get_chest_room_item(EvtEntry * entry, bool isFirstCall)
+{
+    (void) isFirstCall;
+
+    // Get dungeon number
+    EvtScriptCode * args = entry->pCurData;
+    int no = evtGetValue(entry, args[0]); // must be int to match
+
+    // Return the item in this room's chest
+    evtSetValue(entry, args[1], wp->dungeons[no - 1].item);
+
+    return EVT_RET_CONTINUE;
+}
+
+s32 evt_dan_boss_room_set_door_name(EvtEntry * entry, bool isFirstCall)
+{
+    (void) entry;
+    (void) isFirstCall;
+
+    // Set the entering door name
+    strcpy(gp->doorName, DAN_STR(0x36d));
+
+    return EVT_RET_CONTINUE;
+}
+
+void func_80c839cc(const char * param_1, bool param_2)
+{
+    if (param_2)
+    {
+        func_8004f5c8(param_1);
+        func_8008f2a4(param_1);
+        func_801c37e4(param_1);
+        func_801c3694(DAN_STR(0x38a), param_1);
+    }
+    else
+    {
+        func_8004f5f0(param_1);
+        func_8008f324(param_1);
+        func_801c3848(param_1);
+    }
+}
+
+#pragma warn_implicitconv off
+bool wracktailDispCb(void * param, s32 animGroupIdx, s32 param_3)
+{
+    (void) param_3;
+
+    NPCEntry * npc = (NPCEntry *) param;
+    DanAnimWork * animWp = (DanAnimWork *) animGetPtr();
+    AnimPoseData * poseData = animWp->currentPoseData;
+    AnimPose * pose = animWp->currentPose;
+    DanAnimGroup * groups = (DanAnimGroup *) poseData->groups;
+    DanAnimShape * shapes = (DanAnimShape *) poseData->shapes;
+    DanAnimShape * shape = &shapes[groups[animGroupIdx].shapeId];
+    u8 maxColour = 255;
+
+    pose->materialFlag &= ~0x2000;
+    pose->materialColor.a = maxColour;
+
+    switch (dispGetCurWork()->renderMode)
+    {
+        case 4:
+        case 7:
+            if (animGroupIdx != animPoseGetGroupIdx(npc->m_Anim.m_nPoseId, DAN_STR(0x38e)))
+                break;
+
+            pose->materialFlag |= 0x2000;
+            pose->materialColor.r = intplGetValue(11, lbl_80cf05cc[5], lbl_80cf05cc[6], (s32) gp->frameCounter, 10);
+            pose->materialColor.g = intplGetValue(11, lbl_80cf05cc[7], lbl_80cf05cc[8], (s32) gp->frameCounter, 10);
+            pose->materialColor.b = intplGetValue(11, lbl_80cf05cc[1], lbl_80cf05cc[4], (s32) gp->frameCounter, 10);
+            pose->materialColor.a = 255;
+            break;
+
+        case 10:
+            if (shape->type != 3)
+                return true;
+
+            pose->materialFlag |= 0x2000;
+            pose->materialColor.r = maxColour;
+            pose->materialColor.g = maxColour;
+            pose->materialColor.b = maxColour;
+            pose->materialColor.a = intplGetValue(11, lbl_80cf05cc[1], lbl_80cf05cc[7], (s32) gp->frameCounter, 60);
+            break;
+    }
+
+    return false;
+}
+#pragma warn_implicitconv reset
+
+s32 evt_dan_set_wracktail_disp_cb(EvtEntry * entry, bool isFirstCall)
+{
+    (void) entry;
+    (void) isFirstCall;
+
+    // Set wracktail's disp callback to wracktailDispCb
+    NPCEntry * npc = npcNameToPtr(DAN_STR(0x38a));
+    animPoseSetDispCallback(npc->m_Anim.m_nPoseId, wracktailDispCb, npc);
+
+    return EVT_RET_CONTINUE;
+}
+
+s32 func_80c83c48(EvtEntry * entry, bool isFirstCall)
+{
+    (void) entry;
+    (void) isFirstCall;
+
+    void * effect = func_800c1838(0, lbl_80cf05cc[1], lbl_80cf05cc[1], lbl_80cf05cc[1]);
+    func_800c1938(effect, -1, DAN_STR(0x38a));
+
+    return EVT_RET_CONTINUE;
+}
+
+void screenBlinkDisp(s32 cameraId, void * param)
+{
+    (void) param;
+
+    f32 blink = evtGetFloat(NULL, GW(1));
+    CamEntry * camera = camGetPtr(cameraId);
+    GXSetZMode(0, 3, 0);
+    GXSetNumChans(1);
+    GXSetChanCtrl(4, 0, 0, 0, 0, 2, 2);
+    GXColor colour = shadooBlinkColour;
+    GXSetChanMatColor(4, &colour);
+    GXSetNumTevStages(1);
+    GXSetTevOrder(0, 0xff, 0xff, 4);
+    GXSetTevOp(0, 4);
+    GXSetTevSwapMode(0, 0, 0);
+    GXLoadPosMtxImm(camera->viewMtx, 0);
+    GXSetCurrentMtx(0);
+    GXSetCullMode(2);
+    GXClearVtxDesc();
+    GXSetVtxDesc(9, 1);
+    GXSetVtxAttrFmt(0, 9, 1, 4, 0);
+    GXBegin(0x80, 0, 8);
+
+    f32 left;
+    f32 right = lbl_80cf05cc[10] * camera->aspect;
+    left = -right;
+    volatile const f32 * blinkConstants = lbl_80cf05cc;
+
+    danWGFifo.f32 = left;
+    danWGFifo.f32 = blinkConstants[10];
+    danWGFifo.f32 = blinkConstants[1];
+    danWGFifo.f32 = right;
+    danWGFifo.f32 = blinkConstants[10];
+    danWGFifo.f32 = blinkConstants[1];
+    danWGFifo.f32 = right;
+    danWGFifo.f32 = (s16) (lbl_80cf05cc[10] - blink);
+    danWGFifo.f32 = blinkConstants[1];
+    danWGFifo.f32 = left;
+    danWGFifo.f32 = (s16) (lbl_80cf05cc[10] - blink);
+    danWGFifo.f32 = blinkConstants[1];
+    danWGFifo.f32 = left;
+    danWGFifo.f32 = (s16) (lbl_80cf05cc[11] + blink);
+    danWGFifo.f32 = blinkConstants[1];
+    (void) (s16) (lbl_80cf05cc[11] + blink);
+    danWGFifo.f32 = right;
+    danWGFifo.f32 = (s16) (lbl_80cf05cc[11] + blink);
+    danWGFifo.f32 = blinkConstants[1];
+    danWGFifo.f32 = right;
+    danWGFifo.f32 = blinkConstants[11];
+    danWGFifo.f32 = blinkConstants[1];
+    danWGFifo.f32 = left;
+    danWGFifo.f32 = blinkConstants[11];
+    danWGFifo.f32 = blinkConstants[1];
+}
+
+s32 evt_dan_screen_blink(EvtEntry * entry, bool isFirstCall)
+{
+    (void) entry;
+    (void) isFirstCall;
+
+    // Chedule screenBlinkDisp to run this frame
+    dispEntry(11, 4, lbl_80cf05cc[12], screenBlinkDisp, NULL);
+
+    return EVT_RET_BLOCK_WEAK;
+}
+
+const char * func_80c83f6c(const char * param_1)
+{
+    MarioWork * mp = marioGetPtr();
+    if (mp->character == PLAYER_PEACH && strcmp(param_1, DAN_STR(0x39a)) == 0)
+        return DAN_STR(0x39e);
+    else
+        return param_1;
+}
 
 EVT_BEGIN(dan_70_mario_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
@@ -2431,3 +2580,68 @@ EVT_BEGIN(dan_start_shadoo_evt)
     RUN_EVT(PTR(&dan_shadoo_main_evt))
     RETURN()
 EVT_END()
+
+const char danFunctionStrings[0x3a4] =
+    "\074\156\157\076\000\144\141\156\056\143\000\156\157\040\076\075\040\060\040\046"
+    "\046\040\156\157\040\074\040\104\125\116\107\105\117\116\137\115\101\130\000\202"
+    "\310\202\361\202\251\224\324\215\206\202\252\202\250\202\251\202\265\202\242\040"
+    "\133\045\144\135\000\074\151\164\145\155\076\000\074\155\141\160\076\000\074\145"
+    "\156\164\145\162\076\000\074\145\170\151\164\076\000\074\144\157\157\162\076\000"
+    "\074\156\141\155\145\076\000\074\156\165\155\076\000\074\160\157\163\076\000\074"
+    "\145\156\145\155\171\076\000\074\104\165\156\147\145\157\156\076\000\160\141\162"
+    "\164\163\000\101\062\137\160\141\162\164\163\000\142\154\157\143\153\000\101\062"
+    "\137\045\163\000\160\141\162\164\163\137\061\062\137\141\000\160\141\162\164\163"
+    "\137\061\062\137\142\000\160\141\162\164\163\137\061\062\137\143\000\101\062\137"
+    "\160\141\162\164\163\137\061\062\137\141\000\101\062\137\160\141\162\164\163\137"
+    "\061\062\137\142\000\101\062\137\160\141\162\164\163\137\061\062\137\143\000\160"
+    "\141\162\164\163\137\060\071\137\141\000\160\141\162\164\163\137\060\071\137\142"
+    "\000\160\141\162\164\163\137\060\071\137\143\000\101\062\137\160\141\162\164\163"
+    "\137\060\071\137\141\000\101\062\137\160\141\162\164\163\137\060\071\137\142\000"
+    "\101\062\137\160\141\162\164\163\137\060\071\137\143\000\160\141\162\164\163\137"
+    "\061\061\137\141\000\160\141\162\164\163\137\061\061\137\142\000\160\141\162\164"
+    "\163\137\061\061\137\143\000\101\062\137\160\141\162\164\163\137\061\061\137\141"
+    "\000\101\062\137\160\141\162\164\163\137\061\061\137\142\000\101\062\137\160\141"
+    "\162\164\163\137\061\061\137\143\000\160\141\162\164\163\137\061\060\137\141\000"
+    "\160\141\162\164\163\137\061\060\137\142\000\160\141\162\164\163\137\061\060\137"
+    "\143\000\101\062\137\160\141\162\164\163\137\061\060\137\141\000\101\062\137\160"
+    "\141\162\164\163\137\061\060\137\142\000\101\062\137\160\141\162\164\163\137\061"
+    "\060\137\143\000\144\157\153\141\156\000\101\062\104\137\144\157\153\141\156\000"
+    "\101\063\104\137\144\157\153\141\156\000\144\157\153\141\156\137\060\061\000\101"
+    "\062\104\137\144\157\153\141\156\137\060\061\000\101\063\104\137\144\157\153\141"
+    "\156\137\060\061\000\144\157\153\141\156\137\060\062\000\101\062\104\137\144\157"
+    "\153\141\156\137\060\062\000\101\063\104\137\144\157\153\141\156\137\060\062\000"
+    "\144\157\153\141\156\137\060\063\000\101\062\104\137\144\157\153\141\156\137\060"
+    "\063\000\101\063\104\137\144\157\153\141\156\137\060\063\000\144\157\153\141\156"
+    "\137\060\064\000\101\062\104\137\144\157\153\141\156\137\060\064\000\101\063\104"
+    "\137\144\157\153\141\156\137\060\064\000\144\157\153\141\156\137\060\065\000\101"
+    "\062\104\137\144\157\153\141\156\137\060\065\000\101\063\104\137\144\157\153\141"
+    "\156\137\060\065\000\144\157\153\141\156\137\060\066\000\101\062\104\137\144\157"
+    "\153\141\156\137\060\066\000\101\063\104\137\144\157\153\141\156\137\060\066\000"
+    "\144\157\153\141\156\137\060\067\000\101\062\104\137\144\157\153\141\156\137\060"
+    "\067\000\101\063\104\137\144\157\153\141\156\137\060\067\000\144\157\153\141\156"
+    "\137\060\070\000\101\062\104\137\144\157\153\141\156\137\060\070\000\101\063\104"
+    "\137\144\157\153\141\156\137\060\070\000\144\157\141\000\144\157\141\137\045\060"
+    "\062\144\000\101\062\137\144\157\141\137\045\060\062\144\000\101\063\137\144\157"
+    "\141\137\045\060\062\144\000\144\157\141\045\144\137\154\000\144\157\141\045\144"
+    "\137\162\000\000\151\040\074\040\116\120\103\124\105\115\120\114\101\124\105\137"
+    "\115\101\130\000\202\335\202\302\202\251\202\350\202\334\202\271\202\361\202\305"
+    "\202\265\202\275\133\045\144\135\000\154\157\143\153\137\060\060\000\144\157\141"
+    "\061\137\154\000\155\141\143\137\060\065\000\144\157\153\141\156\137\061\000\155"
+    "\141\143\137\061\065\000\172\165\156\000\141\156\164\145\156\141\137\156\141\153"
+    "\141\000\123\137\061\000\123\137\061\102\000";
+
+const f32 lbl_80cf05cc[13] = {
+    40.0f,
+    0.0f,
+    1000.0f,
+    -1.0f,
+    5.0f,
+    190.0f,
+    46.0f,
+    255.0f,
+    61.0f,
+    304.0f,
+    240.0f,
+    -240.0f,
+    1100.0f
+};

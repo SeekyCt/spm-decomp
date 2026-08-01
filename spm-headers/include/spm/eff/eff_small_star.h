@@ -5,6 +5,7 @@ CPP_WRAPPER(spm::eff_small_star)
 // ...
 
 void effSmallStarEntry(f32, f32, f32, f32, f32, f32, s32, s32);
+void effSmallStar(f32, f32, f32, f32, f32, f32, s32, s32);
 
 // ...
 

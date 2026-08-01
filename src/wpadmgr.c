@@ -1,8 +1,3 @@
-/*
-    WARNING: Not fully decompiled
-    This file is currently not linked into the final dol
-*/
-
 #include <common.h>
 #include <spm/memory.h>
 #include <spm/spmario.h>
@@ -19,6 +14,8 @@ static WpadWork work;
 
 // .sdata
 static WpadWork * wp = &work;
+
+extern const volatile f32 wpadScale[2];
 
 WpadWork * wpadGetWork()
 {
@@ -75,7 +72,184 @@ void wpadAllRumbleOff()
         WPADControlMotor(i, 0);
 }
 
-// NOT_DECOMPILED wpadMain
+static inline void wpadFilter(f32 * differences, f32 * averages, f32 * samples, s32 count)
+{
+    for (s32 i = 0; i < count; i++)
+    {
+        f32 a = samples[i * 2];
+        f32 b = samples[i * 2 + 1];
+        averages[i] = 1.4142135f * (a + b) / 2.0f;
+        differences[i] = 1.4142135f * a - averages[i];
+    }
+}
+
+void wpadMain()
+{
+    s32 controller;
+
+    for (controller = 0; controller < 4; controller++)
+    {
+        wp->kpadReadRet[controller] = KPADRead(
+            controller, wp->statuses[controller], WPAD_STATUS_COUNT);
+    }
+
+    for (controller = 0; controller < 4; controller++)
+    {
+        if ((wp->statuses[controller][0].error == 0)
+            && (wp->statuses[controller][0].buttonsHeld != 0))
+            break;
+    }
+    if (controller < 4)
+        gp->lastButtonPressTime = gp->time;
+
+    for (controller = 0; controller < 4; controller++)
+    {
+        KPADStatus * status = &wp->statuses[controller][0];
+
+        if (status->error != 0)
+        {
+            Vec2 zero = {0.0f, 0.0f};
+
+            status->dpdStatus = 0;
+            status->pointingPos = zero;
+            wp->pointingPos[controller] = status->pointingPos;
+        }
+        else
+        {
+            if (status->dpdStatus == 0)
+                status->pointingPos = wp->pointingPos[controller];
+            else
+                wp->pointingPos[controller] = status->pointingPos;
+
+            if (wp->flags & WPAD_FLAG_ENABLE_CURSOR)
+            {
+                if (!WPADIsDpdEnabled(controller))
+                    KPADEnableDPD(controller);
+            }
+            else if (WPADIsDpdEnabled(controller))
+            {
+                KPADDisableDPD(controller);
+            }
+        }
+    }
+
+    for (s32 age = 59; age > 0; age--)
+    {
+        s32 previous = age - 1;
+        for (controller = 0; controller < 4; controller++)
+            wp->pastStatuses[controller][age] = wp->pastStatuses[controller][previous];
+    }
+
+    for (controller = 0; controller < 4; controller++)
+        wp->pastStatuses[controller][0] = wp->statuses[controller][0];
+
+    for (controller = 0; controller < 4; controller++)
+    {
+        KPADStatus * status = &wp->statuses[controller][0];
+        if (status->error == 0)
+        {
+            if ((status->buttonsHeld & ~WPAD_BTN_REPEAT) != wp->unknown_0x9d3c[controller])
+            {
+                wp->unknown_0x9d4c[controller] = 0;
+                wp->unknown_0x9d60[controller] = gp->time;
+            }
+
+            wp->unknown_0x9d4c[controller] =
+                (s32) OSTicksToMilliseconds(gp->time - wp->unknown_0x9d60[controller]);
+            wp->unknown_0x9d3c[controller] = status->buttonsHeld & ~WPAD_BTN_REPEAT;
+        }
+    }
+
+    f32 samples[60];
+    f32 averages[30];
+    f32 differences[30];
+    for (s32 i = 0; i < 60; i++)
+        samples[i] = wp->pastStatuses[0][i].acceleration.y;
+
+    wpadFilter(differences, averages, samples, 30);
+
+    for (s32 i = 0; i < 30; i++)
+        samples[i] = averages[i];
+
+    f32 * filtered = wp->unknown_0x9d80;
+    wpadFilter(differences, filtered, samples, 15);
+
+    wp->unknown_0x9dc0 = func_80237750();
+
+    for (controller = 0; controller < 4; controller++)
+    {
+        u32 buttons = 0;
+        KPADStatus * status = &wp->statuses[controller][0];
+        if (status->error == 0)
+        {
+            u8 extensionType = status->extensionType;
+
+            if ((s8) (extensionType == KPAD_EXTENSION_FS
+                ? (s32) (status->extension.fs.stickPos.x * 127.0f) : 0) < -48)
+                buttons |= WPAD_BTN_DOWN;
+            if ((s8) (extensionType == KPAD_EXTENSION_FS
+                ? (s32) (status->extension.fs.stickPos.x * 127.0f) : 0) > 48)
+                buttons |= WPAD_BTN_UP;
+            if ((s8) (extensionType == KPAD_EXTENSION_FS
+                ? (s32) (status->extension.fs.stickPos.y * 127.0f) : 0) < -48)
+                buttons |= WPAD_BTN_RIGHT;
+            if ((s8) (extensionType == KPAD_EXTENSION_FS
+                ? (s32) (status->extension.fs.stickPos.y * 127.0f) : 0) > 48)
+                buttons |= WPAD_BTN_LEFT;
+
+            wp->unknown_0x14[controller] = buttons & (buttons ^ wp->unknown_0x4[controller]);
+            wp->unknown_0x24[controller] = wp->unknown_0x14[controller];
+
+            if (buttons != 0 && buttons == wp->unknown_0x4[controller])
+            {
+                if (--wp->unknown_0x34[controller] == 0)
+                {
+                    wp->unknown_0x24[controller] = buttons;
+                    wp->unknown_0x34[controller] = (u32) (gp->fps * 6 / 60);
+                }
+            }
+            else
+            {
+                wp->unknown_0x34[controller] = (u32) (gp->fps * 24 / 60);
+            }
+
+            wp->unknown_0x4[controller] = buttons;
+        }
+    }
+
+    if (WPADIsMotorEnabled())
+    {
+        for (controller = 0; controller < 4; controller++)
+        {
+            KPADStatus * status = &wp->statuses[controller][0];
+            if (status->error != 0)
+                continue;
+
+            if (gp->disableRumble[controller])
+            {
+                if (wp->rumblePrev[controller] != wp->enableRumble[controller])
+                {
+                    WPADControlMotor(controller, 0);
+                    wp->enableRumble[controller] = false;
+                    wp->rumblePrev[controller] = false;
+                }
+            }
+            else if (wp->rumblePrev[controller] != wp->enableRumble[controller])
+            {
+                switch (wp->enableRumble[controller])
+                {
+                    case false:
+                        WPADControlMotor(controller, 0);
+                        break;
+                    case true:
+                        WPADControlMotor(controller, 1);
+                        break;
+                }
+                wp->rumblePrev[controller] = wp->enableRumble[controller];
+            }
+        }
+    }
+}
 
 void wpadCursorOn()
 {
@@ -209,11 +383,13 @@ bool func_80237750()
     }
 
     if (wp->unkknown_0x9dbc > 3.0f)
-        wp->unkknown_0x9dbc *= 1.25f;
+        wp->unkknown_0x9dbc *= wpadScale[0];
     
     wp->unknown_0x9dc1 = 1;
 
     return 1;
 }
+
+__declspec(section ".sdata2") const volatile f32 wpadScale[2] = {1.25f, 0.0f};
 
 }
