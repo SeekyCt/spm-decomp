@@ -318,7 +318,7 @@ config.libs = [
         Object(Matching, "evtmgr_cmd.c"),
         Object(NonMatching, "mario_pouch.c"),
         Object(NonStarted, "mario.c"),
-        Object(NonMatching, "seq_title.c"),
+        Object(Matching, "seq_title.c"),
         Object(Matching, "seqdef.c"),
         Object(Matching, "seqdrv.c"),
         Object(NonMatching, "system.c"),
