@@ -1,8 +1,3 @@
-/*
-    WARNING: Not fully decompiled
-    This file is currently not linked into the final dol
-*/
-
 #include <common.h>
 #include <spm/mapdrv.h>
 #include <spm/spmario.h>
@@ -23,21 +18,17 @@ extern "C" {
 
 // .bss
 static OSMutex sysMutex;
-static char * tmp0[0xc00];
-static char tmp1[0x100];
+static void * tmp0[0xc00];
+static u8 tmp1[0x100];
 
 // .sdata
 static OSMutex * sysMutexP = &sysMutex;
 static u32 randomSeed = 1;
 
 // .sbss
-static u32 comp;
-static u32 lo;
-static u32 hi;
-static u32 gt;
-static u32 tail;
-static u32 p;
-static u32 token;
+static s32 (*comp)(void *, void *);
+
+void fsort(void ** base, u32 n);
 
 // .rodata
 static f32 angleABTBL[] = {
@@ -87,7 +78,7 @@ s32 __assert2(const char * filename, s32 line, const char * assertion, const cha
     vsprintf(buf, message, args);
     va_end(args);
 
-    OSPanic(filename, line, "assertion \"%s\" failed.\n \"%s\"\n", assertion, buf);
+    OSPanic(filename, line, "./a\0assertion \"%s\" failed.\n \"%s\"\n" + 4, assertion, buf);
 
     return 1;
 }
@@ -210,9 +201,313 @@ void movePos(f32 distance, f32 angle, f32 * x, f32 * z)
     *z -= distance * c;
 }
 
-// NOT_DECOMPILED fsort
+#pragma warn_implicitconv off
+void fsort(void ** base, u32 n)
+{
+    static void ** lo;
+    static void ** hi;
+    static void ** gt;
+    static void ** tail;
+    static void * p;
+    void ** end;
+    void ** mid;
+    void ** start;
+    void ** pv;
+    s32 c;
+    s32 s;
+    s32 b;
+    s32 half;
+    u32 g;
+    u32 t;
+    s32 k;
+    s32 step;
+    u32 mask;
 
-// NOT_DECOMPILED qqsort
+    do
+    {
+        end = &base[n - 1];
+        tail = end;
+
+        if (n == 2)
+        {
+            if (comp(base[0], *tail) > 0)
+            {
+                p = base[0];
+                base[0] = *tail;
+                *tail = p;
+            }
+            return;
+        }
+
+        if (n == 4)
+        {
+            lo = base;
+            mid = tail;
+            gt = tail;
+            hi = tail - 1;
+        }
+        else if (n < 40)
+        {
+            mid = &base[n >> 1];
+            if (comp(base[0], *tail) > 0)
+            {
+                if (comp(base[0], *mid) < 0)
+                {
+                    p = *tail;
+                    *tail = *mid;
+                    *mid = base[0];
+                    base[0] = p;
+                }
+                else if (comp(*mid, *tail) < 0)
+                {
+                    p = base[0];
+                    base[0] = *mid;
+                    *mid = *tail;
+                    *tail = p;
+                }
+                else
+                {
+                    p = base[0];
+                    base[0] = *tail;
+                    *tail = p;
+                }
+            }
+            else
+            {
+                if (comp(base[0], *mid) > 0)
+                {
+                    p = base[0];
+                    base[0] = *mid;
+                    *mid = p;
+                }
+                else if (comp(*mid, *tail) > 0)
+                {
+                    p = *mid;
+                    *mid = *tail;
+                    *tail = p;
+                }
+            }
+            if (n == 3)
+                return;
+
+            lo = base + 1;
+            gt = tail;
+            hi = tail - 1;
+        }
+        else
+        {
+            mask = 0xffffffff;
+            step = 32;
+            k = 63;
+            while (mask != 0)
+            {
+                t = mask & n;
+                half = step >> 1;
+                mask &= mask << ((half == 0) ? 1 : half);
+                if (t != 0)
+                    k -= step;
+                if (t == 0)
+                    mask >>= step;
+                step = half;
+            }
+            b = (k > 32) ? 0 : 32 - k;
+
+            if (b & 1)
+                s = 1 << (b >> 1);
+            else
+                s = (s32) n >> (b >> 1);
+
+            g = n / s;
+            mid = &base[(s / 2) * g];
+            tail = &base[(s - 1) * g];
+            start = base;
+
+            for (;;)
+            {
+                lo = start;
+                gt = tail;
+                hi = tail;
+                pv = &start[(tail - start) / 2 / g * g];
+
+            sel_scan:
+                while (hi >= lo)
+                {
+                    c = comp(*hi, *pv);
+                    if (c > 0)
+                        gt = hi;
+                    else if (c < 0)
+                        goto sel_lscan;
+                    hi -= g;
+                }
+                goto sel_done;
+            sel_lscan:
+                while (lo < hi)
+                {
+                    c = comp(*lo, *pv);
+                    if (c >= 0)
+                    {
+                        p = *lo;
+                        *lo = *hi;
+                        *hi = p;
+                        if (c > 0)
+                            gt = hi;
+                        if (!(c > 0))
+                            pv = hi;
+                        lo += g;
+                        hi -= g;
+                        goto sel_scan;
+                    }
+                    lo += g;
+                }
+            sel_done:
+                if (gt < pv)
+                {
+                    p = *gt;
+                    *gt = *pv;
+                    *pv = p;
+                    gt += g;
+                }
+
+                if (gt <= mid)
+                    start = gt;
+                else if (hi >= mid)
+                    tail = hi;
+                else
+                    break;
+
+                if (start >= tail)
+                    break;
+            }
+
+            lo = base;
+            tail = end;
+            gt = end;
+            hi = end;
+        }
+
+    scan:
+        while (hi >= lo)
+        {
+            c = comp(*hi, *mid);
+            if (c > 0)
+                gt = hi;
+            else if (c < 0)
+                goto lscan;
+            hi--;
+        }
+        goto done;
+    lscan:
+        while (lo < hi)
+        {
+            c = comp(*lo, *mid);
+            if (c >= 0)
+            {
+                p = *lo;
+                *lo = *hi;
+                *hi = p;
+                if (c > 0)
+                    gt = hi;
+                if (!(c > 0))
+                    mid = hi;
+                lo++;
+                hi--;
+                goto scan;
+            }
+            lo++;
+        }
+    done:
+        if (gt < mid)
+        {
+            p = *gt;
+            *gt++ = *mid;
+            *mid = p;
+        }
+
+        if (hi - base < tail - gt)
+        {
+            lo = hi;
+            hi = base;
+            base = gt;
+        }
+        else
+        {
+            lo = tail;
+            tail = hi;
+            hi = gt;
+        }
+        n = (tail - base) + 1;
+        if (lo > hi)
+            fsort(hi, (lo - hi) + 1);
+    }
+    while (n > 1);
+}
+
+#define MAX_ELEMENT 0xc00
+#define MAX_ELEMENT_SIZE 0x40
+
+void qqsort(void * list, u32 nel, u32 size, s32 (*compare)(void *, void *))
+{
+    u8 * dst;
+    void ** idx;
+    u32 i;
+    void ** slot;
+    u8 * cur;
+    void * p;
+    u32 j;
+    void ** pp;
+    u8 * src;
+    void ** table = tmp0;
+    u8 * buf = tmp1;
+
+    SPM_ASSERT(534, nel < MAX_ELEMENT, "要素数が多すぎてバッファが足りません");
+    SPM_ASSERT(535, size < MAX_ELEMENT_SIZE,
+               "１要素のサイズが大きくてバッファが足りません\0[%8s:% 4d] %s");
+
+    comp = compare;
+    if (nel <= 1)
+        return;
+
+    src = (u8 *) list;
+    pp = table;
+    j = 0;
+    while (j++ < nel)
+    {
+        *pp++ = src;
+        src += size;
+    }
+
+    fsort(table, nel);
+
+    dst = (u8 *) list;
+    idx = table;
+    i = 0;
+    while (i++ < nel)
+    {
+        p = *idx;
+        if (p != NULL)
+        {
+            slot = idx;
+            if (p != dst)
+            {
+                memcpy(buf, cur = dst, size);
+                do
+                {
+                    memcpy(cur, *slot, size);
+                    cur = (u8 *) *slot;
+                    *slot = NULL;
+                    slot = &table[(u32) (cur - (u8 *) list) / size];
+                }
+                while ((p = *slot) != dst);
+                memcpy(cur, buf, size);
+                *slot = NULL;
+            }
+        }
+        dst += size;
+        idx++;
+    }
+}
+
+#pragma warn_implicitconv reset
 
 static u32 _rand_advance()
 {

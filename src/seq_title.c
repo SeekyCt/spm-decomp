@@ -153,8 +153,17 @@ static const char * languageNames[] = {
     "uk"
 };
 
-// NON_MATCHING: try-catches are wrong
-// https://decomp.me/scratch/7rAz6
+inline void * operator new(size_t size, MEMAllocator * allocator)
+{
+    return MEMAllocFromAllocator(allocator, size);
+}
+
+inline void operator delete(void * ptr, MEMAllocator * allocator) throw()
+{
+    (void) ptr;
+    (void) allocator;
+}
+
 void seqTitleInitLayout()
 {
     // Load archive
@@ -173,24 +182,11 @@ void seqTitleInitLayout()
 
     nw4r::lyt::Layout::SetAllocator(&wp->allocator);
 
-    void * layoutMem = MEMAllocFromAllocator(&wp->allocator, sizeof(*wp->layout));
-    nw4r::lyt::Layout * layout;
-    try {
-        layout = new (layoutMem) nw4r::lyt::Layout();
-    }
-    catch (...) {
-        throw;
-    }
+    nw4r::lyt::Layout * layout = new (&wp->allocator) nw4r::lyt::Layout();
     wp->layout = layout;
 
-    void * accessorMem = MEMAllocFromAllocator(&wp->allocator, sizeof(*wp->arcResAccessor));
-    nw4r::lyt::ArcResourceAccessor * arcResAccessor;
-    try {
-        arcResAccessor = new (accessorMem) nw4r::lyt::ArcResourceAccessor();
-    }
-    catch (...) {
-        throw;
-    }
+    nw4r::lyt::ArcResourceAccessor * arcResAccessor =
+        new (&wp->allocator) nw4r::lyt::ArcResourceAccessor();
     wp->arcResAccessor = arcResAccessor;
 
     wp->arcResAccessor->Attach(wp->arc, "arc");
@@ -217,8 +213,12 @@ void seqTitleInitLayout()
     spsndSFXOn("SFX_SYS_TITLE_APPEAR1");
 }
 
+nw4r::lyt::ArcResourceAccessor::~ArcResourceAccessor()
+{
+}
+
 // ALways inlined
-void seqTitleDeleteLayout()
+inline void seqTitleDeleteLayout()
 {
     delete wp->layout;
     delete wp->arcResAccessor;
@@ -348,7 +348,7 @@ const char * getDanMapName(s32 dungeonNo)
             return "dan_42";
         if (dungeonNo - 100 < 75)
             return "dan_43";
-        return "dan_44";
+        return "dan_44\0\0\0\0";
     }
 }
 

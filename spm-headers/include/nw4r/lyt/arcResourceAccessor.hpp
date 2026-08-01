@@ -23,10 +23,7 @@ class ArcResourceAccessor : public ResourceAccessor
 {
 public:
     ArcResourceAccessor();
-    virtual ~ArcResourceAccessor()
-    {
-
-    }
+    virtual ~ArcResourceAccessor();
 
     virtual void * GetResource(u32 type, const char * name, u32 * sizeOut);
     virtual UNKNOWN_FUNCTION(GetFont)

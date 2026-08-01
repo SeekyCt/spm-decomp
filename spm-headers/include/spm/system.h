@@ -116,8 +116,8 @@ void sincosf(f32 x, f32 * sinx, f32 * cosx);
 */
 void movePos(f32 distance, f32 angle, f32 * x, f32 * z);
 
-DECOMP_STATIC(void fsort(char ** table, size_t size))
-void qqsort(char * list, size_t nel, size_t size, void * compare);
+DECOMP_STATIC(void fsort(void ** table, u32 size))
+void qqsort(void * list, u32 nel, u32 size, s32 (*compare)(void *, void *));
 
 /*
     Gets a random number 0 <= x <= RAND_MAX
