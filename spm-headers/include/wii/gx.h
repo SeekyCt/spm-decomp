@@ -26,7 +26,20 @@ SIZE_ASSERT(GXColorS10, 0x8)
 
 typedef struct
 {
-/* 0x0 */ u8 unknown_0x0[0x3c - 0x0];
+/* 0x00 */ u32 viTVmode;
+/* 0x04 */ u16 fbWidth;
+/* 0x06 */ u16 efbHeight;
+/* 0x08 */ u16 xfbHeight;
+/* 0x0A */ u16 viXOrigin;
+/* 0x0C */ u16 viYOrigin;
+/* 0x0E */ u16 viWidth;
+/* 0x10 */ u16 viHeight;
+/* 0x14 */ u32 xFBmode;
+/* 0x18 */ u8 fieldRendering;
+/* 0x19 */ u8 antiAliasing;
+/* 0x1A */ u8 samplePattern[12][2];
+/* 0x32 */ u8 vFilter[7];
+/* 0x39 */ u8 padding[3];
 } GXRenderModeObj;
 SIZE_ASSERT(GXRenderModeObj, 0x3c)
 
@@ -121,7 +134,7 @@ UNKNOWN_FUNCTION(GXSetDispCopyFrame2Field)
 UNKNOWN_FUNCTION(GXSetCopyClamp)
 UNKNOWN_FUNCTION(GXGetYScaleFactor)
 UNKNOWN_FUNCTION(GXSetDispCopyYScale)
-UNKNOWN_FUNCTION(GXSetCopyClear)
+void GXSetCopyClear(const GXColor * colour, u32 depth);
 UNKNOWN_FUNCTION(GXSetCopyFilter)
 UNKNOWN_FUNCTION(GXSetDispCopyGamma)
 UNKNOWN_FUNCTION(GXCopyDisp)

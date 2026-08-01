@@ -1,12 +1,13 @@
 #pragma once
 
 #include <common.h>
+#include <wii/gx.h>
 
 CPP_WRAPPER(wii::DEMOInit)
 
 extern s32 DemoUseMEMHeap;
 
-void DEMOInit();
+void DEMOInit(GXRenderModeObj * renderMode);
 UNKNOWN_FUNCTION(DEMOSetRenderMode)
 void DEMOBeforeRender();
 void DEMODoneRender();

@@ -64,7 +64,7 @@ void wpadInit();
 /*
     Stops vibration of all controllers
 */
-void wpadAllRumbleOff();
+void wpadAllRumbleOff(s32 mode);
 
 /*
     Updates all controllers

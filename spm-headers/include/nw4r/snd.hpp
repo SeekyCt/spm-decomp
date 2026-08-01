@@ -63,8 +63,8 @@ SIZE_ASSERT(Snd_BasicSound, 0xd8)
 
 // TODO: these are c++ functions used in spmario.c
 
-extern UNKNOWN_FUNCTION(func_802f4d0c) // nw4r::snd::detail::AxManager::getInstance
-extern UNKNOWN_FUNCTION(func_802f54a0) // nw4r::snd::detail::AxManager::SetMasterVolume
+void * func_802f4d0c(); // nw4r::snd::detail::AxManager::getInstance
+void func_802f54a0(void * manager, f32 volume, s32 frames); // nw4r::snd::detail::AxManager::SetMasterVolume
 
 void UpdateLoadingBlockIndex(BasicPlayer *player);
 void Skip(BasicPlayer *player, OffsetType type, s32 offset);

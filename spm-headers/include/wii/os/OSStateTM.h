@@ -6,8 +6,8 @@ CPP_WRAPPER(wii::os)
 
 typedef void (*PowerCallback)();
 
-void OSSetResetCallback(PowerCallback * func);
-void OSSetPowerCallback(PowerCallback * func);
+void OSSetResetCallback(PowerCallback func);
+void OSSetPowerCallback(PowerCallback func);
 UNKNOWN_FUNCTION(__OSInitSTM)
 UNKNOWN_FUNCTION(__OSShutdownToSBY)
 UNKNOWN_FUNCTION(__OSHotReset)

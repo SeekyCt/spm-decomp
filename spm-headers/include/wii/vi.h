@@ -7,10 +7,11 @@ CPP_WRAPPER(wii::vi)
 // OnShutdown
 UNKNOWN_FUNCTION(__VIRetraceHandler)
 UNKNOWN_FUNCTION(VISetPreRetraceCallback)
-UNKNOWN_FUNCTION(VISetPostRetraceCallback)
+typedef void (*VIRetraceCallback)(u32 retraceCount);
+VIRetraceCallback VISetPostRetraceCallback(VIRetraceCallback callback);
 UNKNOWN_FUNCTION(getTiming)
 UNKNOWN_FUNCTION(__VIInit)
-UNKNOWN_FUNCTION(VIInit)
+void VIInit();
 void VIWaitForRetrace();
 UNKNOWN_FUNCTION(setFbbRegs)
 UNKNOWN_FUNCTION(setVerticalRegs)
@@ -22,11 +23,11 @@ void VISetBlack(bool enabled);
 UNKNOWN_FUNCTION(VIGetRetraceCount)
 UNKNOWN_FUNCTION(VIGetNextField)
 UNKNOWN_FUNCTION(VIGetCurrentLine)
-UNKNOWN_FUNCTION(VIGetTvFormat)
-UNKNOWN_FUNCTION(VIGetScanMode)
-UNKNOWN_FUNCTION(VIGetDTVStatus)
+u32 VIGetTvFormat();
+u32 VIGetScanMode();
+u32 VIGetDTVStatus();
 UNKNOWN_FUNCTION(__VIDisplayPositionToXY)
-UNKNOWN_FUNCTION(VISetVSyncTimingTest)
+void VISetVSyncTimingTest();
 UNKNOWN_FUNCTION(VISetTimeToDimming)
 UNKNOWN_FUNCTION(__VIResetRFIdle)
 UNKNOWN_FUNCTION(__VIResetSIIdle)

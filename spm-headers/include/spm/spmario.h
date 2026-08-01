@@ -47,9 +47,11 @@ typedef struct
 /* 0x00E4 */ u8 unknown_0xe4[0xf8 - 0xe4];
 /* 0x00F8 */ OSTime time;
 /* 0x0100 */ OSTime timePlayed;
-/* 0x0108 */ u8 unknown_0x108[0x110 - 0x108];
-/* 0x0110 */ OSTime lastSaveLoadTime;
-/* 0x0118 */ u8 unknown_0x118[0x138 - 0x118];
+/* 0x0108 */ OSTime frameTimeDelta;
+/* 0x0110 */ OSTime lastFrameTime;
+/* 0x0118 */ OSTime gameTime;
+/* 0x0120 */ OSTime systemTime;
+/* 0x0128 */ u8 unknown_0x128[0x138 - 0x128];
 /* 0x0138 */ OSTime lastButtonPressTime; // uncertain
 /* 0x0140 */ s32 gsw0; // first GSW is a full word
 /* 0x0144 */ u32 gswf[256]; // 8192 flags
@@ -57,7 +59,13 @@ typedef struct
 /* 0x0D44 */ u32 lswf[16]; // 512 flags
 /* 0x0D84 */ u8 lsw[1024];
 /* 0x1184 */ SwCoinEntry coinEntries[32];
-/* 0x1A84 */ u8 unknown_0x1a84[0x1b00 - 0x1a84];
+/* 0x1A84 */ u8 unknown_0x1a84[0x1ab0 - 0x1a84];
+/* 0x1AB0 */ bool rumbleStarted[4];
+/* 0x1AB4 */ u8 unknown_0x1ab4[0x1ab8 - 0x1ab4];
+/* 0x1AB8 */ OSTime rumbleStartTime[4];
+/* 0x1AD8 */ bool rumbleCooldown[4];
+/* 0x1ADC */ bool rumbleCooldownStarted[4];
+/* 0x1AE0 */ OSTime rumbleCooldownStartTime[4];
 /* 0x1B00 */ bool disableRumble[4]; // overrides to force off wpadmgr's enableRumble,
                                     // index controller id
 /* 0x1B04 */ u8 unknown_0x1b04[0x1b08 - 0x1b04];
@@ -74,7 +82,7 @@ DECOMP_STATIC(s8 spmario_doHomeButtonRestart)
 DECOMP_STATIC(s8 spmario_doShutdown)
 DECOMP_STATIC(s8 spmario_doResetButtonRestart)
 DECOMP_STATIC(s32 spmario_startTick)
-DECOMP_STATIC(s32 spmario_unusedZero)
+DECOMP_STATIC(s8 spmario_unusedZero)
 
 void spmarioInit();
 void spmarioMain();

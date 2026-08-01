@@ -326,7 +326,7 @@ config.libs = [
         Object(Matching, "debug.c"),
         Object(Matching, "filemgr.c"),
         Object(Matching, "memory.c"),
-        Object(NonMatching, "spmario.c"),
+        Object(Matching, "spmario.c"),
         Object(NonStarted, "npcdrv.c"),
         Object(Matching, "wpadmgr.c", postprocess="tools/fixup_wpadmgr.py"),
         Object(Matching, "relmgr.c"),

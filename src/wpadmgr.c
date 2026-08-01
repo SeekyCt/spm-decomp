@@ -66,8 +66,10 @@ void wpadInit()
     WPADSetAutoSleepTime(4);
 }
 
-void wpadAllRumbleOff()
+void wpadAllRumbleOff(s32 mode)
 {
+    (void) mode;
+
     for (int i = 0; i < 4; i++)
         WPADControlMotor(i, 0);
 }

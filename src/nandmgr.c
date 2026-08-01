@@ -347,7 +347,7 @@ void nandLoadSave(s32 saveId)
     memcpy(npcGetWorkPtr()->unknown_0x728, &save->unknown_0x21b0, sizeof(save->unknown_0x21b0));
     gp->discIsEjected = 0;
     _gp = gp; // Sign of inlining?
-    _gp->lastSaveLoadTime = OSGetTime();
+    _gp->lastFrameTime = OSGetTime();
     _gp->gameSpeed = 1.0f;
 
     // Restore globals not read from save
