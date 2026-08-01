@@ -7,17 +7,7 @@
 
 extern "C" {
 
-extern const char lbl_803345e0[] =
-    "MOBJ_ta3_kaze_aka\0"
-    "mario_motion.c\0"
-    "paramType >= 0 && paramType < JUMPPARA_MAX\0"
-    "frm < 5000\0"
-    "ジャンプのパラメータおかしくない？\0"
-    "落下のパラメータおかしくない？\n(%f %f %f %f)\0"
-    "charMode >= MARIO_MODE && charMode < MARIO_MODE_END\0"
-    "おかしなキャラになろうとしています\ncharMode = %d\0"
-    "p_jyabara\0"
-    "S_1";
+extern const char lbl_803345e0[];
 
 void marioChangeCharacter(s32 charMode)
 {

@@ -54,6 +54,13 @@ evtmgr_cmd.c:
 	.bss        start:0x8050CE30 end:0x8050CF30
 	.sdata2     start:0x805B1D50 end:0x805B1D68
 
+mot_walk.c:
+	extab       start:0x8000ABF0 end:0x8000AC28
+	extabindex  start:0x80016558 end:0x800165AC
+	.text       start:0x80118E88 end:0x80119AC0
+	.rodata     start:0x80333238 end:0x80333240
+	.sdata2     start:0x805B2220 end:0x805B2240
+
 mario.c:
 	extab       start:0x8000AE18 end:0x8000B108
 	extabindex  start:0x80016894 end:0x80016CFC
@@ -68,6 +75,13 @@ mario_motion.c:
 	extab       start:0x8000B700 end:0x8000B710
 	extabindex  start:0x800175F0 end:0x80017608
 	.text       start:0x80147570 end:0x80147748
+
+mario_move.c:
+	extab       start:0x8000B770 end:0x8000B778
+	extabindex  start:0x80017698 end:0x800176A4
+	.text       start:0x80148C28 end:0x80149680
+	.rodata     start:0x80334430 end:0x80334438
+	.data       start:0x804275E8 end:0x80427608
 
 mario_pouch.c:
 	extab       start:0x8000B820 end:0x8000B898

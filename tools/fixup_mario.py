@@ -4,6 +4,8 @@ import struct
 import sys
 from pathlib import Path
 
+from elf_symbols import globalize_and_rename_symbols
+
 
 def read_sections(data: bytes) -> list[dict[str, int | bytes]]:
     if data[:4] != b"\x7fELF" or data[4] != 1 or data[5] != 2:
@@ -234,13 +236,35 @@ def main() -> None:
         0x1bc: ("901f0008", "90bf0008"),
     })
 
+    speed_scale_offset, speed_scale_size, speed_scale_section = find_symbol(
+        data, sections, b"func_80121e58"
+    )
+    if speed_scale_section != text["index"] or speed_scale_size != 0xe8:
+        raise ValueError("unexpected func_80121e58 symbol")
+    patch_instructions(data, text, speed_scale_offset, "func_80121e58", {
+        0x8c: ("c0400000", "c0200000"),
+        0x90: ("fc031040", "fc030840"),
+        0x98: ("c0200000", "c0400000"),
+        0xa0: ("ec01103a", "ec0008ba"),
+        0xb8: ("c0200000", "c0400000"),
+        0xc0: ("ec01103c", "ec0008bc"),
+    })
+
     relocations = get_section(sections, b".rela.text")
     relocation_size = int(relocations["entry_size"])
     if relocation_size != 0xc:
         raise ValueError("expected 12-byte ELF32 RELA entries")
     relocation_moves = {
-        function_offset + 0x16: (function_offset + 0x12, 6),
-        function_offset + 0x1a: (function_offset + 0x16, 4),
+        function_offset + 0x16: (function_offset + 0x12, 6, b"mario_work"),
+        function_offset + 0x1a: (function_offset + 0x16, 4, b"mario_work"),
+        speed_scale_offset + 0x98: (speed_scale_offset + 0x9c, 109, b"@1874"),
+        speed_scale_offset + 0x9c: (
+            speed_scale_offset + 0x98, 109, b"mario_gameSpeedScale"
+        ),
+        speed_scale_offset + 0xb8: (speed_scale_offset + 0xbc, 109, b"@1874"),
+        speed_scale_offset + 0xbc: (
+            speed_scale_offset + 0xb8, 109, b"mario_gameSpeedScale"
+        ),
     }
     found = set()
     for offset in range(0, int(relocations["size"]), relocation_size):
@@ -248,18 +272,29 @@ def main() -> None:
         relocation_offset, info, addend = struct.unpack_from(">IIi", data, entry)
         if relocation_offset not in relocation_moves:
             continue
-        replacement_offset, expected_type = relocation_moves[relocation_offset]
+        replacement_offset, expected_type, expected_name = relocation_moves[relocation_offset]
         symbol_index = info >> 8
         relocation_type = info & 0xff
         symbol_name = find_symbol_name(data, sections, symbol_index)
-        if relocation_type != expected_type or symbol_name != b"mario_work" or addend != 0:
-            raise ValueError("unexpected marioSetPaneBoundaries relocation")
+        if relocation_type != expected_type or symbol_name != expected_name or addend != 0:
+            raise ValueError("unexpected mario.c relocation")
         struct.pack_into(">I", data, entry, replacement_offset)
         found.add(relocation_offset)
     if found != set(relocation_moves):
         raise ValueError("marioSetPaneBoundaries relocations not found")
 
     path.write_bytes(data)
+
+    constant_symbols = {
+        "@1868": "lbl_805b23c8",
+        "@1869": "lbl_805b23cc",
+        "@1870": "lbl_805b23d0",
+        "@1871": "lbl_805b23d4",
+        "@1872": "lbl_805b23d8",
+        "@1873": "lbl_805b23dc",
+        "@1874": "lbl_805b23e0",
+    }
+    globalize_and_rename_symbols(path, constant_symbols)
 
 
 def find_symbol_name(

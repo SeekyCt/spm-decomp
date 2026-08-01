@@ -339,7 +339,7 @@ typedef struct
 /* 0x0040 */ u8 unknown_0x40[0x44 - 0x40];
 /* 0x0044 */ f32 unknown_0x44;
 /* 0x0048 */ f32 invincibilityTimer;
-/* 0x004C */ u8 unknown_0x4c[0x50 - 0x4c];
+/* 0x004C */ f32 unknown_0x4c;
 /* 0x0050 */ f32 airTimer; // time in air
 /* 0x0054 */ f32 jumpPeakAirTime; // value of airTimer when reaching top of jump
 /* 0x0058 */ u8 unknown_0x58[0x5c - 0x58];
@@ -354,7 +354,8 @@ typedef struct
 /* 0x00D4 */ u8 unknown_0xd4[0xe0 - 0xd4];
 /* 0x00E0 */ Vec3 unknown_0xe0;
 /* 0x00EC */ Vec3 unknown_0xec;
-/* 0x00F8 */ u8 unknown_0xf8[0x120 - 0xf8];
+/* 0x00F8 */ u8 unknown_0xf8[0x11c - 0xf8];
+/* 0x011C */ f32 unknown_0x11c;
 /* 0x0120 */ s32 camId;
 /* 0x0124 */ u8 unknown_0x124[0x128 - 0x124];
 /* 0x0128 */ Vec3i framebufferPos;
@@ -364,11 +365,12 @@ typedef struct
 /* 0x0150 */ f32 dashSpeed; // base dash speed
 /* 0x0154 */ u8 unknown_0x154[0x158 - 0x154];
 /* 0x0158 */ f32 unknown_0x158;
-/* 0x015C */ u8 unknown_0x15c[0x160 - 0x15c];
+/* 0x015C */ f32 unknown_0x15c;
 /* 0x0160 */ f32 lastGroundSpeed; // xzSpeed when last on ground
 /* 0x0164 */ f32 unknown_0x164;
 /* 0x0168 */ f32 unknown_0x168;
-/* 0x016C */ u8 unknown_0x16c[0x174 - 0x16c];
+/* 0x016C */ f32 unknown_0x16c;
+/* 0x0170 */ u8 unknown_0x170[0x174 - 0x170];
 /* 0x0174 */ f32 directionWorld; // degrees
 /* 0x0178 */ f32 directionView; // degrees
 /* 0x017C */ u8 unknown_0x17c[0x180 - 0x17c];
@@ -399,7 +401,11 @@ typedef struct
         Others unknown
     */
 /* 0x01FC */ HitObj * hitObjs2[3];
-/* 0x0208 */ u8 unknown_0x208[0x248 - 0x208];
+/* 0x0208 */ u8 unknown_0x208[0x218 - 0x208];
+/* 0x0218 */ f32 unknown_0x218;
+/* 0x021C */ u8 unknown_0x21c[0x238 - 0x21c];
+/* 0x0238 */ f32 unknown_0x238;
+/* 0x023C */ u8 unknown_0x23c[0x248 - 0x23c];
 /* 0x0248 */ f32 unknown_0x248;
     /*
         0 is main model
@@ -451,7 +457,12 @@ typedef struct
                  MobjEntry * mobj;
              } caught;
 /* 0x03A8 */ s32 catchType;
-/* 0x03AC */ u8 unknown_0x3ac[0x3d0 - 0x3ac];
+/* 0x03AC */ s32 unknown_0x3ac;
+/* 0x03B0 */ s32 unknown_0x3b0;
+/* 0x03B4 */ u8 unknown_0x3b4[0x3c4 - 0x3b4];
+/* 0x03C4 */ f32 unknown_0x3c4;
+/* 0x03C8 */ f32 unknown_0x3c8;
+/* 0x03CC */ u8 unknown_0x3cc[0x3d0 - 0x3cc];
 /* 0x03D0 */ f32 xzSpeedFactor;
 /* 0x03D4 */ s32 unknown_0x3d4;
 /* 0x03D8 */ Vec3 respawnPosition;
@@ -481,7 +492,10 @@ typedef struct
 /* 0x1304 */ MarioStatus * lastStatus;
 /* 0x1308 */ s32 unknown_0x1308;
 /* 0x130C */ Mtx34 unknown_0x130c;
-/* 0x133C */ u8 unknown_0x133c[0x1360 - 0x133c];
+/* 0x133C */ u8 unknown_0x133c[0x1348 - 0x133c];
+/* 0x1348 */ f32 unknown_0x1348;
+/* 0x134C */ f32 unknown_0x134c;
+/* 0x1350 */ u8 unknown_0x1350[0x1360 - 0x1350];
 /* 0x1360 */ s32 gravityType; // see enum above
     // Unit vectors for each direction under current gravity
 /* 0x1364 */ Vec3 gravUnitRight; // positive x normally
@@ -548,7 +562,7 @@ DECOMP_STATIC(s64 mario_mainLastRunTime) // used to adjust marioGameSpeedScale f
 */
 DECOMP_STATIC(f32 mario_gameSpeedScale)
 
-UNKNOWN_FUNCTION(func_80121e18)
+s32 func_80121e18(const void * param);
 
 /*
     Returns marioGameSpeedScale
@@ -718,7 +732,7 @@ void marioMain();
 UNKNOWN_FUNCTION(func_80125854)
 UNKNOWN_FUNCTION(func_80125998)
 UNKNOWN_FUNCTION(func_80126034)
-UNKNOWN_FUNCTION(func_801265a0)
+bool func_801265a0();
 bool func_80126618();
 UNKNOWN_FUNCTION(func_8012662c)
 UNKNOWN_FUNCTION(func_80126688)

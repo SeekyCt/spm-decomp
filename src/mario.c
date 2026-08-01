@@ -7,6 +7,7 @@
 #include <spm/mario.h>
 #include <spm/mario_hit.h>
 #include <spm/mario_motion.h>
+#include <spm/mot_walk.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
 #include <spm/system.h>
@@ -86,19 +87,57 @@ CharacterProperties characterProperties[4] = {
 
 // .sbss
 static f32 mario_gameSpeedScale;
-static f32 unknownGameSpeedScale;
+f32 lbl_805ae8ec;
 const char * lbl_805ae8f0;
 s32 lbl_805ae8f4;
 static s64 mario_mainLastRunTime;
+
+s32 func_80121e18(const void * param)
+{
+    u32 flags = ((const u32 *) param)[1];
+
+    if (flags & 0x80000000)
+        return 0;
+    if (flags & 0x2000)
+        return 2;
+    return !(flags & (0x04000000 | 0x6));
+}
 
 f32 marioGetGameSpeedScale()
 {
     return mario_gameSpeedScale;
 }
 
+void func_80121e58()
+{
+    MarioWork * mp = &mario_work;
+    f32 target;
+
+    if (4.0f * mp->unknown_0x11c > 12.0f)
+        target = 12.0f;
+    else if (mp->unknown_0x11c > func_80118f40() + 0.5f)
+        target = 4.0f * marioGetDashSpd();
+    else if (mp->unknown_0x11c > 1.0f)
+        target = 4.0f * func_80118f40();
+    else if (mp->unknown_0x11c > 0.1f)
+        target = mp->unknown_0x11c;
+    else
+        target = 0.0f;
+
+    if (target > lbl_805ae8ec) {
+        lbl_805ae8ec = 0.3f * mario_gameSpeedScale + lbl_805ae8ec;
+        if (lbl_805ae8ec > target)
+            lbl_805ae8ec = target;
+    } else {
+        lbl_805ae8ec = lbl_805ae8ec - 0.3f * mario_gameSpeedScale;
+        if (lbl_805ae8ec < target)
+            lbl_805ae8ec = target;
+    }
+}
+
 f32 func_80121f40()
 {
-    return unknownGameSpeedScale;
+    return lbl_805ae8ec;
 }
 
 MarioWork * marioGetPtr()
