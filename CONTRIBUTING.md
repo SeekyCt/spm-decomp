@@ -1,6 +1,6 @@
 # Contact
 
-If you're interested in contributing, it's recommended you reach out to us in the #reverse-engineering channel of the [SPM Speedrunning Discord](https://discord.gg/dbd733H) first. Here you can ask for any help you might need and discuss what you plan to decompile to prevent any duplicated work.
+If you're interested in contributing, it's recommended you reach out to us in the #reverse-engineering channel of the [Flipside Tower Discord](https://discord.gg/ndrxwcyCum) first. Here you can ask for any help you might need and discuss what you plan to decompile to prevent any duplicated work.
 
 # spm-headers
 
