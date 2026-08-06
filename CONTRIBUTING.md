@@ -12,7 +12,7 @@ Changes to these declarations should be made in the `spm-headers` directory. The
 
 ## C++ Linkage
 
-DOL and REL source files are compiled as C++, including files with a `.c` extension. Their contents must be wrapped in `extern "C"` after the includes so that symbols use C linkage and retain their expected names.
+The developers compiled the game as C++ (even with asserts showing that their filenames ended in '.c'), so this project is required to do the same. C++ features are very rarely used, so to avoid the inconvenience of symbol name mangling, all code outside of these rare cases is wrapped in `extern "C"` blocks.
 
 ```cpp
 #include <common.h>
