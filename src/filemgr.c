@@ -990,7 +990,7 @@ void fileFree(FileEntry * lp)
         // Decrement reference count
         lp->touchCnt--;
         // "It's too free"
-        SPM_ASSERT(1039, lp->touchCnt >= 0, "フリーしすぎです。\n");
+        SPM_ASSERT(1039, lp->touchCnt>=0, "フリーしすぎです。\n");
         if (lp->touchCnt == 0)
         {
             lp->state = FILE_WAITING_GARBAGE;

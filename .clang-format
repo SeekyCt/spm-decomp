@@ -34,4 +34,7 @@ PointerAlignment: Middle
 SpaceAfterCStyleCast: true
 SpaceBeforeCpp11BracedList: true
 SortIncludes: CaseInsensitive
+WhitespaceSensitiveMacros: 
+  - SPM_ASSERT
+  - SPM_ASSERT_NM
 ...

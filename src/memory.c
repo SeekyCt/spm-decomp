@@ -167,7 +167,7 @@ void memInit()
             wp->heapEnd[i] = (void *) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
-            SPM_ASSERT(97 + LINE_SHIFT, (u32) wp->heapEnd[i] <= max,
+            SPM_ASSERT(97 + LINE_SHIFT, (u32)wp->heapEnd[i] <= max,
                        "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             nextFree += size;
@@ -193,7 +193,7 @@ void memInit()
             wp->heapEnd[i] = (void *) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
-            SPM_ASSERT(117 + LINE_SHIFT, (u32) wp->heapEnd[i] <= max,
+            SPM_ASSERT(117 + LINE_SHIFT, (u32)wp->heapEnd[i] <= max,
                        "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             nextFree += size;
@@ -226,7 +226,7 @@ void memInit()
             wp->heapEnd[i] = (void *) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
-            SPM_ASSERT(148 + LINE_SHIFT, (u32) wp->heapEnd[i] <= max,
+            SPM_ASSERT(148 + LINE_SHIFT, (u32)wp->heapEnd[i] <= max,
                        "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             nextFree += size;
@@ -252,7 +252,7 @@ void memInit()
             wp->heapEnd[i] = (void *) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
-            SPM_ASSERT(168 + LINE_SHIFT, (u32) wp->heapEnd[i] <= max,
+            SPM_ASSERT(168 + LINE_SHIFT, (u32)wp->heapEnd[i] <= max,
                        "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             nextFree += size;

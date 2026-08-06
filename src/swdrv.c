@@ -314,7 +314,7 @@ s32 swGetGameCoinId()
     id += wp->gameCoinId++;
 
     // "Coin flags have overflowed"
-    SPM_ASSERT(505, (wp->gameCoinId - 1) < assign_tbl[i].num, "コインのフラグが溢れました");
+    SPM_ASSERT(505, (wp->gameCoinId-1) < assign_tbl[i].num, "コインのフラグが溢れました");
 
     return id;
 }
