@@ -1,15 +1,15 @@
 #include "spm/animdrv.h"
 #include "spm/effdrv.h"
 #include "wii/os/OSThread.h"
+#include <msl/stdarg.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
 #include <spm/dvdmgr.h>
 #include <spm/filemgr.h>
 #include <spm/memory.h>
 #include <spm/system.h>
 #include <wii/dvd.h>
 #include <wii/os.h>
-#include <msl/stdarg.h>
-#include <msl/stdio.h>
-#include <msl/string.h>
 
 extern "C" {
 
@@ -65,12 +65,14 @@ void UnpackTexPalette(TPLHeader * palette)
         if (palette->imageTable[i].imageOffset != 0)
         {
             // Convert image header offset to pointer
-            palette->imageTable[i].image = (ImageHeader *) ((u32) palette + palette->imageTable[i].imageOffset);
+            palette->imageTable[i].image =
+                (ImageHeader *) ((u32) palette + palette->imageTable[i].imageOffset);
 
             if (!palette->imageTable[i].image->unpacked)
             {
                 // Convert image data offset to pointer
-                palette->imageTable[i].image->data = (void *) ((u32) palette + palette->imageTable[i].image->dataOffset);
+                palette->imageTable[i].image->data =
+                    (void *) ((u32) palette + palette->imageTable[i].image->dataOffset);
                 palette->imageTable[i].image->unpacked = true;
             }
         }
@@ -78,12 +80,14 @@ void UnpackTexPalette(TPLHeader * palette)
         if (palette->imageTable[i].paletteOffset != 0)
         {
             // Convert palette header offset to pointer
-            palette->imageTable[i].palette = (PaletteHeader *) ((u32) palette + palette->imageTable[i].paletteOffset);
+            palette->imageTable[i].palette =
+                (PaletteHeader *) ((u32) palette + palette->imageTable[i].paletteOffset);
 
             if (!palette->imageTable[i].palette->unpacked)
             {
                 // Convert palette data offset to pointer
-                palette->imageTable[i].palette->data = (void *) ((u32) palette + palette->imageTable[i].palette->dataOffset);
+                palette->imageTable[i].palette->data =
+                    (void *) ((u32) palette + palette->imageTable[i].palette->dataOffset);
                 palette->imageTable[i].palette->unpacked = true;
             }
         }
@@ -96,7 +100,7 @@ void PackTexPalette(TPLHeader * palette)
 
     VALIDATE_TPL_VERSION(0x5e, palette);
 
-    if(IS_TPL_PACKED(palette))
+    if (IS_TPL_PACKED(palette))
         return;
 
     // Pack all images in table
@@ -109,7 +113,8 @@ void PackTexPalette(TPLHeader * palette)
                 palette->imageTable[i].image->unpacked = false;
 
                 // Convert image data pointer to offset
-                palette->imageTable[i].image->dataOffset = (u32) palette->imageTable[i].image->data - (u32) palette;
+                palette->imageTable[i].image->dataOffset =
+                    (u32) palette->imageTable[i].image->data - (u32) palette;
             }
 
             // Convert image header pointer to offset
@@ -123,18 +128,22 @@ void PackTexPalette(TPLHeader * palette)
                 palette->imageTable[i].palette->unpacked = false;
 
                 // Convert palette data pointer to offset
-                palette->imageTable[i].palette->dataOffset = (u32) palette->imageTable[i].palette->data - (u32) palette;
+                palette->imageTable[i].palette->dataOffset =
+                    (u32) palette->imageTable[i].palette->data - (u32) palette;
             }
 
             // Convert palette header pointer to offset
-            palette->imageTable[i].paletteOffset = (u32) palette->imageTable[i].palette - (u32) palette;
+            palette->imageTable[i].paletteOffset =
+                (u32) palette->imageTable[i].palette - (u32) palette;
         }
     }
     // Convert image table pointer to offset
     palette->imageTableOffset = (u32) palette->imageTable - (u32) palette;
 }
 
-typedef struct {
+// clang-format off
+typedef struct
+{
 /* 0x000 */ u8 unknown_0x0[0x14c - 0x0];
 /* 0x14C */ u32 unknown_0x14c;
 /* 0x150 */ u32 unknown_0x150;
@@ -164,32 +173,36 @@ typedef struct {
     // Unknown total size
 } UnkFileData1;
 
-typedef struct {
+typedef struct
+{
 /* 0x00 */ u8 unknown_0x0[0x24 - 0x0];
-/* 0x24 */ u32 unknown_0x24; 
-/* 0x28 */ u32 unknown_0x28; 
-/* 0x2C */ u32 unknown_0x2c; 
-/* 0x30 */ u32 unknown_0x30; 
-/* 0x34 */ u32 unknown_0x34; 
-/* 0x38 */ u32 unknown_0x38; 
-/* 0x3C */ u32 unknown_0x3c; 
-/* 0x40 */ u32 unknown_0x40; 
+/* 0x24 */ u32 unknown_0x24;
+/* 0x28 */ u32 unknown_0x28;
+/* 0x2C */ u32 unknown_0x2c;
+/* 0x30 */ u32 unknown_0x30;
+/* 0x34 */ u32 unknown_0x34;
+/* 0x38 */ u32 unknown_0x38;
+/* 0x3C */ u32 unknown_0x3c;
+/* 0x40 */ u32 unknown_0x40;
     // Unknown total size
 } UnkFileData2;
 
-typedef struct {
+typedef struct
+{
 /* 0x00 */ u8 unkown_0x0[0x48 - 0x0];
 /* 0x48 */ u32 unknown_0x48;
     // Unknown total size
 } UnkFileData3;
 
-typedef struct {
+typedef struct
+{
 /* 0x00 */ u8 unkown_0x0[0x48 - 0x0];
 /* 0x48 */ u32 unknown_0x48;
     // Unknown total size
 } UnkFileData6;
 
-typedef struct {
+typedef struct
+{
 /* 0x00 */ u8 unkown_0x0[0x64 - 0x0];
 /* 0x64 */ u32 unknown_0x64;
 /* 0x68 */ u32 unknown_0x68;
@@ -197,7 +210,8 @@ typedef struct {
     // Unknown total size
 } UnkFileData7;
 
-typedef struct {
+typedef struct
+{
 /* 0x000 */ u8 unknown_0x0[0xc8 - 0x0];
 /* 0x0c8 */ u32 unknown_0xc8;
 /* 0x0cc */ u32 unknown_0xcc;
@@ -225,7 +239,8 @@ typedef struct {
     // Unknown total size
 } UnkFileData8;
 
-typedef struct {
+typedef struct
+{
 /* 0x00 */ u8 unknown_0x0[0x58 - 0x0];
 /* 0x58 */ u32 unknown_0x58;
 /* 0x5c */ u32 unknown_0x5c;
@@ -234,25 +249,27 @@ typedef struct {
     // Unknown total size
 } UnkFileData9;
 
-typedef struct {
+typedef struct
+{
 /* 0x00 */ u8 unknown_0x0[0x48 - 0x0];
 /* 0x48 */ u32 unknown_0x48;
     // Unknown total size
 } UnkFileData10;
+// clang-format on
 
-#define IS_RELOCATED(field, base) ((u32)(field) >= (u32)(base))
-#define IS_NOT_RELOCATED(field, base) ((u32)(field) < (u32)(base))
-#define APPLY_RELOC(field, base) ((u32)(field) + (u32)(base))
-#define CLEAR_RELOC(field, base) ((u32)(field) - (u32)(base))
+#define IS_RELOCATED(field, base) ((u32) (field) >= (u32) (base))
+#define IS_NOT_RELOCATED(field, base) ((u32) (field) < (u32) (base))
+#define APPLY_RELOC(field, base) ((u32) (field) + (u32) (base))
+#define CLEAR_RELOC(field, base) ((u32) (field) - (u32) (base))
 
 static void fileGarbageDataAdrClear(FileEntry * entry)
 {
     void * data = entry->sp->data;
-    switch(entry->fileType)
+    switch (entry->fileType)
     {
         case FILETYPE_1:
         {
-            UnkFileData1 * unk1 = (UnkFileData1 *)data;
+            UnkFileData1 * unk1 = (UnkFileData1 *) data;
             // Skip if not already relocated
             if (IS_NOT_RELOCATED(unk1->unknown_0x14c, unk1))
                 return;
@@ -287,7 +304,7 @@ static void fileGarbageDataAdrClear(FileEntry * entry)
 
         case FILETYPE_2:
         {
-            UnkFileData2 * unk2 = (UnkFileData2 *)data;
+            UnkFileData2 * unk2 = (UnkFileData2 *) data;
             if (IS_NOT_RELOCATED(unk2->unknown_0x24, data))
                 return;
 
@@ -326,18 +343,25 @@ static void fileGarbageDataAdrClear(FileEntry * entry)
             for (s32 i = 0; i < animCount; i++)
             {
                 AnimPoseData_AnimData * animData = pose->anims[i].data;
-                pose->anims[i].data = (AnimPoseData_AnimData *) CLEAR_RELOC(pose->anims[i].data, pose);
+                pose->anims[i].data =
+                    (AnimPoseData_AnimData *) CLEAR_RELOC(pose->anims[i].data, pose);
                 if (IS_NOT_RELOCATED(animData->loopData, animData))
                     continue;
 
                 animData->loopData = (void *) CLEAR_RELOC(animData->loopData, animData);
                 animData->keyframes = (void *) CLEAR_RELOC(animData->keyframes, animData);
-                animData->vertexPositionDeltas = (void *) CLEAR_RELOC(animData->vertexPositionDeltas, animData);
-                animData->vertexNormalDeltras = (void *) CLEAR_RELOC(animData->vertexNormalDeltras, animData);
-                animData->textureCoordinateTransformDeltas = (void *) CLEAR_RELOC(animData->textureCoordinateTransformDeltas, animData);
-                animData->visibilityGroupDeltas = (void *) CLEAR_RELOC(animData->visibilityGroupDeltas, animData);
-                animData->groupTransformDataDeltas = (void *) CLEAR_RELOC(animData->groupTransformDataDeltas, animData);
-                animData->animDataType8Data = (void *) CLEAR_RELOC(animData->animDataType8Data, animData);
+                animData->vertexPositionDeltas =
+                    (void *) CLEAR_RELOC(animData->vertexPositionDeltas, animData);
+                animData->vertexNormalDeltras =
+                    (void *) CLEAR_RELOC(animData->vertexNormalDeltras, animData);
+                animData->textureCoordinateTransformDeltas =
+                    (void *) CLEAR_RELOC(animData->textureCoordinateTransformDeltas, animData);
+                animData->visibilityGroupDeltas =
+                    (void *) CLEAR_RELOC(animData->visibilityGroupDeltas, animData);
+                animData->groupTransformDataDeltas =
+                    (void *) CLEAR_RELOC(animData->groupTransformDataDeltas, animData);
+                animData->animDataType8Data =
+                    (void *) CLEAR_RELOC(animData->animDataType8Data, animData);
             }
 
             pose->shapes = (void *) CLEAR_RELOC(pose->shapes, pose);
@@ -348,16 +372,26 @@ static void fileGarbageDataAdrClear(FileEntry * entry)
             pose->vertexNormalIndices = (void *) CLEAR_RELOC(pose->vertexNormalIndices, pose);
             pose->vertexColors = (void *) CLEAR_RELOC(pose->vertexColors, pose);
             pose->vertexColorIndices = (void *) CLEAR_RELOC(pose->vertexColorIndices, pose);
-            pose->vertexTextureCoordinate0Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate0Indices, pose);
-            pose->vertexTextureCoordinate1Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate1Indices, pose);
-            pose->vertexTextureCoordinate2Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate2Indices, pose);
-            pose->vertexTextureCoordinate3Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate3Indices, pose);
-            pose->vertexTextureCoordinate4Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate4Indices, pose);
-            pose->vertexTextureCoordinate5Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate5Indices, pose);
-            pose->vertexTextureCoordinate6Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate6Indices, pose);
-            pose->vertexTextureCoordinate7Indices = (void *) CLEAR_RELOC(pose->vertexTextureCoordinate7Indices, pose);
-            pose->vertexTextureCoordinates = (void *) CLEAR_RELOC(pose->vertexTextureCoordinates, pose);
-            pose->textureCoordinateTransforms = (void *) CLEAR_RELOC(pose->textureCoordinateTransforms, pose);
+            pose->vertexTextureCoordinate0Indices =
+                (void *) CLEAR_RELOC(pose->vertexTextureCoordinate0Indices, pose);
+            pose->vertexTextureCoordinate1Indices =
+                (void *) CLEAR_RELOC(pose->vertexTextureCoordinate1Indices, pose);
+            pose->vertexTextureCoordinate2Indices =
+                (void *) CLEAR_RELOC(pose->vertexTextureCoordinate2Indices, pose);
+            pose->vertexTextureCoordinate3Indices =
+                (void *) CLEAR_RELOC(pose->vertexTextureCoordinate3Indices, pose);
+            pose->vertexTextureCoordinate4Indices =
+                (void *) CLEAR_RELOC(pose->vertexTextureCoordinate4Indices, pose);
+            pose->vertexTextureCoordinate5Indices =
+                (void *) CLEAR_RELOC(pose->vertexTextureCoordinate5Indices, pose);
+            pose->vertexTextureCoordinate6Indices =
+                (void *) CLEAR_RELOC(pose->vertexTextureCoordinate6Indices, pose);
+            pose->vertexTextureCoordinate7Indices =
+                (void *) CLEAR_RELOC(pose->vertexTextureCoordinate7Indices, pose);
+            pose->vertexTextureCoordinates =
+                (void *) CLEAR_RELOC(pose->vertexTextureCoordinates, pose);
+            pose->textureCoordinateTransforms =
+                (void *) CLEAR_RELOC(pose->textureCoordinateTransforms, pose);
             pose->samplers = (void *) CLEAR_RELOC(pose->samplers, pose);
             pose->textures = (void *) CLEAR_RELOC(pose->textures, pose);
             pose->subshapes = (void *) CLEAR_RELOC(pose->subshapes, pose);
@@ -459,11 +493,11 @@ static void fileGarbageDataAdrClear(FileEntry * entry)
 
 static void fileGarbageDataAdrSet(void * data, s32 fileType)
 {
-    switch(fileType)
+    switch (fileType)
     {
         case FILETYPE_1:
         {
-            UnkFileData1 * unk1 = (UnkFileData1 *)data;
+            UnkFileData1 * unk1 = (UnkFileData1 *) data;
             // Skip if not already relocated
             if (IS_RELOCATED(unk1->unknown_0x14c, unk1))
                 return;
@@ -498,7 +532,7 @@ static void fileGarbageDataAdrSet(void * data, s32 fileType)
 
         case FILETYPE_2:
         {
-            UnkFileData2 * unk2 = (UnkFileData2 *)data;
+            UnkFileData2 * unk2 = (UnkFileData2 *) data;
             if (IS_RELOCATED(unk2->unknown_0x24, data))
                 return;
 
@@ -541,16 +575,26 @@ static void fileGarbageDataAdrSet(void * data, s32 fileType)
             pose->vertexNormalIndices = (void *) APPLY_RELOC(pose->vertexNormalIndices, pose);
             pose->vertexColors = (void *) APPLY_RELOC(pose->vertexColors, pose);
             pose->vertexColorIndices = (void *) APPLY_RELOC(pose->vertexColorIndices, pose);
-            pose->vertexTextureCoordinate0Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate0Indices, pose);
-            pose->vertexTextureCoordinate1Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate1Indices, pose);
-            pose->vertexTextureCoordinate2Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate2Indices, pose);
-            pose->vertexTextureCoordinate3Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate3Indices, pose);
-            pose->vertexTextureCoordinate4Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate4Indices, pose);
-            pose->vertexTextureCoordinate5Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate5Indices, pose);
-            pose->vertexTextureCoordinate6Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate6Indices, pose);
-            pose->vertexTextureCoordinate7Indices = (void *) APPLY_RELOC(pose->vertexTextureCoordinate7Indices, pose);
-            pose->vertexTextureCoordinates = (void *) APPLY_RELOC(pose->vertexTextureCoordinates, pose);
-            pose->textureCoordinateTransforms = (void *) APPLY_RELOC(pose->textureCoordinateTransforms, pose);
+            pose->vertexTextureCoordinate0Indices =
+                (void *) APPLY_RELOC(pose->vertexTextureCoordinate0Indices, pose);
+            pose->vertexTextureCoordinate1Indices =
+                (void *) APPLY_RELOC(pose->vertexTextureCoordinate1Indices, pose);
+            pose->vertexTextureCoordinate2Indices =
+                (void *) APPLY_RELOC(pose->vertexTextureCoordinate2Indices, pose);
+            pose->vertexTextureCoordinate3Indices =
+                (void *) APPLY_RELOC(pose->vertexTextureCoordinate3Indices, pose);
+            pose->vertexTextureCoordinate4Indices =
+                (void *) APPLY_RELOC(pose->vertexTextureCoordinate4Indices, pose);
+            pose->vertexTextureCoordinate5Indices =
+                (void *) APPLY_RELOC(pose->vertexTextureCoordinate5Indices, pose);
+            pose->vertexTextureCoordinate6Indices =
+                (void *) APPLY_RELOC(pose->vertexTextureCoordinate6Indices, pose);
+            pose->vertexTextureCoordinate7Indices =
+                (void *) APPLY_RELOC(pose->vertexTextureCoordinate7Indices, pose);
+            pose->vertexTextureCoordinates =
+                (void *) APPLY_RELOC(pose->vertexTextureCoordinates, pose);
+            pose->textureCoordinateTransforms =
+                (void *) APPLY_RELOC(pose->textureCoordinateTransforms, pose);
             pose->samplers = (void *) APPLY_RELOC(pose->samplers, pose);
             pose->textures = (void *) APPLY_RELOC(pose->textures, pose);
             pose->subshapes = (void *) APPLY_RELOC(pose->subshapes, pose);
@@ -571,12 +615,18 @@ static void fileGarbageDataAdrSet(void * data, s32 fileType)
 
                 animData->loopData = (void *) APPLY_RELOC(animData->loopData, animData);
                 animData->keyframes = (void *) APPLY_RELOC(animData->keyframes, animData);
-                animData->vertexPositionDeltas = (void *) APPLY_RELOC(animData->vertexPositionDeltas, animData);
-                animData->vertexNormalDeltras = (void *) APPLY_RELOC(animData->vertexNormalDeltras, animData);
-                animData->textureCoordinateTransformDeltas = (void *) APPLY_RELOC(animData->textureCoordinateTransformDeltas, animData);
-                animData->visibilityGroupDeltas = (void *) APPLY_RELOC(animData->visibilityGroupDeltas, animData);
-                animData->groupTransformDataDeltas = (void *) APPLY_RELOC(animData->groupTransformDataDeltas, animData);
-                animData->animDataType8Data = (void *) APPLY_RELOC(animData->animDataType8Data, animData);
+                animData->vertexPositionDeltas =
+                    (void *) APPLY_RELOC(animData->vertexPositionDeltas, animData);
+                animData->vertexNormalDeltras =
+                    (void *) APPLY_RELOC(animData->vertexNormalDeltras, animData);
+                animData->textureCoordinateTransformDeltas =
+                    (void *) APPLY_RELOC(animData->textureCoordinateTransformDeltas, animData);
+                animData->visibilityGroupDeltas =
+                    (void *) APPLY_RELOC(animData->visibilityGroupDeltas, animData);
+                animData->groupTransformDataDeltas =
+                    (void *) APPLY_RELOC(animData->groupTransformDataDeltas, animData);
+                animData->animDataType8Data =
+                    (void *) APPLY_RELOC(animData->animDataType8Data, animData);
             }
 
             return;
@@ -676,7 +726,7 @@ static void fileGarbageDataAdrSet(void * data, s32 fileType)
 
 void fileGarbageMoveMem(void * dest, FileEntry * src)
 {
-    // Turn any pointers into the data to offsets 
+    // Turn any pointers into the data to offsets
     if (src->state == 3)
     {
         if (src->dvdEntry == 0)
@@ -744,7 +794,7 @@ void _fileGarbage(s32 patience)
             }
         }
     }
-    
+
     // Free any unused files and update lists
     FileEntry * entry = afp->allocatedStart;
     FileEntry * allocatedEnd = NULL;
@@ -758,7 +808,7 @@ void _fileGarbage(s32 patience)
         {
             // Deallocate
             entry->state = FILE_EMPTY;
-            if ((void *)entry->unknown_0x4 != (void *)entry->sp)
+            if ((void *) entry->unknown_0x4 != (void *) entry->sp)
                 smartFree(entry->sp);
 
             // Remove from allocated list
@@ -843,7 +893,7 @@ static FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused)
 
         return lp;
     }
-    
+
     // Read file synchronously if not found
 
     // Try get a free entry
@@ -889,7 +939,7 @@ static FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused)
     new_sp->fileEntry = new_lp;
 
     // Read into memory
-    if (DVDMgrRead(dvdEntry, new_sp->data, (s32)roundedLength, 0) <= 0)
+    if (DVDMgrRead(dvdEntry, new_sp->data, (s32) roundedLength, 0) <= 0)
         SPM_ASSERT(978, 0, "ＤＶＤだめでっすちめいてきえらー\n");
     DVDMgrClose(dvdEntry);
 
@@ -899,7 +949,7 @@ static FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused)
     new_lp->touchCnt = 1;
     new_lp->fileType = (s8) fileType;
     new_lp->next = NULL;
-    new_lp->length = (u32)length;
+    new_lp->length = (u32) length;
     strcpy(new_lp->path, path);
     new_lp->dvdEntry = NULL;
 
@@ -940,8 +990,9 @@ void fileFree(FileEntry * lp)
         // Decrement reference count
         lp->touchCnt--;
         // "It's too free"
-        SPM_ASSERT(1039, lp->touchCnt>=0, "フリーしすぎです。\n");
-        if (lp->touchCnt == 0) {
+        SPM_ASSERT(1039, lp->touchCnt >= 0, "フリーしすぎです。\n");
+        if (lp->touchCnt == 0)
+        {
             lp->state = FILE_WAITING_GARBAGE;
         }
     }
@@ -956,14 +1007,15 @@ static void dvdReadDoneCallback(s32 result, DVDFileInfo * fp)
 {
     // Find the entry for this file
     int i;
-    FileEntry *lp;
+    FileEntry * lp;
     for (i = 0, lp = afp->allocatedStart; lp != NULL; i++, lp = lp->next)
     {
         if (&lp->dvdEntry->fileInfo == fp)
             break;
     }
     DVDEntry * dvdEntry = lp->dvdEntry;
-    SPM_ASSERT(1076, lp, "listが見つからなかった\ni=%d fp=%x useBegin=%x\n", i, fp, afp->allocatedStart);
+    SPM_ASSERT(1076, lp, "listが見つからなかった\ni=%d fp=%x useBegin=%x\n", i, fp,
+               afp->allocatedStart);
 
     // Check read was successful
     if (result == DVD_RESULT_FATAL_ERROR)
@@ -1000,7 +1052,7 @@ FileEntry * fileAsyncf(s32 fileType, FilemgrCallback * readDoneCb, const char * 
 FileEntry * fileAsync(const char * path, s32 fileType, FilemgrCallback * readDoneCb)
 {
     if (DVDConvertPathToEntrynum(path) == -1)
-        return (FileEntry *)-1;
+        return (FileEntry *) -1;
 
     // Try find existing entry
     for (FileEntry * lp = afp->allocatedStart; lp != NULL; lp = lp->next)
@@ -1018,7 +1070,7 @@ FileEntry * fileAsync(const char * path, s32 fileType, FilemgrCallback * readDon
 
         if (lp->state == FILE_ASYNC_CALLED)
             return lp;
-    
+
         if (lp->state == FILE_WAITING_GARBAGE)
             lp->state = FILE_ASYNC_CALLED;
 
@@ -1042,11 +1094,11 @@ FileEntry * fileAsync(const char * path, s32 fileType, FilemgrCallback * readDon
 
     // Backup next pointer
     FileEntry * newFreeStart = new_lp->next;
-    
+
     // Check file exists
     DVDEntry * dvdEntry = DVDMgrOpen(path, 2, 0);
     if (dvdEntry == NULL)
-        return (FileEntry *)-1;
+        return (FileEntry *) -1;
 
     // Check file isn't empty
     s32 length = DVDMgrGetLength(dvdEntry);
@@ -1098,7 +1150,7 @@ FileEntry * fileAsync(const char * path, s32 fileType, FilemgrCallback * readDon
     // Start async read
     dvdEntry = DVDMgrOpen(path, 2, 0);
     new_lp->dvdEntry = dvdEntry;
-    DVDMgrReadAsync(dvdEntry, new_sp->data, (s32)roundedLength,  0,  dvdReadDoneCallback);
+    DVDMgrReadAsync(dvdEntry, new_sp->data, (s32) roundedLength, 0, dvdReadDoneCallback);
     return NULL;
 }
 
@@ -1108,5 +1160,4 @@ void unkStriped()
 {
     __assert(NULL, -1, "lp->sp");
 }
-
 }

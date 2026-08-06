@@ -4,9 +4,10 @@
 */
 
 #include <common.h>
+#include <msl/string.h>
 #include <spm/camdrv.h>
-#include <spm/gxsub.h>
 #include <spm/effdrv.h>
+#include <spm/gxsub.h>
 #include <spm/memory.h>
 #include <spm/spmario.h>
 #include <spm/sptexture.h>
@@ -14,7 +15,6 @@
 #include <spm/windowdrv.h>
 #include <wii/gx.h>
 #include <wii/mtx.h>
-#include <msl/string.h>
 
 extern "C" {
 
@@ -134,5 +134,4 @@ bool windowCheckOpen()
 
     return false;
 }
-
 }

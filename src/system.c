@@ -4,16 +4,16 @@
 */
 
 #include <common.h>
+#include <msl/math.h>
+#include <msl/stdarg.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
 #include <spm/mapdrv.h>
 #include <spm/spmario.h>
 #include <spm/system.h>
 #include <wii/gx.h>
 #include <wii/mtx.h>
 #include <wii/os.h>
-#include <msl/math.h>
-#include <msl/stdio.h>
-#include <msl/stdarg.h>
-#include <msl/string.h>
 
 extern "C" {
 
@@ -41,18 +41,17 @@ static u32 token;
 
 // .rodata
 static f32 angleABTBL[] = {
-    1.000000, 1.273187, 1.273030, 1.272768, 1.272402, 1.271932, 1.271358, 1.270681,
-    1.269902, 1.269021, 1.268038, 1.266956, 1.265774, 1.264494, 1.263116, 1.261643,
-    1.260075, 1.258413, 1.256659, 1.254815, 1.252881, 1.250859, 1.248752, 1.246560,
-    1.244285, 1.241929, 1.239494, 1.236981, 1.234393, 1.231731, 1.228997, 1.226192,
-    1.223320, 1.220382, 1.217379, 1.214315, 1.211189, 1.208006, 1.204766, 1.201471,
-    1.198124, 1.194727, 1.191281, 1.187787, 1.184250, 1.180669, 1.177047, 1.173386,
-    1.169687, 1.165952, 1.162184, 1.158384, 1.154553, 1.150693, 1.146806, 1.142893,
-    1.138957, 1.134998, 1.131018, 1.127019, 1.123002, 1.118969, 1.114920, 1.110858,
-    1.106783, 1.102697, 1.098601, 1.094496, 1.090384, 1.086266, 1.082142, 1.078014,
-    1.073883, 1.069750, 1.065616, 1.061482, 1.057348, 1.053216, 1.049087, 1.044960,
-    1.040838, 1.036721, 1.032610, 1.028504, 1.024406, 1.020316, 1.016234, 1.012160,
-    1.008097, 1.004043, 1.000000
+    1.000000, 1.273187, 1.273030, 1.272768, 1.272402, 1.271932, 1.271358, 1.270681, 1.269902,
+    1.269021, 1.268038, 1.266956, 1.265774, 1.264494, 1.263116, 1.261643, 1.260075, 1.258413,
+    1.256659, 1.254815, 1.252881, 1.250859, 1.248752, 1.246560, 1.244285, 1.241929, 1.239494,
+    1.236981, 1.234393, 1.231731, 1.228997, 1.226192, 1.223320, 1.220382, 1.217379, 1.214315,
+    1.211189, 1.208006, 1.204766, 1.201471, 1.198124, 1.194727, 1.191281, 1.187787, 1.184250,
+    1.180669, 1.177047, 1.173386, 1.169687, 1.165952, 1.162184, 1.158384, 1.154553, 1.150693,
+    1.146806, 1.142893, 1.138957, 1.134998, 1.131018, 1.127019, 1.123002, 1.118969, 1.114920,
+    1.110858, 1.106783, 1.102697, 1.098601, 1.094496, 1.090384, 1.086266, 1.082142, 1.078014,
+    1.073883, 1.069750, 1.065616, 1.061482, 1.057348, 1.053216, 1.049087, 1.044960, 1.040838,
+    1.036721, 1.032610, 1.028504, 1.024406, 1.020316, 1.016234, 1.012160, 1.008097, 1.004043,
+    1.000000,
 };
 
 void sysInitMutex()
@@ -64,7 +63,6 @@ const char * getSpmarioDVDRoot()
 {
     return ".";
 }
-
 
 const char * getMapdataDvdRoot()
 {
@@ -92,7 +90,8 @@ s32 __assert2(const char * filename, s32 line, const char * assertion, const cha
     return 1;
 }
 
-s32 roundi(f32 x) {
+s32 roundi(f32 x)
+{
     if (!(x >= 0.0f))
         return -(s32) (0.5 - x);
     else
@@ -106,7 +105,7 @@ f32 reviseAngle(f32 angle)
     // NaN check
     if (angle != angle)
         angle = 0.0f;
-    
+
     // Convert negative angles to positive
     if (angle < 0.0f)
     {
@@ -125,7 +124,8 @@ f32 distABf(f32 x1, f32 z1, f32 x2, f32 z2)
     return sqrtf(SQUARE(x2 - x1) + SQUARE(z2 - z1));
 }
 
-f32 compAngle(f32 a, f32 b) {
+f32 compAngle(f32 a, f32 b)
+{
     if (fabsf(b - a) >= 180.0f)
     {
         if (b < a)
@@ -190,7 +190,7 @@ f32 angleABf(f32 x1, f32 z1, f32 x2, f32 z2)
                 return angle;
             else
                 return 360.0f - angle;
-        } 
+        }
     }
 }
 
@@ -235,12 +235,12 @@ static s32 _rand(s32 max) // always inlined
     if (divisor < 1)
         divisor = 1;
 
-    do 
+    do
     {
         res = _rand_advance() / divisor;
     }
     while (res >= max + 1);
-    
+
     return (s32) res;
 }
 
@@ -297,7 +297,7 @@ u16 sysGetToken()
 
     if (++token >= 0xe000)
         token = 0;
-    
+
     return token;
 }
 
@@ -305,7 +305,7 @@ void sysWaitDrawSync()
 {
     u16 curToken;
     OSTick startTick;
-    
+
     curToken = sysGetToken();
     startTick = OSGetTick();
 
@@ -648,29 +648,48 @@ f32 intplGetValue(s32 mode, f32 min, f32 max, s32 progress, s32 progressMax)
             return min + ((QUART(progressf) * (max - min)) / QUART(progressMaxf));
 
         case INTPL_MODE_COS_SLOW_OVERSHOOT:
-            return max - (((progressMaxf - progressf) * ((progressMaxf - progressf) * ((max - min) * cosf(4.0f * (3.141592f * (progressf / progressMaxf)))))) / SQUARE(progressMaxf));
+            return max -
+                   (((progressMaxf - progressf) *
+                     ((progressMaxf - progressf) *
+                      ((max - min) * cosf(4.0f * (3.141592f * (progressf / progressMaxf)))))) /
+                    SQUARE(progressMaxf));
 
         case INTPL_MODE_COS_FAST_OVERSHOOT:
-            return max - (((progressMaxf - progressf) * ((progressMaxf - progressf) * ((max - min) * cosf((4.0f * (3.141592f * (SQUARE(progressf) / progressMaxf))) / ((15.0f * progressMaxf) / 100.0f))))) / (progressMaxf * progressMaxf));
+            return max - (((progressMaxf - progressf) *
+                           ((progressMaxf - progressf) *
+                            ((max - min) *
+                             cosf((4.0f * (3.141592f * (SQUARE(progressf) / progressMaxf))) /
+                                  ((15.0f * progressMaxf) / 100.0f))))) /
+                          (progressMaxf * progressMaxf));
 
         case INTPL_MODE_9:
-            return max - ((progressf * (progressf * ((max - min) * cosf((4.0f * (3.141592f * (SQUARE(progressf) / progressMaxf))) / ((15.0f * progressMaxf) / 100.0f))))) / (progressMaxf * progressMaxf));
+            return max -
+                   ((progressf *
+                     (progressf * ((max - min) *
+                                   cosf((4.0f * (3.141592f * (SQUARE(progressf) / progressMaxf))) /
+                                        ((15.0f * progressMaxf) / 100.0f))))) /
+                    (progressMaxf * progressMaxf));
 
         case INTPL_MODE_QUADRATIC_OUT:
             progressLeft = progressMaxf - progressf;
-            return min + (max - min) - ((SQUARE(progressLeft) * (max - min)) / SQUARE(progressMaxf));
+            return min + (max - min) -
+                   ((SQUARE(progressLeft) * (max - min)) / SQUARE(progressMaxf));
 
         case INTPL_MODE_CUBIC_OUT:
             progressLeft = progressMaxf - progressf;
             return (min + (max - min)) - ((CUBE(progressLeft) * (max - min)) / CUBE(progressMaxf));
 
-
         case INTPL_MODE_QUARTIC_OUT:
             progressLeft = progressMaxf - progressf;
-            return (min + (max - min)) - ((QUART(progressLeft) * (max - min)) / QUART(progressMaxf));
+            return (min + (max - min)) -
+                   ((QUART(progressLeft) * (max - min)) / QUART(progressMaxf));
 
         case INTPL_MODE_COS_BOUNCE:
-            absMag = ((progressMaxf - progressf) * ((progressMaxf - progressf) * cosf((4.0f * (3.141592f * (SQUARE(progressf) / progressMaxf)) / ((40.0f * progressMaxf) / 100.0f))))) / SQUARE(progressMaxf);
+            absMag = ((progressMaxf - progressf) *
+                      ((progressMaxf - progressf) *
+                       cosf((4.0f * (3.141592f * (SQUARE(progressf) / progressMaxf)) /
+                             ((40.0f * progressMaxf) / 100.0f))))) /
+                     SQUARE(progressMaxf);
             if (absMag < 0.0f)
                 absMag = -absMag;
             return -((absMag * (max - min)) - max);
@@ -685,8 +704,7 @@ f32 intplGetValue(s32 mode, f32 min, f32 max, s32 progress, s32 progressMax)
             return ((max - min) * (1.0f - unkInline2(progressf, progressMaxf))) + min;
 
         default:
-            return ((IntplUserFunc *)mode)(progress, progressMax, min, max);
+            return ((IntplUserFunc *) mode)(progress, progressMax, min, max);
     }
 }
-
 }

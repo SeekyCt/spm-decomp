@@ -1,5 +1,7 @@
 #include <common.h>
 #include <evt_cmd.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
 #include <spm/animdrv.h>
 #include <spm/bgdrv.h>
 #include <spm/camdrv.h>
@@ -8,6 +10,7 @@
 #include <spm/eff/eff_spm_confetti.h>
 #include <spm/eff/eff_zunbaba.h>
 #include <spm/evt_cam.h>
+#include <spm/evt_door.h>
 #include <spm/evt_eff.h>
 #include <spm/evt_fairy.h>
 #include <spm/evt_frame.h>
@@ -17,8 +20,8 @@
 #include <spm/evt_item.h>
 #include <spm/evt_map.h>
 #include <spm/evt_mario.h>
-#include <spm/evt_msg.h>
 #include <spm/evt_mobj.h>
+#include <spm/evt_msg.h>
 #include <spm/evt_npc.h>
 #include <spm/evt_offscreen.h>
 #include <spm/evt_paper.h>
@@ -28,29 +31,26 @@
 #include <spm/evt_sub.h>
 #include <spm/evtmgr.h>
 #include <spm/evtmgr_cmd.h>
-#include <spm/evt_door.h>
 #include <spm/hitdrv.h>
 #include <spm/hud.h>
-#include <spm/itemdrv.h>
 #include <spm/item_data.h>
+#include <spm/itemdrv.h>
 #include <spm/lz_embedded.h>
 #include <spm/mapdrv.h>
 #include <spm/mario.h>
 #include <spm/mario_pouch.h>
-#include <spm/mobjdrv.h>
 #include <spm/memory.h>
+#include <spm/mobjdrv.h>
 #include <spm/npcdrv.h>
 #include <spm/parse.h>
-#include <spm/seqdrv.h>
-#include <spm/seq_title.h>
-#include <spm/spmario.h>
-#include <spm/system.h>
 #include <spm/rel/dan.h>
 #include <spm/rel/machi.h>
+#include <spm/seq_title.h>
+#include <spm/seqdrv.h>
+#include <spm/spmario.h>
+#include <spm/system.h>
 #include <wii/cx.h>
 #include <wii/gx.h>
-#include <msl/stdio.h>
-#include <msl/string.h>
 
 #define CHECK_ALL_MASK(num, mask) (((num) & (mask)) == (mask))
 #define CHECK_ANY_MASK(num, mask) (((num) & (mask)) != 0)
@@ -113,7 +113,7 @@ s32 evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
         wp->dungeons = (DanDungeon *) __memAlloc(HEAP_MAP, sizeof(DanDungeon[DUNGEON_MAX]));
         memset(wp->dungeons, 0, sizeof(DanDungeon[DUNGEON_MAX]));
     }
-    
+
     // Prepare pit text to be read
     u32 size = CXGetCompressionHeader(pitText).decompSize;
     char * decompPitText = (char *) __memAlloc(HEAP_MAIN, size);
@@ -134,7 +134,8 @@ s32 evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
         parseTagGet1("<item>", PARSE_VALUE_TYPE_STRING, itemName);
         wp->dungeons[no].item = itemTypeNameToId(itemName);
 
-        // Read map (bitflags for parts of the map to enable and disable in enemy rooms, 0 & unused elsewhere)
+        // Read map (bitflags for parts of the map to enable and disable in enemy rooms, 0 & unused
+        // elsewhere)
         parseTagGet1("<map>", PARSE_VALUE_TYPE_INT, &wp->dungeons[no].map);
 
         // Read doors
@@ -250,7 +251,8 @@ s32 evt_dan_handle_dokans(EvtEntry * entry, bool isFirstCall)
     hitGrpFlagOn(false, "A3D_dokan", HITOBJ_FLAG_DISABLE);
 
     // Turn on enabled pipes
-    if (CHECK_ANY_MASK(dungeon->map, 0x10000)) {
+    if (CHECK_ANY_MASK(dungeon->map, 0x10000))
+    {
         mapGrpFlagOff(false, "dokan_01", MAPOBJ_FLAG0_HIDE);
         hitGrpFlagOff(false, "A2D_dokan_01", HITOBJ_FLAG_DISABLE);
         hitGrpFlagOff(false, "A3D_dokan_01", HITOBJ_FLAG_DISABLE);
@@ -258,7 +260,8 @@ s32 evt_dan_handle_dokans(EvtEntry * entry, bool isFirstCall)
         hitGrpFlagOff(false, "A2D_dokan_02", HITOBJ_FLAG_DISABLE);
         hitGrpFlagOff(false, "A3D_dokan_02", HITOBJ_FLAG_DISABLE);
     }
-    if (CHECK_ANY_MASK(dungeon->map, 0x20000)) {
+    if (CHECK_ANY_MASK(dungeon->map, 0x20000))
+    {
         mapGrpFlagOff(false, "dokan_03", MAPOBJ_FLAG0_HIDE);
         hitGrpFlagOff(false, "A2D_dokan_03", HITOBJ_FLAG_DISABLE);
         hitGrpFlagOff(false, "A3D_dokan_03", HITOBJ_FLAG_DISABLE);
@@ -266,7 +269,8 @@ s32 evt_dan_handle_dokans(EvtEntry * entry, bool isFirstCall)
         hitGrpFlagOff(false, "A2D_dokan_04", HITOBJ_FLAG_DISABLE);
         hitGrpFlagOff(false, "A3D_dokan_04", HITOBJ_FLAG_DISABLE);
     }
-    if (CHECK_ANY_MASK(dungeon->map, 0x40000)) {
+    if (CHECK_ANY_MASK(dungeon->map, 0x40000))
+    {
         mapGrpFlagOff(false, "dokan_05", MAPOBJ_FLAG0_HIDE);
         hitGrpFlagOff(false, "A2D_dokan_05", HITOBJ_FLAG_DISABLE);
         hitGrpFlagOff(false, "A3D_dokan_05", HITOBJ_FLAG_DISABLE);
@@ -274,7 +278,8 @@ s32 evt_dan_handle_dokans(EvtEntry * entry, bool isFirstCall)
         hitGrpFlagOff(false, "A2D_dokan_06", HITOBJ_FLAG_DISABLE);
         hitGrpFlagOff(false, "A3D_dokan_06", HITOBJ_FLAG_DISABLE);
     }
-    if (CHECK_ANY_MASK(dungeon->map, 0x80000)) {
+    if (CHECK_ANY_MASK(dungeon->map, 0x80000))
+    {
         mapGrpFlagOff(false, "dokan_07", MAPOBJ_FLAG0_HIDE);
         hitGrpFlagOff(false, "A2D_dokan_07", HITOBJ_FLAG_DISABLE);
         hitGrpFlagOff(false, "A3D_dokan_07", HITOBJ_FLAG_DISABLE);
@@ -407,7 +412,7 @@ s32 evt_dan_get_enemy_info(EvtEntry * entry, bool isFirstCall)
     (void) isFirstCall;
 
     // Get dungeon and enemy index
-    EvtScriptCode * args = entry->pCurData;    
+    EvtScriptCode * args = entry->pCurData;
     s32 no = evtGetValue(entry, args[0]);
     s32 enemyIdx = evtGetValue(entry, args[1]);
     DanDungeon * dungeon = wp->dungeons + no;
@@ -553,7 +558,8 @@ s32 evt_dan_get_enemy_spawn_pos(EvtEntry * entry, bool isInitialCall)
         s32 i;
         for (i = 0; i < wp->spawnTableCount; i++)
         {
-            if ((wp->doorInfo.enter != wp->spawnTable[i]) && (wp->doorInfo.exit != wp->spawnTable[i]))
+            if ((wp->doorInfo.enter != wp->spawnTable[i]) &&
+                (wp->doorInfo.exit != wp->spawnTable[i]))
             {
                 if (j == targetPos)
                     break;
@@ -571,7 +577,8 @@ s32 evt_dan_get_enemy_spawn_pos(EvtEntry * entry, bool isInitialCall)
     // Unknown, outputs coords with some changes if needed
     f32 f1, f2, f3, f4, f5, f6, f7;
     f4 = 1000.0f;
-    if (hitCheckFilter(doorPos.x, doorPos.y, 0.0f, 0.0f, -1.0f, 0.0f, NULL, &f1, &f2, &f3, &f4, &f5, &f6, &f7))
+    if (hitCheckFilter(doorPos.x, doorPos.y, 0.0f, 0.0f, -1.0f, 0.0f, NULL, &f1, &f2, &f3, &f4, &f5,
+                       &f6, &f7))
     {
         evtSetFloat(entry, args[3], f1);
         evtSetFloat(entry, args[4], f2);
@@ -637,19 +644,17 @@ bool danCheckKeyInMapBbox()
     // Get the range of valid coordinates
     Vec3 min, max;
     hitGetMapEntryBbox(0, &min, &max);
-    
+
     // Check whether any item is the key within valid coordinates
     s32 itemCount = itemWp->num;
     s32 i;
     for (i = 0; i < itemCount; i++, item++)
     {
-        if (
-            CHECK_ANY_MASK(item->flags, 0x1) &&
+        if (CHECK_ANY_MASK(item->flags, 0x1) &&
             ((item->type == ITEM_ID_KEY_DAN_KEY) || (item->type == ITEM_ID_KEY_URA_DAN_KEY)) &&
             (min.x <= item->position.x) && (max.x >= item->position.x) &&
             (min.y <= item->position.y) && (max.y >= item->position.y) &&
-            (min.z <= item->position.z) && (max.z >= item->position.z)
-        )
+            (min.z <= item->position.z) && (max.z >= item->position.z))
             break;
     }
 
@@ -686,11 +691,9 @@ bool danCheckEnemyInMapBbox()
         {
             Vec3 tempMin = {min.x, min.y, min.z};
             tempMin.y -= npc->unknown_0x3ac;
-            if (
-                (tempMin.x <= npc->position.x) && (max.x >= npc->position.x) &&
+            if ((tempMin.x <= npc->position.x) && (max.x >= npc->position.x) &&
                 (tempMin.y <= npc->position.y) && (max.y >= npc->position.y) &&
-                (tempMin.z <= npc->position.z) && (max.z >= npc->position.z)
-            )
+                (tempMin.z <= npc->position.z) && (max.z >= npc->position.z))
                 break;
         }
     }
@@ -706,18 +709,16 @@ s32 evt_dan_handle_key_failsafe(EvtEntry * entry, bool isFirstCall)
     (void) isFirstCall;
 
     // Check whether the key exists anywhere
-    if (
-        !danCheckEnemyInMapBbox() && !danCheckKeyInMapBbox() &&
+    if (!danCheckEnemyInMapBbox() && !danCheckKeyInMapBbox() &&
         !pouchCheckHaveItem(ITEM_ID_KEY_DAN_KEY) && !pouchCheckHaveItem(ITEM_ID_KEY_URA_DAN_KEY) &&
-        !itemCheckForId(ITEM_ID_KEY_DAN_KEY) && !itemCheckForId(ITEM_ID_KEY_URA_DAN_KEY)
-    )
+        !itemCheckForId(ITEM_ID_KEY_DAN_KEY) && !itemCheckForId(ITEM_ID_KEY_URA_DAN_KEY))
     {
         // Spawn the key at the lock if not
         MobjEntry * lock = mobjNameToPtr("lock_00");
         s32 keyId = ITEM_ID_KEY_DAN_KEY;
         if (evtGetValue(entry, GSW(1)) >= 100)
             keyId = ITEM_ID_KEY_URA_DAN_KEY;
-        
+
         itemEntry(NULL, keyId, 1, lock->pos.x, lock->pos.y, 0.0f, NULL, 0);
         effSmallStarEntry(lock->pos.x, lock->pos.y, 0.0f, 0.0f, -1.0f, 0.0f, 4, 8);
         effSpmConfettiEntry(lock->pos.x, lock->pos.y, 0.0f, 1, 0);
@@ -736,13 +737,13 @@ s32 evt_dan_handle_chest_room_dokans_and_doors(EvtEntry * entry, bool isFirstCal
 
     // Get dungeon number
     s32 no = evtGetValue(entry, entry->pCurData[0]);
-    
+
     // Update destination of exit door
     chestRoomMapDoorDescs[1].destMapName = getDanMapName(no + 1);
 
     // Set the entering door name
     strcpy(gp->doorName, "doa1_l");
-    
+
     // Set exit pipe destination
     if (no < 100)
     {
@@ -767,7 +768,7 @@ s32 evt_dan_get_chest_room_item(EvtEntry * entry, bool isFirstCall)
     // Get dungeon number
     EvtScriptCode * args = entry->pCurData;
     int no = evtGetValue(entry, args[0]); // must be int to match
-    
+
     // Return the item in this room's chest
     evtSetValue(entry, args[1], wp->dungeons[no - 1].item);
 
@@ -881,7 +882,7 @@ static MapDoorDesc mapDoorDescs[2] = {
     // enter
     {0x102004, NULL, NULL, NULL, NULL, "", "", 16},
     // exit
-    {0x2004, NULL, NULL, NULL, NULL, "", "", 16}
+    {0x2004, NULL, NULL, NULL, NULL, "", "", 16},
 };
 
 static s32 flipsideLockItems[2] = {ITEM_ID_KEY_DAN_KEY, -1};

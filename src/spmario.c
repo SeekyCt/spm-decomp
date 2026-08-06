@@ -4,18 +4,19 @@
 */
 
 #include <common.h>
+#include <msl/string.h>
+#include <nw4r/snd.hpp>
 #include <spm/acdrv.h>
 #include <spm/animdrv.h>
 #include <spm/bgdrv.h>
 #include <spm/camdrv.h>
 #include <spm/casedrv.h>
 #include <spm/debug.h>
-#include <wii/DEMOInit.h>
 #include <spm/dispdrv.h>
 #include <spm/dvdmgr.h>
-#include <spm/evtmgr.h>
 #include <spm/effdrv.h>
 #include <spm/envdrv.h>
+#include <spm/evtmgr.h>
 #include <spm/extdrv.h>
 #include <spm/fadedrv.h>
 #include <spm/filemgr.h>
@@ -38,9 +39,9 @@
 #include <spm/npcdrv.h>
 #include <spm/offscreendrv.h>
 #include <spm/pausewin.h>
-#include <spm/seqdrv.h>
 #include <spm/relmgr.h>
 #include <spm/romfont.h>
+#include <spm/seqdrv.h>
 #include <spm/shadowdrv.h>
 #include <spm/spmario.h>
 #include <spm/spmario_snd.h>
@@ -50,6 +51,7 @@
 #include <spm/windowdrv.h>
 #include <spm/winmgr.h>
 #include <spm/wpadmgr.h>
+#include <wii/DEMOInit.h>
 #include <wii/dvd.h>
 #include <wii/gx.h>
 #include <wii/mtx.h>
@@ -57,8 +59,6 @@
 #include <wii/sc.h>
 #include <wii/vi.h>
 #include <wii/wpad.h>
-#include <nw4r/snd.hpp>
-#include <msl/string.h>
 
 extern "C" {
 
@@ -151,5 +151,4 @@ void returnToWiiMenu()
 {
     doReturnToMenu = true;
 }
-
 }

@@ -1,11 +1,11 @@
+#include <msl/string.h>
+#include <spm/evt_msg.h>
 #include <spm/evtmgr.h>
 #include <spm/evtmgr_cmd.h>
-#include <spm/evt_msg.h>
 #include <spm/memory.h>
-#include <spm/system.h>
 #include <spm/spmario.h>
+#include <spm/system.h>
 #include <wii/os.h>
-#include <msl/string.h>
 
 extern "C" {
 
@@ -118,15 +118,15 @@ static void make_jump_table(EvtEntry * entry)
         if (n >= MAX_EVT_JMPTBL)
             SPM_ASSERT(136, n < MAX_EVT_JMPTBL, "EVTMGR:Jump Table Overflow !![make_jump_table]");
     }
-    end: ; // didn't match when just using return
+end:; // didn't match when just using return
 }
 
 void evtmgrInit()
 {
     EvtWork * wp;
-    
+
     wp = evtGetWork();
-    
+
     wp->entryCount = EVT_ENTRY_MAX;
     wp->entries = (EvtEntry *) __memAlloc(HEAP_MAIN, wp->entryCount * sizeof(EvtEntry));
     wp->time = gp->time;
@@ -144,7 +144,7 @@ void evtmgrReInit()
 {
     EvtWork * wp;
 
-    wp = evtGetWork();    
+    wp = evtGetWork();
     wp->time = gp->time;
     memset(wp->entries, 0, wp->entryCount * sizeof(EvtEntry));
     evtMax = 0;
@@ -156,7 +156,8 @@ void evtmgrReInit()
 // Always inlined
 void evtEntryRunCheck()
 {
-    switch (_spmarioSystemLevel) {
+    switch (_spmarioSystemLevel)
+    {
         case 0:
             break;
         case 1:
@@ -168,8 +169,9 @@ void evtEntryRunCheck()
     }
 }
 
-EvtEntry * evtEntry(EvtScriptCode * script, u32 priority, u8 flags) {
-    EvtEntry* entry;
+EvtEntry * evtEntry(EvtScriptCode * script, u32 priority, u8 flags)
+{
+    EvtEntry * entry;
     s32 j;
     s32 i;
     EvtWork * wp;
@@ -222,7 +224,8 @@ EvtEntry * evtEntry(EvtScriptCode * script, u32 priority, u8 flags) {
     return entry;
 }
 
-EvtEntry * evtEntryType(EvtScriptCode * script, u32 priority, u8 flags, u8 type) {
+EvtEntry * evtEntryType(EvtScriptCode * script, u32 priority, u8 flags, u8 type)
+{
     EvtEntry * entry;
     s32 j;
     s32 i;
@@ -278,7 +281,7 @@ EvtEntry * evtEntryType(EvtScriptCode * script, u32 priority, u8 flags, u8 type)
 
 EvtEntry * evtChildEntry(EvtEntry * parent, EvtScriptCode * script, u8 flags)
 {
-    EvtEntry* entry;
+    EvtEntry * entry;
     s32 j;
     s32 i;
     EvtWork * wp;
@@ -344,7 +347,7 @@ EvtEntry * evtChildEntry(EvtEntry * parent, EvtScriptCode * script, u8 flags)
 
 EvtEntry * evtBrotherEntry(EvtEntry * brother, EvtScriptCode * script, u8 flags)
 {
-    EvtEntry* entry;
+    EvtEntry * entry;
     s32 j;
     s32 i;
     EvtWork * wp;
@@ -399,7 +402,7 @@ EvtEntry * evtBrotherEntry(EvtEntry * brother, EvtScriptCode * script, u8 flags)
     return entry;
 }
 
-EvtEntry* evtRestart(EvtEntry* entry)
+EvtEntry * evtRestart(EvtEntry * entry)
 {
     EvtWork * wp;
     EvtScriptCode * start;
@@ -588,7 +591,6 @@ void evtSetType(EvtEntry * entry, u32 type)
     entry->type = (u8) type;
 }
 
-
 void evtStop(EvtEntry * entry, u32 mask)
 {
     EvtWork * wp;
@@ -758,5 +760,4 @@ EvtEntry * evtGetPtrID(s32 id)
 
     return 0;
 }
-
 }

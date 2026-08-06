@@ -1,4 +1,8 @@
 #include <common.h>
+#include <msl/math.h>
+#include <msl/new>
+#include <nw4r/db/panic.hpp>
+#include <nw4r/math/types.hpp>
 #include <spm/camdrv.h>
 #include <spm/dispdrv.h>
 #include <spm/fadedrv.h>
@@ -6,18 +10,14 @@
 #include <spm/hud.h>
 #include <spm/mario.h>
 #include <spm/memory.h>
-#include <spm/seqdrv.h>
 #include <spm/seq_title.h>
+#include <spm/seqdrv.h>
 #include <spm/spmario.h>
 #include <spm/spmario_snd.h>
 #include <spm/system.h>
 #include <spm/wpadmgr.h>
 #include <wii/cx.h>
 #include <wii/mtx.h>
-#include <msl/math.h>
-#include <msl/new>
-#include <nw4r/db/panic.hpp>
-#include <nw4r/math/types.hpp>
 
 extern "C" {
 
@@ -118,7 +118,7 @@ void seq_titleMain(SeqWork * seqWork)
         case SEQ_TITLE_REPLAY_FADE:
             // Replay intro after transition
             if (fadeIsFinish())
-                seqSetSeq(SEQ_MAPCHANGE,"aa4_01",NULL);
+                seqSetSeq(SEQ_MAPCHANGE, "aa4_01", NULL);
 
             break;
     }
@@ -142,16 +142,7 @@ void seqTitleDispCb(s32 cameraId, void * param)
     seqTitleDisp();
 }
 
-static const char * languageNames[] = {
-    "jp",
-    "us",
-    "uk",
-    "ge",
-    "fr",
-    "sp",
-    "it",
-    "uk"
-};
+static const char * languageNames[] = {"jp", "us", "uk", "ge", "fr", "sp", "it", "uk"};
 
 inline void * operator new(size_t size, MEMAllocator * allocator)
 {
@@ -352,5 +343,4 @@ const char * getDanMapName(s32 dungeonNo)
         return "dan_44";
     }
 }
-
 }

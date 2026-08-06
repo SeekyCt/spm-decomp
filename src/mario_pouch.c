@@ -5,19 +5,19 @@
 
 #include "spm/item_data_ids.h"
 #include <common.h>
+#include <msl/math.h>
+#include <msl/string.h>
 #include <spm/camdrv.h>
 #include <spm/fadedrv.h>
-#include <spm/mario_pouch.h>
-#include <spm/mario.h>
 #include <spm/hud.h>
 #include <spm/item_data.h>
+#include <spm/mario.h>
+#include <spm/mario_pouch.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
 #include <spm/spmario_snd.h>
 #include <spm/system.h>
 #include <wii/os.h>
-#include <msl/math.h>
-#include <msl/string.h>
 
 extern "C" {
 
@@ -169,7 +169,6 @@ void pouch2Init()
     wp2->unknown_0x18 = OSGetTime();
 }
 
-
 void pouchReInit()
 {
     MarioPouchWork * pp;
@@ -224,7 +223,7 @@ void pouchReInit()
     pp->killsBeforeNextCharm = 0;
 
     pp->unknown_0x350 = pp->unknown_0x35c = (Vec3) {0, 0, 0};
-    
+
     // Setup minigame scores
     for (i = 0; i < 4; i++)
     {
@@ -260,19 +259,16 @@ void pouchMain()
     if (pouchCheckHaveItem(ITEM_ID_CARD_MARIO))
         work.flipTimer = 10;
 
-    if (
-        !marioKeyOffChk() && !marioCtrlOffChk() && ((marioGetPtr()->flags & 0x10000000) == 0) &&
-        (pouchCheckHaveItem(ITEM_ID_CARD_MARIO) == 0)
-    )
+    if (!marioKeyOffChk() && !marioCtrlOffChk() && ((marioGetPtr()->flags & 0x10000000) == 0) &&
+        (pouchCheckHaveItem(ITEM_ID_CARD_MARIO) == 0))
     {
         camGetPtr(CAM_ID_3D);
         mp = marioGetPtr();
         if (camCheck3d(CAM_ID_3D) != 0)
         {
-            if (
-                (mp->motionId != MOT_FAIRY_CHANGE) &&(mp->motionId != MOT_CHAR_CHANGE) &&
-                (mp->motionId != MOT_31) && (mp->motionId != MOT_32) &&
-                (mp->motionId != MOT_33) && (mp->motionId != MOT_34))
+            if ((mp->motionId != MOT_FAIRY_CHANGE) && (mp->motionId != MOT_CHAR_CHANGE) &&
+                (mp->motionId != MOT_31) && (mp->motionId != MOT_32) && (mp->motionId != MOT_33) &&
+                (mp->motionId != MOT_34))
             {
                 wp2->unknown_0x8 += OSGetTime() - wp2->unknown_0x18;
                 wp2->unknown_0x0 = 0;
@@ -299,7 +295,8 @@ void pouchMain()
                     }
                     work.flipTimer -= 1;
                     hudTurnOffFlipTimeBox(work.flipTimer);
-                    if (work.flipTimer == 0) {
+                    if (work.flipTimer == 0)
+                    {
                         marioTakeDamage(NULL, 0x20000, 1);
                         work.flipTimer = 10;
                         func_8019af88();
@@ -309,11 +306,9 @@ void pouchMain()
         }
         else
         {
-            if (
-                (mp->motionId != MOT_FAIRY_CHANGE) && (mp->motionId != MOT_CHAR_CHANGE) &&
-                (mp->motionId != MOT_31) && (mp->motionId != MOT_32) &&
-                (mp->motionId != MOT_33) && (mp->motionId != MOT_34)
-            )
+            if ((mp->motionId != MOT_FAIRY_CHANGE) && (mp->motionId != MOT_CHAR_CHANGE) &&
+                (mp->motionId != MOT_31) && (mp->motionId != MOT_32) && (mp->motionId != MOT_33) &&
+                (mp->motionId != MOT_34))
             {
                 wp2->unknown_0x0 += OSGetTime() - wp2->unknown_0x18;
                 wp2->unknown_0x8 = 0;
@@ -326,10 +321,8 @@ void pouchMain()
                     if (work.flipTimer < 10)
                     {
                         work.flipTimer += 1;
-                        if (
-                            (work.flipTimer == 10) && (fadeIsFinish() != 0) &&
-                            (seqGetSeq() == SEQ_GAME) && (func_8012dab0() == 0)
-                        )
+                        if ((work.flipTimer == 10) && (fadeIsFinish() != 0) &&
+                            (seqGetSeq() == SEQ_GAME) && (func_8012dab0() == 0))
                         {
                             spsndSFXOn("SFX_SYS_3D_GAGE_RECOVER1");
                         }
@@ -359,7 +352,7 @@ void pouchResetFlip()
 void pouchSetLevel(s32 level)
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     pp->level = level;
@@ -374,7 +367,7 @@ void pouchSetLevel(s32 level)
 s32 pouchGetLevel()
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     return pp->level;
@@ -399,7 +392,7 @@ s32 pouchGetNextLevelXp()
 void pouchSetAttack(s32 attack)
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     pp->attack = attack;
@@ -414,7 +407,7 @@ void pouchSetAttack(s32 attack)
 s32 pouchGetAttack()
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     return pp->attack;
@@ -423,7 +416,7 @@ s32 pouchGetAttack()
 void pouchAddAttack(s32 increase)
 {
     s32 attack;
-    
+
     attack = pouchGetAttack();
     pouchSetAttack(attack + increase);
 }
@@ -431,7 +424,7 @@ void pouchAddAttack(s32 increase)
 void pouchSetHp(s32 hp)
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     pp->hp = hp;
@@ -450,7 +443,7 @@ void pouchSetHp(s32 hp)
 s32 pouchGetHp()
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     return pp->hp;
@@ -460,10 +453,10 @@ void pouchAddHp(s32 increase)
 {
     MarioPouchWork * pp;
     s32 maxHp;
-    
+
     pp = pouchGetPtr();
-    maxHp = pouchGetMaxHp();    
-    
+    maxHp = pouchGetMaxHp();
+
     pp->hp += increase;
     if (pp->hp > maxHp)
         pp->hp = maxHp;
@@ -477,7 +470,7 @@ void pouchAddHp(s32 increase)
 void pouchSetMaxHp(s32 maxHp)
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     pp->maxHp = maxHp;
@@ -492,7 +485,7 @@ void pouchSetMaxHp(s32 maxHp)
 s32 pouchGetMaxHp()
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     return pp->maxHp;
@@ -501,7 +494,7 @@ s32 pouchGetMaxHp()
 void pouchSetXp(s32 xp)
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     pp->xp = xp;
@@ -516,7 +509,7 @@ void pouchSetXp(s32 xp)
 s32 pouchGetXp()
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     return pp->xp;
@@ -525,7 +518,7 @@ s32 pouchGetXp()
 void pouchAddXp(s32 increase)
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     pp->xp += increase;
@@ -540,7 +533,7 @@ void pouchAddXp(s32 increase)
 void pouchSetCoin(s32 coins)
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     pp->coins = coins;
@@ -555,7 +548,7 @@ void pouchSetCoin(s32 coins)
 s32 pouchGetCoin()
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     return pp->coins;
@@ -564,7 +557,7 @@ s32 pouchGetCoin()
 void pouchAddTotalCoin(s32 increase) // always inlined
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     pp->totalCoinsCollected += increase;
@@ -576,7 +569,7 @@ void pouchAddTotalCoin(s32 increase) // always inlined
 void pouchAddCoin(s32 increase)
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     pp->coins += increase;
@@ -685,7 +678,7 @@ bool pouchAddItem(s32 itemId)
     {
         s32 cardId = itemId - ITEM_ID_CARD_START;
         s32 idx = cardId / 32;
-        s32 shift =  (cardId % 32);
+        s32 shift = (cardId % 32);
 
         pp->catchCards[cardId] += 1;
         if (pp->catchCards[cardId] > 99)
@@ -720,7 +713,7 @@ bool pouchCheckHaveItem(s32 itemId)
     else if (itemId >= ITEM_ID_USE_START && itemId < ITEM_ID_USE_MAX)
     {
         int i;
-        for (i = 0 ; i < POUCH_USE_ITEM_MAX; i++)
+        for (i = 0; i < POUCH_USE_ITEM_MAX; i++)
         {
             if (pp->useItem[i] == itemId)
                 break;
@@ -763,7 +756,7 @@ bool pouchCheckHaveItem(s32 itemId)
     {
         s32 cardId = itemId - ITEM_ID_CARD_START;
         s32 idx = cardId / 32;
-        s32 shift =  (cardId % 32);
+        s32 shift = (cardId % 32);
 
         if (pp->catchCards[cardId] != 0)
             return true;
@@ -856,7 +849,7 @@ void pouchRemoveItem(s32 itemId)
     {
         s32 cardId = itemId - ITEM_ID_CARD_START;
         s32 idx = cardId / 32;
-        s32 shift =  (cardId % 32);
+        s32 shift = (cardId % 32);
 
         if (pp->catchCards[cardId] > 0)
             pp->catchCards[cardId] -= 1;
@@ -918,7 +911,7 @@ void pouchMakeCharNotSelectable(s32 itemId)
 PouchCharOrPixlInfo * pouchGetPixlInfo(s32 slot)
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     return &pp->pixls[slot];
@@ -934,7 +927,7 @@ void pouchMakePixlSelectable(s32 itemId)
     for (i = 0; i < 16; i++)
         if (itemId == pp->pixls[i].itemType)
             break;
-    
+
     if (i < 16)
         pp->pixls[i].selectable = true;
 }
@@ -949,7 +942,7 @@ void pouchMakePixlNotSelectable(s32 itemId)
     for (i = 0; i < 16; i++)
         if (itemId == pp->pixls[i].itemType)
             break;
-    
+
     if (i < 16)
         pp->pixls[i].selectable = false;
 }
@@ -967,7 +960,7 @@ bool pouchCheckPixlSelected(s32 itemId)
         if (p->itemType != NULL && p->itemType == itemId)
             return p->selected;
     }
-    
+
     return false;
 }
 
@@ -1014,25 +1007,26 @@ void pouchRegisterMapFound(s32 itemId)
 {
     s32 mapId;
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
-    SPM_ASSERT(1117, itemId >= ITEM_ID_MAP_START && itemId < ITEM_ID_MAP_MAX,
-            "そんな地図はない %d", itemId);
+    SPM_ASSERT(1117, itemId >= ITEM_ID_MAP_START && itemId < ITEM_ID_MAP_MAX, "そんな地図はない %d",
+               itemId);
 
     mapId = itemId - ITEM_ID_MAP_START;
     pp->foundMaps[mapId / 32] |= (1 << (mapId % 32));
 }
 
-void pouchRegisterRecipeKnown(s32 itemId) {
+void pouchRegisterRecipeKnown(s32 itemId)
+{
     s32 cookId;
     MarioPouchWork * pp;
 
     pp = pouchGetPtr();
-    
+
     SPM_ASSERT(1151, itemId >= ITEM_ID_COOK_START && itemId < ITEM_ID_COOK_MAX,
-            "そんな料理はない %d", itemId);
-    
+               "そんな料理はない %d", itemId);
+
     cookId = itemId - ITEM_ID_COOK_START;
     pp->knownRecipes[cookId / 32] |= (1 << (cookId % 32));
 }
@@ -1043,14 +1037,14 @@ bool pouchCheckRecipeKnown(s32 itemId)
     s32 cookId;
 
     pp = pouchGetPtr();
-    
+
     SPM_ASSERT(1165, itemId >= ITEM_ID_COOK_START && itemId < ITEM_ID_COOK_MAX,
-            "そんな料理はない %d", itemId);
+               "そんな料理はない %d", itemId);
 
     cookId = itemId - ITEM_ID_COOK_START;
     if (pp->knownRecipes[cookId / 32] & 1 << (cookId % 32))
         return true;
-    
+
     return false;
 }
 
@@ -1062,7 +1056,7 @@ s32 pouchGetCardCount(s32 itemId)
     pp = pouchGetPtr();
 
     SPM_ASSERT(1184, itemId >= ITEM_ID_CARD_START && itemId < ITEM_ID_CARD_MAX,
-            "おかしなカード番号です %d", itemId);
+               "おかしなカード番号です %d", itemId);
 
     cardId = itemId - ITEM_ID_CARD_START;
     return pp->catchCards[cardId];
@@ -1076,12 +1070,12 @@ bool pouchCheckCardKnown(s32 itemId)
     pp = pouchGetPtr();
 
     SPM_ASSERT(1194, itemId >= ITEM_ID_CARD_START && itemId < ITEM_ID_CARD_MAX,
-            "そんなカードはない %d", itemId);
+               "そんなカードはない %d", itemId);
 
     cardId = itemId - ITEM_ID_CARD_START;
     if (pp->knownCards[cardId / 32] & 1 << (cardId % 32))
         return true;
-    
+
     return false;
 }
 
@@ -1093,7 +1087,7 @@ void pouchRegisterJumpCombo(s32 length)
 
     if (length > pp->maxJumpCombo)
         pp->maxJumpCombo = length;
-    
+
     if (pp->maxJumpCombo > 99999)
         pp->maxJumpCombo = 99999;
 }
@@ -1101,12 +1095,12 @@ void pouchRegisterJumpCombo(s32 length)
 void pouchRegisterStylishCombo(s32 length)
 {
     MarioPouchWork * pp;
-    
+
     pp = pouchGetPtr();
 
     if (length > pp->maxStylishCombo)
         pp->maxStylishCombo = length;
-    
+
     if (pp->maxStylishCombo > 99999)
         pp->maxStylishCombo = 99999;
 }
@@ -1299,7 +1293,7 @@ bool pouchCheckFreeUseItem()
     for (i = 0; i < 10; i++)
         if (pp->useItem[i] == NULL)
             return true;
-    
+
     return false;
 }
 
@@ -1312,10 +1306,10 @@ s32 pouchCountMapsOwned()
     pp = pouchGetPtr();
     count = 0;
 
-    for (i = 0;  i < 48; i++)
+    for (i = 0; i < 48; i++)
         if (pp->ownedMaps[i / 32] & 1 << (i % 32))
             count++;
-    
+
     return count;
 }
 
@@ -1347,8 +1341,7 @@ s32 pouchCountCardsKnown()
     for (i = 0; i < 256; i++)
         if (pp->knownCards[i / 32] & 1 << (i % 32))
             count++;
-    
+
     return count;
 }
-
 }

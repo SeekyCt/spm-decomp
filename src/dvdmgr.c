@@ -1,9 +1,9 @@
 #include "wii/dvd.h"
 #include <common.h>
+#include <msl/string.h>
 #include <spm/dvdmgr.h>
 #include <spm/memory.h>
 #include <spm/system.h>
-#include <msl/string.h>
 
 extern "C" {
 
@@ -22,7 +22,7 @@ void DVDMgrDelete()
     return;
 }
 
-DVDEntry* DVDMgrOpen(const char * name, s32 priority, s16 param_3)
+DVDEntry * DVDMgrOpen(const char * name, s32 priority, s16 param_3)
 {
     DVDEntry * entry;
     s32 entrynum;
@@ -32,7 +32,7 @@ DVDEntry* DVDMgrOpen(const char * name, s32 priority, s16 param_3)
     entrynum = DVDConvertPathToEntrynum(name);
     if (entrynum == -1)
         return NULL;
-    
+
     // Find a free entry
     entry = wp->entries;
     for (i = 0; i < wp->num; i++, entry++)
@@ -89,10 +89,10 @@ s32 DVDMgrRead(DVDEntry * entry, void * dest, s32 length, s32 offset)
                           entry->offset + entry->lengthRead, entry->priority);
         if (ret == DVD_RESULT_CANCELED || ret < 0)
             break;
-        
+
         entry->lengthRemaining -= lengthToRead;
         entry->lengthRead += lengthToRead;
-        entry->dest = (void *) ((s32)entry->dest + lengthToRead);
+        entry->dest = (void *) ((s32) entry->dest + lengthToRead);
     }
 
     // Output error code or number of bytes read
@@ -106,16 +106,16 @@ s32 DVDMgrRead(DVDEntry * entry, void * dest, s32 length, s32 offset)
 static void _cb(s32 result, DVDFileInfo * fileInfo)
 {
     DVDEntry * entry;
-    
+
     // Get context
-    entry = (DVDEntry *)fileInfo->commandBlock.userData;
+    entry = (DVDEntry *) fileInfo->commandBlock.userData;
 
     // Forward to user callback
     entry->readCallback(result, fileInfo);
 }
 
 void DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, s32 offset,
-                        DVDMgrCallback * callback)
+                     DVDMgrCallback * callback)
 {
     // Backup data
     // None of these ever seem to be used..?
@@ -139,19 +139,20 @@ static void readAsync(DVDEntry * entry, s32 lengthToRead, DVDFICallback * callba
     entry->fileInfo.commandBlock.userData = entry;
 
     // Start read
-    DVDReadAsyncPrio(&entry->fileInfo, entry->dest, lengthToRead, entry->offset + entry->lengthRead, callback, entry->priority);
+    DVDReadAsyncPrio(&entry->fileInfo, entry->dest, lengthToRead, entry->offset + entry->lengthRead,
+                     callback, entry->priority);
 
     entry->lengthRemaining -= lengthToRead;
     entry->lengthRead += lengthToRead;
-    entry->dest = (void *) ((u32)entry->dest + lengthToRead);
+    entry->dest = (void *) ((u32) entry->dest + lengthToRead);
 }
 
 static void _cb(s32 result, DVDFileInfo * fileInfo)
 {
     DVDEntry * entry;
-    
+
     // Get context
-    entry = (DVDEntry *)fileInfo->commandBlock.userData;
+    entry = (DVDEntry *) fileInfo->commandBlock.userData;
 
     if (result < 0)
     {
@@ -170,7 +171,7 @@ static void _cb(s32 result, DVDFileInfo * fileInfo)
 }
 
 void DVDMgrReadAsync(DVDEntry * entry, void * dest, s32 length, s32 offset,
-                        DVDMgrCallback * callback)
+                     DVDMgrCallback * callback)
 {
     // Backup data
     entry->dest = dest;
@@ -197,5 +198,4 @@ s32 DVDMgrGetLength(DVDEntry * entry)
 {
     return (s32) entry->fileInfo.length;
 }
-
 }

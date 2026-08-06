@@ -37,6 +37,12 @@ Objects marked as `NonMatching` in `configure.py` are not linked in a normal mat
 
 For a REL source file, use `rel` instead of `dol`. Remove the warning once the object is marked as matching and is linked in normal builds.
 
+Additionally, list a comment in place of each function that is not yet included as follows:
+
+```c
+// NOT_DECOMPILED name
+```
+
 # dtk
 
 This project is build around encounter's [decomp-toolkit](https://github.com/encounter/decomp-toolkit).

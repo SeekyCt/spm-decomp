@@ -1,11 +1,11 @@
 #include <common.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/memory.h>
 #include <spm/swdrv.h>
 #include <spm/system.h>
 #include <wii/os.h>
-#include <msl/stdio.h>
-#include <msl/string.h>
 
 extern "C" {
 
@@ -148,7 +148,7 @@ s32 evt_do_continue(EvtEntry * entry)
 s32 evt_wait_frm(EvtEntry * entry)
 {
     EvtScriptCode * p;
-    
+
     p = entry->pCurData;
 
     // Just an if didn't match
@@ -180,7 +180,7 @@ s32 evt_wait_msec(EvtEntry * entry)
             break;
         case false:
             entry->tempS[0] = evtGetValue(entry, args[0]);
-            entry->tempU[1] = (u32) (((u64)time >> 32) & 0xffffffff);
+            entry->tempU[1] = (u32) (((u64) time >> 32) & 0xffffffff);
             entry->tempU[2] = (u32) (time & 0xffffffff);
             entry->blocked = true;
             break;
@@ -190,14 +190,14 @@ s32 evt_wait_msec(EvtEntry * entry)
         return EVT_RET_CONTINUE;
     }
 
-    tickDiff = (s32)time - (s32)*(OSTime *)&entry->tempS[1];
+    tickDiff = (s32) time - (s32) * (OSTime *) &entry->tempS[1];
     msecDiff = (s32) OSTicksToMilliseconds(tickDiff);
     return msecDiff >= entry->tempS[0] ? EVT_RET_CONTINUE_WEAK : EVT_RET_BLOCK_WEAK;
 }
 
 s32 evt_halt(EvtEntry * entry)
 {
-   return evtGetValue(entry, entry->pCurData[0]) ? EVT_RET_BLOCK_WEAK : EVT_RET_CONTINUE;
+    return evtGetValue(entry, entry->pCurData[0]) ? EVT_RET_BLOCK_WEAK : EVT_RET_CONTINUE;
 }
 
 s32 evt_if_str_equal(EvtEntry * entry)
@@ -205,7 +205,7 @@ s32 evt_if_str_equal(EvtEntry * entry)
     EvtScriptCode * p;
     char * s1;
     char * s2;
-    
+
     p = entry->pCurData;
 
     s1 = (char *) evtGetValue(entry, p[0]);
@@ -231,7 +231,7 @@ s32 evt_if_str_not_equal(EvtEntry * entry)
     EvtScriptCode * p;
     char * s1;
     char * s2;
-    
+
     p = entry->pCurData;
 
     s1 = (char *) evtGetValue(entry, p[0]);
@@ -245,7 +245,7 @@ s32 evt_if_str_not_equal(EvtEntry * entry)
     if (!strcmp(s1, s2))
     {
         entry->pCurInstruction = evtSearchElse(entry);
-    
+
         return EVT_RET_CONTINUE;
     }
 
@@ -257,7 +257,7 @@ s32 evt_if_str_small(EvtEntry * entry)
     EvtScriptCode * p;
     char * s1;
     char * s2;
-    
+
     p = entry->pCurData;
 
     s1 = (char *) evtGetValue(entry, p[0]);
@@ -283,7 +283,7 @@ s32 evt_if_str_large(EvtEntry * entry)
     EvtScriptCode * p;
     char * s1;
     char * s2;
-    
+
     p = entry->pCurData;
 
     s1 = (char *) evtGetValue(entry, p[0]);
@@ -304,13 +304,12 @@ s32 evt_if_str_large(EvtEntry * entry)
     return EVT_RET_CONTINUE;
 }
 
-
 s32 evt_if_str_small_equal(EvtEntry * entry)
 {
     EvtScriptCode * p;
     char * s1;
     char * s2;
-    
+
     p = entry->pCurData;
 
     s1 = (char *) evtGetValue(entry, p[0]);
@@ -609,7 +608,6 @@ s32 evt_if_large_equal(EvtEntry * entry)
     return EVT_RET_CONTINUE;
 }
 
-
 s32 evt_if_flag(EvtEntry * entry)
 {
     EvtScriptCode * p;
@@ -841,7 +839,6 @@ s32 evt_case_small_equal(EvtEntry * entry)
     }
 }
 
-
 s32 evt_case_large(EvtEntry * entry)
 {
     EvtScriptCode * p;
@@ -911,7 +908,6 @@ s32 evt_case_large_equal(EvtEntry * entry)
         return EVT_RET_CONTINUE;
     }
 }
-
 
 s32 evt_case_between(EvtEntry * entry)
 {
@@ -1027,7 +1023,7 @@ s32 evt_case_or(EvtEntry * entry)
     targetValue = evtGetValue(entry, p[0]);
     inputValue = entry->switchValues[depth];
     state = entry->switchStates[depth];
-    
+
     if (state == 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
@@ -1062,7 +1058,7 @@ s32 evt_case_and(EvtEntry * entry)
     targetValue = evtGetValue(entry, p[0]);
     inputValue = entry->switchValues[depth];
     state = entry->switchStates[depth];
-    
+
     if (state == 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
@@ -1106,7 +1102,7 @@ s32 evt_case_end(EvtEntry * entry)
 
     inputValue = entry->switchValues[depth];
     state = entry->switchStates[depth];
-    
+
     if (state == 0)
     {
         entry->pCurInstruction = evtSearchEndSwitch(entry);
@@ -1133,7 +1129,7 @@ s32 evt_switch_break(EvtEntry * entry)
 {
     if (entry->switchDepth < 0)
         SPM_ASSERT(1231, 0, "EVTMGR_CMD:Switch Table Underflow !!");
-    
+
     entry->pCurInstruction = evtSearchEndSwitch(entry);
 
     return EVT_RET_CONTINUE;
@@ -1163,7 +1159,7 @@ s32 evt_set(EvtEntry * entry)
     destVar = p[0];
     value = evtGetValue(entry, p[1]);
     evtSetValue(entry, destVar, value);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1177,7 +1173,7 @@ s32 evt_seti(EvtEntry * entry)
     destVar = p[0];
     value = p[1];
     evtSetValue(entry, destVar, value);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1191,7 +1187,7 @@ s32 evt_setf(EvtEntry * entry)
     destVar = p[0];
     value = evtGetFloat(entry, p[1]);
     evtSetFloat(entry, destVar, value);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1207,7 +1203,7 @@ s32 evt_add(EvtEntry * entry)
     param = evtGetValue(entry, p[1]);
     result = evtGetValue(entry, destVar) + param;
     evtSetValue(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1223,7 +1219,7 @@ s32 evt_sub(EvtEntry * entry)
     param = evtGetValue(entry, p[1]);
     result = evtGetValue(entry, destVar) - param;
     evtSetValue(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1239,7 +1235,7 @@ s32 evt_mul(EvtEntry * entry)
     param = evtGetValue(entry, p[1]);
     result = evtGetValue(entry, destVar) * param;
     evtSetValue(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1255,7 +1251,7 @@ s32 evt_div(EvtEntry * entry)
     param = evtGetValue(entry, p[1]);
     result = evtGetValue(entry, destVar) / param;
     evtSetValue(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1273,7 +1269,7 @@ s32 evt_mod(EvtEntry * entry)
     value = (s32) (evtGetValue(entry, destVar) + 0.5f);
     result = value % param;
     evtSetValue(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1289,7 +1285,7 @@ s32 evt_addf(EvtEntry * entry)
     param = evtGetFloat(entry, p[1]);
     result = evtGetFloat(entry, destVar) + param;
     evtSetFloat(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1305,7 +1301,7 @@ s32 evt_subf(EvtEntry * entry)
     param = evtGetFloat(entry, p[1]);
     result = evtGetFloat(entry, destVar) - param;
     evtSetFloat(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 s32 evt_mulf(EvtEntry * entry)
@@ -1320,7 +1316,7 @@ s32 evt_mulf(EvtEntry * entry)
     param = evtGetFloat(entry, p[1]);
     result = evtGetFloat(entry, destVar) * param;
     evtSetFloat(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1336,7 +1332,7 @@ s32 evt_divf(EvtEntry * entry)
     param = evtGetFloat(entry, p[1]);
     result = evtGetFloat(entry, destVar) / param;
     evtSetFloat(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1492,21 +1488,21 @@ s32 evt_clamp_int(EvtEntry * entry)
         evtSetValue(entry, dest, minVal);
     if (destVal > maxVal)
         evtSetValue(entry, dest, maxVal);
-    
+
     return EVT_RET_CONTINUE;
 }
 
 s32 evt_set_user_wrk(EvtEntry * entry)
 {
     entry->uw = (s32 *) evtGetValue(entry, entry->pCurData[0]);
-    
+
     return EVT_RET_CONTINUE;
 }
 
 s32 evt_set_user_flg(EvtEntry * entry)
 {
     entry->uf = (u32 *) evtGetValue(entry, entry->pCurData[0]);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1537,7 +1533,7 @@ s32 evt_and(EvtEntry * entry)
     param = evtGetValue(entry, p[1]);
     result = evtGetValue(entry, destVar) & param;
     evtSetValue(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1553,7 +1549,7 @@ s32 evt_andi(EvtEntry * entry)
     param = p[1];
     result = evtGetValue(entry, destVar) & param;
     evtSetValue(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1569,7 +1565,7 @@ s32 evt_or(EvtEntry * entry)
     param = evtGetValue(entry, p[1]);
     result = evtGetValue(entry, destVar) | param;
     evtSetValue(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1585,7 +1581,7 @@ s32 evt_ori(EvtEntry * entry)
     param = p[1];
     result = evtGetValue(entry, destVar) | param;
     evtSetValue(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1599,9 +1595,9 @@ s32 evt_set_frame_from_msec(EvtEntry * entry)
     p = entry->pCurData;
     destVar = p[0];
     msec = evtGetValue(entry, p[1]);
-    result = (msec * 60) / 1000; 
+    result = (msec * 60) / 1000;
     evtSetValue(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1615,9 +1611,9 @@ s32 evt_set_msec_from_frame(EvtEntry * entry)
     p = entry->pCurData;
     destVar = p[0];
     frame = evtGetValue(entry, p[1]);
-    result = (frame * 1000) / 60; 
+    result = (frame * 1000) / 60;
     evtSetValue(entry, destVar, result);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1627,12 +1623,11 @@ s32 evt_set_ram(EvtEntry * entry)
     s32 value;
     s32 * addr;
 
-
     p = entry->pCurData;
     value = evtGetValue(entry, p[0]);
     addr = (s32 *) p[1];
     *addr = value;
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1646,7 +1641,7 @@ s32 evt_set_ramf(EvtEntry * entry)
     value = evtGetFloat(entry, p[0]);
     addr = (f32 *) p[1];
     *addr = value;
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1660,7 +1655,7 @@ s32 evt_get_ram(EvtEntry * entry)
     addr = (s32 *) p[1];
     value = *addr;
     evtSetValue(entry, p[0], value);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1674,7 +1669,7 @@ s32 evt_get_ramf(EvtEntry * entry)
     addr = (f32 *) p[1];
     value = *addr;
     evtSetFloat(entry, p[0], value);
-    
+
     return EVT_RET_CONTINUE;
 }
 
@@ -1762,7 +1757,7 @@ s32 evt_run_evt(EvtEntry * entry)
 {
     EvtScriptCode * script;
     EvtEntry * evt;
-    
+
     script = (EvtScriptCode *) evtGetValue(entry, entry->pCurData[0]);
     evt = evtEntryType(script, entry->priority, 0, entry->type);
 
@@ -1807,7 +1802,7 @@ s32 evt_run_child_evt(EvtEntry * entry)
 {
     EvtScriptCode * script;
     EvtEntry * evt;
-    
+
     script = (EvtScriptCode *) evtGetValue(entry, entry->pCurData[0]);
     evt = evtChildEntry(entry, script, 0);
 
@@ -1819,18 +1814,18 @@ s32 evt_run_child_evt(EvtEntry * entry)
 s32 evt_restart_evt(EvtEntry * entry)
 {
     EvtScriptCode * script;
-    
+
     script = (EvtScriptCode *) evtGetValue(entry, entry->pCurData[0]);
     entry->scriptStart = script;
     evtRestart(entry);
-    
+
     return EVT_RET_CONTINUE;
 }
 
 s32 evt_delete_evt(EvtEntry * entry)
 {
     s32 id;
-    
+
     id = evtGetValue(entry, entry->pCurData[0]);
     evtDeleteID(id);
 
@@ -1840,7 +1835,7 @@ s32 evt_delete_evt(EvtEntry * entry)
 s32 evt_set_pri(EvtEntry * entry)
 {
     u32 pri;
-    
+
     pri = (u32) evtGetValue(entry, entry->pCurData[0]);
     evtSetPri(entry, pri);
 
@@ -1850,7 +1845,7 @@ s32 evt_set_pri(EvtEntry * entry)
 s32 evt_set_spd(EvtEntry * entry)
 {
     f32 spd;
-    
+
     spd = evtGetFloat(entry, entry->pCurData[0]);
     evtSetSpeed(entry, spd);
 
@@ -1860,7 +1855,7 @@ s32 evt_set_spd(EvtEntry * entry)
 s32 evt_set_type(EvtEntry * entry)
 {
     u32 type;
-    
+
     type = (u32) evtGetValue(entry, entry->pCurData[0]);
     evtSetType(entry, type);
 
@@ -1870,7 +1865,7 @@ s32 evt_set_type(EvtEntry * entry)
 s32 evt_stop_all(EvtEntry * entry)
 {
     u32 mask;
-    
+
     mask = (u32) evtGetValue(entry, entry->pCurData[0]);
     evtStopAll(mask);
 
@@ -1880,7 +1875,7 @@ s32 evt_stop_all(EvtEntry * entry)
 s32 evt_start_all(EvtEntry * entry)
 {
     u32 mask;
-    
+
     mask = (u32) evtGetValue(entry, entry->pCurData[0]);
     evtStartAll(mask);
 
@@ -1890,7 +1885,7 @@ s32 evt_start_all(EvtEntry * entry)
 s32 evt_stop_other(EvtEntry * entry)
 {
     u32 mask;
-    
+
     mask = (u32) evtGetValue(entry, entry->pCurData[0]);
     evtStopOther(entry, mask);
 
@@ -1900,7 +1895,7 @@ s32 evt_stop_other(EvtEntry * entry)
 s32 evt_start_other(EvtEntry * entry)
 {
     u32 mask;
-    
+
     mask = (u32) evtGetValue(entry, entry->pCurData[0]);
     evtStartOther(entry, mask);
 
@@ -1910,7 +1905,7 @@ s32 evt_start_other(EvtEntry * entry)
 s32 evt_stop_id(EvtEntry * entry)
 {
     s32 id;
-    
+
     id = evtGetValue(entry, entry->pCurData[0]);
     evtStopID(id);
 
@@ -1920,7 +1915,7 @@ s32 evt_stop_id(EvtEntry * entry)
 s32 evt_start_id(EvtEntry * entry)
 {
     s32 id;
-    
+
     id = evtGetValue(entry, entry->pCurData[0]);
     evtStartID(id);
 
@@ -2324,7 +2319,7 @@ s32 evt_debug_bp(EvtEntry * entry)
     return EVT_RET_CONTINUE_WEAK;
 }
 
-s32 evtmgrCmd(EvtEntry* entry)
+s32 evtmgrCmd(EvtEntry * entry)
 {
     s32 argCount;
     s32 * p;
@@ -2713,10 +2708,10 @@ s32 evtmgrCmd(EvtEntry* entry)
 
         if (ret == EVT_RET_END)
             return EVTCMD_RET_END;
-        
+
         if (ret < 0)
             return EVTCMD_RET_END_ALL;
-        
+
         if (ret == EVT_RET_BLOCK_WEAK)
             break;
         else if (ret == EVT_RET_CONTINUE_WEAK)
@@ -2727,7 +2722,7 @@ s32 evtmgrCmd(EvtEntry* entry)
         else if (ret == EVT_RET_CONTINUE)
         {
             entry->curOpcode = 0;
-            continue;            
+            continue;
         }
     }
     return EVTCMD_RET_CONTINUE;
@@ -2831,7 +2826,7 @@ s32 evtGetValue(EvtEntry * entry, s32 reg)
 
         if (val <= EVTDAT_ADDR_MAX)
             return val;
-        
+
         if (val <= EVTDAT_FLOAT_MAX)
             val = (s32) check_float(val);
 
@@ -2845,7 +2840,7 @@ s32 evtGetValue(EvtEntry * entry, s32 reg)
 
         if (val <= EVTDAT_ADDR_MAX)
             return val;
-        
+
         if (val <= EVTDAT_FLOAT_MAX)
             val = (s32) check_float(val);
 
@@ -2901,7 +2896,7 @@ s32 evtSetValue(EvtEntry * entry, s32 reg, s32 value)
     {
         reg += EVTDAT_LSW_BASE;
         ret = _swByteGet(reg);
-        _swByteSet(reg, (u8)value);
+        _swByteSet(reg, (u8) value);
         return ret;
     }
     else if (reg <= EVTDAT_GSWF_MAX)
@@ -3046,7 +3041,7 @@ f32 evtSetFloat(EvtEntry * entry, s32 reg, f32 value)
     EvtWork * wp;
     s32 shift;
     s32 ret;
-    
+
     wp = evtGetWork();
 
     if (reg <= EVTDAT_ADDR_MAX)
@@ -3110,7 +3105,7 @@ EvtScriptCode * evtSearchLabel(EvtEntry * entry, s32 lbl)
     s32 n;
 
     ret = entry->pCurData;
-    
+
     if (lbl < EVTDAT_ADDR_MAX)
         return (EvtScriptCode *) lbl;
 
@@ -3159,12 +3154,12 @@ EvtScriptCode * evtSearchElse(EvtEntry * entry)
                 ifDepth += 1;
                 break;
 
-             case EVT_OPC_ELSE:
+            case EVT_OPC_ELSE:
                 if (ifDepth == 0)
                     return pInstr;
                 else
                     break;
-       }
+        }
     }
 }
 
@@ -3198,7 +3193,7 @@ EvtScriptCode * evtSearchEndIf(EvtEntry * entry)
             case EVT_OPC_IF_STR_EQUAL ... EVT_OPC_IF_NOT_FLAG:
                 ifDepth += 1;
                 break;
-       }
+        }
     }
 }
 
@@ -3253,7 +3248,7 @@ EvtScriptCode * evtSearchCase(EvtEntry * entry)
     {
         opc = *pInstr & 0xffff;
         ret = pInstr;
-        argCount = *pInstr++; 
+        argCount = *pInstr++;
         pInstr += argCount >> 16;
 
         switch (opc)
@@ -3348,5 +3343,4 @@ EvtScriptCode * evtSearchJustBeforeWhile(EvtEntry * entry)
         pInstr += argCount >> 16;
     }
 }
-
 }

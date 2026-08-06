@@ -1,10 +1,10 @@
 #include <common.h>
-#include <spm/debug.h>
-#include <wii/base.h>
-#include <wii/os.h>
 #include <msl/stdarg.h>
 #include <msl/stdio.h>
 #include <msl/string.h>
+#include <spm/debug.h>
+#include <wii/base.h>
+#include <wii/os.h>
 
 extern "C" {
 
@@ -18,7 +18,6 @@ void debugInit()
 
 void debugReInit()
 {
-
 }
 
 void OSPanic(const char * filename, s32 line, const char * msg, ...)
@@ -39,7 +38,7 @@ void OSPanic(const char * filename, s32 line, const char * msg, ...)
     // Traverse stack
     stackDepth = 0;
     stack = (u32 *) OSGetStackPointer();
-    while (stack != NULL && stack != (u32 *)0xffffffff && stackDepth++ < 16)
+    while (stack != NULL && stack != (u32 *) 0xffffffff && stackDepth++ < 16)
     {
         pos += sprintf(buf + pos, "0x%08x: 0x%08x 0x%08x\n", stack, stack[0], stack[1]);
         stack = (u32 *) *stack;
@@ -48,7 +47,8 @@ void OSPanic(const char * filename, s32 line, const char * msg, ...)
     // Halt execution
     OSDisableInterrupts();
     PPCHalt();
-    while (1) { }
+    while (1)
+    {
+    }
 }
-
 }

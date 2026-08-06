@@ -1,56 +1,51 @@
 #include <common.h>
 #include <evt_cmd.h>
+#include <msl/string.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/seqdrv.h>
 #include <spm/spmario.h>
 #include <spm/swdrv.h>
 #include <spm/system.h>
-#include <msl/string.h>
 
 extern "C" {
 
 static const s32 gameCoinGswMap[] = {
-    GSW(153), GSW(154), GSW(155), GSW(156), GSW(157), GSW(158), GSW(159), GSW(160),
-    GSW(161), GSW(162), GSW(163), GSW(164), GSW(165), GSW(166), GSW(167), GSW(168),
-    GSW(169), GSW(170), GSW(171), GSW(172), GSW(173), GSW(174), GSW(175), GSW(176),
-    GSW(177), GSW(178), GSW(179), GSW(180), GSW(181), GSW(182), GSW(218), GSW(219),
-    GSW(220), GSW(221), GSW(222), GSW(223), GSW(224), GSW(225), GSW(226), GSW(227),
-    GSW(228), GSW(229), GSW(230), GSW(231), GSW(232), GSW(233), GSW(234), GSW(235),
-    GSW(236), GSW(237), GSW(238), GSW(239), GSW(240), GSW(241), GSW(242), GSW(243),
-    GSW(244), GSW(245), GSW(246), GSW(247), GSW(253), GSW(254), GSW(255), GSW(256),
-    GSW(257), GSW(258), GSW(259), GSW(260), GSW(261), GSW(262), GSW(263), GSW(264),
-    GSW(265), GSW(266), GSW(267), GSW(268), GSW(269), GSW(270), GSW(271), GSW(272),
-    GSW(273), GSW(274), GSW(275), GSW(276), GSW(277), GSW(278), GSW(279), GSW(280),
-    GSW(281), GSW(282), GSW(301), GSW(302), GSW(303), GSW(304), GSW(305), GSW(306),
-    GSW(307), GSW(308), GSW(309), GSW(310), GSW(311), GSW(312), GSW(313), GSW(314),
-    GSW(315), GSW(316), GSW(317), GSW(318), GSW(319), GSW(320), GSW(321), GSW(322),
-    GSW(323), GSW(324), GSW(325), GSW(326), GSW(327), GSW(328), GSW(329), GSW(330),
-    GSW(358), GSW(359), GSW(360), GSW(361), GSW(362), GSW(363), GSW(364), GSW(365),
-    GSW(366), GSW(367), GSW(368), GSW(369), GSW(370), GSW(371), GSW(372), GSW(373),
-    GSW(374), GSW(375), GSW(376), GSW(377), GSW(378), GSW(379), GSW(380), GSW(381),
-    GSW(382), GSW(383), GSW(384), GSW(385), GSW(386), GSW(387), GSW(401), GSW(402),
-    GSW(403), GSW(404), GSW(405), GSW(406), GSW(407), GSW(408), GSW(409), GSW(410),
-    GSW(411), GSW(412), GSW(413), GSW(414), GSW(415), GSW(416), GSW(417), GSW(418),
-    GSW(419), GSW(420), GSW(421), GSW(422), GSW(423), GSW(424), GSW(425), GSW(426),
-    GSW(427), GSW(428), GSW(429), GSW(430), GSW(451), GSW(452), GSW(453), GSW(454),
-    GSW(455), GSW(456), GSW(457), GSW(458), GSW(459), GSW(460), GSW(461), GSW(462),
-    GSW(463), GSW(464), GSW(465), GSW(466), GSW(467), GSW(468), GSW(469), GSW(470),
-    GSW(471), GSW(472), GSW(473), GSW(474), GSW(475), GSW(476), GSW(477), GSW(478),
-    GSW(479), GSW(480), GSW(505), GSW(506), GSW(507), GSW(508), GSW(509), GSW(510),
-    GSW(511), GSW(512), GSW(513), GSW(514), GSW(515), GSW(516), GSW(517), GSW(518),
-    GSW(519), GSW(520), GSW(521), GSW(522), GSW(523), GSW(524), GSW(525), GSW(526),
-    GSW(527), GSW(528), GSW(529), GSW(530), GSW(531), GSW(532), GSW(533), GSW(534)
+    GSW(153), GSW(154), GSW(155), GSW(156), GSW(157), GSW(158), GSW(159), GSW(160), GSW(161),
+    GSW(162), GSW(163), GSW(164), GSW(165), GSW(166), GSW(167), GSW(168), GSW(169), GSW(170),
+    GSW(171), GSW(172), GSW(173), GSW(174), GSW(175), GSW(176), GSW(177), GSW(178), GSW(179),
+    GSW(180), GSW(181), GSW(182), GSW(218), GSW(219), GSW(220), GSW(221), GSW(222), GSW(223),
+    GSW(224), GSW(225), GSW(226), GSW(227), GSW(228), GSW(229), GSW(230), GSW(231), GSW(232),
+    GSW(233), GSW(234), GSW(235), GSW(236), GSW(237), GSW(238), GSW(239), GSW(240), GSW(241),
+    GSW(242), GSW(243), GSW(244), GSW(245), GSW(246), GSW(247), GSW(253), GSW(254), GSW(255),
+    GSW(256), GSW(257), GSW(258), GSW(259), GSW(260), GSW(261), GSW(262), GSW(263), GSW(264),
+    GSW(265), GSW(266), GSW(267), GSW(268), GSW(269), GSW(270), GSW(271), GSW(272), GSW(273),
+    GSW(274), GSW(275), GSW(276), GSW(277), GSW(278), GSW(279), GSW(280), GSW(281), GSW(282),
+    GSW(301), GSW(302), GSW(303), GSW(304), GSW(305), GSW(306), GSW(307), GSW(308), GSW(309),
+    GSW(310), GSW(311), GSW(312), GSW(313), GSW(314), GSW(315), GSW(316), GSW(317), GSW(318),
+    GSW(319), GSW(320), GSW(321), GSW(322), GSW(323), GSW(324), GSW(325), GSW(326), GSW(327),
+    GSW(328), GSW(329), GSW(330), GSW(358), GSW(359), GSW(360), GSW(361), GSW(362), GSW(363),
+    GSW(364), GSW(365), GSW(366), GSW(367), GSW(368), GSW(369), GSW(370), GSW(371), GSW(372),
+    GSW(373), GSW(374), GSW(375), GSW(376), GSW(377), GSW(378), GSW(379), GSW(380), GSW(381),
+    GSW(382), GSW(383), GSW(384), GSW(385), GSW(386), GSW(387), GSW(401), GSW(402), GSW(403),
+    GSW(404), GSW(405), GSW(406), GSW(407), GSW(408), GSW(409), GSW(410), GSW(411), GSW(412),
+    GSW(413), GSW(414), GSW(415), GSW(416), GSW(417), GSW(418), GSW(419), GSW(420), GSW(421),
+    GSW(422), GSW(423), GSW(424), GSW(425), GSW(426), GSW(427), GSW(428), GSW(429), GSW(430),
+    GSW(451), GSW(452), GSW(453), GSW(454), GSW(455), GSW(456), GSW(457), GSW(458), GSW(459),
+    GSW(460), GSW(461), GSW(462), GSW(463), GSW(464), GSW(465), GSW(466), GSW(467), GSW(468),
+    GSW(469), GSW(470), GSW(471), GSW(472), GSW(473), GSW(474), GSW(475), GSW(476), GSW(477),
+    GSW(478), GSW(479), GSW(480), GSW(505), GSW(506), GSW(507), GSW(508), GSW(509), GSW(510),
+    GSW(511), GSW(512), GSW(513), GSW(514), GSW(515), GSW(516), GSW(517), GSW(518), GSW(519),
+    GSW(520), GSW(521), GSW(522), GSW(523), GSW(524), GSW(525), GSW(526), GSW(527), GSW(528),
+    GSW(529), GSW(530), GSW(531), GSW(532), GSW(533), GSW(534),
 };
 
 static const AssignTblEntry assign_tbl[] = {
-    {"an3_01", 27}, {"an3_03",  6}, {"an3_12", 24}, {"an3_14",  4},
-    {"an3_15", 20}, {"an4_12", 16}, {"gn3_04", 48}, {"mi1_10", 15},
-    {"sp2_09", 48}, {"sp4_15", 18}, {"ta2_02", 10}, {"an1_09", 28},
-    {"gn1_05", 45}, {"gn2_06", 28}, {"gn3_10", 48}, {"gn3_16", 41},
-    {"he1_01",  4}, {"he1_03", 62}, {"he2_02", 29}, {"he2_08", 63},
-    {"mi1_01",  4}, {"mi1_03", 16}, {"mi2_05", 50}, {"sp1_07", 36},
-    {"sp2_01",  8}, {"sp3_07", 33}, {"ta1_03", 10}, {"ta1_06", 17},
-    {"ta1_07", 10}, {"ta2_01", 34}, {"ta3_02",  3}, {"ta3_05", 48}
+    {"an3_01", 27}, {"an3_03", 6},  {"an3_12", 24}, {"an3_14", 4},  {"an3_15", 20}, {"an4_12", 16},
+    {"gn3_04", 48}, {"mi1_10", 15}, {"sp2_09", 48}, {"sp4_15", 18}, {"ta2_02", 10}, {"an1_09", 28},
+    {"gn1_05", 45}, {"gn2_06", 28}, {"gn3_10", 48}, {"gn3_16", 41}, {"he1_01", 4},  {"he1_03", 62},
+    {"he2_02", 29}, {"he2_08", 63}, {"mi1_01", 4},  {"mi1_03", 16}, {"mi2_05", 50}, {"sp1_07", 36},
+    {"sp2_01", 8},  {"sp3_07", 33}, {"ta1_03", 10}, {"ta1_06", 17}, {"ta1_07", 10}, {"ta2_01", 34},
+    {"ta3_02", 3},  {"ta3_05", 48},
 };
 
 static SwWork work;
@@ -172,8 +167,7 @@ s32 swGetCoinId()
     {
         // Wipe if changing area
         entry = gp->coinEntries;
-        if (strncmp(gp->mapName, entry->mapName, 3) != 0 &&
-            strncmp(gp->mapName, "bos", 3) != 0)
+        if (strncmp(gp->mapName, entry->mapName, 3) != 0 && strncmp(gp->mapName, "bos", 3) != 0)
         {
             memset(gp->coinEntries, 0, sizeof(gp->coinEntries));
             wp->coinId = 0;
@@ -215,7 +209,7 @@ void swCoinSet(s32 id)
     // Skip if bad id
     if (id == -1)
         return;
-    
+
     // Try find coin entry for this map
     for (i = 0; i < MAX_COIN_MAP; i++, entry++)
     {
@@ -240,7 +234,7 @@ void swCoinClear(s32 id)
     // Skip if bad id
     if (id == -1)
         return;
-    
+
     // Try find coin entry for this map
     for (i = 0; i < MAX_COIN_MAP; i++, entry++)
     {
@@ -265,7 +259,7 @@ bool swCoinGet(s32 id)
     // Skip if bad id
     if (id == -1)
         return false;
-    
+
     // Try find coin entry for this map
     for (i = 0; i < MAX_COIN_MAP; i++, entry++)
     {
@@ -311,16 +305,16 @@ s32 swGetGameCoinId()
             break;
         id += assign_tbl[i].num;
     }
-    
+
     // Skip if not found
     if (i >= MAX_COIN_MAP)
         return -1;
 
     // Increment game coin id
     id += wp->gameCoinId++;
-    
+
     // "Coin flags have overflowed"
-    SPM_ASSERT(505, (wp->gameCoinId-1) < assign_tbl[i].num, "コインのフラグが溢れました");
+    SPM_ASSERT(505, (wp->gameCoinId - 1) < assign_tbl[i].num, "コインのフラグが溢れました");
 
     return id;
 }
@@ -331,7 +325,7 @@ bool swGameCoinGet(s32 id)
     s32 bit;
     EvtVar var;
     s32 val;
-    
+
     // Skip if bad id
     if (id == -1)
         return false;
@@ -362,7 +356,7 @@ void swGameCoinSet(s32 id)
     // Skip if bad id
     if (id == -1)
         return;
-    
+
     // Find index and bit for id
     idx = id / 8;
     bit = id % 8;
@@ -388,5 +382,4 @@ void swGameCoinSet(s32 id)
         gp->gsw[var] = (s8) num;
     }
 }
-
 }

@@ -1,4 +1,6 @@
 #include <common.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
 #include <spm/evtmgr_cmd.h>
 #include <spm/guide.h>
 #include <spm/mario.h>
@@ -12,8 +14,6 @@
 #include <wii/os.h>
 #include <wii/sc.h>
 #include <wii/tpl.h>
-#include <msl/stdio.h>
-#include <msl/string.h>
 
 extern "C" {
 
@@ -55,14 +55,14 @@ void dummy(s32 x)
 
 void nandInit()
 {
-    TPLHeader *tpl;
+    TPLHeader * tpl;
     s32 i;
 
     // Init work
     memset(wp, 0, sizeof(*wp));
     wp->openingBufferSize = 0x4000;
     wp->openingBuffer = __memAlloc(HEAP_MAIN, wp->openingBufferSize);
-    wp->saves = (SaveFile *) __memAlloc(HEAP_MAIN, sizeof(SaveFile)*4);
+    wp->saves = (SaveFile *) __memAlloc(HEAP_MAIN, sizeof(SaveFile) * 4);
     wp->tempSaveFile = __memAlloc(HEAP_MAIN, NAND_TEMP_SAVE_SIZE);
     wp->banner = (NANDBanner *) __memAlloc(HEAP_MAIN, sizeof(*wp->banner));
 
@@ -72,8 +72,11 @@ void nandInit()
         case SC_LANGUAGE_JP:
             // Some broken japanese strings?
             NANDInitBanner(wp->banner, 0x10,
-                L"\x30FB\x0058\x30FB\x005B\x30FB\x0070\x30FB\x005B\x30FB\x0079\x30FB\x005B\x30FB\x0070\x30FB\x005B\x30FB\x007D\x30FB\x30FB\x30FB\x0049",
-                L"\x30FB\x0079\x30FB\x30FB\x30FB\x0079\x30FB\x30FB\x30FB\x007D\x30FB\x30FB\x30FB\x0049\x30FB\xFF8C\x30FB\xFF74\x30FB\x30FB\x30FB\xFF73\x30FB\x30FB\x30FB\x0060\x30FB\xFF6F\x30FB\x0049");
+                           L"\x30FB\x0058\x30FB\x005B\x30FB\x0070\x30FB\x005B\x30FB\x0079\x30FB"
+                           L"\x005B\x30FB\x0070\x30FB\x005B\x30FB\x007D\x30FB\x30FB\x30FB\x0049",
+                           L"\x30FB\x0079\x30FB\x30FB\x30FB\x0079\x30FB\x30FB\x30FB\x007D\x30FB"
+                           L"\x30FB\x30FB\x0049\x30FB\xFF8C\x30FB\xFF74\x30FB\x30FB\x30FB\xFF73"
+                           L"\x30FB\x30FB\x30FB\x0060\x30FB\xFF6F\x30FB\x0049");
             break;
 
         case SC_LANGUAGE_EN:
@@ -185,7 +188,7 @@ void nandCheck()
 {
     // "Already running"
     SPM_ASSERT(300, !flag(wp->flag, NAND_FLAG_Exec), "すでに実行中");
- 
+
     wp->flag = NAND_FLAG_Exec;
     wp->task = NANDMGR_TASK_CHECK;
     wp->code = NAND_CODE_OK;
@@ -264,7 +267,7 @@ void nandCopySave(s32 sourceId, s32 destId)
 void nandClearSave(s32 saveId)
 {
     SaveFile * save;
-    
+
     save = &wp->saves[saveId];
 
     memset(save, 0, sizeof(*save));
@@ -283,7 +286,7 @@ void nandUpdateSave(s32 saveId)
     MarioWork * mp;
     SpmarioGlobals * _gp;
     s32 temp;
-    
+
     save = &wp->saves[saveId];
     mp = marioGetPtr();
 
@@ -325,14 +328,13 @@ void nandUpdateSave(s32 saveId)
     save->checksumNOT = ~save->checksum;
 }
 
-
 void nandLoadSave(s32 saveId)
 {
-    SpmarioGlobals *_gp;
+    SpmarioGlobals * _gp;
     s32 lastSaveLoaded;
     s32 language;
     s32 fps;
-    SaveFile *save;
+    SaveFile * save;
 
     // Get save file
     save = &wp->saves[saveId];
@@ -584,7 +586,7 @@ void nandWriteBannerLoadAllSavesMain()
         if ((wp->saveId < SAVE_FILE_COUNT && wp->stage >= 7) &&
             (wp->code == NAND_CODE_5 || wp->code == NAND_CODE_15))
         {
-                wp->flag |= NAND_FLAG_Error;
+            wp->flag |= NAND_FLAG_Error;
         }
         else
         {
@@ -710,7 +712,7 @@ void nandDeleteSaveMain()
             wp->task = NANDMGR_TASK_NONE;
             wp->flag &= ~NAND_FLAG_Exec;
             break;
-        }
+    }
 
     wp->stage += 1;
 }
@@ -719,10 +721,10 @@ static u32 nandCalcChecksum(SaveFile * save)
 {
     u32 checksum;
     u32 i;
-    
+
     checksum = 0;
     for (i = 0; i < sizeof(*save); i++)
-        checksum += ((u8 *)save)[i];
+        checksum += ((u8 *) save)[i];
 
     return checksum;
 }
@@ -747,7 +749,7 @@ static void checkCallback(s32 result, NANDCommandBlock * commandBlock)
 
     if (wp->code != NAND_CODE_OK)
         return;
-    
+
     if (wp->answer & (NAND_ANSWER_FLAG_2 | NAND_ANSWER_FLAG_8))
         wp->code = NAND_CODE_11;
     if (wp->answer & (NAND_ANSWER_FLAG_1 | NAND_ANSWER_FLAG_4))
@@ -761,8 +763,8 @@ static void nand_check()
     wp->flag |= NAND_FLAG_Waiting;
     tries = 0;
     wp->answer = 0;
-    while (NANDCheckAsync(NAND_BLOCK_COUNT, NAND_INODE_COUNT, &wp->answer,
-                            &checkCallback, &wp->commandBlock) == NAND_CODE_BUSY)
+    while (NANDCheckAsync(NAND_BLOCK_COUNT, NAND_INODE_COUNT, &wp->answer, &checkCallback,
+                          &wp->commandBlock) == NAND_CODE_BUSY)
     {
         if (++tries > NAND_ATTEMPTS_MAX)
         {
@@ -771,7 +773,6 @@ static void nand_check()
             break;
         }
     }
-
 }
 
 static void nand_get_home_dir(char * homedir)
@@ -816,8 +817,8 @@ static void nand_create(const char * path)
 
     wp->flag |= NAND_FLAG_Waiting;
     tries = 0;
-    while (NANDCreateAsync(path, NAND_PERMISSION_READ_WRITE, 0, genericCallback, &wp->commandBlock)
-           == NAND_CODE_BUSY)
+    while (NANDCreateAsync(path, NAND_PERMISSION_READ_WRITE, 0, genericCallback,
+                           &wp->commandBlock) == NAND_CODE_BUSY)
     {
         if (++tries > NAND_ATTEMPTS_MAX)
         {
@@ -869,8 +870,8 @@ static void nand_seek(NANDFileInfo * fileInfo, u32 offset, u8 mode)
 
     wp->flag |= NAND_FLAG_Waiting;
     tries = 0;
-    while (NANDSeekAsync(fileInfo, offset, mode, genericCallback, &wp->commandBlock)
-           == NAND_CODE_BUSY)
+    while (NANDSeekAsync(fileInfo, offset, mode, genericCallback, &wp->commandBlock) ==
+           NAND_CODE_BUSY)
     {
         if (++tries > NAND_ATTEMPTS_MAX)
         {
@@ -887,8 +888,8 @@ static void nand_read(NANDFileInfo * fileInfo, void * data, u32 length)
 
     wp->flag |= NAND_FLAG_Waiting;
     tries = 0;
-    while (NANDReadAsync(fileInfo, data, length, genericCallback, &wp->commandBlock)
-           == NAND_CODE_BUSY)
+    while (NANDReadAsync(fileInfo, data, length, genericCallback, &wp->commandBlock) ==
+           NAND_CODE_BUSY)
     {
         if (++tries > NAND_ATTEMPTS_MAX)
         {
@@ -905,8 +906,8 @@ static void nand_write(NANDFileInfo * fileInfo, void * data, u32 length)
 
     wp->flag |= NAND_FLAG_Waiting;
     tries = 0;
-    while (NANDWriteAsync(fileInfo, data, length, genericCallback, &wp->commandBlock)
-           == NAND_CODE_BUSY)
+    while (NANDWriteAsync(fileInfo, data, length, genericCallback, &wp->commandBlock) ==
+           NAND_CODE_BUSY)
     {
         if (++tries > NAND_ATTEMPTS_MAX)
         {
@@ -931,7 +932,6 @@ static void nand_close(NANDFileInfo * fileInfo)
             wp->flag &= ~NAND_FLAG_Waiting;
             break;
         }
-    }    
+    }
 }
-
 }

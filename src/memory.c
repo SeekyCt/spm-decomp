@@ -1,12 +1,12 @@
 #include <common.h>
+#include <msl/new>
+#include <msl/string.h>
 #include <spm/filemgr.h>
 #include <spm/memory.h>
 #include <spm/system.h>
 #include <wii/gx.h>
-#include <wii/os.h>
 #include <wii/mem.h>
-#include <msl/new>
-#include <msl/string.h>
+#include <wii/os.h>
 
 extern "C" {
 
@@ -16,93 +16,111 @@ extern "C" {
     #define LINE_SHIFT 0
 #endif
 
-static HeapSize size_table[HEAP_COUNT] =
-{
+static HeapSize size_table[HEAP_COUNT] = {
 #if MEMORY_C_VERSION >= 2
     // MEM1
-    { // 0
+    {
+        // 0
         HEAPSIZE_ABSOLUTE_KB,
-        0x2400
+        0x2400,
     },
-    { // 1
+    {
+        // 1
         HEAPSIZE_ABSOLUTE_KB,
-        0x1800
+        0x1800,
     },
-    { // 2
+    {
+        // 2
         HEAPSIZE_PERCENT_REMAINING,
-        100
+        100,
     },
 
     // MEM2
-    { // 3
+    {
+        // 3
         HEAPSIZE_ABSOLUTE_KB,
-        0x100
+        0x100,
     },
-    { // 4
+    {
+        // 4
         HEAPSIZE_ABSOLUTE_KB,
-        0x100
+        0x100,
     },
-    { // 5
+    {
+        // 5
         HEAPSIZE_ABSOLUTE_KB,
-        0x80
+        0x80,
     },
-    { // 6
+    {
+        // 6
         HEAPSIZE_ABSOLUTE_KB,
-        0x4400
+        0x4400,
     },
-    { // 7 - smart heap
+    {
+        // 7 - smart heap
         HEAPSIZE_PERCENT_REMAINING,
-        100
+        100,
     },
-#if MEMORY_C_VERSION >= 3
-    { // Korean font heap
+    #if MEMORY_C_VERSION >= 3
+    {
+        // Korean font heap
         HEAPSIZE_ABSOLUTE_KB,
-        0x520
+        0x520,
     },
-#endif
-    { // 8
+    #endif
+    {
+        // 8
         HEAPSIZE_ABSOLUTE_KB,
-        1
+        1,
     }
 #else // == 1
     // MEM1
-    { // 0
+    {
+        // 0
         HEAPSIZE_ABSOLUTE_KB,
-        0x2400
+        0x2400,
     },
-    { // 1
+    {
+        // 1
         HEAPSIZE_ABSOLUTE_KB,
-        0x1800
+        0x1800,
     },
-    { // 2
+    {
+        // 2
         HEAPSIZE_ABSOLUTE_KB,
-        0x100
+        0x100,
     },
-    { // 3
+    {
+        // 3
         HEAPSIZE_ABSOLUTE_KB,
-        0x100
+        0x100,
     },
-    { // 4
+    {
+        // 4
         HEAPSIZE_PERCENT_REMAINING,
-        100
+        100,
     },
 
     // MEM2
-    { // 5
+    {
+        // 5
         HEAPSIZE_ABSOLUTE_KB,
-        0x80
+        0x80,
     },
-    { // 6
+    {
+        // 6
         HEAPSIZE_ABSOLUTE_KB,
-        0x4400
+        0x4400,
     },
-    { // 7 - smart heap
+    {
+        // 7 - smart heap
         HEAPSIZE_PERCENT_REMAINING,
-        100
+        100,
     },
-    { // 8
+    {
+        // 8
         HEAPSIZE_ABSOLUTE_KB,
-        1
+        1,
     }
 #endif
 };
@@ -119,7 +137,7 @@ static SmartWork * swp = &smartWork;
 static bool memInitFlag = false;
 
 /*
-    Whether smartAlloc has been used since the last spmarioDisp 
+    Whether smartAlloc has been used since the last spmarioDisp
 */
 s32 g_bFirstSmartAlloc = false;
 
@@ -146,10 +164,11 @@ void memInit()
             u32 size = (u32) (size_table[i].size * 1024);
 
             wp->heapStart[i] = (void *) nextFree;
-            wp->heapEnd[i] = (void* ) (nextFree + size);
+            wp->heapEnd[i] = (void *) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
-            SPM_ASSERT(97 + LINE_SHIFT, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            SPM_ASSERT(97 + LINE_SHIFT, (u32) wp->heapEnd[i] <= max,
+                       "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             nextFree += size;
         }
@@ -164,7 +183,8 @@ void memInit()
             u32 size = (u32) (((u64) space * size_table[i].size) / 100);
 
             // "ERROR: Excessive heap acquisition from arena"
-            SPM_ASSERT(111 + LINE_SHIFT, size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
+            SPM_ASSERT(111 + LINE_SHIFT, size >= 32,
+                       "ERROR: アリーナからのヒープの取得オーバーです。\n");
 
             // Round down 0x20
             size -= size & 0x1f;
@@ -173,7 +193,8 @@ void memInit()
             wp->heapEnd[i] = (void *) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
-            SPM_ASSERT(117 + LINE_SHIFT, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            SPM_ASSERT(117 + LINE_SHIFT, (u32) wp->heapEnd[i] <= max,
+                       "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             nextFree += size;
         }
@@ -182,8 +203,8 @@ void memInit()
     // Pass MEM1 heaps into MEM library
     for (i = 0; i < MEM1_HEAP_COUNT; i++)
     {
-        u32 size = (u32)wp->heapEnd[i] - (u32)wp->heapStart[i];
-        wp->heapHandle[i]  = MEMCreateExpHeapEx(wp->heapStart[i], size, 0);
+        u32 size = (u32) wp->heapEnd[i] - (u32) wp->heapStart[i];
+        wp->heapHandle[i] = MEMCreateExpHeapEx(wp->heapStart[i], size, 0);
     }
 
     // Claim memory from arena
@@ -205,7 +226,8 @@ void memInit()
             wp->heapEnd[i] = (void *) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
-            SPM_ASSERT(148 + LINE_SHIFT, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            SPM_ASSERT(148 + LINE_SHIFT, (u32) wp->heapEnd[i] <= max,
+                       "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             nextFree += size;
         }
@@ -220,7 +242,8 @@ void memInit()
             u32 size = (u32) (((u64) space * size_table[i].size) / 100);
 
             // "ERROR: Excessive heap acquisition from arena"
-            SPM_ASSERT(162 + LINE_SHIFT, size >= 32, "ERROR: アリーナからのヒープの取得オーバーです。\n");
+            SPM_ASSERT(162 + LINE_SHIFT, size >= 32,
+                       "ERROR: アリーナからのヒープの取得オーバーです。\n");
 
             // Align size down to 0x20
             size -= size & 0x1f;
@@ -229,7 +252,8 @@ void memInit()
             wp->heapEnd[i] = (void *) (nextFree + size);
 
             // "ERROR: Excessive heap acquisition from arena"
-            SPM_ASSERT(168 + LINE_SHIFT, (u32)wp->heapEnd[i] <= max, "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
+            SPM_ASSERT(168 + LINE_SHIFT, (u32) wp->heapEnd[i] <= max,
+                       "ERROR: アリーナからのヒープの取得オーバーです。[%d]\n", i);
 
             nextFree += size;
         }
@@ -238,13 +262,13 @@ void memInit()
     // Pass MEM2 heaps into MEM library
     for (i = MEM1_HEAP_COUNT; i < HEAP_COUNT; i++)
     {
-        u32 size = (u32)wp->heapEnd[i] - (u32)wp->heapStart[i];
-        wp->heapHandle[i]  = MEMCreateExpHeapEx(wp->heapStart[i], size, 0);
+        u32 size = (u32) wp->heapEnd[i] - (u32) wp->heapStart[i];
+        wp->heapHandle[i] = MEMCreateExpHeapEx(wp->heapStart[i], size, 0);
     }
 
     // Claim memory from arena
     OSSetMEM2ArenaLo((void *) max);
-    
+
     // Clear all heaps
     for (i = 0; i < HEAP_COUNT; i++)
         memClear(i);
@@ -257,12 +281,16 @@ void memClear(s32 heapId)
     if (heapId == HEAP_SMART)
     {
         MEMDestroyExpHeap(wp->heapHandle[heapId]);
-        MEMCreateExpHeapEx(wp->heapStart[heapId], (u32)wp->heapEnd[heapId] - (u32)wp->heapStart[heapId], MEM_FLAG_THREAD_CONTROL);
+        MEMCreateExpHeapEx(wp->heapStart[heapId],
+                           (u32) wp->heapEnd[heapId] - (u32) wp->heapStart[heapId],
+                           MEM_FLAG_THREAD_CONTROL);
     }
     else
     {
         MEMDestroyExpHeap(wp->heapHandle[heapId]);
-        MEMCreateExpHeapEx(wp->heapStart[heapId], (u32)wp->heapEnd[heapId] - (u32)wp->heapStart[heapId], MEM_FLAG_THREAD_CONTROL | MEM_FLAG_FILL_0);
+        MEMCreateExpHeapEx(wp->heapStart[heapId],
+                           (u32) wp->heapEnd[heapId] - (u32) wp->heapStart[heapId],
+                           MEM_FLAG_THREAD_CONTROL | MEM_FLAG_FILL_0);
     }
 }
 
@@ -305,7 +333,7 @@ void smartInit()
     swp->freeStart->prev = NULL;
     swp->freeEnd = &swp->allocations[SMART_ALLOCATION_MAX - 1];
     swp->freeEnd->next = NULL;
-    
+
     swp->freedThisFrame = 0;
     g_bFirstSmartAlloc = false;
 }
@@ -320,7 +348,7 @@ void smartAutoFree(s32 type)
         next = curAllocation->next;
 
         // TODO: type weirdness
-        if (curAllocation->type == (u16)type)
+        if (curAllocation->type == (u16) type)
             smartFree(curAllocation);
     }
 
@@ -365,7 +393,7 @@ void smartFree(SmartAllocation * lp)
         {
             lp->next->prev = lp->prev;
         }
-        
+
         // Update spaceAfter of previous item in allocated list
         size_t spaceFreed = lp->size + lp->spaceAfter;
         if (!IS_FIRST_SMART_ALLOC(lp))
@@ -416,7 +444,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
 
     // "Heap list shortage"
     SPM_ASSERT(482 + LINE_SHIFT, new_lp, "ヒープリスト足りない\n");
-    
+
     // Update previous item in the free list
     if (IS_FIRST_SMART_ALLOC(new_lp))
     {
@@ -465,11 +493,11 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
 
         swp->allocatedStart = new_lp;
 
-        if(IS_LAST_SMART_ALLOC(new_lp))
+        if (IS_LAST_SMART_ALLOC(new_lp))
         {
             u32 heapSize = GET_SMART_HEAP_SIZE();
-            new_lp->spaceAfter = (u32)swp->heapStart + heapSize
-                                 - (u32)new_lp->data - new_lp->size;
+            new_lp->spaceAfter =
+                (u32) swp->heapStart + heapSize - (u32) new_lp->data - new_lp->size;
 
             swp->allocatedEnd = new_lp;
         }
@@ -484,7 +512,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
         {
             if (lp->spaceAfter >= size)
             {
-                new_lp->data = (void *) ((u32)lp->data + lp->size);
+                new_lp->data = (void *) ((u32) lp->data + lp->size);
                 new_lp->spaceAfter = lp->spaceAfter - size;
                 new_lp->next = lp->next;
                 new_lp->prev = lp;
@@ -524,7 +552,7 @@ SmartAllocation * smartAlloc(size_t size, u8 type)
 
             if (lp->spaceAfter >= size)
             {
-                new_lp->data = (void *) ((u32)lp->data + lp->size);
+                new_lp->data = (void *) ((u32) lp->data + lp->size);
                 new_lp->spaceAfter = lp->spaceAfter - size;
                 new_lp->next = lp->next;
                 new_lp->prev = lp;
@@ -562,7 +590,8 @@ void smartGarbage()
     // Move all allocations closer together if possible
     SmartAllocation * prevAllocation = NULL;
     void * space = swp->heapStart;
-    for (SmartAllocation * curAllocation = swp->allocatedStart; curAllocation; prevAllocation = curAllocation, curAllocation = curAllocation->next)
+    for (SmartAllocation * curAllocation = swp->allocatedStart; curAllocation;
+         prevAllocation = curAllocation, curAllocation = curAllocation->next)
     {
         // If this allocation can be moved forwards
         if (curAllocation->data != space)
@@ -571,16 +600,18 @@ void smartGarbage()
             if (curAllocation->fileEntry != NULL)
             {
                 // Don't move if dvd is being read into it?
-                if ((curAllocation->fileEntry->state == 3) && (curAllocation->fileEntry->dvdEntry != 0))
+                if ((curAllocation->fileEntry->state == 3) &&
+                    (curAllocation->fileEntry->dvdEntry != 0))
                 {
-                    // Update previous allocation since assumption there'd be no space after it is false
+                    // Update previous allocation since assumption there'd be no space after it is
+                    // false
                     if (prevAllocation != NULL)
                         prevAllocation->spaceAfter = (u32) curAllocation->data - (u32) space;
                     else
                         swp->heapStartSpace = (u32) curAllocation->data - (u32) space;
 
                     // Do the exact things the continue skips anyway
-                    space = (void *) ((u32)curAllocation->data + curAllocation->size);
+                    space = (void *) ((u32) curAllocation->data + curAllocation->size);
                     curAllocation->spaceAfter = 0;
                     continue;
                 }
@@ -597,17 +628,18 @@ void smartGarbage()
                 curAllocation->data = space;
             }
         }
-        // Assume there'll be no space after this, will be updated by the allocation after if this ends up being not true
+        // Assume there'll be no space after this, will be updated by the allocation after if this
+        // ends up being not true
         curAllocation->spaceAfter = 0;
-        space = (void *) ((u32)curAllocation->data + curAllocation->size);
+        space = (void *) ((u32) curAllocation->data + curAllocation->size);
     }
 
     // Update spaceAfter of final allocation, since assumption it'd be 0 wasn't true
     if (swp->allocatedEnd != NULL)
     {
         u32 heapSize = GET_SMART_HEAP_SIZE();
-        swp->allocatedEnd->spaceAfter = (u32) swp->heapStart + heapSize
-                                        - (u32) swp->allocatedEnd->data - swp->allocatedEnd->size;
+        swp->allocatedEnd->spaceAfter = (u32) swp->heapStart + heapSize -
+                                        (u32) swp->allocatedEnd->data - swp->allocatedEnd->size;
     }
 
     // Flush heap from cache
@@ -624,7 +656,6 @@ GXTexObj * smartTexObj(GXTexObj * texObj, SmartAllocation * imageAllocation)
 
     return texObj;
 }
-
 }
 
 #ifdef __CLANGD__
@@ -635,10 +666,12 @@ void * operator new(size_t size) throw()
 {
     if (!memInitFlag)
     {
-        if (fallbackHeap == NULL) {
+        if (fallbackHeap == NULL)
+        {
             void * memory = OSGetMEM1ArenaLo();
-            fallbackHeap = MEMCreateExpHeapEx(memory, 0x2000, MEM_FLAG_THREAD_CONTROL | MEM_FLAG_FILL_0);
-            OSSetMEM1ArenaLo((void *)((u32)memory + 0x2000));
+            fallbackHeap =
+                MEMCreateExpHeapEx(memory, 0x2000, MEM_FLAG_THREAD_CONTROL | MEM_FLAG_FILL_0);
+            OSSetMEM1ArenaLo((void *) ((u32) memory + 0x2000));
         }
         return MEMAllocFromExpHeapEx(fallbackHeap, size, 4);
     }
@@ -662,5 +695,4 @@ void __sys_free(void * ptr)
 {
     MEMFreeToExpHeap(wp->heapHandle[0], ptr);
 }
-
 }

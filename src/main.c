@@ -1,7 +1,7 @@
 #include <common.h>
 #include <spm/main.h>
-#include <wii/DEMOInit.h>
 #include <spm/spmario.h>
+#include <wii/DEMOInit.h>
 
 extern "C" {
 
@@ -23,5 +23,4 @@ int main(int argc, char ** argv)
         DEMODoneRender();
     }
 }
-
 }

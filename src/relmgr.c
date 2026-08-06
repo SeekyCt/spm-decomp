@@ -1,13 +1,13 @@
 #include <common.h>
+#include <msl/stdio.h>
+#include <msl/string.h>
 #include <spm/filemgr.h>
 #include <spm/memory.h>
 #include <spm/relmgr.h>
 #include <spm/system.h>
-#include <wii/dvd.h>
 #include <wii/cx.h>
+#include <wii/dvd.h>
 #include <wii/os.h>
-#include <msl/stdio.h>
-#include <msl/string.h>
 
 extern "C" {
 
@@ -29,7 +29,7 @@ void relMain()
     char relPath[0x48];
     bool isCompressed;
     FileEntry * file;
-    
+
     if (wp->loaded)
         return;
 
@@ -58,7 +58,8 @@ void relMain()
     }
     else
     {
-        wp->relFile = (RelHeader *) __memAlloc(HEAP_MAIN, CXGetCompressionHeader(file->sp->data).decompSize);
+        wp->relFile =
+            (RelHeader *) __memAlloc(HEAP_MAIN, CXGetCompressionHeader(file->sp->data).decompSize);
         CXUncompressLZ(file->sp->data, wp->relFile);
     }
 
@@ -75,5 +76,4 @@ bool isRelLoaded()
 {
     return wp->loaded;
 }
-
 }

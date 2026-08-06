@@ -1,8 +1,8 @@
 #include <common.h>
-#include <spm/seqdrv.h>
-#include <spm/seqdef.h>
-#include <spm/system.h>
 #include <msl/string.h>
+#include <spm/seqdef.h>
+#include <spm/seqdrv.h>
+#include <spm/system.h>
 
 extern "C" {
 
@@ -43,7 +43,7 @@ void seqMain()
 
         now_seq = next_seq;
 
-        seqWork.seq = next_seq;    
+        seqWork.seq = next_seq;
         seqWork.stage = 0;
         seqWork.p0 = next_p0;
         seqWork.p1 = next_p1;
@@ -51,7 +51,7 @@ void seqMain()
 
         (*seq_data[now_seq].init)(&seqWork);
     }
-    
+
     (*seq_data[now_seq].main)(&seqWork);
 
     if (seqWork.afterFunc != NULL)
@@ -69,5 +69,4 @@ s32 seqGetSeq()
 {
     return now_seq == -1 ? 0 : now_seq;
 }
-
 }
