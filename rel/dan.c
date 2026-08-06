@@ -887,6 +887,7 @@ static MapDoorDesc mapDoorDescs[2] = {
 static s32 flipsideLockItems[2] = {ITEM_ID_KEY_DAN_KEY, -1};
 static s32 flopsideLockItems[2] = {ITEM_ID_KEY_URA_DAN_KEY, -1};
 
+// clang-format off
 EVT_BEGIN(dan_lock_interact_evt)
     USER_FUNC(evt_mario_key_off, 0)
     IF_SMALL(GSW(1), 100)
@@ -909,7 +910,9 @@ EVT_BEGIN(dan_lock_interact_evt)
     USER_FUNC(evt_mario_key_on)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_lock_open_evt)
     USER_FUNC(evt_dan_get_exit_door_name_l, LW(0))
     USER_FUNC(evt_door_enable_disable_map_door_desc, 1, LW(0))
@@ -917,7 +920,9 @@ EVT_BEGIN(dan_lock_open_evt)
     RUN_CHILD_EVT(PTR(lbl_80417e10))
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_enemy_room_init_evt)
     SET(LW(0), GSW(1))
     USER_FUNC(evt_dan_read_data)
@@ -990,6 +995,7 @@ EVT_BEGIN(dan_enemy_room_init_evt)
     USER_FUNC(func_800d4de4, 1, 0)
     RETURN()
 EVT_END()
+// clang-format on()
 
 static DokanDesc chestRoomDokanDesc = {
     2, 0x8000, 0, "dokan_1", "dan", "A2D_dokan_1", "A3D_dokan_1", "mac_05", "dokan_1"
@@ -1002,13 +1008,16 @@ static MapDoorDesc chestRoomMapDoorDescs[2] = {
     {0x4, "doa2_l", "doa2_r", "A2_doa_02", "A3_doa_02", "dan_01", NULL, 16}
 };
 
+// clang-format off
 EVT_BEGIN(dan_exit_pipe_sign_interact_evt)
     USER_FUNC(evt_mario_key_off, 0)
     USER_FUNC(evt_msg_print, 0, PTR("mac_dungeon_002"), 0, 0)
     USER_FUNC(evt_mario_key_on)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_chest_open_evt)
     SET(LW(0), GSW(1))
     USER_FUNC(evt_dan_get_chest_room_item, LW(0), LW(10))
@@ -1032,6 +1041,7 @@ EVT_BEGIN(dan_chest_open_evt)
     USER_FUNC(evt_item_wait_collected, PTR("item"))
     RETURN()
 EVT_END()
+// clang-format on()
 
 static s32 rotenShopItems[] =
 {
@@ -1078,6 +1088,7 @@ static NPCTribeAnimDef danRotenTribeAnimDefs[] =
     {-1, "S_1"},
 };
 
+// clang-format off
 EVT_BEGIN(dan_chest_room_init_evt)
     SET(LW(0), GSW(1))
     USER_FUNC(evt_dan_read_data)
@@ -1185,6 +1196,7 @@ EVT_BEGIN(dan_chest_room_init_evt)
     USER_FUNC(func_800d4de4, 1, 0)
     RETURN()
 EVT_END()
+// clang-format on()
 
 static MapDoorDesc dan_30_map_door_desc =
 {
@@ -1201,6 +1213,7 @@ static DokanDesc dan_70_dokan_desc =
     0, 0, 0, "dokan", "dan_70", "A2D_dokan_1", "A3D_dokan_1", "mac_15", "dokan_1"
 };
 
+// clang-format off
 EVT_BEGIN(dan_30_init_evt)
     USER_FUNC(evt_door_set_map_door_descs, PTR(&dan_30_map_door_desc), 1)
     USER_FUNC(evt_door_enable_disable_map_door_desc, 0, PTR("doa1_l"))
@@ -1243,7 +1256,9 @@ EVT_BEGIN(dan_30_init_evt)
     USER_FUNC(func_800d4de4, 1, 0)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_init_evt)
     USER_FUNC(evt_door_set_map_door_descs, PTR(&dan_30_map_door_desc), 1)
     USER_FUNC(evt_door_enable_disable_map_door_desc, 0, PTR("doa1_l"))
@@ -1286,6 +1301,7 @@ EVT_BEGIN(dan_70_init_evt)
     USER_FUNC(func_800d4de4, 1, 0)
     RETURN()
 EVT_END()
+// clang-format on()
 
 static NPCTribeAnimDef dashellTribeAnimDefs[5] =
 {
@@ -1296,6 +1312,7 @@ static NPCTribeAnimDef dashellTribeAnimDefs[5] =
     {-1, "Z_1"},
 };
 
+// clang-format off
 EVT_BEGIN(dan_30_chest_interact_evt)
     USER_FUNC(evt_snd_bgmoff_f_d, 0, 1000)
     USER_FUNC(evt_mario_fairy_reset)
@@ -1315,7 +1332,9 @@ EVT_BEGIN(dan_30_chest_interact_evt)
     WAIT_MSEC(500)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_30_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("box"))
     USER_FUNC(evt_mario_fairy_reset)
@@ -1519,6 +1538,7 @@ EVT_BEGIN(dan_30_chest_open_evt)
     USER_FUNC(evt_mario_key_on)
     RETURN()
 EVT_END()
+// clang-format on()
 
 static NPCTribeAnimDef wracktailTribeAnimDefs[] =
 {
@@ -1533,6 +1553,7 @@ static NPCTribeAnimDef wracktailTribeAnimDefs[] =
     {-1, "zun_all_Z_1"},
 };
 
+// clang-format off
 EVT_BEGIN(dan_wracktail_main_evt)
     DO(0)
         USER_FUNC(evt_mario_get_pos, LW(0), LW(1), LW(2))
@@ -1832,7 +1853,9 @@ EVT_BEGIN(dan_wracktail_main_evt)
     USER_FUNC(evt_mario_key_on)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_start_wracktail_evt)
     USER_FUNC(evt_npc_entry, PTR("zun"), PTR("e_W_zun_all"), 0)
     USER_FUNC(evt_npc_set_position, PTR("zun"), 0, -1000, 0)
@@ -1848,11 +1871,13 @@ EVT_BEGIN(dan_start_wracktail_evt)
     RUN_EVT(PTR(&dan_wracktail_main_evt))
     RETURN()
 EVT_END()
+// clang-format on()
 
 // Must come after "e_W_zun_all"
 static const GXColor shadooBlinkColour = {0x00, 0x00, 0x00, 0xff};
 const f64 lbl_80cf0018 = 4.503601774854144E15; // TODO: this is just a literal, but wasn't placed in the right location as a dummy
 
+// clang-format off
 EVT_BEGIN(dan_70_mario_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1862,7 +1887,9 @@ EVT_BEGIN(dan_70_mario_chest_open_evt)
     SET(GF(0), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_dark_mario_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1872,7 +1899,9 @@ EVT_BEGIN(dan_70_dark_mario_chest_open_evt)
     SET(GF(1), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_peach_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1882,7 +1911,9 @@ EVT_BEGIN(dan_70_peach_chest_open_evt)
     SET(GF(2), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_dark_peach_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1892,7 +1923,9 @@ EVT_BEGIN(dan_70_dark_peach_chest_open_evt)
     SET(GF(3), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_bowser_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1902,7 +1935,9 @@ EVT_BEGIN(dan_70_bowser_chest_open_evt)
     SET(GF(4), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_dark_bowser_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1912,7 +1947,9 @@ EVT_BEGIN(dan_70_dark_bowser_chest_open_evt)
     SET(GF(5), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_luigi_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1922,7 +1959,9 @@ EVT_BEGIN(dan_70_luigi_chest_open_evt)
     SET(GF(6), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_dark_luigi_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1932,8 +1971,10 @@ EVT_BEGIN(dan_70_dark_luigi_chest_open_evt)
     SET(GF(7), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
 
+// clang-format off
 EVT_BEGIN(dan_shadoo_main_evt)
     IF_LARGE_EQUAL(GSW(24), 2)
         RETURN()
@@ -2102,7 +2143,9 @@ EVT_BEGIN(dan_shadoo_main_evt)
     END_SWITCH()
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_shadoo_fight_evt)
     DO(0)
         USER_FUNC(evt_npc_get_active_count, LW(0))
@@ -2230,7 +2273,9 @@ EVT_BEGIN(dan_shadoo_fight_evt)
     USER_FUNC(evt_mario_key_on)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_shadoo_defeat_evt)
     USER_FUNC(evt_mario_key_off, 0)
     USER_FUNC(evt_mario_fairy_reset)
@@ -2249,7 +2294,9 @@ EVT_BEGIN(dan_shadoo_defeat_evt)
     RUN_CHILD_EVT(PTR(lbl_80439f10))
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_reward_appear_evt)
     WAIT_MSEC(500)
     USER_FUNC(evt_mario_get_character, LW(0))
@@ -2426,8 +2473,11 @@ EVT_BEGIN(dan_70_reward_appear_evt)
     SET(GSW(24), 2)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_start_shadoo_evt)
     RUN_EVT(PTR(&dan_shadoo_main_evt))
     RETURN()
 EVT_END()
+// clang-format on()
