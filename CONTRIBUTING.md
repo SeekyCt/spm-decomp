@@ -2,6 +2,41 @@
 
 If you're interested in contributing, it's recommended you reach out to us in the #reverse-engineering channel of the [SPM Speedrunning Discord](https://discord.gg/dbd733H) first. Here you can ask for any help you might need and discuss what you plan to decompile to prevent any duplicated work.
 
+# spm-headers
+
+This project uses [spm-headers](https://github.com/SeekyCt/spm-headers) for shared game, SDK, NW4R and MSL declarations. It is included in this repository using [git-subrepo](https://github.com/ingydotnet/git-subrepo).
+
+Changes to these declarations should be made in the `spm-headers` directory. The files can be edited like any other tracked files and git-subrepo is not required to build the project, but `spm-headers/.gitrepo` should not be edited manually. See [spm-headers/CONTRIBUTING.md](spm-headers/CONTRIBUTING.md) for its contribution guidelines.
+
+# Source Files
+
+## C++ Linkage
+
+DOL and REL source files are compiled as C++, including files with a `.c` extension. Their contents must be wrapped in `extern "C"` after the includes so that symbols use C linkage and retain their expected names.
+
+```cpp
+#include <common.h>
+
+extern "C" {
+
+// Source definitions
+
+}
+```
+
+## Non-Matching Files
+
+Objects marked as `NonMatching` in `configure.py` are not linked in a normal matching build. Add the following warning before the includes in a non-matching DOL source file:
+
+```c
+/*
+    WARNING: Not fully decompiled
+    This file is currently not linked into the final dol
+*/
+```
+
+For a REL source file, use `rel` instead of `dol`. Remove the warning once the object is marked as matching and is linked in normal builds.
+
 # dtk
 
 This project is build around encounter's [decomp-toolkit](https://github.com/encounter/decomp-toolkit).
