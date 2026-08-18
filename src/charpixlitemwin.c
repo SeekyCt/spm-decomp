@@ -22,33 +22,29 @@
 
 extern "C" {
 
-f32 __fmadds(f32 a, f32 b, f32 c);
-f32 __fmsubs(f32 a, f32 b, f32 c);
-f32 __fnmsubs(f32 a, f32 b, f32 c);
-
 // .bss
-static CharPixlItemWinWork lbl_80513be8;
+static CharPixlItemWinWork work;
 
 extern const f32 lbl_80337370[20];
 
 // .sdata
-CharPixlItemWinWork * lbl_805ae0f8 = &lbl_80513be8;
+static CharPixlItemWinWork * wp = &work;
 
-extern void * lbl_805ae930;
+extern PausewinWork * pausewin_wp;
 
 void func_801950f8(f32 value)
 {
-    *(f32 *) ((u8 *) lbl_805ae930 + 0x3c) = value;
+    pausewin_wp->gameSpeedBackup = value;
 }
 
 void charPixlItemWinInit()
 {
-    memset(lbl_805ae0f8, 0, sizeof(*lbl_805ae0f8));
+    memset(wp, 0, sizeof(*wp));
 }
 
 void charPixlItemWinReInit()
 {
-    memset(lbl_805ae0f8, 0, sizeof(*lbl_805ae0f8));
+    memset(wp, 0, sizeof(*wp));
 }
 
 void charPixlItemWinOpen(s32 initialTab, bool animate)
@@ -57,65 +53,65 @@ void charPixlItemWinOpen(s32 initialTab, bool animate)
     f32 height;
     s32 initialEntry;
 
-    memset(lbl_805ae0f8, 0, sizeof(*lbl_805ae0f8));
+    memset(wp, 0, sizeof(*wp));
     buttonWidth = 148.0f;
 
     if (!animate)
     {
-        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON] =
-            pausewinEntry(__fmsubs(-buttonWidth, 0.5f, 180.0f) + 5.0f, 160.0f, 0.0f, 0.0f, false,
+        wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON] =
+            pausewinEntry(-buttonWidth / 2.0f - 180.0f + 5.0f, 160.0f, 0.0f, 0.0f, false,
                           PAUSETEX_CHARACTERS_BTN, 10, NULL, NULL, NULL, NULL, NULL);
 
         if (pouchCountPixls() > 0)
         {
-            lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON] =
-                pausewinEntry(__fmadds(-buttonWidth, 0.5f, 5.0f), 160.0f, 0.0f, 0.0f, false,
+            wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON] =
+                pausewinEntry(-buttonWidth / 2.0f + 5.0f, 160.0f, 0.0f, 0.0f, false,
                               PAUSETEX_PIXLS_BTN, 10, NULL, NULL, NULL, NULL, NULL);
         }
         else
         {
-            lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON] = -1;
+            wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON] = -1;
         }
 
-        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON] =
-            pausewinEntry(__fmadds(-buttonWidth, 0.5f, 180.0f) + 5.0f, 160.0f, 0.0f, 0.0f, false,
+        wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON] =
+            pausewinEntry(-buttonWidth / 2.0f + 180.0f + 5.0f, 160.0f, 0.0f, 0.0f, false,
                           PAUSETEX_ITEMS_BTN, 10, NULL, NULL, NULL, NULL, NULL);
 
-        pausewinAppear(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON]);
-        pausewinAppear(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON]);
-        pausewinAppear(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON]);
+        pausewinAppear(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON]);
+        pausewinAppear(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON]);
+        pausewinAppear(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON]);
     }
     else
     {
-        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON] =
-            pausewinEntry(__fmsubs(-buttonWidth, 0.5f, 180.0f) + 5.0f, 190.0f, 0.0f, 0.0f, false,
+        wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON] =
+            pausewinEntry(-buttonWidth / 2.0f - 180.0f + 5.0f, 190.0f, 0.0f, 0.0f, false,
                           PAUSETEX_CHARACTERS_BTN, 10, NULL, NULL, NULL, NULL, NULL);
 
         if (pouchCountPixls() > 0)
         {
-            lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON] =
-                pausewinEntry(__fmadds(-buttonWidth, 0.5f, 5.0f), 190.0f, 0.0f, 0.0f, false,
+            wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON] =
+                pausewinEntry(-buttonWidth / 2.0f + 5.0f, 190.0f, 0.0f, 0.0f, false,
                               PAUSETEX_PIXLS_BTN, 10, NULL, NULL, NULL, NULL, NULL);
         }
         else
         {
-            lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON] = -1;
+            wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON] = -1;
         }
 
-        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON] =
-            pausewinEntry(__fmadds(-buttonWidth, 0.5f, 180.0f) + 5.0f, 190.0f, 0.0f, 0.0f, false,
+        wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON] =
+            pausewinEntry(-buttonWidth / 2.0f + 180.0f + 5.0f, 190.0f, 0.0f, 0.0f, false,
                           PAUSETEX_ITEMS_BTN, 10, NULL, NULL, NULL, NULL, NULL);
 
-        pausewinGoNeutral(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON]);
-        pausewinGoNeutral(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON]);
-        pausewinGoNeutral(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON]);
+        pausewinGoNeutral(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON]);
+        pausewinGoNeutral(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON]);
+        pausewinGoNeutral(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON]);
 
-        pausewinMoveTo(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON],
-                       __fmsubs(-buttonWidth, 0.5f, 180.0f) + 5.0f, 160.0f);
-        pausewinMoveTo(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON],
-                       __fmadds(-buttonWidth, 0.5f, 5.0f), 160.0f);
-        pausewinMoveTo(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON],
-                       __fmadds(-buttonWidth, 0.5f, 180.0f) + 5.0f, 160.0f);
+        pausewinMoveTo(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON],
+                       -buttonWidth / 2.0f - 180.0f + 5.0f, 160.0f);
+        pausewinMoveTo(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON],
+                       -buttonWidth / 2.0f + 5.0f, 160.0f);
+        pausewinMoveTo(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON],
+                       -buttonWidth / 2.0f + 180.0f + 5.0f, 160.0f);
     }
 
     spsndSFXOn("SFX_SYS_MENU_OPEN2");
@@ -123,44 +119,42 @@ void charPixlItemWinOpen(s32 initialTab, bool animate)
     height = 50.0f + 25.0f * pouchCountChars();
     if (height > 250.0f || height < 0.0f)
         height = 250.0f;
-    lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_TAB] =
-        pausewinEntry(__fmadds(buttonWidth, 0.5f, __fmsubs(-buttonWidth, 0.5f, 180.0f)) - 90.0f,
-                      140.0f, 180.0f, height, true, PAUSETEX_NONE, 5, initCharTab, func_80196174,
-                      func_801969dc, dispCharTab, deleteCharTab);
+    wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_TAB] = pausewinEntry(
+        -buttonWidth / 2.0f - 180.0f + buttonWidth / 2.0f - 90.0f, 140.0f, 180.0f, height, true,
+        PAUSETEX_NONE, 5, initCharTab, func_80196174, func_801969dc, dispCharTab, deleteCharTab);
 
     height = 50.0f + 25.0f * pouchCountPixls();
     if (height > 250.0f || height < 0.0f)
         height = 250.0f;
-    lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_TAB] = pausewinEntry(
-        __fmadds(-buttonWidth, 0.5f, buttonWidth / 2.0f) - 90.0f, 140.0f, 180.0f, height, true,
+    wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_TAB] = pausewinEntry(
+        -buttonWidth / 2.0f + buttonWidth / 2.0f - 90.0f, 140.0f, 180.0f, height, true,
         PAUSETEX_NONE, 5, initPixlTab, func_80196c8c, func_80197544, dispPixlTab, deletePixlTab);
 
     height = 50.0f + 25.0f * pouchCountUseItems();
     if (height > 250.0f || height < 0.0f)
         height = 250.0f;
-    lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_TAB] =
-        pausewinEntry(__fmadds(buttonWidth, 0.5f, __fmadds(-buttonWidth, 0.5f, 180.0f)) - 90.0f,
-                      140.0f, 180.0f, height, true, PAUSETEX_NONE, 5, initItemTab, func_801976e8,
-                      func_80198238, dispItemTab, deleteItemTab);
+    wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_TAB] = pausewinEntry(
+        -buttonWidth / 2.0f + 180.0f + buttonWidth / 2.0f - 90.0f, 140.0f, 180.0f, height, true,
+        PAUSETEX_NONE, 5, initItemTab, func_801976e8, func_80198238, dispItemTab, deleteItemTab);
 
     initialEntry = initialTab + CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_TAB;
-    pausewinAppear(lbl_805ae0f8->entryIds[initialEntry]);
+    pausewinAppear(wp->entryIds[initialEntry]);
 
-    lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION] =
+    wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION] =
         pausewinEntry(-262.0f, -120.0f, 524.0f, 80.0f, true, PAUSETEX_NONE, 0, func_80198290,
                       func_80198294, func_801982ac, NULL, func_801982b0);
 
-    lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION] =
+    wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION] =
         pausewinEntry(-270.0f, 110.0f, 340.0f, 60.0f, true, PAUSETEX_NONE, 0, func_801982b4,
                       func_801982c0, func_801982c4, NULL, func_801984f0);
 
-    pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION])->flags |= 8;
+    pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION])->flags |= 8;
 
     switch (initialTab)
     {
         case 0:
         {
-            CharPixlItemWinWork * tabWork = lbl_805ae0f8;
+            CharPixlItemWinWork * tabWork = wp;
             PausewinEntry * entry;
             s32 useItemType;
             u16 windowId;
@@ -176,7 +170,7 @@ void charPixlItemWinOpen(s32 initialTab, bool animate)
 
             itemType = tabWork->characterTab.entries[tabWork->characterTab.selectedIndex].itemType;
 
-            entry = pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);
+            entry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);
             windowId = entry->id;
             if (itemType == ITEM_ID_NULL)
             {
@@ -195,43 +189,36 @@ void charPixlItemWinOpen(s32 initialTab, bool animate)
 
             useItemType =
                 tabWork->characterTab.entries[tabWork->characterTab.selectedIndex].itemType;
-            entry =
-                pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
+            entry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
             useMsgName = getItemUseMsg(useItemType);
             if (useMsgName != NULL)
             {
                 entry->msg = msgSearch(useMsgName);
                 FontGetMessageWidthLine(entry->msg, &outlines);
                 entry->height = (outlines + 2) * 25 + 20;
-                if (!pausewinCheckVisible(
-                        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
+                if (!pausewinCheckVisible(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
                 {
-                    pausewinGoNeutral(
-                        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
+                    pausewinGoNeutral(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
                 }
             }
             else
             {
                 entry->msg = NULL;
-                if (pausewinCheckVisible(
-                        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
+                if (pausewinCheckVisible(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
                 {
-                    pausewinHide(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
+                    pausewinHide(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
                 }
             }
 
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON])->flags &=
-                ~0x40;
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON])->flags |=
-                0x40;
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON])->flags |=
-                0x40;
+            pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON])->flags &= ~0x40;
+            pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON])->flags |= 0x40;
+            pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON])->flags |= 0x40;
             break;
         }
 
         case 1:
         {
-            CharPixlItemWinWork * tabWork = lbl_805ae0f8;
+            CharPixlItemWinWork * tabWork = wp;
             PausewinEntry * entry;
             u16 windowId;
             const char * useMsgName;
@@ -247,7 +234,7 @@ void charPixlItemWinOpen(s32 initialTab, bool animate)
 
             itemType = tabWork->pixlTab.entries[tabWork->pixlTab.selectedIndex].itemType;
 
-            entry = pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);
+            entry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);
             windowId = entry->id;
             if (itemType == ITEM_ID_NULL)
             {
@@ -265,43 +252,36 @@ void charPixlItemWinOpen(s32 initialTab, bool animate)
                 pausewinSetMessage(entry, itemType, NULL);
 
             useItemType = tabWork->pixlTab.entries[tabWork->pixlTab.selectedIndex].itemType;
-            entry =
-                pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
+            entry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
             useMsgName = getItemUseMsg(useItemType);
             if (useMsgName != NULL)
             {
                 entry->msg = msgSearch(useMsgName);
                 FontGetMessageWidthLine(entry->msg, &outlines);
                 entry->height = (outlines + 2) * 25 + 20;
-                if (!pausewinCheckVisible(
-                        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
+                if (!pausewinCheckVisible(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
                 {
-                    pausewinGoNeutral(
-                        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
+                    pausewinGoNeutral(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
                 }
             }
             else
             {
                 entry->msg = NULL;
-                if (pausewinCheckVisible(
-                        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
+                if (pausewinCheckVisible(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
                 {
-                    pausewinHide(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
+                    pausewinHide(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
                 }
             }
 
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON])->flags |=
-                0x40;
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON])->flags &=
-                ~0x40;
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON])->flags |=
-                0x40;
+            pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON])->flags |= 0x40;
+            pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON])->flags &= ~0x40;
+            pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON])->flags |= 0x40;
             break;
         }
 
         case 2:
         {
-            CharPixlItemWinWork * tabWork = lbl_805ae0f8;
+            CharPixlItemWinWork * tabWork = wp;
             PausewinEntry * entry;
             u16 windowId;
             const char * useMsgName;
@@ -317,7 +297,7 @@ void charPixlItemWinOpen(s32 initialTab, bool animate)
 
             itemType = tabWork->itemTab.entries[tabWork->itemTab.selectedIndex].itemType;
 
-            entry = pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);
+            entry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);
             windowId = entry->id;
             if (itemType == ITEM_ID_NULL)
             {
@@ -335,53 +315,46 @@ void charPixlItemWinOpen(s32 initialTab, bool animate)
                 pausewinSetMessage(entry, itemType, NULL);
 
             useItemType = tabWork->itemTab.entries[tabWork->itemTab.selectedIndex].itemType;
-            entry =
-                pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
+            entry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
             useMsgName = getItemUseMsg(useItemType);
             if (useMsgName != NULL)
             {
                 entry->msg = msgSearch(useMsgName);
                 FontGetMessageWidthLine(entry->msg, &outlines);
                 entry->height = (outlines + 2) * 25 + 20;
-                if (!pausewinCheckVisible(
-                        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
+                if (!pausewinCheckVisible(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
                 {
-                    pausewinGoNeutral(
-                        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
+                    pausewinGoNeutral(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
                 }
             }
             else
             {
                 entry->msg = NULL;
-                if (pausewinCheckVisible(
-                        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
+                if (pausewinCheckVisible(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
                 {
-                    pausewinHide(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
+                    pausewinHide(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
                 }
             }
 
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON])->flags |=
-                0x40;
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON])->flags |=
-                0x40;
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON])->flags &=
-                ~0x40;
+            pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON])->flags |= 0x40;
+            pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON])->flags |= 0x40;
+            pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON])->flags &= ~0x40;
             break;
         }
     }
 
-    if (pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION])->msg != NULL)
+    if (pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION])->msg != NULL)
     {
-        pausewinAppear(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);
+        pausewinAppear(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);
     }
 
     if (pouchCountChars() == 0 || func_801472b4() == 0)
     {
-        pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON])->flags |= 4;
+        pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON])->flags |= 4;
     }
     if (pouchCountPixls() == 0 || func_801471e8() == 0)
     {
-        pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON])->flags |= 4;
+        pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON])->flags |= 4;
     }
 }
 
@@ -391,28 +364,28 @@ s32 func_80195e64(bool immediate)
     s32 hiddenTabs;
     s32 i;
 
-    if (lbl_805ae0f8->flags & 0x8800)
+    if (wp->flags & 0x8800)
         playCloseSound = true;
 
     for (hiddenTabs = 0; hiddenTabs < 3; hiddenTabs++)
     {
-        if (pausewinCheckVisible(lbl_805ae0f8->entryIds[hiddenTabs + 3]))
+        if (pausewinCheckVisible(wp->entryIds[hiddenTabs + 3]))
             break;
     }
 
-    lbl_805ae0f8->pendingDeleteTabs = 3;
+    wp->pendingDeleteTabs = 3;
     if (immediate)
     {
         for (i = 0; i < 3; i++)
-            _pausewinDelete(lbl_805ae0f8->entryIds[i]);
+            _pausewinDelete(wp->entryIds[i]);
 
         for (i = 3; i < CHAR_PIXL_ITEM_WIN_ENTRY_MAX; i++)
-            pausewinDelete(lbl_805ae0f8->entryIds[i]);
+            pausewinDelete(wp->entryIds[i]);
     }
     else
     {
         for (i = 0; i < CHAR_PIXL_ITEM_WIN_ENTRY_MAX; i++)
-            pausewinDelete(lbl_805ae0f8->entryIds[i]);
+            pausewinDelete(wp->entryIds[i]);
     }
 
     if (playCloseSound)
@@ -423,12 +396,12 @@ s32 func_80195e64(bool immediate)
 
 bool charPixlItemWinIsClosed()
 {
-    return lbl_805ae0f8->pendingDeleteTabs == 0;
+    return wp->pendingDeleteTabs == 0;
 }
 
 s32 charPixlItemWinGetNextWindow()
 {
-    u16 flags = lbl_805ae0f8->flags;
+    u16 flags = wp->flags;
 
     if (flags & CHAR_PIXL_ITEM_WIN_RESULT_CANCEL)
         return -1;
@@ -445,7 +418,6 @@ s32 charPixlItemWinGetNextWindow()
 
 void func_80196004(s32 * selectedIndexOut, s32 * itemTypeOut)
 {
-    CharPixlItemWinWork * wp = lbl_805ae0f8;
     CharPixlItemWinTab * tab;
 
     if (wp->flags & CHAR_PIXL_ITEM_WIN_RESULT_CHARACTER)
@@ -461,7 +433,6 @@ void func_80196004(s32 * selectedIndexOut, s32 * itemTypeOut)
 
 void initCharTab(PausewinEntry * parent)
 {
-    CharPixlItemWinWork * wp = lbl_805ae0f8;
     CharPixlItemWinTab * tab = &wp->characterTab;
     s32 i;
 
@@ -506,11 +477,11 @@ void func_80196174(PausewinEntry * entry)
     PausewinEntry * parentEntry = entry;
 
     // Reusing the callback parameter preserves the target register allocation.
-    entry = (PausewinEntry *) lbl_805ae0f8;
+    entry = (PausewinEntry *) wp;
 
-#define work ((CharPixlItemWinWork *) entry)
+#define windowWork ((CharPixlItemWinWork *) entry)
 
-    if (work->flags & CHAR_PIXL_ITEM_WIN_RESULT_MASK)
+    if (windowWork->flags & CHAR_PIXL_ITEM_WIN_RESULT_MASK)
         return;
 
 // The target inlines this transition at each character-tab branch.
@@ -522,11 +493,11 @@ void func_80196174(PausewinEntry * entry)
         const char * useMsgName;                                                                   \
         u16 outlines;                                                                              \
                                                                                                    \
-        pausewinDisappear(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_TAB]);              \
-        pausewinAppear(lbl_805ae0f8->entryIds[(tabIndex) + CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_TAB]);    \
+        pausewinDisappear(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_TAB]);                        \
+        pausewinAppear(wp->entryIds[(tabIndex) + CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_TAB]);              \
         spsndSFXOn("SFX_SYS_MENU_CURSOR_MOVE1");                                                   \
                                                                                                    \
-        CharPixlItemWinWork * tabWork = lbl_805ae0f8;                                              \
+        CharPixlItemWinWork * tabWork = wp;                                                        \
         tabWork->tabField.scrollPos = 25.0f * tabWork->tabField.scrollOffset;                      \
         tabWork->tabField.cursorX = tabWork->tabField.parent->pos.x;                               \
         tabWork->tabField.cursorY =                                                                \
@@ -534,8 +505,7 @@ void func_80196174(PausewinEntry * entry)
             25.0f * (tabWork->tabField.selectedIndex - tabWork->tabField.scrollOffset);            \
         itemType = tabWork->tabField.entries[tabWork->tabField.selectedIndex].itemType;            \
                                                                                                    \
-        tabPauseEntry =                                                                            \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);        \
+        tabPauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);      \
         tabWindowId = (tabPauseEntry)->id;                                                         \
         if (itemType == ITEM_ID_NULL)                                                              \
         {                                                                                          \
@@ -553,41 +523,34 @@ void func_80196174(PausewinEntry * entry)
             pausewinSetMessage((tabPauseEntry), itemType, NULL);                                   \
                                                                                                    \
         tabUseItemType = tabWork->tabField.entries[tabWork->tabField.selectedIndex].itemType;      \
-        usePauseEntry =                                                                            \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);    \
+        usePauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);  \
         useMsgName = getItemUseMsg(tabUseItemType);                                                \
         if (useMsgName != NULL)                                                                    \
         {                                                                                          \
             usePauseEntry->msg = msgSearch(useMsgName);                                            \
             FontGetMessageWidthLine(usePauseEntry->msg, &outlines);                                \
             usePauseEntry->height = (outlines + 2) * 25 + 20;                                      \
-            if (!pausewinCheckVisible(                                                             \
-                    lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))             \
-                pausewinGoNeutral(                                                                 \
-                    lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);             \
+            if (!pausewinCheckVisible(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))     \
+                pausewinGoNeutral(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);         \
         }                                                                                          \
         else                                                                                       \
         {                                                                                          \
             usePauseEntry->msg = NULL;                                                             \
-            if (pausewinCheckVisible(                                                              \
-                    lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))             \
-                pausewinHide(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);    \
+            if (pausewinCheckVisible(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))      \
+                pausewinHide(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);              \
         }                                                                                          \
                                                                                                    \
-        tabPauseEntry =                                                                            \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON]);        \
+        tabPauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON]);      \
         if ((tabIndex) == 0)                                                                       \
             (tabPauseEntry)->flags &= ~0x40;                                                       \
         else                                                                                       \
             (tabPauseEntry)->flags |= 0x40;                                                        \
-        tabPauseEntry =                                                                            \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON]);        \
+        tabPauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON]);      \
         if ((tabIndex) == 1)                                                                       \
             (tabPauseEntry)->flags &= ~0x40;                                                       \
         else                                                                                       \
             (tabPauseEntry)->flags |= 0x40;                                                        \
-        tabPauseEntry =                                                                            \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON]);        \
+        tabPauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON]);      \
         if ((tabIndex) == 2)                                                                       \
             (tabPauseEntry)->flags &= ~0x40;                                                       \
         else                                                                                       \
@@ -624,8 +587,8 @@ void func_80196174(PausewinEntry * entry)
 
     if (pausewinCheckPressOk())
     {
-        entries = work->characterTab.entries;
-        selectedIndex = work->characterTab.selectedIndex;
+        entries = windowWork->characterTab.entries;
+        selectedIndex = windowWork->characterTab.selectedIndex;
 
         if (!entries[selectedIndex].selectable)
         {
@@ -634,46 +597,45 @@ void func_80196174(PausewinEntry * entry)
         else
         {
             spsndSFXOn("SFX_SYS_MENU_DESIDE1");
-            lbl_805ae0f8->flags |= CHAR_PIXL_ITEM_WIN_RESULT_CHARACTER;
+            wp->flags |= CHAR_PIXL_ITEM_WIN_RESULT_CHARACTER;
         }
     }
     else if (pausewinCheckPressBack())
     {
-        lbl_805ae0f8->flags |= CHAR_PIXL_ITEM_WIN_RESULT_CANCEL;
+        wp->flags |= CHAR_PIXL_ITEM_WIN_RESULT_CANCEL;
     }
     else if (wpadGetButtonsPressed(0) & pausewinGetOpenButtonMask())
     {
         if (!(gp->flags & 0x1000))
-            lbl_805ae0f8->flags |= CHAR_PIXL_ITEM_WIN_RESULT_RETURN_TO_PLUS;
+            wp->flags |= CHAR_PIXL_ITEM_WIN_RESULT_RETURN_TO_PLUS;
     }
     else
     {
-        func_801984f4(parentEntry, &lbl_805ae0f8->characterTab);
+        func_801984f4(parentEntry, &wp->characterTab);
     }
 
-#undef work
+#undef windowWork
 }
 
 void func_801969dc(PausewinEntry * entry)
 {
-    func_80198874(entry, &lbl_805ae0f8->characterTab);
+    func_80198874(entry, &wp->characterTab);
 }
 
 void dispCharTab(PausewinEntry * entry)
 {
-    dispTab(entry, &lbl_805ae0f8->characterTab, 0);
+    dispTab(entry, &wp->characterTab, 0);
 }
 
 void deleteCharTab(PausewinEntry * entry)
 {
     (void) entry;
-    __memFree(HEAP_MAP, lbl_805ae0f8->characterTab.entries);
-    lbl_805ae0f8->pendingDeleteTabs--;
+    __memFree(HEAP_MAP, wp->characterTab.entries);
+    wp->pendingDeleteTabs--;
 }
 
 void initPixlTab(PausewinEntry * parent)
 {
-    CharPixlItemWinWork * wp = lbl_805ae0f8;
     CharPixlItemWinTab * tab = &wp->pixlTab;
     s32 selectedItemType;
     s32 maxScrollOffset;
@@ -747,9 +709,9 @@ void initPixlTab(PausewinEntry * parent)
 
 void func_80196c8c(PausewinEntry * entry)
 {
-    CharPixlItemWinWork * work = lbl_805ae0f8;
+    CharPixlItemWinWork * windowWork = wp;
 
-    if (work->flags & CHAR_PIXL_ITEM_WIN_RESULT_MASK)
+    if (windowWork->flags & CHAR_PIXL_ITEM_WIN_RESULT_MASK)
         return;
 
 // The target inlines this transition at each Pixl-tab branch.
@@ -763,11 +725,11 @@ void func_80196c8c(PausewinEntry * entry)
         u16 windowId;                                                                              \
         s32 itemType;                                                                              \
                                                                                                    \
-        pausewinDisappear(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_TAB]);              \
-        pausewinAppear(lbl_805ae0f8->entryIds[(tabIndex) + CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_TAB]);    \
+        pausewinDisappear(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_TAB]);                        \
+        pausewinAppear(wp->entryIds[(tabIndex) + CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_TAB]);              \
         spsndSFXOn("SFX_SYS_MENU_CURSOR_MOVE1");                                                   \
                                                                                                    \
-        CharPixlItemWinWork * tabWork = lbl_805ae0f8;                                              \
+        CharPixlItemWinWork * tabWork = wp;                                                        \
         tabWork->tabField.scrollPos = 25.0f * tabWork->tabField.scrollOffset;                      \
         tabWork->tabField.cursorX = tabWork->tabField.parent->pos.x;                               \
         tabWork->tabField.cursorY =                                                                \
@@ -775,8 +737,7 @@ void func_80196c8c(PausewinEntry * entry)
             25.0f * (tabWork->tabField.selectedIndex - tabWork->tabField.scrollOffset);            \
         itemType = tabWork->tabField.entries[tabWork->tabField.selectedIndex].itemType;            \
                                                                                                    \
-        pauseEntry =                                                                               \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);        \
+        pauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);         \
         windowId = pauseEntry->id;                                                                 \
         if (itemType == ITEM_ID_NULL)                                                              \
         {                                                                                          \
@@ -794,41 +755,34 @@ void func_80196c8c(PausewinEntry * entry)
             pausewinSetMessage(pauseEntry, itemType, NULL);                                        \
                                                                                                    \
         useItemType = tabWork->tabField.entries[tabWork->tabField.selectedIndex].itemType;         \
-        pauseEntry =                                                                               \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);    \
+        pauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);     \
         useMsgName = getItemUseMsg(useItemType);                                                   \
         if (useMsgName != NULL)                                                                    \
         {                                                                                          \
             pauseEntry->msg = msgSearch(useMsgName);                                               \
             FontGetMessageWidthLine(pauseEntry->msg, &outlines);                                   \
             pauseEntry->height = (outlines + 2) * 25 + 20;                                         \
-            if (!pausewinCheckVisible(                                                             \
-                    lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))             \
-                pausewinGoNeutral(                                                                 \
-                    lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);             \
+            if (!pausewinCheckVisible(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))     \
+                pausewinGoNeutral(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);         \
         }                                                                                          \
         else                                                                                       \
         {                                                                                          \
             pauseEntry->msg = NULL;                                                                \
-            if (pausewinCheckVisible(                                                              \
-                    lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))             \
-                pausewinHide(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);    \
+            if (pausewinCheckVisible(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))      \
+                pausewinHide(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);              \
         }                                                                                          \
                                                                                                    \
-        pauseEntry =                                                                               \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON]);        \
+        pauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON]);         \
         if ((tabIndex) == 0)                                                                       \
             pauseEntry->flags &= ~0x40;                                                            \
         else                                                                                       \
             pauseEntry->flags |= 0x40;                                                             \
-        pauseEntry =                                                                               \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON]);        \
+        pauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON]);         \
         if ((tabIndex) == 1)                                                                       \
             pauseEntry->flags &= ~0x40;                                                            \
         else                                                                                       \
             pauseEntry->flags |= 0x40;                                                             \
-        pauseEntry =                                                                               \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON]);        \
+        pauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON]);         \
         if ((tabIndex) == 2)                                                                       \
             pauseEntry->flags &= ~0x40;                                                            \
         else                                                                                       \
@@ -853,7 +807,7 @@ void func_80196c8c(PausewinEntry * entry)
 
     if (pausewinCheckPressOk())
     {
-        CharPixlItemWinWork * selectWork = lbl_805ae0f8;
+        CharPixlItemWinWork * selectWork = wp;
         CharPixlItemWinTabEntry * entries = selectWork->pixlTab.entries;
         s32 selectedIndex = selectWork->pixlTab.selectedIndex;
         s32 entryOffset;
@@ -883,39 +837,39 @@ void func_80196c8c(PausewinEntry * entry)
             }
 
             spsndSFXOn("SFX_SYS_MENU_DESIDE1");
-            lbl_805ae0f8->flags |= CHAR_PIXL_ITEM_WIN_RESULT_PIXL;
+            wp->flags |= CHAR_PIXL_ITEM_WIN_RESULT_PIXL;
         }
     }
     else if (pausewinCheckPressBack())
     {
-        lbl_805ae0f8->flags |= CHAR_PIXL_ITEM_WIN_RESULT_CANCEL;
+        wp->flags |= CHAR_PIXL_ITEM_WIN_RESULT_CANCEL;
     }
     else if (wpadGetButtonsPressed(0) & pausewinGetOpenButtonMask())
     {
         if (!(gp->flags & 0x1000))
-            lbl_805ae0f8->flags |= CHAR_PIXL_ITEM_WIN_RESULT_RETURN_TO_PLUS;
+            wp->flags |= CHAR_PIXL_ITEM_WIN_RESULT_RETURN_TO_PLUS;
     }
     else
     {
-        func_801984f4(entry, &lbl_805ae0f8->pixlTab);
+        func_801984f4(entry, &wp->pixlTab);
     }
 }
 
 void func_80197544(PausewinEntry * entry)
 {
-    func_80198874(entry, &lbl_805ae0f8->pixlTab);
+    func_80198874(entry, &wp->pixlTab);
 }
 
 void dispPixlTab(PausewinEntry * entry)
 {
-    dispTab(entry, &lbl_805ae0f8->pixlTab, 1);
+    dispTab(entry, &wp->pixlTab, 1);
 }
 
 void deletePixlTab(PausewinEntry * entry)
 {
     (void) entry;
-    __memFree(HEAP_MAP, lbl_805ae0f8->pixlTab.entries);
-    lbl_805ae0f8->pendingDeleteTabs--;
+    __memFree(HEAP_MAP, wp->pixlTab.entries);
+    wp->pendingDeleteTabs--;
 }
 
 void initItemTab(PausewinEntry * parent)
@@ -924,7 +878,7 @@ void initItemTab(PausewinEntry * parent)
     CharPixlItemWinTab * tab;
     s32 i;
 
-    tab = &lbl_805ae0f8->itemTab;
+    tab = &wp->itemTab;
     mp = marioGetPtr();
 
     memset(tab, 0, sizeof(*tab));
@@ -977,7 +931,7 @@ void func_801976e8(PausewinEntry * entry)
     PausewinEntry * parentEntry = entry;
 
     // Reusing the callback parameter preserves the target register allocation.
-    entry = (PausewinEntry *) lbl_805ae0f8;
+    entry = (PausewinEntry *) wp;
 
 #define itemWork ((CharPixlItemWinWork *) entry)
 
@@ -993,11 +947,11 @@ void func_801976e8(PausewinEntry * entry)
         const char * useMsgName;                                                                   \
         u16 outlines;                                                                              \
                                                                                                    \
-        pausewinDisappear(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_TAB]);              \
-        pausewinAppear(lbl_805ae0f8->entryIds[(tabIndex) + CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_TAB]);    \
+        pausewinDisappear(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_TAB]);                        \
+        pausewinAppear(wp->entryIds[(tabIndex) + CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_TAB]);              \
         spsndSFXOn("SFX_SYS_MENU_CURSOR_MOVE1");                                                   \
                                                                                                    \
-        CharPixlItemWinWork * tabWork = lbl_805ae0f8;                                              \
+        CharPixlItemWinWork * tabWork = wp;                                                        \
         tabWork->tabField.scrollPos = 25.0f * tabWork->tabField.scrollOffset;                      \
         tabWork->tabField.cursorX = tabWork->tabField.parent->pos.x;                               \
         tabWork->tabField.cursorY =                                                                \
@@ -1005,8 +959,7 @@ void func_801976e8(PausewinEntry * entry)
             25.0f * (tabWork->tabField.selectedIndex - tabWork->tabField.scrollOffset);            \
         itemType = tabWork->tabField.entries[tabWork->tabField.selectedIndex].itemType;            \
                                                                                                    \
-        tabPauseEntry =                                                                            \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);        \
+        tabPauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);      \
         tabWindowId = (tabPauseEntry)->id;                                                         \
         if (itemType == ITEM_ID_NULL)                                                              \
         {                                                                                          \
@@ -1024,41 +977,34 @@ void func_801976e8(PausewinEntry * entry)
             pausewinSetMessage((tabPauseEntry), itemType, NULL);                                   \
                                                                                                    \
         tabUseItemType = tabWork->tabField.entries[tabWork->tabField.selectedIndex].itemType;      \
-        usePauseEntry =                                                                            \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);    \
+        usePauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);  \
         useMsgName = getItemUseMsg(tabUseItemType);                                                \
         if (useMsgName != NULL)                                                                    \
         {                                                                                          \
             usePauseEntry->msg = msgSearch(useMsgName);                                            \
             FontGetMessageWidthLine(usePauseEntry->msg, &outlines);                                \
             usePauseEntry->height = (outlines + 2) * 25 + 20;                                      \
-            if (!pausewinCheckVisible(                                                             \
-                    lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))             \
-                pausewinGoNeutral(                                                                 \
-                    lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);             \
+            if (!pausewinCheckVisible(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))     \
+                pausewinGoNeutral(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);         \
         }                                                                                          \
         else                                                                                       \
         {                                                                                          \
             usePauseEntry->msg = NULL;                                                             \
-            if (pausewinCheckVisible(                                                              \
-                    lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))             \
-                pausewinHide(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);    \
+            if (pausewinCheckVisible(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))      \
+                pausewinHide(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);              \
         }                                                                                          \
                                                                                                    \
-        tabPauseEntry =                                                                            \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON]);        \
+        tabPauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_CHAR_BUTTON]);      \
         if ((tabIndex) == 0)                                                                       \
             (tabPauseEntry)->flags &= ~0x40;                                                       \
         else                                                                                       \
             (tabPauseEntry)->flags |= 0x40;                                                        \
-        tabPauseEntry =                                                                            \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON]);        \
+        tabPauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_PIXL_BUTTON]);      \
         if ((tabIndex) == 1)                                                                       \
             (tabPauseEntry)->flags &= ~0x40;                                                       \
         else                                                                                       \
             (tabPauseEntry)->flags |= 0x40;                                                        \
-        tabPauseEntry =                                                                            \
-            pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON]);        \
+        tabPauseEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_ITEM_BUTTON]);      \
         if ((tabIndex) == 2)                                                                       \
             (tabPauseEntry)->flags &= ~0x40;                                                       \
         else                                                                                       \
@@ -1132,21 +1078,21 @@ void func_801976e8(PausewinEntry * entry)
         else
         {
             spsndSFXOn("SFX_SYS_MENU_DESIDE1");
-            lbl_805ae0f8->flags |= CHAR_PIXL_ITEM_WIN_RESULT_ITEM;
+            wp->flags |= CHAR_PIXL_ITEM_WIN_RESULT_ITEM;
         }
     }
     else if (pausewinCheckPressBack())
     {
-        lbl_805ae0f8->flags |= CHAR_PIXL_ITEM_WIN_RESULT_CANCEL;
+        wp->flags |= CHAR_PIXL_ITEM_WIN_RESULT_CANCEL;
     }
     else if (wpadGetButtonsPressed(0) & pausewinGetOpenButtonMask())
     {
         if (!(gp->flags & 0x1000))
-            lbl_805ae0f8->flags |= CHAR_PIXL_ITEM_WIN_RESULT_RETURN_TO_PLUS;
+            wp->flags |= CHAR_PIXL_ITEM_WIN_RESULT_RETURN_TO_PLUS;
     }
     else
     {
-        func_801984f4(parentEntry, &lbl_805ae0f8->itemTab);
+        func_801984f4(parentEntry, &wp->itemTab);
     }
 
 done:
@@ -1156,19 +1102,19 @@ done:
 
 void func_80198238(PausewinEntry * entry)
 {
-    func_80198874(entry, &lbl_805ae0f8->itemTab);
+    func_80198874(entry, &wp->itemTab);
 }
 
 void dispItemTab(PausewinEntry * entry)
 {
-    dispTab(entry, &lbl_805ae0f8->itemTab, 2);
+    dispTab(entry, &wp->itemTab, 2);
 }
 
 void deleteItemTab(PausewinEntry * entry)
 {
     (void) entry;
-    __memFree(HEAP_MAP, lbl_805ae0f8->itemTab.entries);
-    lbl_805ae0f8->pendingDeleteTabs--;
+    __memFree(HEAP_MAP, wp->itemTab.entries);
+    wp->pendingDeleteTabs--;
 }
 
 void func_80198290(PausewinEntry * entry)
@@ -1178,7 +1124,7 @@ void func_80198290(PausewinEntry * entry)
 
 void func_80198294(PausewinEntry * entry)
 {
-    if (!(lbl_805ae0f8->flags & CHAR_PIXL_ITEM_WIN_RESULT_MASK))
+    if (!(wp->flags & CHAR_PIXL_ITEM_WIN_RESULT_MASK))
         pausewinMsgBoxMain(entry);
 }
 
@@ -1225,8 +1171,8 @@ void func_801982c4(PausewinEntry * entry)
     {
         PSMTXScale(scale, 0.8f, 0.8f, 1.0f);
     }
-    PSMTXTrans(translation, __fmadds(entry->width - drawnWidth, 0.5f, entry->pos.x),
-               entry->pos.y - 10.0f, 0.0f);
+    PSMTXTrans(translation, (entry->width - drawnWidth) / 2.0f + entry->pos.x, entry->pos.y - 10.0f,
+               0.0f);
     PSMTXConcat(translation, scale, translation);
     FontDrawStart_alpha((u8) (entry->alpha / 2));
     {
@@ -1246,7 +1192,7 @@ void func_801982c4(PausewinEntry * entry)
     {
         PSMTXScale(scale, 1.0f, 1.0f, 1.0f);
     }
-    PSMTXTrans(translation, __fmadds(entry->width - drawnWidth, 0.5f, entry->pos.x),
+    PSMTXTrans(translation, (entry->width - drawnWidth) / 2.0f + entry->pos.x,
                entry->pos.y - 10.0f - 24.0f, 0.0f);
     PSMTXConcat(translation, scale, translation);
     FontDrawStart_alpha((u8) (entry->alpha / 2));
@@ -1318,8 +1264,7 @@ void func_801984f4(PausewinEntry * entry, CharPixlItemWinTab * tab)
             PausewinEntry * descriptionEntry;
 
             itemType = tab->entries[tab->selectedIndex].itemType;
-            descriptionEntry =
-                pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);
+            descriptionEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_DESCRIPTION]);
             windowId = descriptionEntry->id;
             if (itemType == ITEM_ID_NULL)
             {
@@ -1343,25 +1288,21 @@ void func_801984f4(PausewinEntry * entry, CharPixlItemWinTab * tab)
             u16 outlines;
 
             useItemType = tab->entries[tab->selectedIndex].itemType;
-            useEntry =
-                pausewinGetEntry(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
+            useEntry = pausewinGetEntry(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
             useMsgName = getItemUseMsg(useItemType);
             if (useMsgName != NULL)
             {
                 useEntry->msg = msgSearch(useMsgName);
                 FontGetMessageWidthLine(useEntry->msg, &outlines);
                 useEntry->height = (outlines + 2) * 25 + 20;
-                if (!pausewinCheckVisible(
-                        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
-                    pausewinGoNeutral(
-                        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
+                if (!pausewinCheckVisible(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
+                    pausewinGoNeutral(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
             }
             else
             {
                 useEntry->msg = NULL;
-                if (pausewinCheckVisible(
-                        lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
-                    pausewinHide(lbl_805ae0f8->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
+                if (pausewinCheckVisible(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]))
+                    pausewinHide(wp->entryIds[CHAR_PIXL_ITEM_WIN_ENTRY_USE_DESCRIPTION]);
             }
         }
     }
@@ -1425,7 +1366,7 @@ void func_80198874(PausewinEntry * entry, CharPixlItemWinTab * tab)
     GXSetFog(0, 0.0f, 0.0f, 0.0f, 0.0f, &fogColor);
     GXGetScissor(&oldX, &oldY, &oldWidth, &oldHeight);
 
-    if (tab != &lbl_805ae0f8->characterTab)
+    if (tab != &wp->characterTab)
     {
         func_80193888((u16) (u32) (304.0f + entry->pos.x),
                       (u16) (u32) (240.0f - entry->pos.y + 22.0f + 12.0f), (u16) (u32) entry->width,
@@ -1453,7 +1394,7 @@ void func_80198874(PausewinEntry * entry, CharPixlItemWinTab * tab)
             Mtx34 matrix;
             Mtx34 scale;
 
-            if (tab == &lbl_805ae0f8->characterTab)
+            if (tab == &wp->characterTab)
                 iconXOffset = 16.0f;
             if (((CharPixlItemWinTabEntry *) ((u8 *) tab->entries + entryOffset))->itemType ==
                 ITEM_ID_CHAR_LUIGI)
@@ -1487,7 +1428,7 @@ void func_80198874(PausewinEntry * entry, CharPixlItemWinTab * tab)
                        entry->pos.y - 12.0f - 20.0f - 12.0f - 25.0f * i + tab->scrollPos - 14.0f +
                            iconYOffset,
                        0.0f);
-            if (tab != &lbl_805ae0f8->characterTab)
+            if (tab != &wp->characterTab)
             {
                 PSMTXScale(scale, 0.6f, 0.6f, 1.0f);
                 PSMTXConcat(matrix, scale, matrix);
@@ -1545,7 +1486,7 @@ void dispTab(PausewinEntry * entry, CharPixlItemWinTab * tab, s32 type)
         if (tab->scrollOffset != 0)
         {
             f32 width = entry->width;
-            PSMTXTrans(matrix, __fmadds(width, 0.5f, entry->pos.x), entry->pos.y - 20.0f, 0.0f);
+            PSMTXTrans(matrix, width / 2.0f + entry->pos.x, entry->pos.y - 20.0f, 0.0f);
             PSMTXRotRad(rotation, 'z', 3.1415927f);
             PSMTXScale(scale, 0.6f, 0.6f, 0.6f);
             PSMTXConcat(matrix, rotation, matrix);
@@ -1562,8 +1503,7 @@ void dispTab(PausewinEntry * entry, CharPixlItemWinTab * tab, s32 type)
         if (tab->scrollOffset != tab->entryCount - 8)
         {
             f32 width = entry->width;
-            PSMTXTrans(matrix, __fmadds(width, 0.5f, entry->pos.x), entry->pos.y - entry->height,
-                       0.0f);
+            PSMTXTrans(matrix, width / 2.0f + entry->pos.x, entry->pos.y - entry->height, 0.0f);
             PSMTXScale(scale, 0.6f, 0.6f, 0.6f);
             PSMTXConcat(matrix, bounce, matrix);
             PSMTXConcat(matrix, scale, matrix);
@@ -1576,11 +1516,11 @@ void dispTab(PausewinEntry * entry, CharPixlItemWinTab * tab, s32 type)
         }
     }
 
-    PausewinEntry * buttonEntry = pausewinGetEntry(lbl_805ae0f8->entryIds[type]);
+    PausewinEntry * buttonEntry = pausewinGetEntry(wp->entryIds[type]);
     color.a = (u8) (color.a >> 1);
 
     PSMTXTrans(matrix, buttonEntry->pos.x + buttonEntry->width + 10.0f - 5.0f,
-               __fnmsubs(buttonEntry->height, 0.5f, buttonEntry->pos.y), 0.0f);
+               buttonEntry->pos.y - buttonEntry->height / 2.0f, 0.0f);
     PSMTXRotRad(rotation, 'z', 1.5707964f);
     PSMTXScale(scale, 0.6f, 0.6f, 0.6f);
     PSMTXConcat(matrix, rotation, matrix);
@@ -1595,7 +1535,7 @@ void dispTab(PausewinEntry * entry, CharPixlItemWinTab * tab, s32 type)
     }
 
     PSMTXTrans(matrix, buttonEntry->pos.x - 10.0f - 5.0f,
-               __fnmsubs(buttonEntry->height, 0.5f, buttonEntry->pos.y), 0.0f);
+               buttonEntry->pos.y - buttonEntry->height / 2.0f, 0.0f);
     PSMTXRotRad(rotation, 'z', 4.712389f);
     PSMTXScale(scale, 0.6f, 0.6f, 0.6f);
     PSMTXConcat(matrix, rotation, matrix);

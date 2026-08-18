@@ -209,8 +209,8 @@ void seqTitleInitLayout()
 
 // ~ArcResourceAccessor emitted from header file here
 
-// ALways inlined
-void seqTitleDeleteLayout()
+// Always inlined
+inline void seqTitleDeleteLayout()
 {
     delete wp->layout;
     delete wp->arcResAccessor;
