@@ -228,7 +228,7 @@ UNKNOWN_FUNCTION(GXSetViewport)
 UNKNOWN_FUNCTION(GXGetViewportv)
 UNKNOWN_FUNCTION(GXSetZScaleOffset)
 UNKNOWN_FUNCTION(GXSetScissor)
-UNKNOWN_FUNCTION(GXGetScissor)
+void GXGetScissor(u32 * xOrigin, u32 * yOrigin, u32 * width, u32 * height);
 UNKNOWN_FUNCTION(GXSetScissorBoxOffset)
 UNKNOWN_FUNCTION(GXSetClipMode)
 UNKNOWN_FUNCTION(__GXSetMatrixIndex)

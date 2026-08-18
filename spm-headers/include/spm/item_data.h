@@ -83,7 +83,7 @@ typedef struct
     */
 /* 0x27 */ u8 dispFlags;
 /* 0x28 */ s16 tribe; // For the NPCs on cards
-/* 0x2A */ s16 sortValue; // For sorting in shops, higher value -> lower on the list
+/* 0x2A */ u16 sortValue; // For sorting in shops, higher value -> lower on the list
 } ItemData;
 SIZE_ASSERT(ItemData, 0x2c)
 

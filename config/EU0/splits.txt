@@ -95,6 +95,15 @@ seqdrv.c:
 	.sdata      start:0x805AE0B8 end:0x805AE0C8
 	.sbss       start:0x805AE918 end:0x805AE920
 
+charpixlitemwin.c:
+	extab       start:0x8000C768 end:0x8000C7E0
+	extabindex  start:0x80018E20 end:0x80018ED4
+	.text       start:0x801950F8 end:0x801991F4
+	.rodata     start:0x80337350 end:0x80337460
+	.bss        start:0x80513BE8 end:0x80513C90
+	.sdata      start:0x805AE0F8 end:0x805AE0FC
+	.sdata2     start:0x805B3A48 end:0x805B3B10
+
 system.c:
 	extab       start:0x8000C848 end:0x8000C8C0
 	extabindex  start:0x80018F70 end:0x80019024

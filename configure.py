@@ -320,6 +320,7 @@ config.libs = [
         Object(Matching, "seq_title.c"),
         Object(Matching, "seqdef.c"),
         Object(Matching, "seqdrv.c"),
+        Object(Matching, "charpixlitemwin.c"),
         Object(NonMatching, "system.c"),
         Object(Matching, "dvdmgr.c"),
         Object(Matching, "debug.c"),
