@@ -152,17 +152,17 @@ DECOMP_STATIC(PluswinWork * pausewin_pluswinWp)
 DECOMP_STATIC(PausewinWork * pausewin_wp)
 DECOMP_STATIC(char pausewinCardDescBuf[512])
 
-UNKNOWN_FUNCTION(pausewinGetEntry)
-UNKNOWN_FUNCTION(pausewinGetTpl)
+PausewinEntry * pausewinGetEntry(s32 id);
+FileEntry * pausewinGetTpl();
 void pausewinInit();
 UNKNOWN_FUNCTION(pausewinReInit)
-UNKNOWN_FUNCTION(pausewinGetOpenButtonMask)
-UNKNOWN_FUNCTION(pausewinCheckMoveUp)
-UNKNOWN_FUNCTION(pausewinCheckMoveDown)
-UNKNOWN_FUNCTION(pausewinCheckMoveLeft)
-UNKNOWN_FUNCTION(pausewinCheckMoveRight)
-UNKNOWN_FUNCTION(pausewinCheckPressOk)
-UNKNOWN_FUNCTION(pausewinCheckPressBack)
+u32 pausewinGetOpenButtonMask();
+s32 pausewinCheckMoveUp();
+s32 pausewinCheckMoveDown();
+s32 pausewinCheckMoveLeft();
+s32 pausewinCheckMoveRight();
+s32 pausewinCheckPressOk();
+s32 pausewinCheckPressBack();
 void pausewinMain();
 UNKNOWN_FUNCTION(pausewinDisp)
 UNKNOWN_FUNCTION(pausewinEntryDisp)
@@ -173,10 +173,10 @@ void pausewinMoveTo(s32 id, f32 x, f32 y);
 void pausewinAppear(s32 id);
 void pausewinDisappear(s32 id);
 void pausewinDelete(s32 id);
-UNKNOWN_FUNCTION(pausewinGoNeutral)
-UNKNOWN_FUNCTION(pausewinHide)
-UNKNOWN_FUNCTION(pausewinCheckVisible)
-UNKNOWN_FUNCTION(_pausewinDelete)
+void pausewinGoNeutral(s32 id);
+void pausewinHide(s32 id);
+s32 pausewinCheckVisible(s32 id);
+void _pausewinDelete(s32 id);
 void pausewinPauseGame();
 void pausewinUnpauseGame();
 UNKNOWN_FUNCTION(pausewinUpdate)
@@ -194,10 +194,10 @@ UNKNOWN_FUNCTION(pluswinCursorDisp)
 UNKNOWN_FUNCTION(pluswinStatsDisp)
 UNKNOWN_FUNCTION(pluswinBgDispSub)
 UNKNOWN_FUNCTION(pluswinBgDisp)
-UNKNOWN_FUNCTION(pausewinMsgBoxInit)
-UNKNOWN_FUNCTION(pausewinMsgBoxMain)
-UNKNOWN_FUNCTION(pausewinMsgBoxDisp)
-UNKNOWN_FUNCTION(pausewinMsgBoxDelete)
+void pausewinMsgBoxInit(PausewinEntry * entry);
+void pausewinMsgBoxMain(PausewinEntry * entry);
+void pausewinMsgBoxDisp(PausewinEntry * entry);
+void pausewinMsgBoxDelete(PausewinEntry * entry);
 void pausewinSetMessage(PausewinEntry * entry, s32 itemId, const char * msgName);
 void pausewinSetMessageCard(PausewinEntry * entry, s32 itemId);
 UNKNOWN_FUNCTION(pluswinKeyItemWinOpen)
@@ -251,12 +251,12 @@ UNKNOWN_FUNCTION(func_80193498)
 UNKNOWN_FUNCTION(func_801936b8)
 UNKNOWN_FUNCTION(func_80193860)
 UNKNOWN_FUNCTION(func_80193874)
-UNKNOWN_FUNCTION(func_80193888)
+void func_80193888(u16 x, u16 y, u16 width, u16 height);
 UNKNOWN_FUNCTION(func_80193a04)
 UNKNOWN_FUNCTION(minuswinOpen)
 UNKNOWN_FUNCTION(minuswinDisp)
 UNKNOWN_FUNCTION(minuswinMain)
-UNKNOWN_FUNCTION(func_801950f8)
+void func_801950f8(f32 value);
 
 void levelUpWindowMain();
 
