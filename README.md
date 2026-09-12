@@ -6,7 +6,7 @@
 [Data Progress]: https://decomp.dev/SeekyCt/spm-decomp.svg?mode=shield&measure=data&label=Data
 [progress]: https://decomp.dev/SeekyCt/spm-decomp
 [Discord Badge]: https://img.shields.io/discord/727908905392275526?color=%237289DA&logo=discord&logoColor=%23FFFFFF
-[discord]: https://discord.gg/dbd733H
+[discord]: https://discord.gg/ndrxwcyCum
 
 Decompilation of Super Paper Mario. The main versions targetted are the two PAL versions of the game (with symbol and split addresses being identical between both). Support has also been set-up for NTSC-U revision 0 of the game, though less addresses have been ported (and it's advised to not put work into this until some kind of automated porting setup has been created).
 
