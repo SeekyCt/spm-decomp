@@ -18,6 +18,81 @@ main.c:
 	extabindex  start:0x8000FAC0 end:0x8000FACC
 	.text       start:0x8001DA60 end:0x8001DA88
 
+ac_shake_timing.c:
+	extab       start:0x800064E8 end:0x80006500
+	extabindex  start:0x8000FACC end:0x8000FAF0
+	.text       start:0x8001DA88 end:0x8001E308
+
+ac_pendulum_crane_timing.c:
+	extab       start:0x80006500 end:0x80006518
+	extabindex  start:0x8000FAF0 end:0x8000FB14
+	.text       start:0x8001E308 end:0x8001E69C
+
+ac_scissor.c:
+	extab       start:0x80006518 end:0x80006590
+	extabindex  start:0x8000FB14 end:0x8000FBC8
+	.text       start:0x8001E69C end:0x80022510
+
+ac_crane_timing.c:
+	extab       start:0x80006590 end:0x800065A8
+	extabindex  start:0x8000FBC8 end:0x8000FBEC
+	.text       start:0x80022510 end:0x80022B34
+
+ac_signal_timing.c:
+	extab       start:0x800065A8 end:0x800065C0
+	extabindex  start:0x8000FBEC end:0x8000FC10
+	.text       start:0x80022B34 end:0x800236AC
+
+ac_target_row.c:
+	extab       start:0x800065C0 end:0x800065F0
+	extabindex  start:0x8000FC10 end:0x8000FC58
+	.text       start:0x800236AC end:0x800244E8
+
+ac_timing_button.c:
+	extab       start:0x800065F0 end:0x80006600
+	extabindex  start:0x8000FC58 end:0x8000FC70
+	.text       start:0x800244E8 end:0x80024DA4
+
+ac_timing_hold.c:
+	extab       start:0x80006600 end:0x80006618
+	extabindex  start:0x8000FC70 end:0x8000FC94
+	.text       start:0x80024DA4 end:0x80025164
+
+item_event_data.c:
+	extab       start:0x80006618 end:0x800067E0
+	extabindex  start:0x8000FC94 end:0x8000FF40
+	.text       start:0x80025164 end:0x800294E0
+
+map_data.c:
+	extab       start:0x800067E0 end:0x800067F0
+	extabindex  start:0x8000FF40 end:0x8000FF58
+	.text       start:0x800294E0 end:0x80029680
+
+setup_data.c:
+	extab       start:0x800067F0 end:0x800067F8
+	extabindex  start:0x8000FF58 end:0x8000FF64
+	.text       start:0x80029680 end:0x800297C0
+
+mobjdrv.c:
+	extab       start:0x800067F8 end:0x80006938
+	extabindex  start:0x8000FF64 end:0x80010144
+	.text       start:0x800297C0 end:0x8002EDA0
+
+msgdrv.c:
+	extab       start:0x80006938 end:0x80006A20
+	extabindex  start:0x80010144 end:0x800102A0
+	.text       start:0x8002EDA0 end:0x80034B44
+
+offscreen.c:
+	extab       start:0x80006A20 end:0x80006A68
+	extabindex  start:0x800102A0 end:0x8001030C
+	.text       start:0x80034B44 end:0x800355D4
+
+shadowdrv.c:
+	extab       start:0x80006A68 end:0x80006B08
+	extabindex  start:0x8001030C end:0x800103FC
+	.text       start:0x800355D4 end:0x80037EAC
+
 swdrv.c:
 	extab       start:0x80006B08 end:0x80006B50
 	extabindex  start:0x800103FC end:0x80010468
@@ -34,6 +109,161 @@ windowdrv.c:
 	.data       start:0x80406C98 end:0x80406D28
 	.sbss       start:0x805AE790 end:0x805AE7A0
 	.sdata2     start:0x805AF7E0 end:0x805AF870
+
+winmgr.c:
+	extab       start:0x80006BD0 end:0x80006C28
+	extabindex  start:0x80010528 end:0x800105AC
+	.text       start:0x8003B26C end:0x8003EB4C
+
+acdrv.c:
+	extab       start:0x80006C28 end:0x80006C88
+	extabindex  start:0x800105AC end:0x8001063C
+	.text       start:0x8003EB4C end:0x8004158C
+
+animdrv.c:
+	extab       start:0x80006C88 end:0x80006EC8
+	extabindex  start:0x8001063C end:0x8001099C
+	.text       start:0x8004158C end:0x8004E09C
+
+bgdrv.c:
+	extab       start:0x80006EC8 end:0x80006F18
+	extabindex  start:0x8001099C end:0x80010A14
+	.text       start:0x8004E09C end:0x8004F654
+
+cam_road.c:
+	extab       start:0x80006F18 end:0x80006F90
+	extabindex  start:0x80010A14 end:0x80010AC8
+	.text       start:0x8004F654 end:0x8005401C
+
+cam_shift.c:
+	extab       start:0x80006F90 end:0x80006F98
+	extabindex  start:0x80010AC8 end:0x80010AD4
+	.text       start:0x8005401C end:0x80054804
+
+camdrv.c:
+	extab       start:0x80006F98 end:0x80007050
+	extabindex  start:0x80010AD4 end:0x80010BE8
+	.text       start:0x80054804 end:0x80058D58
+
+casedrv.c:
+	extab       start:0x80007050 end:0x80007088
+	extabindex  start:0x80010BE8 end:0x80010C3C
+	.text       start:0x80058D58 end:0x8005AEA4
+
+dispdrv.c:
+	extab       start:0x80007088 end:0x800070E0
+	extabindex  start:0x80010C3C end:0x80010CC0
+	.text       start:0x8005AEA4 end:0x8005BF88
+
+eff_sub.c:
+	extab       start:0x800070E0 end:0x80007130
+	extabindex  start:0x80010CC0 end:0x80010D38
+	.text       start:0x8005BF88 end:0x800614E0
+
+effdrv.c:
+	extab       start:0x80007130 end:0x800071E0
+	extabindex  start:0x80010D38 end:0x80010E40
+	.text       start:0x800614E0 end:0x80063408
+
+envdrv.c:
+	extab       start:0x800071E0 end:0x80007230
+	extabindex  start:0x80010E40 end:0x80010EB8
+	.text       start:0x80063408 end:0x80064B58
+
+extdrv.c:
+	extab       start:0x80007230 end:0x80007278
+	extabindex  start:0x80010EB8 end:0x80010F24
+	.text       start:0x80064B58 end:0x80065C78
+
+fadedrv.c:
+	extab       start:0x80007278 end:0x800072B8
+	extabindex  start:0x80010F24 end:0x80010F84
+	.text       start:0x80065C78 end:0x80067AB8
+
+framedrv.c:
+	extab       start:0x800072B8 end:0x80007388
+	extabindex  start:0x80010F84 end:0x800110BC
+	.text       start:0x80067AB8 end:0x8006AEC8
+
+hitdrv.c:
+	extab       start:0x80007388 end:0x80007520
+	extabindex  start:0x800110BC end:0x80011320
+	.text       start:0x8006AEC8 end:0x80072188
+
+icondrv.c:
+	extab       start:0x80007520 end:0x800075D8
+	extabindex  start:0x80011320 end:0x80011434
+	.text       start:0x80072188 end:0x8007508C
+
+imgdrv.c:
+	extab       start:0x800075D8 end:0x80007658
+	extabindex  start:0x80011434 end:0x800114F4
+	.text       start:0x8007508C end:0x80077660
+
+itemdrv.c:
+	extab       start:0x80007658 end:0x80007760
+	extabindex  start:0x800114F4 end:0x80011680
+	.text       start:0x80077660 end:0x8007E1A8
+
+lightdrv.c:
+	extab       start:0x80007760 end:0x80007790
+	extabindex  start:0x80011680 end:0x800116C8
+	.text       start:0x8007E1A8 end:0x8007EC34
+
+mapdrv.c:
+	extab       start:0x80007790 end:0x80007A68
+	extabindex  start:0x800116C8 end:0x80011B0C
+	.text       start:0x8007EC34 end:0x80091654
+
+eff_spm_recovery.c:
+	extab       start:0x80007A68 end:0x80007AD8
+	extabindex  start:0x80011B0C end:0x80011BB4
+	.text       start:0x80091654 end:0x800930D4
+
+eff_zunbaba.c:
+	extab       start:0x80007AD8 end:0x80007AF0
+	extabindex  start:0x80011BB4 end:0x80011BD8
+	.text       start:0x800930D4 end:0x80093520
+
+eff_spm_use.c:
+	extab       start:0x80007AF0 end:0x80007B08
+	extabindex  start:0x80011BD8 end:0x80011BFC
+	.text       start:0x80093520 end:0x800939E0
+
+eff_spm_get.c:
+	extab       start:0x80007B08 end:0x80007B38
+	extabindex  start:0x80011BFC end:0x80011C44
+	.text       start:0x800939E0 end:0x8009461C
+
+eff_map_water.c:
+	extab       start:0x80007B38 end:0x80007B58
+	extabindex  start:0x80011C44 end:0x80011C74
+	.text       start:0x8009461C end:0x80094E44
+
+eff_pure_heart.c:
+	extab       start:0x80007B58 end:0x80007B88
+	extabindex  start:0x80011C74 end:0x80011CBC
+	.text       start:0x80094E44 end:0x80096714
+
+eff_map_bubble.c:
+	extab       start:0x80007B88 end:0x80007BA0
+	extabindex  start:0x80011CBC end:0x80011CE0
+	.text       start:0x80096714 end:0x80096D70
+
+eff_score.c:
+	extab       start:0x80008990 end:0x800089A8
+	extabindex  start:0x800131C8 end:0x800131EC
+	.text       start:0x800D17C8 end:0x800D2148
+
+evt_snd.c:
+	extab       start:0x800089A8 end:0x80008B58
+	extabindex  start:0x800131EC end:0x80013474
+	.text       start:0x800D2148 end:0x800D378C
+
+evt_sub.c:
+	extab       start:0x80008B58 end:0x80008D68
+	extabindex  start:0x80013474 end:0x8001378C
+	.text       start:0x800D378C end:0x800D87E4
 
 evtmgr.c:
 	extab       start:0x80008D68 end:0x80008E08
@@ -54,6 +284,176 @@ evtmgr_cmd.c:
 	.bss        start:0x8050CE30 end:0x8050CF30
 	.sdata2     start:0x805B1D50 end:0x805B1D68
 
+evt_ac.c:
+	extab       start:0x800091E8 end:0x80009200
+	extabindex  start:0x80013E4C end:0x80013E70
+	.text       start:0x800DF9A8 end:0x800DFAE0
+
+evt_bg.c:
+	extab       start:0x80009200 end:0x80009218
+	extabindex  start:0x80013E70 end:0x80013E94
+	.text       start:0x800DFAE0 end:0x800DFC80
+
+evt_cam.c:
+	extab       start:0x80009218 end:0x800092C0
+	extabindex  start:0x80013E94 end:0x80013F90
+	.text       start:0x800DFC80 end:0x800E0CA4
+
+evt_case.c:
+	extab       start:0x800092C0 end:0x800092F8
+	extabindex  start:0x80013F90 end:0x80013FE4
+	.text       start:0x800E0CA4 end:0x800E0FB0
+
+evt_door.c:
+	extab       start:0x800092F8 end:0x80009438
+	extabindex  start:0x80013FE4 end:0x800141C4
+	.text       start:0x800E0FB0 end:0x800E57BC
+
+evt_eff.c:
+	extab       start:0x80009438 end:0x80009470
+	extabindex  start:0x800141C4 end:0x80014218
+	.text       start:0x800E57BC end:0x800E658C
+
+evt_env.c:
+	extab       start:0x80009470 end:0x800094A8
+	extabindex  start:0x80014218 end:0x8001426C
+	.text       start:0x800E658C end:0x800E6F9C
+
+evt_ext.c:
+	extab       start:0x800094A8 end:0x800094B8
+	extabindex  start:0x8001426C end:0x80014284
+	.text       start:0x800E6F9C end:0x800E7050
+
+evt_fade.c:
+	extab       start:0x800094B8 end:0x800094E8
+	extabindex  start:0x80014284 end:0x800142CC
+	.text       start:0x800E7050 end:0x800E72C4
+
+evt_fairy.c:
+	extab       start:0x800094E8 end:0x80009600
+	extabindex  start:0x800142CC end:0x80014470
+	.text       start:0x800E72C4 end:0x800E8854
+
+evt_frame.c:
+	extab       start:0x80009600 end:0x80009680
+	extabindex  start:0x80014470 end:0x80014530
+	.text       start:0x800E8854 end:0x800E9BB4
+
+evt_guide.c:
+	extab       start:0x80009680 end:0x80009740
+	extabindex  start:0x80014530 end:0x80014650
+	.text       start:0x800E9BB4 end:0x800EAB1C
+
+evt_hit.c:
+	extab       start:0x80009740 end:0x800097C0
+	extabindex  start:0x80014650 end:0x80014710
+	.text       start:0x800EAB1C end:0x800EC2C8
+
+evt_img.c:
+	extab       start:0x800097C0 end:0x80009830
+	extabindex  start:0x80014710 end:0x800147B8
+	.text       start:0x800EC2C8 end:0x800ECC84
+
+evt_item.c:
+	extab       start:0x80009830 end:0x80009898
+	extabindex  start:0x800147B8 end:0x80014854
+	.text       start:0x800ECC84 end:0x800ED6C0
+
+evt_map.c:
+	extab       start:0x80009898 end:0x80009990
+	extabindex  start:0x80014854 end:0x800149C8
+	.text       start:0x800ED6C0 end:0x800EF3C8
+
+evt_mario.c:
+	extab       start:0x80009990 end:0x80009CD0
+	extabindex  start:0x800149C8 end:0x80014EA8
+	.text       start:0x800EF3C8 end:0x800F358C
+
+evt_mobj.c:
+	extab       start:0x80009CD0 end:0x80009EE0
+	extabindex  start:0x80014EA8 end:0x800151C0
+	.text       start:0x800F358C end:0x800FB27C
+
+evt_msg.c:
+	extab       start:0x80009EE0 end:0x80009F68
+	extabindex  start:0x800151C0 end:0x8001528C
+	.text       start:0x800FB27C end:0x800FDCC0
+
+evt_npc.c:
+	extab       start:0x80009F68 end:0x8000A708
+	extabindex  start:0x8001528C end:0x80015DFC
+	.text       start:0x800FDCC0 end:0x8010C4A4
+
+evt_offscreen.c:
+	extab       start:0x8000A708 end:0x8000A720
+	extabindex  start:0x80015DFC end:0x80015E20
+	.text       start:0x8010C4A4 end:0x8010C600
+
+evt_paper.c:
+	extab       start:0x8000A720 end:0x8000A730
+	extabindex  start:0x80015E20 end:0x80015E38
+	.text       start:0x8010C600 end:0x8010C698
+
+evt_pouch.c:
+	extab       start:0x8000A730 end:0x8000A858
+	extabindex  start:0x80015E38 end:0x80015FF4
+	.text       start:0x8010C698 end:0x8010D028
+
+evt_seq.c:
+	extab       start:0x8000A858 end:0x8000A870
+	extabindex  start:0x80015FF4 end:0x80016018
+	.text       start:0x8010D028 end:0x8010D194
+
+evt_shop.c:
+	extab       start:0x8000A870 end:0x8000AA20
+	extabindex  start:0x80016018 end:0x800162A0
+	.text       start:0x8010D194 end:0x80111FE8
+
+mot_stay.c:
+	extab       start:0x8000AA20 end:0x8000AA40
+	extabindex  start:0x800162A0 end:0x800162D0
+	.text       start:0x80111FE8 end:0x80112AF8
+
+mot_swim.c:
+	extab       start:0x8000AA40 end:0x8000ABC8
+	extabindex  start:0x800162D0 end:0x8001651C
+	.text       start:0x80112AF8 end:0x80117D20
+
+mot_mega_star.c:
+	extab       start:0x8000ABC8 end:0x8000ABF0
+	extabindex  start:0x8001651C end:0x80016558
+	.text       start:0x80117D20 end:0x80118E88
+
+mot_walk.c:
+	extab       start:0x8000ABF0 end:0x8000AC28
+	extabindex  start:0x80016558 end:0x800165AC
+	.text       start:0x80118E88 end:0x80119AC0
+
+mot_crouch.c:
+	extab       start:0x8000AC28 end:0x8000AC58
+	extabindex  start:0x800165AC end:0x800165F4
+	.text       start:0x80119AC0 end:0x8011A7B4
+
+mot_spring.c:
+	extab       start:0x8000AC58 end:0x8000AC78
+	extabindex  start:0x800165F4 end:0x80016624
+	.text       start:0x8011A7B4 end:0x8011AE80
+
+mot_ladder.c:
+	extab       start:0x8000AC78 end:0x8000ACA0
+	extabindex  start:0x80016624 end:0x80016660
+	.text       start:0x8011AE80 end:0x8011BC08
+
+fairy.c:
+	extab       start:0x8000ACA0 end:0x8000AD80
+	extabindex  start:0x80016660 end:0x800167B0
+	.text       start:0x8011BC08 end:0x8011FA2C
+
+guide.c:
+	extab       start:0x8000AD80 end:0x8000AE18
+	extabindex  start:0x800167B0 end:0x80016894
+	.text       start:0x8011FA2C end:0x80121E18
+
 mario.c:
 	extab       start:0x8000AE18 end:0x8000B108
 	extabindex  start:0x80016894 end:0x80016CFC
@@ -64,6 +464,26 @@ mario.c:
 	.sbss       start:0x805AE8E8 end:0x805AE8F8
 	.sdata2     start:0x805B23C8 end:0x805B2578
 
+mario_acrobat.c:
+	extab       start:0x8000B108 end:0x8000B1A0
+	extabindex  start:0x80016CFC end:0x80016DE0
+	.text       start:0x8012DAC4 end:0x80130A50
+
+mario_fairy.c:
+	extab       start:0x8000B1A0 end:0x8000B200
+	extabindex  start:0x80016DE0 end:0x80016E70
+	.text       start:0x80130A50 end:0x80131488
+
+mario_hit.c:
+	extab       start:0x8000B200 end:0x8000B5B8
+	extabindex  start:0x80016E70 end:0x80017404
+	.text       start:0x80131488 end:0x80143370
+
+mario_motion.c:
+	extab       start:0x8000B5B8 end:0x8000B820
+	extabindex  start:0x80017404 end:0x800177A0
+	.text       start:0x80143370 end:0x8014C088
+
 mario_pouch.c:
 	extab       start:0x8000B820 end:0x8000B898
 	extabindex  start:0x800177A0 end:0x80017854
@@ -72,6 +492,61 @@ mario_pouch.c:
 	.bss        start:0x80511A28 end:0x805120E8
 	.sdata      start:0x805AE060 end:0x805AE068
 	.sdata2     start:0x805B28A0 end:0x805B28A8
+
+mario_sbr.c:
+	extab       start:0x8000B898 end:0x8000BA78
+	extabindex  start:0x80017854 end:0x80017B24
+	.text       start:0x801501C4 end:0x80154C80
+
+mario_status.c:
+	extab       start:0x8000BA78 end:0x8000C0B8
+	extabindex  start:0x80017B24 end:0x80018484
+	.text       start:0x80154C80 end:0x8016D898
+
+mot_fairy_other.c:
+	extab       start:0x8000C0B8 end:0x8000C168
+	extabindex  start:0x80018484 end:0x8001858C
+	.text       start:0x8016D898 end:0x80171E10
+
+mot_jabara.c:
+	extab       start:0x8000C168 end:0x8000C198
+	extabindex  start:0x8001858C end:0x800185D4
+	.text       start:0x80171E10 end:0x80173C98
+
+mot_jump.c:
+	extab       start:0x8000C198 end:0x8000C200
+	extabindex  start:0x800185D4 end:0x80018670
+	.text       start:0x80173C98 end:0x80175BCC
+
+mot_hit.c:
+	extab       start:0x8000C200 end:0x8000C210
+	extabindex  start:0x80018670 end:0x80018688
+	.text       start:0x80175BCC end:0x80175F68
+
+mot_peach_float.c:
+	extab       start:0x8000C210 end:0x8000C228
+	extabindex  start:0x80018688 end:0x800186AC
+	.text       start:0x80175F68 end:0x801764A4
+
+mot_slit.c:
+	extab       start:0x8000C228 end:0x8000C2E0
+	extabindex  start:0x800186AC end:0x800187C0
+	.text       start:0x801764A4 end:0x801789F4
+
+seq_gameover.c:
+	extab       start:0x8000C2E0 end:0x8000C2F8
+	extabindex  start:0x800187C0 end:0x800187E4
+	.text       start:0x801789F4 end:0x80178FD0
+
+seq_logo.c:
+	extab       start:0x8000C2F8 end:0x8000C318
+	extabindex  start:0x800187E4 end:0x80018814
+	.text       start:0x80178FD0 end:0x8017A33C
+
+seq_mapchange.c:
+	extab       start:0x8000C318 end:0x8000C330
+	extabindex  start:0x80018814 end:0x80018838
+	.text       start:0x8017A33C end:0x8017B130
 
 seq_title.c:
 	extab       start:0x8000C330 end:0x8000C3B8
@@ -94,6 +569,61 @@ seqdrv.c:
 	.bss        start:0x80512360 end:0x80512388
 	.sdata      start:0x805AE0B8 end:0x805AE0C8
 	.sbss       start:0x805AE918 end:0x805AE920
+
+seq_load.c:
+	extab       start:0x8000C3C8 end:0x8000C3E0
+	extabindex  start:0x800188B0 end:0x800188D4
+	.text       start:0x8017C0A0 end:0x8017C61C
+
+seq_game.c:
+	extab       start:0x8000C3E0 end:0x8000C410
+	extabindex  start:0x800188D4 end:0x8001891C
+	.text       start:0x8017C61C end:0x8017D008
+
+seq_load_sub.c:
+	extab       start:0x8000C410 end:0x8000C438
+	extabindex  start:0x8001891C end:0x80018958
+	.text       start:0x8017D008 end:0x80180CD0
+
+levelupwindow.c:
+	extab       start:0x8000C438 end:0x8000C468
+	extabindex  start:0x80018958 end:0x800189A0
+	.text       start:0x80180CD0 end:0x80181924
+
+charmwindow.c:
+	extab       start:0x8000C468 end:0x8000C4A8
+	extabindex  start:0x800189A0 end:0x80018A00
+	.text       start:0x80181924 end:0x80182BDC
+
+nameent.c:
+	extab       start:0x8000C4A8 end:0x8000C4C0
+	extabindex  start:0x80018A00 end:0x80018A24
+	.text       start:0x80182BDC end:0x80183FB0
+
+pausewin.c:
+	extab       start:0x8000C4C0 end:0x8000C768
+	extabindex  start:0x80018A24 end:0x80018E20
+	.text       start:0x80183FB0 end:0x80195104
+
+charpixlitemwin.c:
+	extab       start:0x8000C768 end:0x8000C7E0
+	extabindex  start:0x80018E20 end:0x80018ED4
+	.text       start:0x80195104 end:0x801991F4
+
+hud.c:
+	extab       start:0x8000C7E0 end:0x8000C820
+	extabindex  start:0x80018ED4 end:0x80018F34
+	.text       start:0x801991F4 end:0x8019BEB4
+
+treasuremap.c:
+	extab       start:0x8000C820 end:0x8000C838
+	extabindex  start:0x80018F34 end:0x80018F58
+	.text       start:0x8019BEB4 end:0x8019C3B0
+
+sptexture.c:
+	extab       start:0x8000C838 end:0x8000C848
+	extabindex  start:0x80018F58 end:0x80018F70
+	.text       start:0x8019C3B0 end:0x8019C500
 
 system.c:
 	extab       start:0x8000C848 end:0x8000C8C0
@@ -131,6 +661,21 @@ filemgr.c:
 	.bss        start:0x80516F88 end:0x805173A0
 	.sdata      start:0x805AE130 end:0x805AE138
 
+fontmgr.c:
+	extab       start:0x8000C948 end:0x8000CA08
+	extabindex  start:0x800190F0 end:0x80019210
+	.text       start:0x8019FFB8 end:0x801A37B4
+
+gxsub.c:
+	extab       start:0x8000CA08 end:0x8000CA88
+	extabindex  start:0x80019210 end:0x800192D0
+	.text       start:0x801A37B4 end:0x801A5418
+
+himo.c:
+	extab       start:0x8000CA88 end:0x8000CA98
+	extabindex  start:0x800192D0 end:0x800192E8
+	.text       start:0x801A5418 end:0x801A5DCC
+
 memory.c:
 	extab       start:0x8000CA98 end:0x8000CB30
 	extabindex  start:0x800192E8 end:0x8001936C
@@ -140,6 +685,16 @@ memory.c:
 	.bss        start:0x805173E0 end:0x80525468
 	.sdata      start:0x805AE168 end:0x805AE170
 	.sbss       start:0x805AE9A8 end:0x805AE9B8
+
+parse.c:
+	extab       start:0x8000CB30 end:0x8000CB48
+	extabindex  start:0x8001936C end:0x80019390
+	.text       start:0x801A6E9C end:0x801A74F0
+
+romfont.c:
+	extab       start:0x8000CB48 end:0x8000CB60
+	extabindex  start:0x80019390 end:0x800193B4
+	.text       start:0x801A74F0 end:0x801A7DDC
 
 spmario.c:
 	extab       start:0x8000CB60 end:0x8000CB90
@@ -151,6 +706,11 @@ spmario.c:
 	.sdata      start:0x805AE178 end:0x805AE180
 	.sbss       start:0x805AE9B8 end:0x805AE9D0
 	.sdata2     start:0x805B3D20 end:0x805B3D50
+
+DEMOInit.c:
+	extab       start:0x8000CB90 end:0x8000CBB0
+	extabindex  start:0x800193FC end:0x8001942C
+	.text       start:0x801A9098 end:0x801A9640
 
 npcdrv.c:
 	extab       start:0x8000CBB0 end:0x8000D0C0
@@ -171,6 +731,12 @@ wpadmgr.c:
 	.sdata      start:0x805AE198 end:0x805AE1A0
 	.sdata2     start:0x805B61F8 end:0x805B6230
 
+spmario_snd.c:
+	extab       start:0x8000EEE8 end:0x8000F088
+	extabindex  start:0x8001C900 end:0x8001CB58
+	.text       start:0x80237A10 end:0x8023E434
+	.ctors      start:0x8031BF08 end:0x8031BF0C
+
 relmgr.c:
 	extab       start:0x8000F088 end:0x8000F090
 	extabindex  start:0x8001CB58 end:0x8001CB64
@@ -188,6 +754,36 @@ nandmgr.c:
 	.bss        start:0x80534FA8 end:0x80535168
 	.sdata      start:0x805AE1B0 end:0x805AE1B8
 	.sdata2     start:0x805B62A8 end:0x805B62B0
+
+ac_shake.c:
+	extab       start:0x8000F110 end:0x8000F138
+	extabindex  start:0x8001CC24 end:0x8001CC60
+	.text       start:0x802406A0 end:0x80241408
+
+evt_nand.c:
+	extab       start:0x8000F138 end:0x8000F190
+	extabindex  start:0x8001CC60 end:0x8001CCE4
+	.text       start:0x80241408 end:0x80241808
+
+homebuttondrv.c:
+	extab       start:0x8000F190 end:0x8000F1B8
+	extabindex  start:0x8001CCE4 end:0x8001CD20
+	.text       start:0x80241808 end:0x80242938
+
+search.c:
+	extab       start:0x8000F1B8 end:0x8000F3E0
+	extabindex  start:0x8001CD20 end:0x8001D05C
+	.text       start:0x80242938 end:0x8024A62C
+
+evt_search.c:
+	extab       start:0x8000F3E0 end:0x8000F410
+	extabindex  start:0x8001D05C end:0x8001D0A4
+	.text       start:0x8024A62C end:0x8024AD48
+
+eff_cheri_shell.c:
+	extab       start:0x8000F8A0 end:0x8000F8B8
+	extabindex  start:0x8001D77C end:0x8001D7A0
+	.text       start:0x80255334 end:0x80255838
 
 Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
 	.text       start:0x802566B8 end:0x80256728
