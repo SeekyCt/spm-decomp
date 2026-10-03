@@ -35,16 +35,10 @@ typedef f32 (IntplUserFunc)(s32, s32, f32, f32);
 #ifdef DECOMP
 
 #define SPM_ASSERT_NM(line, condition) \
-    do \
-    { \
-        if ((condition) == false) __assert(__FILE__, line, #condition); \
-    } while (0)
+    if ((condition) == false) __assert(__FILE__, line, #condition);
 
 #define SPM_ASSERT(line, condition, ...) \
-    do \
-    { \
-        if ((condition) == false) __assert2(__FILE__, line, #condition, __VA_ARGS__); \
-    } while (0)
+    if ((condition) == false) __assert2(__FILE__, line, #condition, __VA_ARGS__);
 
 #else
 
