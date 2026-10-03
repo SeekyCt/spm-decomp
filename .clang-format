@@ -50,4 +50,6 @@ IncludeCategories:
 
 WhitespaceSensitiveMacros:
   - SPM_ASSERT
+  - SPM_ASSERT_
   - SPM_ASSERT_NM
+  - SPM_ASSERT_NM_
