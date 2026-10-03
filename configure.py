@@ -400,7 +400,7 @@ config.libs = [
         Object(NonStarted, "mario_fairy.c"),
         Object(NonStarted, "mario_hit.c"),
         Object(NonStarted, "mario_motion.c"),
-        Object(NonMatching, "mario_pouch.c"),
+        Object(Matching, "mario_pouch.c"),
         Object(NonStarted, "mario_sbr.c"),
         Object(NonStarted, "mario_status.c"),
         Object(NonStarted, "mot_fairy_other.c"),
