@@ -127,7 +127,7 @@ s32 evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
         s32 no = 0;
         s32 i = 0;
         parseTagGet1("<no>", PARSE_VALUE_TYPE_INT, &no);
-        SPM_ASSERT(144, no >= 0 && no < DUNGEON_MAX, "なんか番号がおかしい [%d]", no);
+        SPM_ASSERT_(144, no >= 0 && no < DUNGEON_MAX, "なんか番号がおかしい [%d]", no);
 
         // Read item id (chest contents in chest rooms, null & unused elsewhere)
         char itemName[64];
@@ -441,7 +441,7 @@ s32 evt_dan_get_enemy_info(EvtEntry * entry, bool isFirstCall)
                 if (((curTemplate->unknown_0x8 & 1) == 0) && (curTemplate->tribeId == tribeId))
                     break;
             }
-            SPM_ASSERT(628, i < NPCTEMPLATE_MAX, "みつかりませんでした[%d]", tribeId);
+            SPM_ASSERT_(628, i < NPCTEMPLATE_MAX, "みつかりませんでした[%d]", tribeId);
 
             // Return template id and num
             evtSetValue(entry, args[2], i);

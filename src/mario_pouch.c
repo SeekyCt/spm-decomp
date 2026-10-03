@@ -684,7 +684,7 @@ bool pouchAddItem(s32 itemId)
     else
     {
         // "Strange id"
-        SPM_ASSERT(742, 0, "おかしいです id = %d", itemId);
+        SPM_ASSERT_(742, 0, "おかしいです id = %d", itemId);
     }
 
     return true;
@@ -759,7 +759,7 @@ bool pouchCheckHaveItem(s32 itemId)
     else
     {
         // "Strange id"
-        SPM_ASSERT(793, 0, "おかしいです id = %d", itemId);
+        SPM_ASSERT_(793, 0, "おかしいです id = %d", itemId);
     }
 
     return false;
@@ -852,7 +852,7 @@ void pouchRemoveItem(s32 itemId)
     else
     {
         // "Strange id"
-        SPM_ASSERT(870, 0, "おかしいです id = %d", itemId);
+        SPM_ASSERT_(870, 0, "おかしいです id = %d", itemId);
     }
 }
 
@@ -862,7 +862,7 @@ void pouchRemoveItemIdx(s32 itemId, s32 idx)
 
     if (itemId >= ITEM_ID_KEY_START && itemId < ITEM_ID_KEY_MAX)
     {
-        SPM_ASSERT(0x370, pp->keyItem[idx] == itemId, "おかしい");
+        SPM_ASSERT_(0x370, pp->keyItem[idx] == itemId, "おかしい");
         if (idx >= POUCH_KEY_ITEM_MAX)
             return;
         pp->keyItem[idx] = NULL;
@@ -873,7 +873,7 @@ void pouchRemoveItemIdx(s32 itemId, s32 idx)
     }
     else if (itemId >= ITEM_ID_USE_START && itemId < ITEM_ID_USE_MAX)
     {
-        SPM_ASSERT(892, pp->useItem[idx] == itemId, "おかしい");
+        SPM_ASSERT_(892, pp->useItem[idx] == itemId, "おかしい");
         if (idx >= POUCH_USE_ITEM_MAX)
             return;
         pp->useItem[idx] = NULL;
@@ -884,14 +884,14 @@ void pouchRemoveItemIdx(s32 itemId, s32 idx)
     }
     else
     {
-        SPM_ASSERT(904, 0, "pouchRemoveItemIdx は KeyItem,UseItem にしか対応していません");
+        SPM_ASSERT_(904, 0, "pouchRemoveItemIdx は KeyItem,UseItem にしか対応していません");
     }
 }
 
 bool pouchAddShopItem(s32 itemId)
 {
     MarioPouchWork * pp = pouchGetPtr();
-    SPM_ASSERT(915, itemId >= ITEM_ID_USE_START && itemId < ITEM_ID_USE_MAX, "それは預かれない\n");
+    SPM_ASSERT_(915, itemId >= ITEM_ID_USE_START && itemId < ITEM_ID_USE_MAX, "それは預かれない\n");
     s32 i;
     for (i = 0; i < POUCH_SHOP_ITEM_MAX; i++)
     {
@@ -908,7 +908,7 @@ bool pouchAddShopItem(s32 itemId)
 void pouchRemoveShopItem(s32 itemId)
 {
     MarioPouchWork * pp = pouchGetPtr();
-    SPM_ASSERT(932, itemId >= ITEM_ID_USE_START && itemId < ITEM_ID_USE_MAX, "それは預ってない\n");
+    SPM_ASSERT_(932, itemId >= ITEM_ID_USE_START && itemId < ITEM_ID_USE_MAX, "それは預ってない\n");
 
     s32 i;
     for (i = 0; i < POUCH_SHOP_ITEM_MAX; i++)
@@ -930,8 +930,8 @@ void pouchRemoveShopItem(s32 itemId)
 void pouchRemoveShopItemIdx(s32 itemId, s32 idx)
 {
     MarioPouchWork * pp = pouchGetPtr();
-    SPM_ASSERT(952, itemId >= ITEM_ID_USE_START && itemId < ITEM_ID_USE_MAX, "それは預ってない\n");
-    SPM_ASSERT(953, pp->shopItem[idx] == itemId, "おかしい");
+    SPM_ASSERT_(952, itemId >= ITEM_ID_USE_START && itemId < ITEM_ID_USE_MAX, "それは預ってない\n");
+    SPM_ASSERT_(953, pp->shopItem[idx] == itemId, "おかしい");
     if (idx >= POUCH_SHOP_ITEM_MAX)
         return;
     pp->shopItem[idx] = NULL;
@@ -1083,7 +1083,7 @@ void pouchRegisterMapFound(s32 itemId)
 
     pp = pouchGetPtr();
 
-    SPM_ASSERT(1117, itemId >= ITEM_ID_MAP_START && itemId < ITEM_ID_MAP_MAX, "そんな地図はない %d",
+    SPM_ASSERT_(1117, itemId >= ITEM_ID_MAP_START && itemId < ITEM_ID_MAP_MAX, "そんな地図はない %d",
                itemId);
 
     mapId = itemId - ITEM_ID_MAP_START;
@@ -1097,7 +1097,7 @@ void pouchRegisterRecipeKnown(s32 itemId)
 
     pp = pouchGetPtr();
 
-    SPM_ASSERT(1151, itemId >= ITEM_ID_COOK_START && itemId < ITEM_ID_COOK_MAX,
+    SPM_ASSERT_(1151, itemId >= ITEM_ID_COOK_START && itemId < ITEM_ID_COOK_MAX,
                "そんな料理はない %d", itemId);
 
     cookId = itemId - ITEM_ID_COOK_START;
@@ -1111,7 +1111,7 @@ bool pouchCheckRecipeKnown(s32 itemId)
 
     pp = pouchGetPtr();
 
-    SPM_ASSERT(1165, itemId >= ITEM_ID_COOK_START && itemId < ITEM_ID_COOK_MAX,
+    SPM_ASSERT_(1165, itemId >= ITEM_ID_COOK_START && itemId < ITEM_ID_COOK_MAX,
                "そんな料理はない %d", itemId);
 
     cookId = itemId - ITEM_ID_COOK_START;
@@ -1128,7 +1128,7 @@ s32 pouchGetCardCount(s32 itemId)
 
     pp = pouchGetPtr();
 
-    SPM_ASSERT(1184, itemId >= ITEM_ID_CARD_START && itemId < ITEM_ID_CARD_MAX,
+    SPM_ASSERT_(1184, itemId >= ITEM_ID_CARD_START && itemId < ITEM_ID_CARD_MAX,
                "おかしなカード番号です %d", itemId);
 
     cardId = itemId - ITEM_ID_CARD_START;
@@ -1142,7 +1142,7 @@ bool pouchCheckCardKnown(s32 itemId)
 
     pp = pouchGetPtr();
 
-    SPM_ASSERT(1194, itemId >= ITEM_ID_CARD_START && itemId < ITEM_ID_CARD_MAX,
+    SPM_ASSERT_(1194, itemId >= ITEM_ID_CARD_START && itemId < ITEM_ID_CARD_MAX,
                "そんなカードはない %d", itemId);
 
     cardId = itemId - ITEM_ID_CARD_START;

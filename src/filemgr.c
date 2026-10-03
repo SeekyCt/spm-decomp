@@ -823,7 +823,7 @@ void _fileGarbage(s32 patience)
             else
             {
                 // "The list structure is broken"
-                SPM_ASSERT(772, afp->freeEnd, "リスト構造が壊れています");
+                SPM_ASSERT_(772, afp->freeEnd, "リスト構造が壊れています");
                 afp->freeEnd->next = entry;
             }
             entry->next = NULL;
@@ -873,7 +873,7 @@ static FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused)
             continue;
 
         // "The file type is different from before"
-        SPM_ASSERT(876, lp->fileType == fileType, "ファイルタイプが以前と違います\n");
+        SPM_ASSERT_(876, lp->fileType == fileType, "ファイルタイプが以前と違います\n");
 
         // Wait for reading to finish
         while (lp->dvdEntry != NULL)
@@ -909,7 +909,7 @@ static FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused)
         new_lp = afp->freeStart;
     }
     // "File list is missing"
-    SPM_ASSERT(917, new_lp, "ファイルリストが足りない\n");
+    SPM_ASSERT_(917, new_lp, "ファイルリストが足りない\n");
 
     // Backup next pointer
     FileEntry * newFreeStart = new_lp->next;
@@ -935,12 +935,12 @@ static FileEntry * _fileAlloc(const char * path, s32 fileType, s32 unused)
     SmartAllocation * new_sp = smartAlloc(roundedLength, 0);
     memset(new_sp->data, 0, new_sp->size);
     // Memory allocation failure
-    SPM_ASSERT(969, new_sp, "メモリ確保に失敗\n");
+    SPM_ASSERT_(969, new_sp, "メモリ確保に失敗\n");
     new_sp->fileEntry = new_lp;
 
     // Read into memory
     if (DVDMgrRead(dvdEntry, new_sp->data, (s32) roundedLength, 0) <= 0)
-        SPM_ASSERT(978, 0, "ＤＶＤだめでっすちめいてきえらー\n");
+        SPM_ASSERT_(978, 0, "ＤＶＤだめでっすちめいてきえらー\n");
     DVDMgrClose(dvdEntry);
 
     // Update file entry
@@ -990,7 +990,7 @@ void fileFree(FileEntry * lp)
         // Decrement reference count
         lp->touchCnt--;
         // "It's too free"
-        SPM_ASSERT(1039, lp->touchCnt>=0, "フリーしすぎです。\n");
+        SPM_ASSERT_(1039, lp->touchCnt>=0, "フリーしすぎです。\n");
         if (lp->touchCnt == 0)
         {
             lp->state = FILE_WAITING_GARBAGE;
@@ -999,7 +999,7 @@ void fileFree(FileEntry * lp)
     else
     {
         // "!An unalocated pointer was pointed to"
-        SPM_ASSERT_NM(1049, !"Alloc されていないポインタを示しました\n");
+        SPM_ASSERT_NM_(1049, !"Alloc されていないポインタを示しました\n");
     }
 }
 
@@ -1014,12 +1014,12 @@ static void dvdReadDoneCallback(s32 result, DVDFileInfo * fp)
             break;
     }
     DVDEntry * dvdEntry = lp->dvdEntry;
-    SPM_ASSERT(1076, lp, "listが見つからなかった\ni=%d fp=%x useBegin=%x\n", i, fp,
+    SPM_ASSERT_(1076, lp, "listが見つからなかった\ni=%d fp=%x useBegin=%x\n", i, fp,
                afp->allocatedStart);
 
     // Check read was successful
     if (result == DVD_RESULT_FATAL_ERROR)
-        SPM_ASSERT_NM(1080, !"致命的なエラー DVD_RESULT_FATAL_ERROR \n");
+        SPM_ASSERT_NM_(1080, !"致命的なエラー DVD_RESULT_FATAL_ERROR \n");
 
     if (result == DVD_RESULT_CANCELED)
     {
@@ -1062,7 +1062,7 @@ FileEntry * fileAsync(const char * path, s32 fileType, FilemgrCallback * readDon
             continue;
 
         // "The file type is different from before"
-        SPM_ASSERT(1158, lp->fileType == fileType, "ファイルタイプが以前と違います[%s]\n", path);
+        SPM_ASSERT_(1158, lp->fileType == fileType, "ファイルタイプが以前と違います[%s]\n", path);
 
         // Wait for reading to finish
         if (lp->dvdEntry != NULL)
@@ -1090,7 +1090,7 @@ FileEntry * fileAsync(const char * path, s32 fileType, FilemgrCallback * readDon
         new_lp = afp->freeStart;
     }
     // "File list is missing"
-    SPM_ASSERT(1196, new_lp, "ファイルリストが足りない\n");
+    SPM_ASSERT_(1196, new_lp, "ファイルリストが足りない\n");
 
     // Backup next pointer
     FileEntry * newFreeStart = new_lp->next;
@@ -1117,7 +1117,7 @@ FileEntry * fileAsync(const char * path, s32 fileType, FilemgrCallback * readDon
     SmartAllocation * new_sp = smartAlloc(roundedLength, 0);
     memset(new_sp->data, 0, new_sp->size);
     // Memory allocation failure
-    SPM_ASSERT(1251, new_sp, "メモリ確保に失敗\n");
+    SPM_ASSERT_(1251, new_sp, "メモリ確保に失敗\n");
     new_sp->fileEntry = new_lp;
 
     // Update file entry
