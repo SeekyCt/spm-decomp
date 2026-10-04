@@ -1,0 +1,13 @@
+object: sys/main.dol
+object_base: orig/US2
+hash: 847ea576f843514310e287c14fcef59f9794b3c4
+symbols: config/US2/symbols.txt
+splits: config/US2/splits.txt
+mw_comment_version: 15
+quick_analysis: false
+
+modules:
+- object: files/rel/relF.bin:nlzss
+  hash: d53d181f6da865e3d442d77076d16291e8341168
+  symbols: config/US2/relF/symbols.txt
+  splits: config/US2/relF/splits.txt
