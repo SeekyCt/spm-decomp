@@ -37,6 +37,7 @@ VERSIONS = [
     "JP1",  # 3
     "KR0",  # 4
     "US0",  # 5
+    "US1",  # 6
 ]
 
 parser = argparse.ArgumentParser()
