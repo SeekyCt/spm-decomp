@@ -1,0 +1,53 @@
+Language: Cpp
+BasedOnStyle: LLVM
+
+AllowShortFunctionsOnASingleLine: None
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: true
+  AfterClass: true
+  AfterControlStatement: Always
+  AfterEnum: true
+  AfterExternBlock: false
+  AfterFunction: true
+  AfterNamespace: false
+  AfterStruct: true
+  AfterUnion: true
+  BeforeCatch: true
+  BeforeElse: true
+  BeforeWhile: true
+  SplitEmptyFunction: true
+  SplitEmptyNamespace: true
+  SplitEmptyRecord: true
+ColumnLimit: 100
+IndentWidth: 4
+IndentCaseLabels: true
+IndentPPDirectives: BeforeHash
+PointerAlignment: Middle
+SortIncludes: CaseInsensitive
+SpaceAfterCStyleCast: true
+SpaceBeforeCpp11BracedList: true
+
+OneLineFormatOffRegex: \
+  (^\/\* 0x[a-fA-F0-9]+ \*\/\
+  |^\/\/ evt_)
+
+IncludeCategories:
+  - Regex: ^<common.h>
+    Priority: 0
+  - Regex: ^<[^/]+>
+    Priority: 1
+  - Regex: ^<spm/
+    Priority: 2
+  - Regex: ^<wii/
+    Priority: 3
+  - Regex: ^<nw4r/
+    Priority: 4
+  - Regex: ^<msl/
+    Priority: 5
+  - Regex: .*
+    Priority: 6
+
+WhitespaceSensitiveMacros:
+  - SPM_ASSERT
+  - SPM_ASSERT_NM

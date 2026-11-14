@@ -14,33 +14,32 @@ SeqDef seq_data[SEQ_COUNT] = {
     {
         &seq_logoInit,
         &seq_logoMain,
-        &seq_logoExit
+        &seq_logoExit,
     },
     {
         &seq_titleInit,
         &seq_titleMain,
-        &seq_titleExit
+        &seq_titleExit,
     },
     {
         &seq_gameInit,
         &seq_gameMain,
-        &seq_gameExit
+        &seq_gameExit,
     },
     {
         &seq_mapChangeInit,
         &seq_mapChangeMain,
-        &seq_mapChangeExit
+        &seq_mapChangeExit,
     },
     {
         &seq_gameOverInit,
         &seq_gameOverMain,
-        &seq_gameOverExit
+        &seq_gameOverExit,
     },
     {
         &seq_loadInit,
         &seq_loadMain,
-        &seq_loadExit
-    }
+        &seq_loadExit,
+    },
 };
-
 }

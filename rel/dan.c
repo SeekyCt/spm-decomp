@@ -8,6 +8,7 @@
 #include <spm/eff/eff_spm_confetti.h>
 #include <spm/eff/eff_zunbaba.h>
 #include <spm/evt_cam.h>
+#include <spm/evt_door.h>
 #include <spm/evt_eff.h>
 #include <spm/evt_fairy.h>
 #include <spm/evt_frame.h>
@@ -17,8 +18,8 @@
 #include <spm/evt_item.h>
 #include <spm/evt_map.h>
 #include <spm/evt_mario.h>
-#include <spm/evt_msg.h>
 #include <spm/evt_mobj.h>
+#include <spm/evt_msg.h>
 #include <spm/evt_npc.h>
 #include <spm/evt_offscreen.h>
 #include <spm/evt_paper.h>
@@ -28,25 +29,24 @@
 #include <spm/evt_sub.h>
 #include <spm/evtmgr.h>
 #include <spm/evtmgr_cmd.h>
-#include <spm/evt_door.h>
 #include <spm/hitdrv.h>
 #include <spm/hud.h>
-#include <spm/itemdrv.h>
 #include <spm/item_data.h>
+#include <spm/itemdrv.h>
 #include <spm/lz_embedded.h>
 #include <spm/mapdrv.h>
 #include <spm/mario.h>
 #include <spm/mario_pouch.h>
-#include <spm/mobjdrv.h>
 #include <spm/memory.h>
+#include <spm/mobjdrv.h>
 #include <spm/npcdrv.h>
 #include <spm/parse.h>
-#include <spm/seqdrv.h>
-#include <spm/seq_title.h>
-#include <spm/spmario.h>
-#include <spm/system.h>
 #include <spm/rel/dan.h>
 #include <spm/rel/machi.h>
+#include <spm/seq_title.h>
+#include <spm/seqdrv.h>
+#include <spm/spmario.h>
+#include <spm/system.h>
 #include <wii/cx.h>
 #include <wii/gx.h>
 #include <msl/stdio.h>
@@ -113,7 +113,7 @@ s32 evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
         wp->dungeons = (DanDungeon *) __memAlloc(HEAP_MAP, sizeof(DanDungeon[DUNGEON_MAX]));
         memset(wp->dungeons, 0, sizeof(DanDungeon[DUNGEON_MAX]));
     }
-    
+
     // Prepare pit text to be read
     u32 size = CXGetCompressionHeader(pitText).decompSize;
     char * decompPitText = (char *) __memAlloc(HEAP_MAIN, size);
@@ -134,7 +134,8 @@ s32 evt_dan_read_data(EvtEntry * entry, bool isFirstCall)
         parseTagGet1("<item>", PARSE_VALUE_TYPE_STRING, itemName);
         wp->dungeons[no].item = itemTypeNameToId(itemName);
 
-        // Read map (bitflags for parts of the map to enable and disable in enemy rooms, 0 & unused elsewhere)
+        // Read map (bitflags for parts of the map to enable and disable in enemy rooms, 0 & unused
+        // elsewhere)
         parseTagGet1("<map>", PARSE_VALUE_TYPE_INT, &wp->dungeons[no].map);
 
         // Read doors
@@ -250,7 +251,8 @@ s32 evt_dan_handle_dokans(EvtEntry * entry, bool isFirstCall)
     hitGrpFlagOn(false, "A3D_dokan", HITOBJ_FLAG_DISABLE);
 
     // Turn on enabled pipes
-    if (CHECK_ANY_MASK(dungeon->map, 0x10000)) {
+    if (CHECK_ANY_MASK(dungeon->map, 0x10000))
+    {
         mapGrpFlagOff(false, "dokan_01", MAPOBJ_FLAG0_HIDE);
         hitGrpFlagOff(false, "A2D_dokan_01", HITOBJ_FLAG_DISABLE);
         hitGrpFlagOff(false, "A3D_dokan_01", HITOBJ_FLAG_DISABLE);
@@ -258,7 +260,8 @@ s32 evt_dan_handle_dokans(EvtEntry * entry, bool isFirstCall)
         hitGrpFlagOff(false, "A2D_dokan_02", HITOBJ_FLAG_DISABLE);
         hitGrpFlagOff(false, "A3D_dokan_02", HITOBJ_FLAG_DISABLE);
     }
-    if (CHECK_ANY_MASK(dungeon->map, 0x20000)) {
+    if (CHECK_ANY_MASK(dungeon->map, 0x20000))
+    {
         mapGrpFlagOff(false, "dokan_03", MAPOBJ_FLAG0_HIDE);
         hitGrpFlagOff(false, "A2D_dokan_03", HITOBJ_FLAG_DISABLE);
         hitGrpFlagOff(false, "A3D_dokan_03", HITOBJ_FLAG_DISABLE);
@@ -266,7 +269,8 @@ s32 evt_dan_handle_dokans(EvtEntry * entry, bool isFirstCall)
         hitGrpFlagOff(false, "A2D_dokan_04", HITOBJ_FLAG_DISABLE);
         hitGrpFlagOff(false, "A3D_dokan_04", HITOBJ_FLAG_DISABLE);
     }
-    if (CHECK_ANY_MASK(dungeon->map, 0x40000)) {
+    if (CHECK_ANY_MASK(dungeon->map, 0x40000))
+    {
         mapGrpFlagOff(false, "dokan_05", MAPOBJ_FLAG0_HIDE);
         hitGrpFlagOff(false, "A2D_dokan_05", HITOBJ_FLAG_DISABLE);
         hitGrpFlagOff(false, "A3D_dokan_05", HITOBJ_FLAG_DISABLE);
@@ -274,7 +278,8 @@ s32 evt_dan_handle_dokans(EvtEntry * entry, bool isFirstCall)
         hitGrpFlagOff(false, "A2D_dokan_06", HITOBJ_FLAG_DISABLE);
         hitGrpFlagOff(false, "A3D_dokan_06", HITOBJ_FLAG_DISABLE);
     }
-    if (CHECK_ANY_MASK(dungeon->map, 0x80000)) {
+    if (CHECK_ANY_MASK(dungeon->map, 0x80000))
+    {
         mapGrpFlagOff(false, "dokan_07", MAPOBJ_FLAG0_HIDE);
         hitGrpFlagOff(false, "A2D_dokan_07", HITOBJ_FLAG_DISABLE);
         hitGrpFlagOff(false, "A3D_dokan_07", HITOBJ_FLAG_DISABLE);
@@ -407,7 +412,7 @@ s32 evt_dan_get_enemy_info(EvtEntry * entry, bool isFirstCall)
     (void) isFirstCall;
 
     // Get dungeon and enemy index
-    EvtScriptCode * args = entry->pCurData;    
+    EvtScriptCode * args = entry->pCurData;
     s32 no = evtGetValue(entry, args[0]);
     s32 enemyIdx = evtGetValue(entry, args[1]);
     DanDungeon * dungeon = wp->dungeons + no;
@@ -553,7 +558,8 @@ s32 evt_dan_get_enemy_spawn_pos(EvtEntry * entry, bool isInitialCall)
         s32 i;
         for (i = 0; i < wp->spawnTableCount; i++)
         {
-            if ((wp->doorInfo.enter != wp->spawnTable[i]) && (wp->doorInfo.exit != wp->spawnTable[i]))
+            if ((wp->doorInfo.enter != wp->spawnTable[i]) &&
+                (wp->doorInfo.exit != wp->spawnTable[i]))
             {
                 if (j == targetPos)
                     break;
@@ -571,7 +577,8 @@ s32 evt_dan_get_enemy_spawn_pos(EvtEntry * entry, bool isInitialCall)
     // Unknown, outputs coords with some changes if needed
     f32 f1, f2, f3, f4, f5, f6, f7;
     f4 = 1000.0f;
-    if (hitCheckFilter(doorPos.x, doorPos.y, 0.0f, 0.0f, -1.0f, 0.0f, NULL, &f1, &f2, &f3, &f4, &f5, &f6, &f7))
+    if (hitCheckFilter(doorPos.x, doorPos.y, 0.0f, 0.0f, -1.0f, 0.0f, NULL, &f1, &f2, &f3, &f4, &f5,
+                       &f6, &f7))
     {
         evtSetFloat(entry, args[3], f1);
         evtSetFloat(entry, args[4], f2);
@@ -637,19 +644,17 @@ bool danCheckKeyInMapBbox()
     // Get the range of valid coordinates
     Vec3 min, max;
     hitGetMapEntryBbox(0, &min, &max);
-    
+
     // Check whether any item is the key within valid coordinates
     s32 itemCount = itemWp->num;
     s32 i;
     for (i = 0; i < itemCount; i++, item++)
     {
-        if (
-            CHECK_ANY_MASK(item->flags, 0x1) &&
+        if (CHECK_ANY_MASK(item->flags, 0x1) &&
             ((item->type == ITEM_ID_KEY_DAN_KEY) || (item->type == ITEM_ID_KEY_URA_DAN_KEY)) &&
             (min.x <= item->position.x) && (max.x >= item->position.x) &&
             (min.y <= item->position.y) && (max.y >= item->position.y) &&
-            (min.z <= item->position.z) && (max.z >= item->position.z)
-        )
+            (min.z <= item->position.z) && (max.z >= item->position.z))
             break;
     }
 
@@ -686,11 +691,9 @@ bool danCheckEnemyInMapBbox()
         {
             Vec3 tempMin = {min.x, min.y, min.z};
             tempMin.y -= npc->unknown_0x3ac;
-            if (
-                (tempMin.x <= npc->position.x) && (max.x >= npc->position.x) &&
+            if ((tempMin.x <= npc->position.x) && (max.x >= npc->position.x) &&
                 (tempMin.y <= npc->position.y) && (max.y >= npc->position.y) &&
-                (tempMin.z <= npc->position.z) && (max.z >= npc->position.z)
-            )
+                (tempMin.z <= npc->position.z) && (max.z >= npc->position.z))
                 break;
         }
     }
@@ -706,18 +709,16 @@ s32 evt_dan_handle_key_failsafe(EvtEntry * entry, bool isFirstCall)
     (void) isFirstCall;
 
     // Check whether the key exists anywhere
-    if (
-        !danCheckEnemyInMapBbox() && !danCheckKeyInMapBbox() &&
+    if (!danCheckEnemyInMapBbox() && !danCheckKeyInMapBbox() &&
         !pouchCheckHaveItem(ITEM_ID_KEY_DAN_KEY) && !pouchCheckHaveItem(ITEM_ID_KEY_URA_DAN_KEY) &&
-        !itemCheckForId(ITEM_ID_KEY_DAN_KEY) && !itemCheckForId(ITEM_ID_KEY_URA_DAN_KEY)
-    )
+        !itemCheckForId(ITEM_ID_KEY_DAN_KEY) && !itemCheckForId(ITEM_ID_KEY_URA_DAN_KEY))
     {
         // Spawn the key at the lock if not
         MobjEntry * lock = mobjNameToPtr("lock_00");
         s32 keyId = ITEM_ID_KEY_DAN_KEY;
         if (evtGetValue(entry, GSW(1)) >= 100)
             keyId = ITEM_ID_KEY_URA_DAN_KEY;
-        
+
         itemEntry(NULL, keyId, 1, lock->pos.x, lock->pos.y, 0.0f, NULL, 0);
         effSmallStarEntry(lock->pos.x, lock->pos.y, 0.0f, 0.0f, -1.0f, 0.0f, 4, 8);
         effSpmConfettiEntry(lock->pos.x, lock->pos.y, 0.0f, 1, 0);
@@ -736,13 +737,13 @@ s32 evt_dan_handle_chest_room_dokans_and_doors(EvtEntry * entry, bool isFirstCal
 
     // Get dungeon number
     s32 no = evtGetValue(entry, entry->pCurData[0]);
-    
+
     // Update destination of exit door
     chestRoomMapDoorDescs[1].destMapName = getDanMapName(no + 1);
 
     // Set the entering door name
     strcpy(gp->doorName, "doa1_l");
-    
+
     // Set exit pipe destination
     if (no < 100)
     {
@@ -767,7 +768,7 @@ s32 evt_dan_get_chest_room_item(EvtEntry * entry, bool isFirstCall)
     // Get dungeon number
     EvtScriptCode * args = entry->pCurData;
     int no = evtGetValue(entry, args[0]); // must be int to match
-    
+
     // Return the item in this room's chest
     evtSetValue(entry, args[1], wp->dungeons[no - 1].item);
 
@@ -881,12 +882,13 @@ static MapDoorDesc mapDoorDescs[2] = {
     // enter
     {0x102004, NULL, NULL, NULL, NULL, "", "", 16},
     // exit
-    {0x2004, NULL, NULL, NULL, NULL, "", "", 16}
+    {0x2004, NULL, NULL, NULL, NULL, "", "", 16},
 };
 
 static s32 flipsideLockItems[2] = {ITEM_ID_KEY_DAN_KEY, -1};
 static s32 flopsideLockItems[2] = {ITEM_ID_KEY_URA_DAN_KEY, -1};
 
+// clang-format off
 EVT_BEGIN(dan_lock_interact_evt)
     USER_FUNC(evt_mario_key_off, 0)
     IF_SMALL(GSW(1), 100)
@@ -909,7 +911,9 @@ EVT_BEGIN(dan_lock_interact_evt)
     USER_FUNC(evt_mario_key_on)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_lock_open_evt)
     USER_FUNC(evt_dan_get_exit_door_name_l, LW(0))
     USER_FUNC(evt_door_enable_disable_map_door_desc, 1, LW(0))
@@ -917,7 +921,9 @@ EVT_BEGIN(dan_lock_open_evt)
     RUN_CHILD_EVT(PTR(lbl_80417e10))
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_enemy_room_init_evt)
     SET(LW(0), GSW(1))
     USER_FUNC(evt_dan_read_data)
@@ -990,6 +996,7 @@ EVT_BEGIN(dan_enemy_room_init_evt)
     USER_FUNC(func_800d4de4, 1, 0)
     RETURN()
 EVT_END()
+// clang-format on()
 
 static DokanDesc chestRoomDokanDesc = {
     2, 0x8000, 0, "dokan_1", "dan", "A2D_dokan_1", "A3D_dokan_1", "mac_05", "dokan_1"
@@ -1002,13 +1009,16 @@ static MapDoorDesc chestRoomMapDoorDescs[2] = {
     {0x4, "doa2_l", "doa2_r", "A2_doa_02", "A3_doa_02", "dan_01", NULL, 16}
 };
 
+// clang-format off
 EVT_BEGIN(dan_exit_pipe_sign_interact_evt)
     USER_FUNC(evt_mario_key_off, 0)
     USER_FUNC(evt_msg_print, 0, PTR("mac_dungeon_002"), 0, 0)
     USER_FUNC(evt_mario_key_on)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_chest_open_evt)
     SET(LW(0), GSW(1))
     USER_FUNC(evt_dan_get_chest_room_item, LW(0), LW(10))
@@ -1032,6 +1042,7 @@ EVT_BEGIN(dan_chest_open_evt)
     USER_FUNC(evt_item_wait_collected, PTR("item"))
     RETURN()
 EVT_END()
+// clang-format on()
 
 static s32 rotenShopItems[] =
 {
@@ -1078,6 +1089,7 @@ static NPCTribeAnimDef danRotenTribeAnimDefs[] =
     {-1, "S_1"},
 };
 
+// clang-format off
 EVT_BEGIN(dan_chest_room_init_evt)
     SET(LW(0), GSW(1))
     USER_FUNC(evt_dan_read_data)
@@ -1185,6 +1197,7 @@ EVT_BEGIN(dan_chest_room_init_evt)
     USER_FUNC(func_800d4de4, 1, 0)
     RETURN()
 EVT_END()
+// clang-format on()
 
 static MapDoorDesc dan_30_map_door_desc =
 {
@@ -1201,6 +1214,7 @@ static DokanDesc dan_70_dokan_desc =
     0, 0, 0, "dokan", "dan_70", "A2D_dokan_1", "A3D_dokan_1", "mac_15", "dokan_1"
 };
 
+// clang-format off
 EVT_BEGIN(dan_30_init_evt)
     USER_FUNC(evt_door_set_map_door_descs, PTR(&dan_30_map_door_desc), 1)
     USER_FUNC(evt_door_enable_disable_map_door_desc, 0, PTR("doa1_l"))
@@ -1243,7 +1257,9 @@ EVT_BEGIN(dan_30_init_evt)
     USER_FUNC(func_800d4de4, 1, 0)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_init_evt)
     USER_FUNC(evt_door_set_map_door_descs, PTR(&dan_30_map_door_desc), 1)
     USER_FUNC(evt_door_enable_disable_map_door_desc, 0, PTR("doa1_l"))
@@ -1286,6 +1302,7 @@ EVT_BEGIN(dan_70_init_evt)
     USER_FUNC(func_800d4de4, 1, 0)
     RETURN()
 EVT_END()
+// clang-format on()
 
 static NPCTribeAnimDef dashellTribeAnimDefs[5] =
 {
@@ -1296,6 +1313,7 @@ static NPCTribeAnimDef dashellTribeAnimDefs[5] =
     {-1, "Z_1"},
 };
 
+// clang-format off
 EVT_BEGIN(dan_30_chest_interact_evt)
     USER_FUNC(evt_snd_bgmoff_f_d, 0, 1000)
     USER_FUNC(evt_mario_fairy_reset)
@@ -1315,7 +1333,9 @@ EVT_BEGIN(dan_30_chest_interact_evt)
     WAIT_MSEC(500)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_30_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("box"))
     USER_FUNC(evt_mario_fairy_reset)
@@ -1519,6 +1539,7 @@ EVT_BEGIN(dan_30_chest_open_evt)
     USER_FUNC(evt_mario_key_on)
     RETURN()
 EVT_END()
+// clang-format on()
 
 static NPCTribeAnimDef wracktailTribeAnimDefs[] =
 {
@@ -1533,6 +1554,7 @@ static NPCTribeAnimDef wracktailTribeAnimDefs[] =
     {-1, "zun_all_Z_1"},
 };
 
+// clang-format off
 EVT_BEGIN(dan_wracktail_main_evt)
     DO(0)
         USER_FUNC(evt_mario_get_pos, LW(0), LW(1), LW(2))
@@ -1832,7 +1854,9 @@ EVT_BEGIN(dan_wracktail_main_evt)
     USER_FUNC(evt_mario_key_on)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_start_wracktail_evt)
     USER_FUNC(evt_npc_entry, PTR("zun"), PTR("e_W_zun_all"), 0)
     USER_FUNC(evt_npc_set_position, PTR("zun"), 0, -1000, 0)
@@ -1848,11 +1872,13 @@ EVT_BEGIN(dan_start_wracktail_evt)
     RUN_EVT(PTR(&dan_wracktail_main_evt))
     RETURN()
 EVT_END()
+// clang-format on()
 
 // Must come after "e_W_zun_all"
 static const GXColor shadooBlinkColour = {0x00, 0x00, 0x00, 0xff};
 const f64 lbl_80cf0018 = 4.503601774854144E15; // TODO: this is just a literal, but wasn't placed in the right location as a dummy
 
+// clang-format off
 EVT_BEGIN(dan_70_mario_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1862,7 +1888,9 @@ EVT_BEGIN(dan_70_mario_chest_open_evt)
     SET(GF(0), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_dark_mario_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1872,7 +1900,9 @@ EVT_BEGIN(dan_70_dark_mario_chest_open_evt)
     SET(GF(1), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_peach_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1882,7 +1912,9 @@ EVT_BEGIN(dan_70_peach_chest_open_evt)
     SET(GF(2), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_dark_peach_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1892,7 +1924,9 @@ EVT_BEGIN(dan_70_dark_peach_chest_open_evt)
     SET(GF(3), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_bowser_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1902,7 +1936,9 @@ EVT_BEGIN(dan_70_bowser_chest_open_evt)
     SET(GF(4), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_dark_bowser_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1912,7 +1948,9 @@ EVT_BEGIN(dan_70_dark_bowser_chest_open_evt)
     SET(GF(5), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_luigi_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1922,7 +1960,9 @@ EVT_BEGIN(dan_70_luigi_chest_open_evt)
     SET(GF(6), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_dark_luigi_chest_open_evt)
     USER_FUNC(evt_mobj_wait_animation_end, PTR("me"))
     USER_FUNC(evt_mobj_get_position, PTR("me"), LW(0), LW(1), LW(2))
@@ -1932,8 +1972,10 @@ EVT_BEGIN(dan_70_dark_luigi_chest_open_evt)
     SET(GF(7), 1)
     RETURN()
 EVT_END()
+// clang-format on()
 
 
+// clang-format off
 EVT_BEGIN(dan_shadoo_main_evt)
     IF_LARGE_EQUAL(GSW(24), 2)
         RETURN()
@@ -2102,7 +2144,9 @@ EVT_BEGIN(dan_shadoo_main_evt)
     END_SWITCH()
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_shadoo_fight_evt)
     DO(0)
         USER_FUNC(evt_npc_get_active_count, LW(0))
@@ -2230,7 +2274,9 @@ EVT_BEGIN(dan_shadoo_fight_evt)
     USER_FUNC(evt_mario_key_on)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_shadoo_defeat_evt)
     USER_FUNC(evt_mario_key_off, 0)
     USER_FUNC(evt_mario_fairy_reset)
@@ -2249,7 +2295,9 @@ EVT_BEGIN(dan_shadoo_defeat_evt)
     RUN_CHILD_EVT(PTR(lbl_80439f10))
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_70_reward_appear_evt)
     WAIT_MSEC(500)
     USER_FUNC(evt_mario_get_character, LW(0))
@@ -2426,8 +2474,11 @@ EVT_BEGIN(dan_70_reward_appear_evt)
     SET(GSW(24), 2)
     RETURN()
 EVT_END()
+// clang-format on()
 
+// clang-format off
 EVT_BEGIN(dan_start_shadoo_evt)
     RUN_EVT(PTR(&dan_shadoo_main_evt))
     RETURN()
 EVT_END()
+// clang-format on()
