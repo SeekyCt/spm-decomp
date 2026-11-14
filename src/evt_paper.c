@@ -1,6 +1,6 @@
+#include <spm/animdrv.h>
 #include <spm/evt_paper.h>
-#include "spm/animdrv.h"
-#include "spm/evtmgr_cmd.h"
+#include <spm/evtmgr_cmd.h>
 
 extern "C" {
 

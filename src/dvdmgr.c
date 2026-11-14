@@ -2,8 +2,8 @@
 #include <spm/dvdmgr.h>
 #include <spm/memory.h>
 #include <spm/system.h>
+#include <wii/dvd.h>
 #include <msl/string.h>
-#include "wii/dvd.h"
 
 extern "C" {
 

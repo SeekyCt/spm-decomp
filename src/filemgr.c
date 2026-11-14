@@ -1,15 +1,15 @@
+#include <spm/animdrv.h>
 #include <spm/dvdmgr.h>
+#include <spm/effdrv.h>
 #include <spm/filemgr.h>
 #include <spm/memory.h>
 #include <spm/system.h>
 #include <wii/dvd.h>
 #include <wii/os.h>
+#include <wii/os/OSThread.h>
 #include <msl/stdarg.h>
 #include <msl/stdio.h>
 #include <msl/string.h>
-#include "spm/animdrv.h"
-#include "spm/effdrv.h"
-#include "wii/os/OSThread.h"
 
 extern "C" {
 

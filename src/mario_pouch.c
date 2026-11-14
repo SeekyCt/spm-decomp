@@ -3,6 +3,7 @@
 #include <spm/fadedrv.h>
 #include <spm/hud.h>
 #include <spm/item_data.h>
+#include <spm/item_data_ids.h>
 #include <spm/mario.h>
 #include <spm/mario_pouch.h>
 #include <spm/seqdrv.h>
@@ -12,7 +13,6 @@
 #include <wii/os.h>
 #include <msl/math.h>
 #include <msl/string.h>
-#include "spm/item_data_ids.h"
 
 extern "C" {
 
