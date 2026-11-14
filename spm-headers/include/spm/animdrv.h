@@ -1,10 +1,13 @@
 #pragma once
 
+#include "spm/animdrv.h"
+#include "spm/evtmgr.h"
 #include <common.h>
-#include <wii/os.h>
-#include <wii/mtx.h>
 #include <wii/gx.h>
+#include <wii/mtx.h>
+#include <wii/os.h>
 #include <spm/filemgr.h>
+
 
 CPP_WRAPPER(spm::animdrv)
 
@@ -38,7 +41,7 @@ typedef struct
 } AnimPoseData_AnimData;
 SIZE_ASSERT(AnimPoseData_AnimData, 0x5c)
 
-typedef struct 
+typedef struct
 {
 /* 0x00 */ char name[60];
 /* 0x3C */ AnimPoseData_AnimData * data;
@@ -48,7 +51,7 @@ SIZE_ASSERT(AnimPoseData_AnimTableEntry, 0x40)
 /*
     Header of an AnimPose file from the /a/ folder
 */
-typedef struct 
+typedef struct
 {
 /* 0x000 */ u32 headerSize;
 /* 0x004 */ char modelName[64];
@@ -141,7 +144,7 @@ SIZE_ASSERT(AnimWork, 0x110)
 
 DECOMP_STATIC(AnimWork * animdrv_wp)
 
-typedef struct 
+typedef struct
 {
 /* 0x000 */ u32 flag;
 /* 0x004 */ s32 paperPoseFlag; // typeFlags
@@ -164,14 +167,14 @@ UNKNOWN_FUNCTION(textureGroupEntry)
 UNKNOWN_FUNCTION(animGroupEntry)
 UNKNOWN_FUNCTION(animPoseRefresh)
 s32 animPoseEntry(const char * filename, s32 releaseType);
-UNKNOWN_FUNCTION(animPaperPoseEntry)
+s32 animPaperPoseEntry(const char * filename, s32 releaseType);
 UNKNOWN_FUNCTION(func_80042ec8)
 UNKNOWN_FUNCTION(animPosePeraOff)
 UNKNOWN_FUNCTION(animPoseSetLocalTimeRate)
 UNKNOWN_FUNCTION(animPoseSetLocalTime)
 UNKNOWN_FUNCTION(animPoseSetStartTime)
 void animPoseSetAnim(s32 id, const char * animName, bool forceReset);
-UNKNOWN_FUNCTION(animPaperPoseGetId)
+s32 animPaperPoseGetId(const char * filename, s32 releaseType);
 UNKNOWN_FUNCTION(animPoseSetPaperAnimGroup)
 UNKNOWN_FUNCTION(animPoseSetPaperAnim)
 UNKNOWN_FUNCTION(func_80043b90)
@@ -218,7 +221,7 @@ UNKNOWN_FUNCTION(_animPoseDrawMtx)
 void animPoseDrawMtx(s32 id, Mtx34 mtx, s32 xluStage, f32 rotY, f32 scale);
 UNKNOWN_FUNCTION(animSetPaperTexObj)
 s32 animPoseRelease(s32 id);
-UNKNOWN_FUNCTION(animPaperPoseRelease)
+s32 animPaperPoseRelease(s32 id);
 void animPoseAutoRelease(s32 releaseType);
 UNKNOWN_FUNCTION(animPaperPoseDisp)
 UNKNOWN_FUNCTION(animPaperPoseDispSub)

@@ -386,7 +386,7 @@ config.libs = [
         Object(NonStarted, "evt_msg.c"),
         Object(NonStarted, "evt_npc.c"),
         Object(NonStarted, "evt_offscreen.c"),
-        Object(NonStarted, "evt_paper.c"),
+        Object(Matching, "evt_paper.c"),
         Object(NonStarted, "evt_pouch.c"),
         Object(NonStarted, "evt_seq.c"),
         Object(NonStarted, "evt_shop.c"),
