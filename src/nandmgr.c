@@ -18,7 +18,7 @@
 extern "C" {
 
 #if defined SPM_JP0
-#elif defined SPM_EU0
+#elif defined SPM_EU0 || defined SPM_EU1
     #define NANDMGR_PRESERVE_FPS
     #define NANDMGR_SAVING_DISABLE_API
 #else
@@ -82,9 +82,8 @@ void nandInit()
     if (gp->language == SC_LANGUAGE_JP)
     {
         // Some broken japanese strings?
-        NANDInitBanner(wp->banner, 0x10,
-                        L"スーパーペーパーマリオ",
-                        L"ペラペラマリオの超次元大冒険！");
+        NANDInitBanner(wp->banner, 0x10, L"スーパーペーパーマリオ",
+                       L"ペラペラマリオの超次元大冒険！");
     }
     else
     {
