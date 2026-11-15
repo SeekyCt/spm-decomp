@@ -39,11 +39,13 @@ typedef f32 (IntplUserFunc)(s32, s32, f32, f32);
 */
 #ifdef DECOMP
 
+#define SPM_ASSERT_LINE_SHIFT 0
+
 #define SPM_ASSERT_NM_(line, condition) \
-    if ((condition) == false) __assert(__FILE__, line, #condition);
+    if ((condition) == false) __assert(__FILE__, line+SPM_ASSERT_LINE_SHIFT, #condition);
 
 #define SPM_ASSERT_(line, condition, ...) \
-    if ((condition) == false) __assert2(__FILE__, line, #condition, __VA_ARGS__);
+    if ((condition) == false) __assert2(__FILE__, line+SPM_ASSERT_LINE_SHIFT, #condition, __VA_ARGS__);
 
 #else
 
