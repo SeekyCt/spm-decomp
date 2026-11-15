@@ -17,7 +17,7 @@
 
 extern "C" {
 
-#if defined SPM_JP0
+#if defined SPM_JP0 || defined SPM_JP1
 #elif defined SPM_EU0 || defined SPM_EU1
     #define NANDMGR_PRESERVE_FPS
     #define NANDMGR_SAVING_DISABLE_API
@@ -54,12 +54,14 @@ static void nand_read(NANDFileInfo * fileInfo, void * data, u32 length);
 static void nand_write(NANDFileInfo * fileInfo, void * data, u32 length);
 static void nand_close(NANDFileInfo * fileInfo);
 
+#ifndef SPM_JP1
 // For some reason nandInit won't match without this
 void dummy(s32 x);
 void dummy(s32 x)
 {
     memcpy(&wp->saves[x], 0, 0);
 }
+#endif
 
 void nandInit()
 {
@@ -76,7 +78,7 @@ void nandInit()
 
     // Create banner
 
-#if defined SPM_JP0
+#if defined SPM_JP0 || defined SPM_JP1
     #undef SPM_ASSERT_LINE_SHIFT
     #define SPM_ASSERT_LINE_SHIFT -30
     if (gp->language == SC_LANGUAGE_JP)

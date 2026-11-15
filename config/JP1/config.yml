@@ -6,6 +6,11 @@ splits: config/JP1/splits.txt
 mw_comment_version: 15
 quick_analysis: false
 
+extract:
+- symbol: lz_saveImagesTpl
+  binary: saveImages.tpl.lz
+  header: assets/saveImages.tpl.lz.inc
+
 modules:
 - object: files/rel/relF.bin:nlzss
   hash: a02d209cd0face6a3bda93015e8a18779d4c7774
