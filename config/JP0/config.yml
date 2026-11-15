@@ -11,3 +11,8 @@ modules:
   hash: 679d960150577de4b3e4d49af92ae719184edb4c
   symbols: config/JP0/relF/symbols.txt
   splits: config/JP0/relF/splits.txt
+
+extract:
+- symbol: lz_saveImagesTpl
+  binary: saveImages.tpl.lz
+  header: assets/saveImages.tpl.lz.inc

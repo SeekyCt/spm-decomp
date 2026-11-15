@@ -17,6 +17,14 @@
 
 extern "C" {
 
+#if defined SPM_JP0
+#elif defined SPM_EU0
+    #define NANDMGR_PRESERVE_FPS
+    #define NANDMGR_SAVING_DISABLE_API
+#else
+    #error "Unported"
+#endif
+
 #define flag(value, mask) (value & mask) // needed for assert
 
 // TODO: the built-in align define causes code not to match
@@ -67,6 +75,23 @@ void nandInit()
     wp->banner = (NANDBanner *) __memAlloc(HEAP_MAIN, sizeof(*wp->banner));
 
     // Create banner
+
+#if defined SPM_JP0
+    #undef SPM_ASSERT_LINE_SHIFT
+    #define SPM_ASSERT_LINE_SHIFT -30
+    if (gp->language == SC_LANGUAGE_JP)
+    {
+        // Some broken japanese strings?
+        NANDInitBanner(wp->banner, 0x10,
+                        L"スーパーペーパーマリオ",
+                        L"ペラペラマリオの超次元大冒険！");
+    }
+    else
+    {
+        NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE, L"Super Paper Mario",
+                       L"Interdimensional adventure!");
+    }
+#elif defined SPM_EU0 || SPM_EU1
     switch (gp->language)
     {
         case SC_LANGUAGE_JP:
@@ -106,6 +131,9 @@ void nandInit()
                            L"Un'avventura interdimensionale!");
             break;
     }
+#else
+    #error "Unported"
+#endif
 
     // Setup banner icons
     tpl = (TPLHeader *) __memAlloc(HEAP_MAIN, CXGetUncompressedSize(&lz_saveImagesTpl));
@@ -333,7 +361,9 @@ void nandLoadSave(s32 saveId)
     SpmarioGlobals * _gp;
     s32 lastSaveLoaded;
     s32 language;
+#ifdef NANDMGR_PRESERVE_FPS
     s32 fps;
+#endif
     SaveFile * save;
 
     // Get save file
@@ -341,7 +371,9 @@ void nandLoadSave(s32 saveId)
 
     // Backup globals not read from save
     language = gp->language;
+#ifdef NANDMGR_PRESERVE_FPS
     fps = gp->fps;
+#endif
     lastSaveLoaded = gp->lastSaveLoaded;
 
     memcpy(gp, &save->spmarioGlobals, sizeof(save->spmarioGlobals));
@@ -355,11 +387,14 @@ void nandLoadSave(s32 saveId)
     // Restore globals not read from save
     gp->lastSaveLoaded = lastSaveLoaded;
     gp->language = language;
+#ifdef NANDMGR_PRESERVE_FPS
     gp->fps = fps;
+#endif
 
     gp->unknown_0xe0 = 0;
 }
 
+#ifdef NANDMGR_SAVING_DISABLE_API
 void nandDisableSaving()
 {
     wp->flag |= NAND_FLAG_NoSave;
@@ -374,6 +409,7 @@ bool nandCheckSaving()
 {
     return (wp->flag & NAND_FLAG_NoSave) != 0;
 }
+#endif
 
 void nandCheckMain()
 {
