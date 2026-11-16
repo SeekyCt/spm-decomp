@@ -17,7 +17,7 @@
 
 extern "C" {
 
-#if defined SPM_JP0 || defined SPM_JP1
+#if defined SPM_JP0 || defined SPM_JP1 || defined SPM_US0
 #elif defined SPM_EU0 || defined SPM_EU1
     #define NANDMGR_PRESERVE_FPS
     #define NANDMGR_SAVING_DISABLE_API
@@ -78,7 +78,7 @@ void nandInit()
 
     // Create banner
 
-#if defined SPM_JP0 || defined SPM_JP1
+#if defined SPM_JP0 || defined SPM_JP1 || defined SPM_US0
     #undef SPM_ASSERT_LINE_SHIFT
     #define SPM_ASSERT_LINE_SHIFT -30
     if (gp->language == SC_LANGUAGE_JP)

@@ -13,6 +13,16 @@ Sections:
 	.sdata2     type:rodata align:16
 	.sbss2      type:bss align:32
 
+nandmgr.c:
+	extab       start:0x8000F050 end:0x8000F0D0
+	extabindex  start:0x8001CAC4 end:0x8001CB84
+	.text       start:0x8023C018 end:0x8023DFD0
+	.rodata     start:0x803413C0 end:0x80346468
+	.data       start:0x804A2460 end:0x804A2578
+	.bss        start:0x804F1FA0 end:0x804F2160
+	.sdata      start:0x8056D1D0 end:0x8056D1D8
+	.sdata2     start:0x80575268 end:0x80575270
+
 Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
 	.text       start:0x80253E68 end:0x80253ED8
 	.ctors      start:0x80319180 end:0x80319184 rename:.ctors$10
