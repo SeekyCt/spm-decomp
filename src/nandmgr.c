@@ -46,15 +46,17 @@ static void nand_read(NANDFileInfo * fileInfo, void * data, u32 length);
 static void nand_write(NANDFileInfo * fileInfo, void * data, u32 length);
 static void nand_close(NANDFileInfo * fileInfo);
 
-
 #if defined SPM_KR0
 // TODO: encoding is confusing on KR0
 // Most NANDInitBanner calls are no longer wide strings (@wstringBase0 isn't used), but the TC case
 // seems to be explicitly converting to one. Also, these strings in particular seem to be UTF-8??
 // "슈퍼 페이퍼 마리오"
-static char title[] = "\xEC\x8A\x88\xED\x8D\xBC\x20\xED\x8E\x98\xEC\x9D\xB4\xED\x8D\xBC\x20\xEB\xA7\x88\xEB\xA6\xAC\xEC\x98\xA4";
+static char title[] = "\xEC\x8A\x88\xED\x8D\xBC\x20\xED\x8E\x98\xEC\x9D\xB4\xED\x8D\xBC\x20\xEB\xA7"
+                      "\x88\xEB\xA6\xAC\xEC\x98\xA4";
 // "팔랑팔랑 마리오의 차원 대모험!"
-static char comment[] = "\xED\x8C\x94\xEB\x9E\x91\xED\x8C\x94\xEB\x9E\x91\x20\xEB\xA7\x88\xEB\xA6\xAC\xEC\x98\xA4\xEC\x9D\x98\x20\xEC\xB0\xA8\xEC\x9B\x90\x20\xEB\x8C\x80\xEB\xAA\xA8\xED\x97\x98\x21";
+static char comment[] =
+    "\xED\x8C\x94\xEB\x9E\x91\xED\x8C\x94\xEB\x9E\x91\x20\xEB\xA7\x88\xEB\xA6\xAC\xEC\x98\xA4\xEC"
+    "\x9D\x98\x20\xEC\xB0\xA8\xEC\x9B\x90\x20\xEB\x8C\x80\xEB\xAA\xA8\xED\x97\x98\x21";
 #endif
 
 #if !(defined SPM_JP1 || defined SPM_US1 || defined SPM_KR0)
@@ -101,33 +103,38 @@ void nandInit()
     {
         case SC_LANGUAGE_JP:
             NANDInitBanner(wp->banner, 0x10, (const wchar_t *) "スーパーペーパーマリオ",
-                        (const wchar_t *)  "ペラペラマリオの超次元大冒険！");
+                           (const wchar_t *) "ペラペラマリオの超次元大冒険！");
             break;
 
         case SC_LANGUAGE_EN:
         case SC_LANGUAGE_GE:
         case SC_LANGUAGE_SC:
-            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE, (const wchar_t *)"Super Paper Mario",
+            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE,
+                           (const wchar_t *) "Super Paper Mario",
                            (const wchar_t *) "An interdimensional adventure!");
             break;
 
         case SC_LANGUAGE_FR:
-            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE, (const wchar_t *) "Super Paper Mario",
+            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE,
+                           (const wchar_t *) "Super Paper Mario",
                            (const wchar_t *) "Ein interdimensionales Abenteuer");
             break;
 
         case SC_LANGUAGE_SP:
-            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE, (const wchar_t *) "Super Paper Mario",
+            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE,
+                           (const wchar_t *) "Super Paper Mario",
                            (const wchar_t *) "Une aventure interdimensionnelle");
             break;
 
         case SC_LANGUAGE_IT:
-            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE, (const wchar_t *) "Super Paper Mario",
+            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE,
+                           (const wchar_t *) "Super Paper Mario",
                            (const wchar_t *) "\xA1Una aventura interdimensional!");
             break;
 
         case SC_LANGUAGE_DU:
-            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE, (const wchar_t *) "Super Paper Mario",
+            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE,
+                           (const wchar_t *) "Super Paper Mario",
                            (const wchar_t *) "Un'avventura interdimensionale!");
             break;
 
@@ -145,7 +152,7 @@ void nandInit()
             func_8033E648(0, &length, comment, 0);
             wp->unknown_0x1c4 = (wchar16_t *) __memAlloc(0, length * 4);
             memset(wp->unknown_0x1c4, 0, length * 4);
-            func_8033E648(wp->unknown_0x1c4, &length, comment,0);
+            func_8033E648(wp->unknown_0x1c4, &length, comment, 0);
             wp->unknown_0x1c4[length] = '\0';
             NANDInitBanner(wp->banner, 0x10, wp->unknown_0x1c0, wp->unknown_0x1c4);
             break;
@@ -162,7 +169,7 @@ void nandInit()
                            L"\x30FB\x0079\x30FB\x30FB\x30FB\x0079\x30FB\x30FB\x30FB\x007D\x30FB"
                            L"\x30FB\x30FB\x0049\x30FB\xFF8C\x30FB\xFF74\x30FB\x30FB\x30FB\xFF73"
                            L"\x30FB\x30FB\x30FB\x0060\x30FB\xFF6F\x30FB\x0049");
-        break;
+            break;
 
         case SC_LANGUAGE_EN:
         case SC_LANGUAGE_GE:
