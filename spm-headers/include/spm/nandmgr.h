@@ -13,6 +13,15 @@
 
 CPP_WRAPPER(spm::nandmgr)
 
+#if defined SPM_EU0 || defined SPM_EU1 || defined SPM_KR0
+    #define NANDMGR_PRESERVE_FPS
+    #define NANDMGR_SAVING_DISABLE_API
+#endif
+
+#if defined SPM_US2 || defined SPM_KR0
+    #define NANDMGR_MERGE_WRITE_BANNER
+#endif
+
 USING(spm::mario_pouch::MarioPouchWork)
 USING(spm::spmario::SpmarioGlobals)
 USING(wii::nand::NANDBanner)
@@ -27,7 +36,7 @@ enum NandTask
 {
 /* 0x0 */ NANDMGR_TASK_NONE,
 /* 0x1 */ NANDMGR_TASK_CHECK,
-#ifndef SPM_US2
+#ifndef NANDMGR_MERGE_WRITE_BANNER
 /* 0x2 */ NANDMGR_TASK_WRITE_BANNER,
 #endif
 /* 0x3 */ NANDMGR_TASK_WRITE_ALL_SAVES,
@@ -81,9 +90,13 @@ typedef struct
 /* 0x1B0 */ s32 stage;
 /* 0x1B4 */ s32 code;
 /* 0x1B8 */ s32 saveId; // slot of save file to work on
+#ifdef SPM_KR0
+/* 0x1C0 */ wchar16_t * unknown_0x1c0;
+/* 0x1C0 */ wchar16_t * unknown_0x1c4;
+#endif
 } NandWork;
 #ifdef SPM_KR0
-SIZE_ASSERT(NandWork, 0x1c0)
+SIZE_ASSERT(NandWork, 0x1c8)
 #else
 SIZE_ASSERT(NandWork, 0x1bc)
 #endif
@@ -122,7 +135,7 @@ SaveFile * nandGetSaveFiles();
 */
 void nandCheck();
 
-#ifndef SPM_US2
+#ifndef NANDMGR_MERGE_WRITE_BANNER
 /*
     Starts banner.bin being written to NAND asynchronously 
 */
@@ -195,10 +208,12 @@ bool nandCheckSaving();
 */
 void nandCheckMain();
 
+#ifndef NANDMGR_MERGE_WRITE_BANNER
 /*
     Carries out the asynchronous process for nandWriteBanner
 */
 void nandWriteBannerMain();
+#endif
 
 /*
     Carries out the asynchronous process for nandWriteAllSaves

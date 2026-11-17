@@ -23,6 +23,16 @@ memory.c:
 	.sdata      start:0x805D7968 end:0x805D7970
 	.sbss       start:0x805D8128 end:0x805D8138
 
+nandmgr.c:
+	extab       start:0x8000EF24 end:0x8000EF94
+	extabindex  start:0x8001CAAC end:0x8001CB54
+	.text       start:0x80236CD8 end:0x80238C78
+	.rodata     start:0x80366610 end:0x8036B7A0
+	.data       start:0x80516280 end:0x80516358
+	.bss        start:0x8056C938 end:0x8056CB00
+	.sdata      start:0x805D79B0 end:0x805D79B8
+	.sdata2     start:0x805DFA18 end:0x805DFA20
+
 Runtime.PPCEABI.H/__init_cpp_exceptions.cpp:
 	.text       start:0x802583C0 end:0x80258430
 	.ctors      start:0x8033F2E0 end:0x8033F2E4 rename:.ctors$10

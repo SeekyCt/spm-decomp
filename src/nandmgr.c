@@ -17,14 +17,6 @@
 
 extern "C" {
 
-#if defined SPM_JP0 || defined SPM_JP1 || defined SPM_US0 || defined SPM_US1 || defined SPM_US2
-#elif defined SPM_EU0 || defined SPM_EU1
-    #define NANDMGR_PRESERVE_FPS
-    #define NANDMGR_SAVING_DISABLE_API
-#else
-    #error "Unported"
-#endif
-
 #define flag(value, mask) (value & mask) // needed for assert
 
 // TODO: the built-in align define causes code not to match
@@ -54,7 +46,18 @@ static void nand_read(NANDFileInfo * fileInfo, void * data, u32 length);
 static void nand_write(NANDFileInfo * fileInfo, void * data, u32 length);
 static void nand_close(NANDFileInfo * fileInfo);
 
-#if !(defined SPM_JP1 || defined SPM_US1)
+
+#if defined SPM_KR0
+// TODO: encoding is confusing on KR0
+// Most NANDInitBanner calls are no longer wide strings (@wstringBase0 isn't used), but the TC case
+// seems to be explicitly converting to one. Also, these strings in particular seem to be UTF-8??
+// "슈퍼 페이퍼 마리오"
+static char title[] = "\xEC\x8A\x88\xED\x8D\xBC\x20\xED\x8E\x98\xEC\x9D\xB4\xED\x8D\xBC\x20\xEB\xA7\x88\xEB\xA6\xAC\xEC\x98\xA4";
+// "팔랑팔랑 마리오의 차원 대모험!"
+static char comment[] = "\xED\x8C\x94\xEB\x9E\x91\xED\x8C\x94\xEB\x9E\x91\x20\xEB\xA7\x88\xEB\xA6\xAC\xEC\x98\xA4\xEC\x9D\x98\x20\xEC\xB0\xA8\xEC\x9B\x90\x20\xEB\x8C\x80\xEB\xAA\xA8\xED\x97\x98\x21";
+#endif
+
+#if !(defined SPM_JP1 || defined SPM_US1 || defined SPM_KR0)
 // For some reason nandInit won't match without this
 void dummy(s32 x);
 void dummy(s32 x)
@@ -83,7 +86,6 @@ void nandInit()
     #define SPM_ASSERT_LINE_SHIFT -30
     if (gp->language == SC_LANGUAGE_JP)
     {
-        // Some broken japanese strings?
         NANDInitBanner(wp->banner, 0x10, L"スーパーペーパーマリオ",
                        L"ペラペラマリオの超次元大冒険！");
     }
@@ -92,7 +94,64 @@ void nandInit()
         NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE, L"Super Paper Mario",
                        L"Interdimensional adventure!");
     }
-#elif defined SPM_EU0 || SPM_EU1
+#elif defined SPM_KR0
+    #undef SPM_ASSERT_LINE_SHIFT
+    #define SPM_ASSERT_LINE_SHIFT 37
+    switch (gp->language)
+    {
+        case SC_LANGUAGE_JP:
+            NANDInitBanner(wp->banner, 0x10, (const wchar_t *) "スーパーペーパーマリオ",
+                        (const wchar_t *)  "ペラペラマリオの超次元大冒険！");
+            break;
+
+        case SC_LANGUAGE_EN:
+        case SC_LANGUAGE_GE:
+        case SC_LANGUAGE_SC:
+            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE, (const wchar_t *)"Super Paper Mario",
+                           (const wchar_t *) "An interdimensional adventure!");
+            break;
+
+        case SC_LANGUAGE_FR:
+            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE, (const wchar_t *) "Super Paper Mario",
+                           (const wchar_t *) "Ein interdimensionales Abenteuer");
+            break;
+
+        case SC_LANGUAGE_SP:
+            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE, (const wchar_t *) "Super Paper Mario",
+                           (const wchar_t *) "Une aventure interdimensionnelle");
+            break;
+
+        case SC_LANGUAGE_IT:
+            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE, (const wchar_t *) "Super Paper Mario",
+                           (const wchar_t *) "\xA1Una aventura interdimensional!");
+            break;
+
+        case SC_LANGUAGE_DU:
+            NANDInitBanner(wp->banner, NAND_BANNER_FLAG_BOUNCE, (const wchar_t *) "Super Paper Mario",
+                           (const wchar_t *) "Un'avventura interdimensionale!");
+            break;
+
+        case SC_LANGUAGE_TC:
+            // TODO: move to a header, probably nw4r?
+            void func_8033E648(wchar16_t *, size_t * sizeOut, const char * str, Unk32);
+
+            size_t length = 0;
+            func_8033E648(0, &length, title, 0);
+            wp->unknown_0x1c0 = (wchar16_t *) __memAlloc(0, length * 4);
+            memset(wp->unknown_0x1c0, 0, length * 4);
+            func_8033E648(wp->unknown_0x1c0, &length, title, 0);
+            wp->unknown_0x1c0[length] = '\0';
+
+            func_8033E648(0, &length, comment, 0);
+            wp->unknown_0x1c4 = (wchar16_t *) __memAlloc(0, length * 4);
+            memset(wp->unknown_0x1c4, 0, length * 4);
+            func_8033E648(wp->unknown_0x1c4, &length, comment,0);
+            wp->unknown_0x1c4[length] = '\0';
+            NANDInitBanner(wp->banner, 0x10, wp->unknown_0x1c0, wp->unknown_0x1c4);
+            break;
+    }
+
+#else
     switch (gp->language)
     {
         case SC_LANGUAGE_JP:
@@ -103,7 +162,7 @@ void nandInit()
                            L"\x30FB\x0079\x30FB\x30FB\x30FB\x0079\x30FB\x30FB\x30FB\x007D\x30FB"
                            L"\x30FB\x30FB\x0049\x30FB\xFF8C\x30FB\xFF74\x30FB\x30FB\x30FB\xFF73"
                            L"\x30FB\x30FB\x30FB\x0060\x30FB\xFF6F\x30FB\x0049");
-            break;
+        break;
 
         case SC_LANGUAGE_EN:
         case SC_LANGUAGE_GE:
@@ -132,8 +191,6 @@ void nandInit()
                            L"Un'avventura interdimensionale!");
             break;
     }
-#else
-    #error "Unported"
 #endif
 
     // Setup banner icons
@@ -168,12 +225,12 @@ void nandMain()
             nandCheckMain();
             break;
 
-#ifndef SPM_US2
+#ifndef NANDMGR_MERGE_WRITE_BANNER
         case NANDMGR_TASK_WRITE_BANNER:
             nandWriteBannerMain();
             break;
-
 #endif
+
         case NANDMGR_TASK_WRITE_ALL_SAVES:
             nandWriteAllSavesMain();
             break;
@@ -190,7 +247,7 @@ void nandMain()
             nandDeleteSaveMain();
             break;
 
-#ifndef SPM_US2
+#ifndef NANDMGR_MERGE_WRITE_BANNER
         case NANDMGR_TASK_NONE:
             return;
 #endif
@@ -229,7 +286,12 @@ void nandCheck()
     wp->saveId = 0;
 }
 
-#ifndef SPM_US2
+#if defined SPM_KR0
+    #undef SPM_ASSERT_LINE_SHIFT
+    #define SPM_ASSERT_LINE_SHIFT 37
+#endif
+
+#ifndef NANDMGR_MERGE_WRITE_BANNER
 void nandWriteBanner()
 {
     // "Already running"
@@ -450,7 +512,7 @@ void nandCheckMain()
     }
 }
 
-#ifndef SPM_US2
+#ifndef NANDMGR_MERGE_WRITE_BANNER
 void nandWriteBannerMain()
 {
     if (wp->flag & NAND_FLAG_Waiting)
@@ -554,7 +616,7 @@ void nandWriteAllSavesMain()
             nand_close(&wp->fileInfo);
             break;
 
-#ifndef SPM_US2
+#ifndef NANDMGR_MERGE_WRITE_BANNER
         case 6:
             wp->saveId += 1;
             if (wp->saveId < SAVE_FILE_COUNT)
