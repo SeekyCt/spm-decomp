@@ -27,7 +27,9 @@ enum NandTask
 {
 /* 0x0 */ NANDMGR_TASK_NONE,
 /* 0x1 */ NANDMGR_TASK_CHECK,
+#ifndef SPM_US2
 /* 0x2 */ NANDMGR_TASK_WRITE_BANNER,
+#endif
 /* 0x3 */ NANDMGR_TASK_WRITE_ALL_SAVES,
 /* 0x4 */ NANDMGR_TASK_WRITE_SAVE,
 /* 0x5 */ NANDMGR_TASK_WRITE_BANNER_LOAD_ALL_SAVES,
@@ -120,10 +122,12 @@ SaveFile * nandGetSaveFiles();
 */
 void nandCheck();
 
+#ifndef SPM_US2
 /*
     Starts banner.bin being written to NAND asynchronously 
 */
 void nandWriteBanner();
+#endif
 
 /*
     Starts all save files being written to NAND asynchronously 

@@ -17,7 +17,7 @@
 
 extern "C" {
 
-#if defined SPM_JP0 || defined SPM_JP1 || defined SPM_US0 || defined SPM_US1
+#if defined SPM_JP0 || defined SPM_JP1 || defined SPM_US0 || defined SPM_US1 || defined SPM_US2
 #elif defined SPM_EU0 || defined SPM_EU1
     #define NANDMGR_PRESERVE_FPS
     #define NANDMGR_SAVING_DISABLE_API
@@ -78,7 +78,7 @@ void nandInit()
 
     // Create banner
 
-#if defined SPM_JP0 || defined SPM_JP1 || defined SPM_US0 || defined SPM_US1
+#if defined SPM_JP0 || defined SPM_JP1 || defined SPM_US0 || defined SPM_US1 || defined SPM_US2
     #undef SPM_ASSERT_LINE_SHIFT
     #define SPM_ASSERT_LINE_SHIFT -30
     if (gp->language == SC_LANGUAGE_JP)
@@ -168,10 +168,12 @@ void nandMain()
             nandCheckMain();
             break;
 
+#ifndef SPM_US2
         case NANDMGR_TASK_WRITE_BANNER:
             nandWriteBannerMain();
             break;
 
+#endif
         case NANDMGR_TASK_WRITE_ALL_SAVES:
             nandWriteAllSavesMain();
             break;
@@ -188,8 +190,10 @@ void nandMain()
             nandDeleteSaveMain();
             break;
 
+#ifndef SPM_US2
         case NANDMGR_TASK_NONE:
             return;
+#endif
     }
 }
 
@@ -225,6 +229,7 @@ void nandCheck()
     wp->saveId = 0;
 }
 
+#ifndef SPM_US2
 void nandWriteBanner()
 {
     // "Already running"
@@ -236,6 +241,7 @@ void nandWriteBanner()
     wp->stage = 0;
     wp->saveId = 0;
 }
+#endif
 
 void nandWriteAllSaves()
 {
@@ -444,6 +450,7 @@ void nandCheckMain()
     }
 }
 
+#ifndef SPM_US2
 void nandWriteBannerMain()
 {
     if (wp->flag & NAND_FLAG_Waiting)
@@ -491,6 +498,7 @@ void nandWriteBannerMain()
 
     wp->stage += 1;
 }
+#endif
 
 void nandWriteAllSavesMain()
 {
@@ -546,6 +554,7 @@ void nandWriteAllSavesMain()
             nand_close(&wp->fileInfo);
             break;
 
+#ifndef SPM_US2
         case 6:
             wp->saveId += 1;
             if (wp->saveId < SAVE_FILE_COUNT)
@@ -555,6 +564,38 @@ void nandWriteAllSavesMain()
             }
             wp->task = NANDMGR_TASK_NONE;
             wp->flag &= ~NAND_FLAG_Exec;
+            break;
+#else
+        case 6:
+            wp->saveId += 1;
+            if (wp->saveId < SAVE_FILE_COUNT)
+            {
+                wp->stage = 2;
+                return;
+            }
+            wp->stage = 10;
+
+        case 10:
+            nand_create("banner.bin");
+            break;
+
+        case 11:
+            nand_open("banner.bin", &wp->fileInfo, NAND_MODE_WRITE);
+            break;
+
+        case 12:
+            nand_write(&wp->fileInfo, wp->banner, wp->bannerSize);
+            break;
+
+        case 13:
+            nand_close(&wp->fileInfo);
+            break;
+
+        case 14:
+            wp->task = NANDMGR_TASK_NONE;
+            wp->flag &= ~NAND_FLAG_Exec;
+            break;
+#endif
     }
 
     wp->stage += 1;
