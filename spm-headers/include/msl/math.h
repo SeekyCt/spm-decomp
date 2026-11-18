@@ -16,6 +16,9 @@ double cos(double x);
 double sin(double x);
 #define sinf(x) ((f32)sin(x))
 
+double tan(double x);
+#define tanf(x) ((f32)tan(x))
+
 double fmod(double numer, double denom);
 #define fmodf(numer, denom) ((f32)fmod(numer, denom))
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "spm/memory.h"
 #include <common.h>
 #include <wii/os.h>
 #include <wii/mtx.h>
@@ -172,16 +173,23 @@ typedef struct
 /* 0x02C */ void * curTexData;
 /* 0x030 */ void * texObjs[2];
 /* 0x038 */ void * curTexObj;
-/* 0x03C */ u8 unknown_0x3c[0xf8 - 0x3c];
-/* 0x0F8 */ Vec3 * vtxArrayPos;
+/* 0x03C */ Mtx34 paperMtx[3];
+/* 0x0CC */ Mtx34 * paperMtxPtr[3];
+/* 0x0D8 */ u32 unknown_0xd8;
+/* 0x0DC */ u32 unknown_0xdc;
+/* 0x0E0 */ u8 unknown_0xe0[0xe8 - 0xe0];
+/* 0x0E8 */ BOOL useFloatScratch;
+/* 0x0EC */ Vec3 * floatScratch;
+/* 0x0F0 */ u32 floatScratchRP;
+/* 0x0F4 */ u32 floatScratchWP;
+/* 0x0F8 */ u8 unknown_0xf8[0xfc - 0xf8];
 /* 0x0FC */ Vec3 * vtxArrayNorm;
-/* 0x100 */ void * ag2tg; 
+/* 0x100 */ SmartAllocation * ag2tg; 
 /* 0x104 */ void * testHeap;
 /* 0x108 */ void * testHeapNextFree;
 /* 0x10C */ BOOL inBattle; 
 } AnimWork; // Uncertain size
 SIZE_ASSERT(AnimWork, 0x110)
-
 
 DECOMP_STATIC(AnimWork * animdrv_wp)
 
@@ -190,7 +198,7 @@ OSTime animTimeGetTime();
 DECOMP_STATIC(void * animdrv_testAlloc(u32 size))
 void animInit();
 void animMain();
-UNKNOWN_FUNCTION(textureGroupEntry)
+int textureGroupEntry(char * filename);
 UNKNOWN_FUNCTION(animGroupEntry)
 UNKNOWN_FUNCTION(animPoseRefresh)
 s32 animPoseEntry(const char * filename, s32 releaseType);
@@ -250,7 +258,7 @@ UNKNOWN_FUNCTION(animSetPaperTexObj)
 s32 animPoseRelease(s32 id);
 UNKNOWN_FUNCTION(animPaperPoseRelease)
 void animPoseAutoRelease(s32 releaseType);
-UNKNOWN_FUNCTION(animPaperPoseDisp)
+void animPaperPoseDisp(s32 cameraId, void * param);
 UNKNOWN_FUNCTION(animPaperPoseDispSub)
 UNKNOWN_FUNCTION(animPoseDisp_MakeExtTexture)
 UNKNOWN_FUNCTION(animSetPaperTexMtx)

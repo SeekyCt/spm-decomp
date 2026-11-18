@@ -8,7 +8,7 @@
 
 CPP_WRAPPER(wii::mtx)
 
-#define DEG_TO_RAD(a) (a * 0.01745329238474369f)
+#define DEG_TO_RAD(a) ((a) * 0.01745329238474369f)
 
 typedef struct
 {
